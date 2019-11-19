@@ -1,0 +1,4 @@
+author = Alucard I
+version = 0.2
+displayName = Risk of Slime Rain
+includePDB=true
