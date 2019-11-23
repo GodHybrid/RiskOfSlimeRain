@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Items
 
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("7% chance to snare enemies for 1.5 seconds");
+			Tooltip.SetDefault("15% chance to cause bleeding");
 		}
 
 		public override void SetDefaults()
@@ -23,11 +23,11 @@ namespace RiskOfSlimeRain.Items
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "Taser", "You say you can fix 'em?\nThese tasers are very very faulty");
+            TooltipLine line = new TooltipLine(mod, "Knife", "Murder weapon, case name ELIAS. Probably a lover's spat?\nThere is still dried blood on the knife, so mark it as biological.");
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.Name == "Taser")
+                if (line2.Name == "Knife")
                 {
                     line.overrideColor = Color.FloralWhite;
                 }
@@ -36,12 +36,14 @@ namespace RiskOfSlimeRain.Items
 
         public override bool CanUseItem(Player player)
         {
-            return true;
+            if (player.GetModPlayer<RORPlayer>().rustyKnives < 7)
+                return true;
+            else return false;
         }
 
         public override bool UseItem(Player player)
 		{
-            player.GetModPlayer<RORPlayer>().tasers++;
+            player.GetModPlayer<RORPlayer>().rustyKnives++;
             return true;
 		}
 

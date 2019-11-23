@@ -62,6 +62,9 @@ namespace RiskOfSlimeRain.Items
             TP.crowbars = 0;
             TP.gasCanisters = 0;
             TP.stompers = 0;
+            TP.mortarTubes = 0;
+            TP.rustyKnives = 0;
+            TP.stickyBombs = 0;
             return true;
         }
     }

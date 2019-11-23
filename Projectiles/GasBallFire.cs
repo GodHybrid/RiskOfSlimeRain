@@ -20,7 +20,7 @@ namespace RiskOfSlimeRain.Projectiles
         public override void SetDefaults()
 		{
 			projectile.width = 84;
-			projectile.height = 12;
+			projectile.height = 14;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
             projectile.frameCounter = 5;

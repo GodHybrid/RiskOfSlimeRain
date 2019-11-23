@@ -12,7 +12,8 @@ namespace RiskOfSlimeRain.Items
 
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("7% chance to snare enemies for 1.5 seconds");
+			Tooltip.SetDefault("8% chance to attach a bomb to an enemy, detonating for 140% damage");
+            DisplayName.SetDefault("Sticky Bomb");
 		}
 
 		public override void SetDefaults()
@@ -23,11 +24,11 @@ namespace RiskOfSlimeRain.Items
 
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
-            TooltipLine line = new TooltipLine(mod, "Taser", "You say you can fix 'em?\nThese tasers are very very faulty");
+            TooltipLine line = new TooltipLine(mod, "Bomb", "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF.");
             tooltips.Add(line);
             foreach (TooltipLine line2 in tooltips)
             {
-                if (line2.Name == "Taser")
+                if (line2.Name == "Bomb")
                 {
                     line.overrideColor = Color.FloralWhite;
                 }
@@ -41,7 +42,7 @@ namespace RiskOfSlimeRain.Items
 
         public override bool UseItem(Player player)
 		{
-            player.GetModPlayer<RORPlayer>().tasers++;
+            player.GetModPlayer<RORPlayer>().stickyBombs++;
             return true;
 		}
 

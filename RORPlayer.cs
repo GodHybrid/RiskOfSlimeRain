@@ -60,6 +60,8 @@ namespace RiskOfSlimeRain
         public int gasCanisters = 0;
         public int stompers = 0;
         public int mortarTubes = 0;
+        public int rustyKnives = 0;
+        public int stickyBombs = 0;
         #endregion
 
         public override void Initialize()
@@ -69,23 +71,25 @@ namespace RiskOfSlimeRain
 
         public override void ResetEffects()
         {
-            
-            player.statLifeMax2 += bitterRootIncrease;
-            player.lifeRegen += (int)(mysteriousVials * 1.2f);
-            player.maxRunSpeed += player.maxRunSpeed * 0.2f * paulsGoatHooves;
-            player.moveSpeed += player.moveSpeed * 0.2f * paulsGoatHooves;
-            if (stompers > 0) player.maxFallSpeed += 6f;
-            if (snakeEyesDiceIncrease > 0)
+            if (player == Main.player[Main.myPlayer])
             {
-                int sedIncrease = snakeEyesDiceIncrease * (snakeEyesDice * 3 + 3);
-                player.meleeCrit += sedIncrease;
-                player.rangedCrit += sedIncrease;
-                player.magicCrit += sedIncrease;
-                player.thrownCrit += sedIncrease;
+                player.statLifeMax2 += bitterRootIncrease;
+                player.lifeRegen += (int)(mysteriousVials * 1.2f);
+                player.maxRunSpeed += player.maxRunSpeed * 0.2f * paulsGoatHooves;
+                player.moveSpeed += player.moveSpeed * 0.2f * paulsGoatHooves;
+                if (stompers > 0) player.maxFallSpeed += 6f;
+                if (snakeEyesDiceIncrease > 0)
+                {
+                    int sedIncrease = snakeEyesDiceIncrease * (snakeEyesDice * 3 + 3);
+                    player.meleeCrit += sedIncrease;
+                    player.rangedCrit += sedIncrease;
+                    player.magicCrit += sedIncrease;
+                    player.thrownCrit += sedIncrease;
+                }
+                if (((player.controlRight && player.velocity.X < 0) || (player.controlLeft && player.velocity.X > 0)) && paulsGoatHooves > 5) player.velocity.X = 0;
+                if (sproutingEggTimer == -1) player.lifeRegen += (int)(sproutingEggs * 2.4f);
+                if (player.HasBuff(mod.BuffType("Slowdown"))) player.velocity.X *= 0.8f;
             }
-            if (((player.controlRight && player.velocity.X < 0) || (player.controlLeft && player.velocity.X > 0)) && paulsGoatHooves > 5) player.velocity.X = 0;
-            if (sproutingEggTimer == -1) player.lifeRegen += (int)(sproutingEggs * 2.4f);
-            if (player.HasBuff(mod.BuffType("Slowdown"))) player.velocity.X *= 0.8f;
         }
 
         public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -125,7 +129,7 @@ namespace RiskOfSlimeRain
             sproutingEggTimer = 420;
             if (fireShields > 0 && damage >= player.statLifeMax2 / 10) 
             {
-                Projectile.NewProjectile(player.position, new Vector2(0, 0), mod.ProjectileType("FireShieldExplosion"), 200 * fireShields, 20 + fireShields, Main.myPlayer);
+                Projectile.NewProjectile(player.position, new Vector2(0, 0), mod.ProjectileType("FireShieldExplosion"), (200 + 200 * fireShields) * player.HeldItem.damage, 20 + fireShields, Main.myPlayer);
             }
             if (spikestrips > 0)
             {
@@ -152,6 +156,17 @@ namespace RiskOfSlimeRain
             if (warbanners > 0 && target.life <= 0) AddBanner();
             if (crowbars > 0 && target.life < target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
             if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), mod.ProjectileType("GasBallFire"), 0, 0);
+            if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), mod.ProjectileType("MortarRocket"), (int)(player.HeldItem.damage * 1.7f * mortarTubes), 0);
+            if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(mod.BuffType("KnifeBleed"), 120);
+            if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), mod.ProjectileType("StickyBomb"), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
+            {
+                if (target.HasBuff(mod.BuffType("StickyBomb")))
+                {
+                    Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), mod.ProjectileType("StickyBombExplosion"), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
+                    target.DelBuff(mod.BuffType("StickyBomb"));
+                }
+                target.AddBuff(mod.BuffType("StickyBomb"), 120);
+            }
         }
 
         public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
@@ -176,10 +191,16 @@ namespace RiskOfSlimeRain
             if (warbanners > 0 && target.life <= 0) AddBanner();
             if (crowbars > 0 && target.life < target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
             if (tasers > 0 && Main.rand.Next(100) < 7) target.AddBuff(mod.BuffType("TaserImmobility"), 60 + 30 * tasers);
-
-            if (gasCanisters > 0 && target.life <= 0)
+            if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), mod.ProjectileType("MortarRocket"), (int)(player.HeldItem.damage * 1.7f * mortarTubes), 0);
+            if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), mod.ProjectileType("GasBallFire"), 0, 0, Main.myPlayer, player.HeldItem.damage, gasCanisters);
+            if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(mod.BuffType("KnifeBleed"), 120);
+            if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), mod.ProjectileType("StickyBomb"), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
             {
-                Projectile.NewProjectile(target.position, new Vector2(0, 1), mod.ProjectileType("GasBallFire"), 0, 0, Main.myPlayer, player.HeldItem.damage, gasCanisters);
+                if (target.HasBuff(mod.BuffType("StickyBomb")))
+                {
+                    Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), mod.ProjectileType("StickyBombExplosion"), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
+                }
+                target.AddBuff(mod.BuffType("StickyBomb"), 120);
             }
         }
 
