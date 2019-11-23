@@ -22,9 +22,9 @@ namespace RiskOfSlimeRain.Tiles
 			Main.tileNoAttach[Type] = true;
 			Main.tileValue[Type] = 500;
 			TileID.Sets.HasOutlines[Type] = true;
-		    TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
-            TileObjectData.newTile.Width = 4;
-            TileObjectData.newTile.Height = 2;
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+			TileObjectData.newTile.Width = 4;
+			TileObjectData.newTile.Height = 2;
 			TileObjectData.newTile.Origin = new Point16(0, 1);
 			TileObjectData.newTile.CoordinateHeights = new int[] { 32, 18 };
 			TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
@@ -56,7 +56,7 @@ namespace RiskOfSlimeRain.Tiles
 			Tile tile = Main.tile[i, j];
 			if (tile.frameX % 72 != 0)
 			{
-                left -= tile.frameX / 18 % 4;
+				left -= tile.frameX / 18 % 4;
 			}
 			if (tile.frameY != 0)
 			{
@@ -66,7 +66,7 @@ namespace RiskOfSlimeRain.Tiles
 			if (Main.chest[chest].name == "")
 			{
 				return name;
-            }
+			}
 			else
 			{
 				return name + ": " + Main.chest[chest].name;
@@ -93,8 +93,8 @@ namespace RiskOfSlimeRain.Tiles
 			int top = j;
 			if (tile.frameX % 72 != 0)
 			{
-                left -= tile.frameX / 18 % 4;
-            }
+				left -= tile.frameX / 18 % 4;
+			}
 			if (tile.frameY != 0)
 			{
 				top--;
@@ -149,8 +149,8 @@ namespace RiskOfSlimeRain.Tiles
 						Main.recBigList = false;
 						player.chestX = left;
 						player.chestY = top;
-                        if (player.chest < 0) Main.PlaySound(SoundID.NPCHit54);
-                        else Main.PlaySound(SoundID.MenuTick);
+						if (player.chest < 0) Main.PlaySound(SoundID.NPCHit54);
+						else Main.PlaySound(SoundID.MenuTick);
 					}
 					Recipe.FindRecipes();
 				}
@@ -165,8 +165,8 @@ namespace RiskOfSlimeRain.Tiles
 			int top = j;
 			if (tile.frameX % 72 != 0)
 			{
-                left -= tile.frameX / 18 % 4;
-            }
+				left -= tile.frameX / 18 % 4;
+			}
 			if (tile.frameY != 0)
 			{
 				top--;

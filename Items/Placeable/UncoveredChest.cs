@@ -28,8 +28,8 @@ namespace RiskOfSlimeRain.Items.Placeable
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.LunarBar, 50);
-            recipe.AddIngredient(mod.ItemType("SalvagedChest"), 2);
+			recipe.AddIngredient(ItemID.LunarBar, 50);
+			recipe.AddIngredient(mod.ItemType("SalvagedChest"), 2);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

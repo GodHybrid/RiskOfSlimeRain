@@ -64,7 +64,7 @@ namespace RiskOfSlimeRain.Tiles
 			if (Main.chest[chest].name == "")
 			{
 				return name;
-            }
+			}
 			else
 			{
 				return name + ": " + Main.chest[chest].name;

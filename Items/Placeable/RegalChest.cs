@@ -28,10 +28,10 @@ namespace RiskOfSlimeRain.Items.Placeable
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-            recipe.AddIngredient(ItemID.LunarBar, 66);
-            recipe.AddRecipeGroup("RoR:GoldPlatBar", 99);
-            recipe.AddIngredient(ItemID.SpectreBar, 66);
-            recipe.AddIngredient(mod.ItemType("UncoveredChest"), 2);
+			recipe.AddIngredient(ItemID.LunarBar, 66);
+			recipe.AddRecipeGroup("RoR:GoldPlatBar", 99);
+			recipe.AddIngredient(ItemID.SpectreBar, 66);
+			recipe.AddIngredient(mod.ItemType("UncoveredChest"), 2);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

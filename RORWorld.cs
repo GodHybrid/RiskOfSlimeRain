@@ -19,47 +19,47 @@ namespace RiskOfSlimeRain
 		private const int saveVersion = 0;
 		public static bool downedAbomination = false;
 		public static bool downedPuritySpirit = false;
+        
+		//public struct Warbanner
+		//{
+		//	public byte id;
+		//	public Vector2 pos;
+		//	public float radius;
 
-        //public struct Warbanner
-        //{
-        //    public byte id;
-        //    public Vector2 pos;
-        //    public float radius;
+		//	public Warbanner(byte id, Vector2 pos, float radius)
+		//	{
+		//		this.id = id;
+		//		this.pos = pos;
+		//		this.radius = radius;
+		//	}
+		//}
 
-        //    public Warbanner(byte id, Vector2 pos, float radius)
-        //    {
-        //        this.id = id;
-        //        this.pos = pos;
-        //        this.radius = radius;
-        //    }
-        //}
+		public static List<float> radius = new List<float>();
+		public static List<Vector2> pos = new List<Vector2>();
 
-        public static List<float> radius = new List<float>();
-        public static List<Vector2> pos = new List<Vector2>();
+		//static public List<Warbanner> WarbannersList = new List<Warbanner>();
 
-        //static public List<Warbanner> WarbannersList = new List<Warbanner>();
-
-        public override void Initialize()
+		public override void Initialize()
 		{
 		}
 
-        public override TagCompound Save()
-        {
-            return new TagCompound {
-                { "WarbannersListRadius", radius},
-                { "WarbannersListPosition", pos}
-            };
-        }
-
-        public override void Load(TagCompound tag)
+		public override TagCompound Save()
 		{
-            //WarbannersList = (List<Warbanner>)tag.GetList<Warbanner>("WarbannerList");
-            radius = (List<float>)tag.GetList<float>("WarbannersListRadius");
-            pos = (List<Vector2>)tag.GetList<Vector2>("WarbannersListPosition");
-        }
+			return new TagCompound {
+				{ "WarbannersListRadius", radius},
+				{ "WarbannersListPosition", pos}
+			};
+		}
 
-        #region Boring commented stuff
-        public override void LoadLegacy(BinaryReader reader)
+		public override void Load(TagCompound tag)
+		{
+			//WarbannersList = (List<Warbanner>)tag.GetList<Warbanner>("WarbannerList");
+			radius = (List<float>)tag.GetList<float>("WarbannersListRadius");
+			pos = (List<Vector2>)tag.GetList<Vector2>("WarbannersListPosition");
+		}
+
+		#region Boring commented stuff
+		public override void LoadLegacy(BinaryReader reader)
 		{
 			//int loadVersion = reader.ReadInt32();
 			//if (loadVersion == 0)
@@ -556,9 +556,9 @@ namespace RiskOfSlimeRain
 			//}
 			//Main.spriteBatch.End();
 		}
-        #endregion
-        // A helper method that draws a bordered rectangle. 
-        public static void DrawBorderedRect(SpriteBatch spriteBatch, Color color, Color borderColor, Vector2 position, Vector2 size, int borderWidth)
+		#endregion
+		// A helper method that draws a bordered rectangle. 
+		public static void DrawBorderedRect(SpriteBatch spriteBatch, Color color, Color borderColor, Vector2 position, Vector2 size, int borderWidth)
 		{
 			spriteBatch.Draw(Main.magicPixel, new Rectangle((int)position.X, (int)position.Y, (int)size.X, (int)size.Y), color);
 			spriteBatch.Draw(Main.magicPixel, new Rectangle((int)position.X - borderWidth, (int)position.Y - borderWidth, (int)size.X + borderWidth * 2, borderWidth), borderColor);
