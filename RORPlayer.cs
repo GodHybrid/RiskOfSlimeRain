@@ -1,14 +1,14 @@
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.GameInput;
 
 namespace RiskOfSlimeRain
 {
@@ -62,6 +62,7 @@ namespace RiskOfSlimeRain
 		public int mortarTubes = 0;
 		public int rustyKnives = 0;
 		public int stickyBombs = 0;
+		public int bundles = 0;
 		#endregion
 
 		public override void Initialize()
@@ -100,7 +101,7 @@ namespace RiskOfSlimeRain
 				player.immuneTime = 40;
 				return false;
 			}
-			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && stompers > 0 && damageSource.SourceNPCIndex > -1 && !player.immune) 
+			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && stompers > 0 && damageSource.SourceNPCIndex > -1 && !player.immune)
 			{
 				Main.npc[damageSource.SourceNPCIndex].StrikeNPC((int)(player.GetWeaponDamage(player.HeldItem) * ((5.07f + (0.3f * (stompers - 1))) * player.velocity.Y / 16)), 2f, 0, false);
 				player.immune = true;
@@ -119,6 +120,7 @@ namespace RiskOfSlimeRain
 		{
 			float dudChange = 1f;
 			if ((item.damage > 0 || item.axe > 0 || item.hammer > 0) && soldiersSyringes > 0) dudChange += soldiersSyringes * 0.1f; //15% is made into 10%, but it still works as 15%
+
 			//if (affectedWarbanner && player.HasBuff(mod.BuffType("WarCry"))) dudChange *= 1.3f;
 			return dudChange;
 		}
@@ -127,7 +129,7 @@ namespace RiskOfSlimeRain
 		{
 			medkitTimer = 0;
 			sproutingEggTimer = 420;
-			if (fireShields > 0 && damage >= player.statLifeMax2 / 10) 
+			if (fireShields > 0 && damage >= player.statLifeMax2 / 10)
 			{
 				Projectile.NewProjectile(player.position, new Vector2(0, 0), mod.ProjectileType("FireShieldExplosion"), (200 + 200 * fireShields) * player.HeldItem.damage, 20 + fireShields, Main.myPlayer);
 			}
@@ -142,12 +144,12 @@ namespace RiskOfSlimeRain
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			sproutingEggTimer = 420;
-			if (meatNuggets > 0 && Main.rand.Next(100) < 8) 
+			if (meatNuggets > 0 && Main.rand.Next(100) < 8)
 			{
 				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), mod.ProjectileType("MeatNugget"), 0, 0);
 				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), mod.ProjectileType("MeatNugget"), 0, 0);
 			}
-			if (monsterTeeth > 0 && target.life <= 0) 
+			if (monsterTeeth > 0 && target.life <= 0)
 			{
 				player.HealEffect(monsterTeeth * 5 + 5);
 				player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
@@ -174,7 +176,7 @@ namespace RiskOfSlimeRain
 			if (!crit && Main.rand.Next(100) < (lensMakersGlasses * 7)) crit = true;
 			if (crowbars > 0 && target.life >= target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
 		}
-		
+
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			sproutingEggTimer = 420;
@@ -183,7 +185,7 @@ namespace RiskOfSlimeRain
 				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), mod.ProjectileType("MeatNugget"), 0, 0);
 				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), mod.ProjectileType("MeatNugget"), 0, 0);
 			}
-			if (monsterTeeth > 0 && target.life <= 0) 
+			if (monsterTeeth > 0 && target.life <= 0)
 			{
 				player.HealEffect(monsterTeeth * 5 + 5);
 				player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
@@ -389,7 +391,7 @@ namespace RiskOfSlimeRain
 		{
 			if (sproutingEggTimer >= 0) sproutingEggTimer--;
 			#region Medkit
-			if (medkitTimer >= 0 && medkits > 0) 
+			if (medkitTimer >= 0 && medkits > 0)
 			{
 				medkitTimer++;
 				if (medkitTimer >= 66)
@@ -403,7 +405,7 @@ namespace RiskOfSlimeRain
 			#region Piggy Bank
 			if (piggyBankTimer == 0)
 			{
-				piggyBankTimer = 180/savings;
+				piggyBankTimer = 180 / savings;
 				player.QuickSpawnItem(ItemID.CopperCoin, 1);
 			}
 			piggyBankTimer--;
@@ -480,7 +482,7 @@ namespace RiskOfSlimeRain
 					NPC enemy = Main.npc[m];
 					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
 					{
-						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires-1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
+						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
 						break;
 					}
 				}
@@ -488,7 +490,7 @@ namespace RiskOfSlimeRain
 			if (wireTimer > 0) wireTimer--;
 			else wireTimer = 59;
 		}
-		
+
 		public static bool PlayerSolidTileCollision(Player p)
 		{
 			try
@@ -661,7 +663,7 @@ namespace RiskOfSlimeRain
 					//Main.playerDrawData.Add(data);
 				}
 			});
-		
+
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
 			MiscEffectsBack.visible = true;
