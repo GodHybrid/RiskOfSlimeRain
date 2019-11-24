@@ -9,7 +9,6 @@ namespace RiskOfSlimeRain
 	{
 		public RiskOfSlimeRain()
 		{
-
 		}
 
 		public override void AddRecipeGroups()
