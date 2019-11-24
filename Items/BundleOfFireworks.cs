@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -12,7 +11,7 @@ namespace RiskOfSlimeRain.Items
 
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("7% chance to snare enemies for 1.5 seconds");
+			Tooltip.SetDefault("Fire 8 fireworks that deal 300% damage");
 		}
 
 		public override void SetDefaults()
@@ -23,11 +22,11 @@ namespace RiskOfSlimeRain.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			TooltipLine line = new TooltipLine(mod, "Taser", "You say you can fix 'em?\nThese tasers are very very faulty");
+			TooltipLine line = new TooltipLine(mod, "Bundle", "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart.");
 			tooltips.Add(line);
 			foreach (TooltipLine line2 in tooltips)
 			{
-				if (line2.Name == "Taser")
+				if (line2.Name == "Bundle")
 				{
 					line.overrideColor = Color.FloralWhite;
 				}
@@ -53,7 +52,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
 			recipe.AddIngredient(ItemID.CoralstoneBlock, 55);
 			recipe.AddIngredient(ItemID.SharkFin, 250);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}
