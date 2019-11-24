@@ -9,8 +9,7 @@ namespace RiskOfSlimeRain
 	{
 		public RiskOfSlimeRain()
 		{
-
-			//test lol
+			//git is gay
 		}
 
 		public override void AddRecipeGroups()
