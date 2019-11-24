@@ -9,6 +9,8 @@ namespace RiskOfSlimeRain
 	{
 		public RiskOfSlimeRain()
 		{
+
+			//test lol
 		}
 
 		public override void AddRecipeGroups()
