@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	class WarbannerBanner : ModProjectile
+	public class WarbannerBanner : ModProjectile
 	{
 		//float rad = RORWorld.WarbannersList[0].radius;
 

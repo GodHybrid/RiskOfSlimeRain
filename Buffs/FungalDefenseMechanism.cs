@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class FungalDefenseMechanism : ModBuff
+	public class FungalDefenseMechanism : ModBuff
 	{
 		public override void SetDefaults()
 		{

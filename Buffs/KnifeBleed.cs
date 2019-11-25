@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class KnifeBleed : ModBuff
+	public class KnifeBleed : ModBuff
 	{
 		public override void SetDefaults()
 		{

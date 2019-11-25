@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class SpikestripSlowdown : ModBuff
+	public class SpikestripSlowdown : ModBuff
 	{
 		public override void SetDefaults()
 		{

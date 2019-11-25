@@ -1,45 +1,25 @@
-﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
-using Terraria;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace RiskOfSlimeRain.Items
+namespace RiskOfSlimeRain.Items.Consumable
 {
-	class BitterRoot : ModItem
+	public class BitterRoot : RORConsumableItem
 	{
-		public override void SetStaticDefaults()
+		public override void Initialize()
 		{
-			Tooltip.SetDefault("Permanently increases maximum life roughly by 8%");
+			description = "Permanently increases maximum life by roughly 8%";
+			flavorText = "Biggest. Ginseng. Root. Ever.";
 		}
 
-		public override void SetDefaults()
+		public override bool CanUse(RORPlayer mPlayer)
 		{
-			item.CloneDefaults(ItemID.LifeFruit);
-			item.rare = ItemRarityID.White;
+			return mPlayer.bitterRootIncrease < mPlayer.player.statLifeMax * 3;
 		}
 
-		public override void ModifyTooltips(List<TooltipLine> tooltips)
+		public override void ApplyEffect(RORPlayer mPlayer)
 		{
-			TooltipLine line = new TooltipLine(mod, "Root", "Biggest. Ginseng. Root. Ever.");
-			tooltips.Add(line);
-			foreach (TooltipLine line2 in tooltips)
-			{
-				if (line2.Name == "Root")
-				{
-					line.overrideColor = Color.FloralWhite;
-				}
-			}
-		}
-
-		public override bool CanUseItem(Player player)
-		{
-			return player.GetModPlayer<RORPlayer>().bitterRootIncrease < player.statLifeMax * 3;
-		}
-
-		public override bool UseItem(Player player)
-		{
-			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			Player player = mPlayer.player;
 			if (mPlayer.bitterRootIncrease + (int)((player.statLifeMax + mPlayer.bitterRootIncrease) * 0.08f) < player.statLifeMax * 3)
 			{
 				int increase = (int)((player.statLifeMax + mPlayer.bitterRootIncrease) * 0.08f);
@@ -63,7 +43,13 @@ namespace RiskOfSlimeRain.Items
 					player.HealEffect(increase, true);
 				}
 			}
-			return true;
+		}
+
+		public override void ResetEffect(RORPlayer mPlayer)
+		{
+			mPlayer.player.statLifeMax2 -= mPlayer.bitterRootIncrease;
+			mPlayer.bitterRoots = 0;
+			mPlayer.bitterRootIncrease = 0;
 		}
 
 		public override void AddRecipes()

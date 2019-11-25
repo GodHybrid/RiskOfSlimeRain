@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	class GasBallFire : ModProjectile
+	public class GasBallFire : ModProjectile
 	{
 		byte timer = 0;
 

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class TaserImmobility : ModBuff
+	public class TaserImmobility : ModBuff
 	{
 		public override void SetDefaults()
 		{

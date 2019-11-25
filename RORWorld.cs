@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -10,7 +9,6 @@ namespace RiskOfSlimeRain
 {
 	public class RORWorld : ModWorld
 	{
-		private const int saveVersion = 0;
 		public static bool downedAbomination = false;
 		public static bool downedPuritySpirit = false;
 

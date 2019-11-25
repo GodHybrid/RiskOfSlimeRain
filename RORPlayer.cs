@@ -333,7 +333,7 @@ namespace RiskOfSlimeRain
 					player.AddBuff(ModContent.BuffType<FungalDefenseMechanism>(), 120); //The buff is only applied after 2 seconds has passed
 					foreach (NPC n in Main.npc)
 					{
-						if (n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
+						if (n.active && n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
 						{
 							n.HealEffect((int)(totalFungusHeal), true);
 							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
@@ -343,7 +343,7 @@ namespace RiskOfSlimeRain
 					{
 						foreach (Player n in Main.player)
 						{
-							if (Vector2.Distance(player.position, n.position) < fungalRadius)
+							if (n.active && Vector2.Distance(player.position, n.position) < fungalRadius)
 							{
 								player.HealEffect((int)(totalFungusHeal), true);
 								player.statLife += (int)(totalFungusHeal);
@@ -365,7 +365,6 @@ namespace RiskOfSlimeRain
 					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
 					{
 						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
-						break;
 					}
 				}
 			}

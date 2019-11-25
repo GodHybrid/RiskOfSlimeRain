@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	class SpikestripStrip : ModProjectile
+	public class SpikestripStrip : ModProjectile
 	{
 		public override void SetDefaults()
 		{

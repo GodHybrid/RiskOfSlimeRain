@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class StickyBombExplosion : ModProjectile
+	public class StickyBombExplosion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
