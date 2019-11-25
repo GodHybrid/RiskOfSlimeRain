@@ -19,6 +19,8 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public override void ResetEffect(RORPlayer mPlayer)
 		{
 			mPlayer.warbanners = 0;
+			RORWorld.pos.Clear();
+			RORWorld.radius.Clear();
 		}
 
 		public override void AddRecipes()
