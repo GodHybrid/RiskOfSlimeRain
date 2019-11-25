@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class StickyBombBuff : ModBuff
+	public class StickyBombBuff : ModBuff
 	{
 		public override void SetDefaults()
 		{
