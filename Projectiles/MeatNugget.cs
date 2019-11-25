@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class MeatNugget : ModProjectile
+	public class MeatNugget : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -26,8 +23,8 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.frameCounter = 2;
 			projectile.frame = 0;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 1800;
-			
+			projectile.timeLeft = 1800;
+
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -38,9 +35,9 @@ namespace RiskOfSlimeRain.Projectiles
 		}
 
 		public override void AI()
-        {
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+		{
+			projectile.rotation = projectile.velocity.ToRotation();
+			projectile.velocity.Y = projectile.velocity.Y + 0.2f;
 			if (projectile.velocity.Y > 13f)
 			{
 				projectile.velocity.Y = 13f;
@@ -53,6 +50,7 @@ namespace RiskOfSlimeRain.Projectiles
 					player.HealEffect(heals);
 					player.statLife += Math.Min(heals, player.statLifeMax2 - player.statLife);
 					projectile.Kill();
+					break;
 				}
 			}
 			//if (projectile.timeLeft < 60) this.projectile.alpha += (int)255 / 60;
@@ -61,7 +59,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			
+
 		}
 	}
 }

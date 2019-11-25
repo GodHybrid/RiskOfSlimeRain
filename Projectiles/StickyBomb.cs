@@ -1,15 +1,12 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class StickyBomb : ModProjectile
+	public class StickyBomb : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -24,7 +21,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.friendly = true;
 			projectile.penetrate = -1;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 120;
+			projectile.timeLeft = 120;
 		}
 
 		public float targetWhoAmI
@@ -285,7 +282,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		//public override void Kill(int timeLeft)
 		//{
-		//		  if (timeLeft == 0) Projectile.NewProjectile(projectile.position, new Vector2(0, 0), mod.ProjectileType("StickyBombExplosion"), projectile.damage, projectile.knockBack);
+		//		  if (timeLeft == 0) Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), projectile.damage, projectile.knockBack);
 		//}
 	}
 }

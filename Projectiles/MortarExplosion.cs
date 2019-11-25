@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class MortarExplosion : ModProjectile
+	public class MortarExplosion : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -29,7 +26,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.alpha = 255;
 			projectile.timeLeft = 1;
 		}
-		
+
 		public override void AI()
 		{
 			foreach (NPC enemy in Main.npc)

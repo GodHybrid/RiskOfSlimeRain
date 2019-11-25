@@ -1,25 +1,17 @@
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.World.Generation;
 using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
-using Terraria.ModLoader.IO;
-using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain
 {
 	public class RORWorld : ModWorld
 	{
-		private const int saveVersion = 0;
 		public static bool downedAbomination = false;
 		public static bool downedPuritySpirit = false;
-        
+
 		//public struct Warbanner
 		//{
 		//	public byte id;
@@ -59,20 +51,6 @@ namespace RiskOfSlimeRain
 		}
 
 		#region Boring commented stuff
-		public override void LoadLegacy(BinaryReader reader)
-		{
-			//int loadVersion = reader.ReadInt32();
-			//if (loadVersion == 0)
-			//{
-			//	BitsByte flags = reader.ReadByte();
-			//	downedAbomination = flags[0];
-			//	downedPuritySpirit = flags[1];
-			//}
-			//else
-			//{
-			//	ErrorLogger.Log("ExampleMod: Unknown loadVersion: " + loadVersion);
-			//}
-		}
 
 		//public override void NetSend(BinaryWriter writer)
 		//{
@@ -176,7 +154,7 @@ namespace RiskOfSlimeRain
 		//		int y = WorldGen.genRand.Next((int)WorldGen.worldSurfaceLow, Main.maxTilesY); // WorldGen.worldSurfaceLow is actually the highest surface tile. In practice you might want to use WorldGen.rockLayer or other WorldGen values.
 
 		//		// Then, we call WorldGen.TileRunner with random "strength" and random "steps", as well as the Tile we wish to place. Feel free to experiment with strength and step to see the shape they generate.
-		//		WorldGen.TileRunner(x, y, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), mod.TileType("ExampleBlock"), false, 0f, 0f, false, true);
+		//		WorldGen.TileRunner(x, y, (double)WorldGen.genRand.Next(3, 6), WorldGen.genRand.Next(2, 6), ModContent.TileType<ExampleBlock>(), false, 0f, 0f, false, true);
 
 		//		// Alternately, we could check the tile already present in the coordinate we are interested. Wrapping WorldGen.TileRunner in the following condition would make the ore only generate in Snow.
 		//		// Tile tile = Framing.GetTileSafely(x, y);
@@ -412,14 +390,14 @@ namespace RiskOfSlimeRain
 			////}
 
 			//// Here we spawn Example Person just like the Guide.
-			//int num = NPC.NewNPC((Main.spawnTileX + 5) * 16, Main.spawnTileY * 16, mod.NPCType("Example Person"), 0, 0f, 0f, 0f, 0f, 255);
+			//int num = NPC.NewNPC((Main.spawnTileX + 5) * 16, Main.spawnTileY * 16, ModContent.NPCType<Example Person>(), 0, 0f, 0f, 0f, 0f, 255);
 			//Main.npc[num].homeTileX = Main.spawnTileX + 5;
 			//Main.npc[num].homeTileY = Main.spawnTileY;
 			//Main.npc[num].direction = 1;
 			//Main.npc[num].homeless = true;
 
 			//// Place some items in Ice Chests
-			//int[] itemsToPlaceInIceChests = new int[] { mod.ItemType("CarKey"), mod.ItemType("ExampleLightPet"), ItemID.PinkJellyfishJar };
+			//int[] itemsToPlaceInIceChests = new int[] { ModContent.ItemType<CarKey>(), ModContent.ItemType<ExampleLightPet>(), ItemID.PinkJellyfishJar };
 			//int itemsToPlaceInIceChestsChoice = 0;
 			//for (int chestIndex = 0; chestIndex < 1000; chestIndex++)
 			//{
@@ -450,7 +428,7 @@ namespace RiskOfSlimeRain
 
 		public override void TileCountsAvailable(int[] tileCounts)
 		{
-			//exampleTiles = tileCounts[mod.TileType("ExampleBlock")];
+			//exampleTiles = tileCounts[ModContent.TileType<ExampleBlock>()];
 		}
 
 		public override void PostUpdate()

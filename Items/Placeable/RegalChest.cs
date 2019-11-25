@@ -1,3 +1,4 @@
+using RiskOfSlimeRain.Tiles;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,7 +23,7 @@ namespace RiskOfSlimeRain.Items.Placeable
 			item.useStyle = 1;
 			item.consumable = true;
 			item.value = 350000066;
-			item.createTile = mod.TileType("RegalChest");
+			item.createTile = ModContent.TileType<RegalChestTile>();
 		}
 
 		public override void AddRecipes()
@@ -31,7 +32,7 @@ namespace RiskOfSlimeRain.Items.Placeable
 			recipe.AddIngredient(ItemID.LunarBar, 66);
 			recipe.AddRecipeGroup("RoR:GoldPlatBar", 99);
 			recipe.AddIngredient(ItemID.SpectreBar, 66);
-			recipe.AddIngredient(mod.ItemType("UncoveredChest"), 2);
+			recipe.AddIngredient(ModContent.ItemType<UncoveredChest>(), 2);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

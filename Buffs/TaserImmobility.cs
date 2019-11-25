@@ -1,10 +1,10 @@
-﻿using Terraria;
+﻿using RiskOfSlimeRain.NPCs;
+using Terraria;
 using Terraria.ModLoader;
-using RiskOfSlimeRain.NPCs;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class TaserImmobility : ModBuff
+	public class TaserImmobility : ModBuff
 	{
 		public override void SetDefaults()
 		{

@@ -1,3 +1,4 @@
+using RiskOfSlimeRain.Tiles;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -22,14 +23,14 @@ namespace RiskOfSlimeRain.Items.Placeable
 			item.useStyle = 1;
 			item.consumable = true;
 			item.value = 50000000;
-			item.createTile = mod.TileType("UncoveredChest");
+			item.createTile = ModContent.TileType<UncoveredChestTile>();
 		}
 
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.LunarBar, 50);
-			recipe.AddIngredient(mod.ItemType("SalvagedChest"), 2);
+			recipe.AddIngredient(ModContent.ItemType<SalvagedChest>(), 2);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

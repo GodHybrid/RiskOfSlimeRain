@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	class GasBallFire : ModProjectile
+	public class GasBallFire : ModProjectile
 	{
 		byte timer = 0;
 
@@ -26,7 +23,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.frameCounter = 5;
 			projectile.frame = 0;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 300;
+			projectile.timeLeft = 300;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -47,7 +44,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.velocity.Y = 6f;
 			foreach (NPC enemy in Main.npc)
 			{
-				if (enemy.Hitbox.Intersects(projectile.Hitbox))
+				if (enemy.active && enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					if (timer == 60)
 					{

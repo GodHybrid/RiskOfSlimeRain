@@ -1,4 +1,4 @@
-using Terraria.ID;
+using RiskOfSlimeRain.Tiles;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Placeable
@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Items.Placeable
 			item.useStyle = 1;
 			item.consumable = true;
 			item.value = 500000;
-			item.createTile = mod.TileType("SalvagedChest");
+			item.createTile = ModContent.TileType<SalvagedChestTile>();
 		}
 
 		public override void AddRecipes()

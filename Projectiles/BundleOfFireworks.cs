@@ -3,7 +3,7 @@
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class BundleOfFireworks : ModProjectile
+	public class BundleOfFireworks : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Projectiles
 				//	if ((enemy.CanBeChasedBy() || enemy.netID == 488) && enemy.Hitbox.Intersects(projectile.Hitbox))
 				//	{
 				//		//enemy.StrikeNPC(projectile.damage, 5, 0, false);
-				//		Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), mod.ProjectileType("MortarExplosion"), projectile.damage, 5, Main.myPlayer);
+				//		Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, 5, Main.myPlayer);
 				//		projectile.Kill();
 				//	}
 				//}

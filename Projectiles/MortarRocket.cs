@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	// to investigate: Projectile.Damage, (8843)
-	class MortarRocket : ModProjectile
+	public class MortarRocket : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
@@ -24,12 +20,12 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.friendly = true;
 			projectile.penetrate = -1;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 1800;
+			projectile.timeLeft = 1800;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), mod.ProjectileType("MortarExplosion"), projectile.damage, 5, Main.myPlayer);
+			Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, 5, Main.myPlayer);
 			projectile.Kill();
 			return false;
 		}
@@ -47,16 +43,16 @@ namespace RiskOfSlimeRain.Projectiles
 				if ((enemy.CanBeChasedBy() || enemy.netID == 488) && enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					//enemy.StrikeNPC(projectile.damage, 5, 0, false);
-					Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), mod.ProjectileType("MortarExplosion"), projectile.damage, 5, Main.myPlayer);
+					Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, 5, Main.myPlayer);
 					projectile.Kill();
 				}
 			}
 			return;
 		}
-		
+
 		public override void Kill(int timeLeft)
 		{
-			
+
 		}
 	}
 }

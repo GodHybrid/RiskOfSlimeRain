@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class FungalDefenseMechanism : ModBuff
+	public class FungalDefenseMechanism : ModBuff
 	{
 		public override void SetDefaults()
 		{

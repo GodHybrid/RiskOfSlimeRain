@@ -4,8 +4,10 @@
     <StartAction>Program</StartAction>
     <StartProgram>D:\SteamLibrary\steamapps\common\Terraria\Terraria.exe</StartProgram>
     <StartWorkingDirectory>D:\SteamLibrary\steamapps\common\Terraria\</StartWorkingDirectory>
+    <DebuggerFlavor>ProjectDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
+    <ActiveDebugProfile>TerrariaFast</ActiveDebugProfile>
   </PropertyGroup>
 </Project>
