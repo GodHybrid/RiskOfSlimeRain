@@ -39,10 +39,11 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool UseItem(Player player)
 		{
-			player.GetModPlayer<RORPlayer>().bustlingFungi++;
-			player.GetModPlayer<RORPlayer>().bustlingFungusHeals++;
-			player.GetModPlayer<RORPlayer>().fungalRadius += 16;
-			player.GetModPlayer<RORPlayer>().fungalDefense = true;
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			mPlayer.bustlingFungi++;
+			mPlayer.bustlingFungusHeals++;
+			mPlayer.fungalRadius += 16;
+			mPlayer.fungalDefense = true;
 			return true;
 		}
 

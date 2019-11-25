@@ -234,37 +234,13 @@ namespace RiskOfSlimeRain
 			}
 		}
 
-		// In MP, other clients need accurate information about your player or else bugs happen.
-		// clientClone, SyncPlayer, and SendClientChanges, ensure that information is correct.
-		// We only need to do this for data that is changed by code not executed by all clients, 
-		// or data that needs to be shared while joining a world.
-		// For example, examplePet doesn't need to be synced because all clients know that the player is wearing the ExamplePet item in an equipment slot. 
-		// The examplePet bool is set for that player on every clients computer independently (via the Buff.Update), keeping that data in sync.
-		// ExampleLifeFruits, however might be out of sync. For example, when joining a server, we need to share the exampleLifeFruits variable with all other clients.
-		public override void clientClone(ModPlayer clientClone)
-		{
-			RORPlayer clone = clientClone as RORPlayer;
-			// Here we would make a backup clone of values that are only correct on the local players Player instance.
-			// Some examples would be RPG stats from a GUI, Hotkey states, and Extra Item Slots
-			// clone.someLocalVariable = someLocalVariable;
-		}
-
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			ModPacket packet = mod.GetPacket();
-			packet.Write((byte)player.whoAmI);
-			packet.Write(bitterRootIncrease);
-			packet.Send(toWho, fromWho);
-		}
-
-		public override void SendClientChanges(ModPlayer clientPlayer)
-		{
-			// Here we would sync something like an RPG stat whenever the player changes it.
-			// So far, ExampleMod has nothing that needs this.
-			// if (clientPlayer.someLocalVariable != someLocalVariable)
-			// {
-			//	Send a Mod Packet with the changes.
-			// }
+			//TODO no HandlePacket 
+			//ModPacket packet = mod.GetPacket();
+			//packet.Write((byte)player.whoAmI);
+			//packet.Write(bitterRootIncrease);
+			//packet.Send(toWho, fromWho);
 		}
 
 		public override void UpdateDead()
@@ -308,6 +284,153 @@ namespace RiskOfSlimeRain
 			meatNuggets = tag.GetInt("meatNuggets");
 			monsterTeeth = tag.GetInt("monsterTeeth");
 			soldiersSyringes = tag.GetInt("soldiersSyringes");
+		}
+
+		public override void ProcessTriggers(TriggersSet triggersSet)
+		{
+
+		}
+
+		public override void PreUpdateBuffs()
+		{
+			if (sproutingEggTimer >= 0) sproutingEggTimer--;
+			#region Medkit
+			if (medkitTimer >= 0 && medkits > 0)
+			{
+				medkitTimer++;
+				if (medkitTimer >= 66)
+				{
+					player.HealEffect(medkits * 10);
+					player.statLife += Math.Min(medkits * 10, MissingHP());
+					medkitTimer = -1;
+				}
+			}
+			#endregion
+			#region Piggy Bank
+			if (piggyBankTimer == 0)
+			{
+				piggyBankTimer = 180 / savings;
+				player.QuickSpawnItem(ItemID.CopperCoin, 1);
+			}
+			piggyBankTimer--;
+			#endregion
+		}
+
+		public override void PostUpdateBuffs()
+		{
+			if (player.HasBuff(BuffID.PotionSickness)) snakeEyesDiceIncrease = 0;
+		}
+
+		public override void PostUpdateEquips()
+		{
+			int totalFungusHeal = (int)(player.statLifeMax2 * 0.045f * bustlingFungusHeals);
+			if (player.statLifeMax2 == player.statLife) snakeEyesDiceReady = true;
+			if (fungalDefense && Equals(player.velocity, Vector2.Zero) && player.itemAnimation <= 0/*PlayerSolidTileCollision(player)*/)
+			{
+				noMoveTimer++;
+				if (Main.myPlayer == player.whoAmI && noMoveTimer % 120 == 0 && noMoveTimer > 120)
+				{
+					player.AddBuff(ModContent.BuffType<FungalDefenseMechanism>(), 120); //The buff is only applied after 2 seconds has passed
+					foreach (NPC n in Main.npc)
+					{
+						if (n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
+						{
+							n.HealEffect((int)(totalFungusHeal), true);
+							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
+						}
+					}
+					if (Main.player.Length > 1)
+					{
+						foreach (Player n in Main.player)
+						{
+							if (Vector2.Distance(player.position, n.position) < fungalRadius)
+							{
+								player.HealEffect((int)(totalFungusHeal), true);
+								player.statLife += (int)(totalFungusHeal);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				noMoveTimer = 0;
+				player.ClearBuff(ModContent.BuffType<FungalDefenseMechanism>());
+			}
+			if (barbedWires > 0 && wireTimer % 60 == 0)
+			{
+				for (int m = 0; m < 200; m++)
+				{
+					NPC enemy = Main.npc[m];
+					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
+					{
+						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
+						break;
+					}
+				}
+			}
+			if (wireTimer > 0) wireTimer--;
+			else wireTimer = 59;
+		}
+
+		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+		{
+			if (drawInfo.shadow != 0f)
+			{
+				return;
+			}
+			Player drawPlayer = drawInfo.drawPlayer;
+			Mod mod = ModLoader.GetMod("RiskOfSlimeRain");
+			RORPlayer modPlayer = drawPlayer.GetModPlayer<RORPlayer>();
+
+			if (modPlayer.barbedWires > 0)
+			{
+				float scale = 3f;
+				Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Projectiles/Textures/BarbedWireTexturePic");
+				int drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
+				int drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
+				DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.6f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+				Main.playerDrawData.Add(data);
+				//scale = modPlayer.wireRadius * modPlayer.barbedWires;
+				//drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
+				//drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
+				//data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.2f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+				//Main.playerDrawData.Add(data);
+			}
+		});
+
+		public override void ModifyDrawLayers(List<PlayerLayer> layers)
+		{
+			MiscEffectsBack.visible = true;
+			layers.Insert(0, MiscEffectsBack);
+			//MiscEffects.visible = true;
+			//layers.Add(MiscEffects);
+		}
+
+		#region Boring commented stuff
+		// In MP, other clients need accurate information about your player or else bugs happen.
+		// clientClone, SyncPlayer, and SendClientChanges, ensure that information is correct.
+		// We only need to do this for data that is changed by code not executed by all clients, 
+		// or data that needs to be shared while joining a world.
+		// For example, examplePet doesn't need to be synced because all clients know that the player is wearing the ExamplePet item in an equipment slot. 
+		// The examplePet bool is set for that player on every clients computer independently (via the Buff.Update), keeping that data in sync.
+		// ExampleLifeFruits, however might be out of sync. For example, when joining a server, we need to share the exampleLifeFruits variable with all other clients.
+		public override void clientClone(ModPlayer clientClone)
+		{
+			RORPlayer clone = clientClone as RORPlayer;
+			// Here we would make a backup clone of values that are only correct on the local players Player instance.
+			// Some examples would be RPG stats from a GUI, Hotkey states, and Extra Item Slots
+			// clone.someLocalVariable = someLocalVariable;
+		}
+
+		public override void SendClientChanges(ModPlayer clientPlayer)
+		{
+			// Here we would sync something like an RPG stat whenever the player changes it.
+			// So far, ExampleMod has nothing that needs this.
+			// if (clientPlayer.someLocalVariable != someLocalVariable)
+			// {
+			//	Send a Mod Packet with the changes.
+			// }
 		}
 
 		public override void SetupStartInventory(IList<Item> items, bool mediumcoreDeath)
@@ -374,39 +497,21 @@ namespace RiskOfSlimeRain
 			return null;
 		}
 
-		public override void ProcessTriggers(TriggersSet triggersSet)
+		public static bool PlayerSolidTileCollision(Player p)
 		{
-
-		}
-
-		public override void PreUpdateBuffs()
-		{
-			if (sproutingEggTimer >= 0) sproutingEggTimer--;
-			#region Medkit
-			if (medkitTimer >= 0 && medkits > 0)
+			try
 			{
-				medkitTimer++;
-				if (medkitTimer >= 66)
+				foreach (Point x in p.TouchedTiles)
 				{
-					player.HealEffect(medkits * 10);
-					player.statLife += Math.Min(medkits * 10, MissingHP());
-					medkitTimer = -1;
+					Tile tile = Main.tile[x.X, x.Y];
+					if (tile != null && tile.active() && tile.nactive())
+					{
+						return true;
+					}
 				}
 			}
-			#endregion
-			#region Piggy Bank
-			if (piggyBankTimer == 0)
-			{
-				piggyBankTimer = 180 / savings;
-				player.QuickSpawnItem(ItemID.CopperCoin, 1);
-			}
-			piggyBankTimer--;
-			#endregion
-		}
-
-		public override void PostUpdateBuffs()
-		{
-			if (player.HasBuff(BuffID.PotionSickness)) snakeEyesDiceIncrease = 0;
+			catch { return false; }
+			return false;
 		}
 
 		public override void UpdateVanityAccessories()
@@ -429,75 +534,6 @@ namespace RiskOfSlimeRain
 			//{
 			//	player.AddBuff(mod.BuffType<Buffs.Blocky>(), 60, true);
 			//}
-		}
-
-		public override void PostUpdateEquips()
-		{
-			int totalFungusHeal = (int)(player.statLifeMax2 * 0.045f * bustlingFungusHeals);
-			if (player.statLifeMax2 == player.statLife) snakeEyesDiceReady = true;
-			if (fungalDefense && Equals(player.velocity, Vector2.Zero) && player.itemAnimation <= 0/*PlayerSolidTileCollision(player)*/)
-			{
-				noMoveTimer++;
-				if (Main.myPlayer == player.whoAmI && noMoveTimer % 120 == 0 && noMoveTimer > 120)
-				{
-					player.AddBuff(ModContent.BuffType<FungalDefenseMechanism>(), 120); //The buff is only applied after 2 seconds has passed
-					foreach (NPC n in Main.npc)
-					{
-						if (n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
-						{
-							n.HealEffect((int)(totalFungusHeal), true);
-							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
-						}
-					}
-					if (Main.player.Length > 1)
-					{
-						foreach (Player n in Main.player)
-						{
-							if (Vector2.Distance(player.position, n.position) < fungalRadius)
-							{
-								player.HealEffect((int)(totalFungusHeal), true);
-								player.statLife += (int)(totalFungusHeal);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				noMoveTimer = 0;
-				player.ClearBuff(ModContent.BuffType<FungalDefenseMechanism>());
-			}
-			if (barbedWires > 0 && wireTimer % 60 == 0)
-			{
-				for (int m = 0; m < 200; m++)
-				{
-					NPC enemy = Main.npc[m];
-					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
-					{
-						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
-						break;
-					}
-				}
-			}
-			if (wireTimer > 0) wireTimer--;
-			else wireTimer = 59;
-		}
-
-		public static bool PlayerSolidTileCollision(Player p)
-		{
-			try
-			{
-				foreach (Point x in p.TouchedTiles)
-				{
-					Tile tile = Main.tile[x.X, x.Y];
-					if (tile != null && tile.active() && tile.nactive())
-					{
-						return true;
-					}
-				}
-			}
-			catch { return false; }
-			return false;
 		}
 
 		public override void PostUpdateMiscEffects()
@@ -629,39 +665,6 @@ namespace RiskOfSlimeRain
 			//	Main.playerDrawData.Add(data);
 			//}
 		});
-
-		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
-			{
-				if (drawInfo.shadow != 0f)
-				{
-					return;
-				}
-				Player drawPlayer = drawInfo.drawPlayer;
-				Mod mod = ModLoader.GetMod("RiskOfSlimeRain");
-				RORPlayer modPlayer = drawPlayer.GetModPlayer<RORPlayer>();
-
-				if (modPlayer.barbedWires > 0)
-				{
-					float scale = 3f;
-					Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Projectiles/Textures/BarbedWireTexturePic");
-					int drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-					int drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-					DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.6f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
-					Main.playerDrawData.Add(data);
-					//scale = modPlayer.wireRadius * modPlayer.barbedWires;
-					//drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-					//drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-					//data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.2f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
-					//Main.playerDrawData.Add(data);
-				}
-			});
-
-		public override void ModifyDrawLayers(List<PlayerLayer> layers)
-		{
-			MiscEffectsBack.visible = true;
-			layers.Insert(0, MiscEffectsBack);
-			//MiscEffects.visible = true;
-			//layers.Add(MiscEffects);
-		}
+		#endregion
 	}
 }

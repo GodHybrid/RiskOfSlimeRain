@@ -39,8 +39,9 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool UseItem(Player player)
 		{
-			player.GetModPlayer<RORPlayer>().savings++;
-			player.GetModPlayer<RORPlayer>().piggyBankTimer = 180 / player.GetModPlayer<RORPlayer>().savings + 1;
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			mPlayer.savings++;
+			mPlayer.piggyBankTimer = 180 / mPlayer.savings + 1;
 			return true;
 		}
 

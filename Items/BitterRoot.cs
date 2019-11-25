@@ -39,12 +39,13 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool UseItem(Player player)
 		{
-			if (player.GetModPlayer<RORPlayer>().bitterRootIncrease + (int)((player.statLifeMax + player.GetModPlayer<RORPlayer>().bitterRootIncrease) * 0.08f) < player.statLifeMax * 3)
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			if (mPlayer.bitterRootIncrease + (int)((player.statLifeMax + mPlayer.bitterRootIncrease) * 0.08f) < player.statLifeMax * 3)
 			{
-				int increase = (int)((player.statLifeMax + player.GetModPlayer<RORPlayer>().bitterRootIncrease) * 0.08f);
-				player.GetModPlayer<RORPlayer>().bitterRootIncrease += increase;
-				player.statLifeMax2 += player.GetModPlayer<RORPlayer>().bitterRootIncrease;
-				player.statLife += player.GetModPlayer<RORPlayer>().bitterRootIncrease;
+				int increase = (int)((player.statLifeMax + mPlayer.bitterRootIncrease) * 0.08f);
+				mPlayer.bitterRootIncrease += increase;
+				player.statLifeMax2 += mPlayer.bitterRootIncrease;
+				player.statLife += mPlayer.bitterRootIncrease;
 				if (Main.myPlayer == player.whoAmI)
 				{
 					player.HealEffect(increase, true);
@@ -53,10 +54,10 @@ namespace RiskOfSlimeRain.Items
 			else
 			{
 				//int increase = 10000 - player.GetModPlayer<RORPlayer>().bitterRootIncrease;
-				int increase = (player.statLifeMax * 3) - player.GetModPlayer<RORPlayer>().bitterRootIncrease;
-				player.GetModPlayer<RORPlayer>().bitterRootIncrease = (player.statLifeMax * 3);
-				player.statLifeMax2 += player.GetModPlayer<RORPlayer>().bitterRootIncrease;
-				player.statLife += player.GetModPlayer<RORPlayer>().bitterRootIncrease;
+				int increase = (player.statLifeMax * 3) - mPlayer.bitterRootIncrease;
+				mPlayer.bitterRootIncrease = (player.statLifeMax * 3);
+				player.statLifeMax2 += mPlayer.bitterRootIncrease;
+				player.statLife += mPlayer.bitterRootIncrease;
 				if (Main.myPlayer == player.whoAmI)
 				{
 					player.HealEffect(increase, true);

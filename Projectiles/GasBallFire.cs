@@ -44,7 +44,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.velocity.Y = 6f;
 			foreach (NPC enemy in Main.npc)
 			{
-				if (enemy.Hitbox.Intersects(projectile.Hitbox))
+				if (enemy.active && enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					if (timer == 60)
 					{

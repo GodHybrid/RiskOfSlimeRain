@@ -53,20 +53,6 @@ namespace RiskOfSlimeRain
 		}
 
 		#region Boring commented stuff
-		public override void LoadLegacy(BinaryReader reader)
-		{
-			//int loadVersion = reader.ReadInt32();
-			//if (loadVersion == 0)
-			//{
-			//	BitsByte flags = reader.ReadByte();
-			//	downedAbomination = flags[0];
-			//	downedPuritySpirit = flags[1];
-			//}
-			//else
-			//{
-			//	ErrorLogger.Log("ExampleMod: Unknown loadVersion: " + loadVersion);
-			//}
-		}
 
 		//public override void NetSend(BinaryWriter writer)
 		//{

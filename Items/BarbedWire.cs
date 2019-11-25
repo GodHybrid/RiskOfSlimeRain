@@ -39,8 +39,9 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool UseItem(Player player)
 		{
-			player.GetModPlayer<RORPlayer>().barbedWires++;
-			player.GetModPlayer<RORPlayer>().wireTimer++;
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			mPlayer.barbedWires++;
+			mPlayer.wireTimer++;
 
 			return true;
 		}
