@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class MysteriousVial : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Permanently increases health regeneration by 1.2 health per second");

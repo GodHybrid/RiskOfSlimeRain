@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class RustyKnife : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("15% chance to cause bleeding");

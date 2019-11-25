@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class StickyBomb : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("8% chance to attach a bomb to an enemy, detonating for 140% damage");

@@ -282,7 +282,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		//public override void Kill(int timeLeft)
 		//{
-		//		  if (timeLeft == 0) Projectile.NewProjectile(projectile.position, new Vector2(0, 0), mod.ProjectileType("StickyBombExplosion"), projectile.damage, projectile.knockBack);
+		//		  if (timeLeft == 0) Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), projectile.damage, projectile.knockBack);
 		//}
 	}
 }

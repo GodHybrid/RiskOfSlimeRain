@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Headstompers : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Hurt enemies by falling for up to 507% damage");

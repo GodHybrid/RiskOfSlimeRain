@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class BustlingFungus : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Grants \"Fungal Defense Mechanism\"\nStand still for 2 seconds to activate the buff\nHeals for 4.5% of your max HP every second");

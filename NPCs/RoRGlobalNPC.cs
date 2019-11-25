@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -41,7 +42,7 @@ namespace RiskOfSlimeRain.NPCs
 				if (bombTimer % 120 == 0)
 				{
 					bombTimer = 0;
-					Projectile.NewProjectile(npc.Center, new Vector2(0, 0), mod.ProjectileType("StickyBombExplosion"), (int)((1 + 0.4f * Main.player[Main.myPlayer].GetModPlayer<RORPlayer>().stickyBombs) * Main.player[Main.myPlayer].HeldItem.damage), 0);
+					Projectile.NewProjectile(npc.Center, new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * Main.player[Main.myPlayer].GetModPlayer<RORPlayer>().stickyBombs) * Main.player[Main.myPlayer].HeldItem.damage), 0);
 				}
 			}
 			if (bleeding)
@@ -80,15 +81,15 @@ namespace RiskOfSlimeRain.NPCs
 			{
 				if (Main.rand.Next(4) < 3)
 				{
-					int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, mod.DustType("EtherealFlame"), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default(Color), 3.5f);
-					Main.dust[dust].noGravity = true;
-					Main.dust[dust].velocity *= 1.8f;
-					Main.dust[dust].velocity.Y -= 0.5f;
-					if (Main.rand.Next(4) == 0)
-					{
-						Main.dust[dust].noGravity = false;
-						Main.dust[dust].scale *= 0.5f;
-					}
+					//int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, ModContent.DustType<EtherealFlame>(), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default(Color), 3.5f);
+					//Main.dust[dust].noGravity = true;
+					//Main.dust[dust].velocity *= 1.8f;
+					//Main.dust[dust].velocity.Y -= 0.5f;
+					//if (Main.rand.Next(4) == 0)
+					//{
+					//	Main.dust[dust].noGravity = false;
+					//	Main.dust[dust].scale *= 0.5f;
+					//}
 				}
 				Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
 			}

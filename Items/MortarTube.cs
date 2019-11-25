@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class MortarTube : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("9% chance to fire a mortar for 170% damage");

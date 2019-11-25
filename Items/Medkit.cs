@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Medkit : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Heal for 10 health 1.1 seconds after receiving damage");

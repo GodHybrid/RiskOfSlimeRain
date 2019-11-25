@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class BundleOfFireworks : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Fire 8 fireworks that deal 300% damage");

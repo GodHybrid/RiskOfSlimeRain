@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class SnakeEyes : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Increase crit chance by 6% for each time you're in peril, up to 4 times");

@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Taser : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("7% chance to snare enemies for 1.5 seconds");

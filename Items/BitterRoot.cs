@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class BitterRoot : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Permanently increases maximum life roughly by 8%");

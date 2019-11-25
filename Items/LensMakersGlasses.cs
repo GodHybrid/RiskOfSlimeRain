@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class LensMakersGlasses : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Increases crit chance by 10%");

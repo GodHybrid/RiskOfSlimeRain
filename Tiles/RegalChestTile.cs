@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Items.Placeable;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +11,7 @@ using Terraria.ObjectData;
 
 namespace RiskOfSlimeRain.Tiles
 {
-	public class SalvagedChest : ModTile
+	public class RegalChestTile : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -22,9 +23,11 @@ namespace RiskOfSlimeRain.Tiles
 			Main.tileNoAttach[Type] = true;
 			Main.tileValue[Type] = 500;
 			TileID.Sets.HasOutlines[Type] = true;
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style2x2);
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style3x2);
+			TileObjectData.newTile.Width = 4;
+			TileObjectData.newTile.Height = 2;
 			TileObjectData.newTile.Origin = new Point16(0, 1);
-			TileObjectData.newTile.CoordinateHeights = new int[] { 16, 18 };
+			TileObjectData.newTile.CoordinateHeights = new int[] { 32, 18 };
 			TileObjectData.newTile.HookCheck = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.FindEmptyChest), -1, 0, true);
 			TileObjectData.newTile.HookPostPlaceMyPlayer = new PlacementHook(new Func<int, int, int, int, int, int>(Chest.AfterPlacement_Hook), -1, 0, false);
 			TileObjectData.newTile.AnchorInvalidTiles = new int[] { 127 };
@@ -33,13 +36,13 @@ namespace RiskOfSlimeRain.Tiles
 			TileObjectData.newTile.AnchorBottom = new AnchorData(AnchorType.SolidTile | AnchorType.SolidWithTop | AnchorType.SolidSide, TileObjectData.newTile.Width, 0);
 			TileObjectData.addTile(Type);
 			ModTranslation name = CreateMapEntryName();
-			name.SetDefault("Salvaged Chest");
+			name.SetDefault("Regal Chest");
 			AddMapEntry(new Color(200, 200, 200), name, MapChestName);
-			dustType = 121;
+			dustType = 378;
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Containers };
-			chest = "Salvaged Chest";
-			chestDrop = mod.ItemType("SalvagedChest");
+			chest = "Regal Chest";
+			chestDrop = ModContent.ItemType<RegalChest>();
 		}
 
 		public override bool HasSmartInteract()
@@ -52,9 +55,9 @@ namespace RiskOfSlimeRain.Tiles
 			int left = i;
 			int top = j;
 			Tile tile = Main.tile[i, j];
-			if (tile.frameX % 36 != 0)
+			if (tile.frameX % 72 != 0)
 			{
-				left--;
+				left -= tile.frameX / 18 % 4;
 			}
 			if (tile.frameY != 0)
 			{
@@ -78,7 +81,7 @@ namespace RiskOfSlimeRain.Tiles
 
 		public override void KillMultiTile(int i, int j, int frameX, int frameY)
 		{
-			Item.NewItem(i * 16, j * 16, 32, 32, chestDrop);
+			Item.NewItem(i * 16, j * 16, 64, 32, chestDrop);
 			Chest.DestroyChest(i, j);
 		}
 
@@ -89,9 +92,9 @@ namespace RiskOfSlimeRain.Tiles
 			Main.mouseRightRelease = false;
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.frameX % 72 != 0)
 			{
-				left--;
+				left -= tile.frameX / 18 % 4;
 			}
 			if (tile.frameY != 0)
 			{
@@ -99,7 +102,7 @@ namespace RiskOfSlimeRain.Tiles
 			}
 			if (player.sign >= 0)
 			{
-				Main.PlaySound(SoundID.Item61);
+				Main.PlaySound(SoundID.NPCHit54);
 				player.sign = -1;
 				Main.editSign = false;
 				Main.npcChatText = "";
@@ -121,7 +124,7 @@ namespace RiskOfSlimeRain.Tiles
 				{
 					player.chest = -1;
 					Recipe.FindRecipes();
-					Main.PlaySound(SoundID.Item110);
+					Main.PlaySound(SoundID.NPCHit49);
 				}
 				else
 				{
@@ -138,7 +141,7 @@ namespace RiskOfSlimeRain.Tiles
 					if (chest == player.chest)
 					{
 						player.chest = -1;
-						Main.PlaySound(SoundID.MenuClose);
+						Main.PlaySound(SoundID.NPCHit49);
 					}
 					else
 					{
@@ -147,7 +150,8 @@ namespace RiskOfSlimeRain.Tiles
 						Main.recBigList = false;
 						player.chestX = left;
 						player.chestY = top;
-						Main.PlaySound(player.chest < 0 ? SoundID.MenuOpen : SoundID.MenuTick);
+						if (player.chest < 0) Main.PlaySound(SoundID.NPCHit54);
+						else Main.PlaySound(SoundID.MenuTick);
 					}
 					Recipe.FindRecipes();
 				}
@@ -160,9 +164,9 @@ namespace RiskOfSlimeRain.Tiles
 			Tile tile = Main.tile[i, j];
 			int left = i;
 			int top = j;
-			if (tile.frameX % 36 != 0)
+			if (tile.frameX % 72 != 0)
 			{
-				left--;
+				left -= tile.frameX / 18 % 4;
 			}
 			if (tile.frameY != 0)
 			{
@@ -176,10 +180,10 @@ namespace RiskOfSlimeRain.Tiles
 			}
 			else
 			{
-				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Salvaged Chest";
-				if (player.showItemIconText == "Salvaged Chest")
+				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Regal Chest";
+				if (player.showItemIconText == "Regal Chest")
 				{
-					player.showItemIcon2 = mod.ItemType("SalvagedChest");
+					player.showItemIcon2 = ModContent.ItemType<RegalChest>();
 					player.showItemIconText = "";
 				}
 			}

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Buffs
 {
-	class StickyBomb : ModBuff
+	class StickyBombBuff : ModBuff
 	{
 		public override void SetDefaults()
 		{
@@ -13,6 +13,9 @@ namespace RiskOfSlimeRain.Buffs
 			Main.buffNoSave[Type] = true;
 		}
 
-		public override void Update(NPC npc, ref int buffIndex) => npc.GetGlobalNPC<RoRGlobalNPC>().stickyBomb = true;
+		public override void Update(NPC npc, ref int buffIndex)
+		{
+			npc.GetGlobalNPC<RoRGlobalNPC>().stickyBomb = true;
+		}
 	}
 }

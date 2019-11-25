@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class FireShield : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("After being hit for 10% of your max health - explode, dealing 200 damage");

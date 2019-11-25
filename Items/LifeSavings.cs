@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class LifeSavings : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Generate 1 copper every 3 seconds");

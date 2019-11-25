@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class SproutingEgg : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Permanently increases health regeneration by 2.4 health per second when out of combat");

@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class MeatNugget : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Upon use enemies will have an 8% chance to drop two meat nuggets\nEach meat nugget recovers 6 health");

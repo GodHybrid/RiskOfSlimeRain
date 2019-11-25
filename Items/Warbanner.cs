@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Warbanner : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Chance to drop an empowering banner");

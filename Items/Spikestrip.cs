@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Spikestrip : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Drop spikestrips on hit, slowing enemies by 20%");

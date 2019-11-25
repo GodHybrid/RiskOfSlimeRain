@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Items.Placeable;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +11,7 @@ using Terraria.ObjectData;
 
 namespace RiskOfSlimeRain.Tiles
 {
-	public class UncoveredChest : ModTile
+	public class UncoveredChestTile : ModTile
 	{
 		public override void SetDefaults()
 		{
@@ -41,7 +42,7 @@ namespace RiskOfSlimeRain.Tiles
 			disableSmartCursor = true;
 			adjTiles = new int[] { TileID.Containers };
 			chest = "Uncovered Chest";
-			chestDrop = mod.ItemType("UncoveredChest");
+			chestDrop = ModContent.ItemType<UncoveredChest>();
 		}
 
 		public override bool HasSmartInteract()
@@ -182,7 +183,7 @@ namespace RiskOfSlimeRain.Tiles
 				player.showItemIconText = Main.chest[chest].name.Length > 0 ? Main.chest[chest].name : "Uncovered Chest";
 				if (player.showItemIconText == "Uncovered Chest")
 				{
-					player.showItemIcon2 = mod.ItemType("UncoveredChest");
+					player.showItemIcon2 = ModContent.ItemType<UncoveredChest>();
 					player.showItemIconText = "";
 				}
 			}

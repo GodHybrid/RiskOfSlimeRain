@@ -8,10 +8,9 @@ namespace RiskOfSlimeRain.Items
 {
 	class BarbedWire : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Touching enemies deals 50% of you current damage every second");
+			Tooltip.SetDefault("Touching enemies deals 50% of your current damage every second");
 		}
 
 		public override void SetDefaults()

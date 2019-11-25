@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Crowbar : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Deal 50% more damage to enemies above 80% HP");

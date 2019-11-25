@@ -50,6 +50,7 @@ namespace RiskOfSlimeRain.Projectiles
 					player.HealEffect(heals);
 					player.statLife += Math.Min(heals, player.statLifeMax2 - player.statLife);
 					projectile.Kill();
+					break;
 				}
 			}
 			//if (projectile.timeLeft < 60) this.projectile.alpha += (int)255 / 60;

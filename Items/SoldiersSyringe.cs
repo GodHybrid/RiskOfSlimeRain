@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class SoldiersSyringe : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Increase attack speed by 15%");

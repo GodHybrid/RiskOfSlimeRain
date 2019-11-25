@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class Gasoline : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Killing enemies burns the ground to deal 60% damage and set enemies on fire");

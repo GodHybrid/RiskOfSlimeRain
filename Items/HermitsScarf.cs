@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class HermitsScarf : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Allows you to evade attacks with 10% chance");

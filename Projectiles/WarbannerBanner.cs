@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -44,7 +45,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (player.active && player.Hitbox.Distance(projectile.position) < projectile.ai[0])
 				{
-					player.AddBuff(mod.BuffType("WarCry"), 60);
+					player.AddBuff(ModContent.BuffType<WarCry>(), 60);
 				}
 			}
 			return;

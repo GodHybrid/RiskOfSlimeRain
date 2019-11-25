@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Buffs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -29,7 +30,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
-					enemy.AddBuff(mod.BuffType("SpikestripSlowdown"), 60);
+					enemy.AddBuff(ModContent.BuffType<SpikestripSlowdown>(), 60);
 				}
 			}
 		}

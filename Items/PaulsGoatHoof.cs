@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class PaulsGoatHoof : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Run 20% faster");

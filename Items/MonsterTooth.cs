@@ -8,7 +8,6 @@ namespace RiskOfSlimeRain.Items
 {
 	class MonsterTooth : ModItem
 	{
-
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Killing an enemy will heal you for 10 health");
