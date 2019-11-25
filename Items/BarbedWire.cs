@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -43,7 +42,7 @@ namespace RiskOfSlimeRain.Items
 		{
 			player.GetModPlayer<RORPlayer>().barbedWires++;
 			player.GetModPlayer<RORPlayer>().wireTimer++;
-			
+
 			return true;
 		}
 
@@ -55,7 +54,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
 			recipe.AddIngredient(ItemID.CoralstoneBlock, 55);
 			recipe.AddIngredient(ItemID.SharkFin, 250);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

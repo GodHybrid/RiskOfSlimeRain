@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -24,7 +20,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.friendly = true;
 			projectile.penetrate = -1;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 1800;
+			projectile.timeLeft = 1800;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -53,10 +49,10 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 			return;
 		}
-		
+
 		public override void Kill(int timeLeft)
 		{
-			
+
 		}
 	}
 }

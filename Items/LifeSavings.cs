@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -42,7 +41,7 @@ namespace RiskOfSlimeRain.Items
 		public override bool UseItem(Player player)
 		{
 			player.GetModPlayer<RORPlayer>().savings++;
-			player.GetModPlayer<RORPlayer>().piggyBankTimer = 180/player.GetModPlayer<RORPlayer>().savings + 1;
+			player.GetModPlayer<RORPlayer>().piggyBankTimer = 180 / player.GetModPlayer<RORPlayer>().savings + 1;
 			return true;
 		}
 
@@ -54,7 +53,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.ClayBlock, 600);
 			recipe.AddIngredient(ItemID.GoldenCarp, 30);
 			recipe.AddIngredient(ItemID.Bacon, 6);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

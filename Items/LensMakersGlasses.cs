@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -54,7 +53,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.Ruby, 300);
 			recipe.AddIngredient(ItemID.MeteoriteBrick, 350);
 			recipe.AddIngredient(ItemID.CorruptHardenedSand, 250);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

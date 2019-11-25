@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -53,7 +52,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.HellstoneBrick, 666);
 			recipe.AddIngredient(ItemID.Dynamite, 200);
 			recipe.AddIngredient(ItemID.LargeAmber, 25);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

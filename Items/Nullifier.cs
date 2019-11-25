@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.GameContent.Achievements;
+﻿using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -24,7 +22,7 @@ namespace RiskOfSlimeRain.Items
 		{
 			return true;
 		}
-		
+
 		public override bool UseItem(Player player)
 		{
 			RORPlayer TP = player.GetModPlayer<RORPlayer>();

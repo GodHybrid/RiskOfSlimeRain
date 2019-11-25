@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -42,7 +41,7 @@ namespace RiskOfSlimeRain.Items
 		public override bool UseItem(Player player)
 		{
 			player.GetModPlayer<RORPlayer>().paulsGoatHooves++;
-			
+
 			return true;
 		}
 
@@ -54,7 +53,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddRecipeGroup("RoR:FastBoots", 8);
 			recipe.AddIngredient(ItemID.AsphaltBlock, 350);
 			recipe.AddIngredient(ItemID.Rally, 2);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

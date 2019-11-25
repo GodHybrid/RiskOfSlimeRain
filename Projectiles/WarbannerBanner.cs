@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
-using System.IO;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -28,7 +23,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.tileCollide = true;
 			projectile.timeLeft = 60;
 		}
-		
+
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			projectile.velocity = new Vector2(0f, 0f);
@@ -37,7 +32,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			spriteBatch.Draw(Main.magicPixel, Main.screenPosition - projectile.Center - new Vector2(projectile.ai[0], projectile.ai[0]) / 2f, 
+			spriteBatch.Draw(Main.magicPixel, Main.screenPosition - projectile.Center - new Vector2(projectile.ai[0], projectile.ai[0]) / 2f,
 								new Rectangle(0, 0, (int)projectile.ai[0], (int)projectile.ai[0]), Color.LightGoldenrodYellow, 0f, Vector2.Zero, 1f, SpriteEffects.None, 0f);
 			return true;
 		}
@@ -57,7 +52,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			
+
 		}
 	}
 }

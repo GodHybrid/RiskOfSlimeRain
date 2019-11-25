@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
@@ -67,12 +66,12 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void SetDefaults(NPC npc)
 		{
-			
+
 		}
 
 		public override void NPCLoot(NPC npc)
 		{
-			
+
 		}
 
 		public override void DrawEffects(NPC npc, ref Color drawColor)
@@ -109,7 +108,7 @@ namespace RiskOfSlimeRain.NPCs
 				spriteBatch.Draw(tex, npc.Center - Main.screenPosition, new Rectangle(0, frame * 16, 16, 16), Color.White, 0f, new Vector2(2f, 2f), 2f, SpriteEffects.None, 1f);
 			}
 		}
-		
+
 		public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
 		{
 			//if (player.GetModPlayer<ExamplePlayer>(mod).ZoneExample)
@@ -136,11 +135,11 @@ namespace RiskOfSlimeRain.NPCs
 			//	shop.item[nextSlot].shopSpecialCurrency = ExampleMod.FaceCustomCurrencyID;
 			//	nextSlot++;
 			//}
-   //		 else if (type == NPCID.Wizard && Main.expertMode)
-   //		 {
-   //			 shop.item[nextSlot].SetDefaults(mod.ItemType<Items.Infinity>());
-   //			 nextSlot++;
-   //		 }
+			//		 else if (type == NPCID.Wizard && Main.expertMode)
+			//		 {
+			//			 shop.item[nextSlot].SetDefaults(mod.ItemType<Items.Infinity>());
+			//			 nextSlot++;
+			//		 }
 		}
 
 		// Make any NPC with a chat complain to the player if they have the stinky debuff.

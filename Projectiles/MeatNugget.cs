@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -26,8 +23,8 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.frameCounter = 2;
 			projectile.frame = 0;
 			//projectile.tileCollide = true;
-		  	projectile.timeLeft = 1800;
-			
+			projectile.timeLeft = 1800;
+
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -38,9 +35,9 @@ namespace RiskOfSlimeRain.Projectiles
 		}
 
 		public override void AI()
-        {
-            projectile.rotation = projectile.velocity.ToRotation();
-            projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+		{
+			projectile.rotation = projectile.velocity.ToRotation();
+			projectile.velocity.Y = projectile.velocity.Y + 0.2f;
 			if (projectile.velocity.Y > 13f)
 			{
 				projectile.velocity.Y = 13f;
@@ -61,7 +58,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			
+
 		}
 	}
 }

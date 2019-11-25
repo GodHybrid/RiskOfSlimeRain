@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using Terraria;
+﻿using Terraria;
 using Terraria.ModLoader;
-using Microsoft.Xna.Framework;
 
 namespace RiskOfSlimeRain.Buffs
 {
@@ -31,7 +25,7 @@ namespace RiskOfSlimeRain.Buffs
 			player.maxRunSpeed *= 1.3f;
 			player.meleeSpeed *= 1.04f;
 			player.pickSpeed *= 1.04f;
-			
+
 			player.GetModPlayer<RORPlayer>().affectedWarbanner = true;
 		}
 	}

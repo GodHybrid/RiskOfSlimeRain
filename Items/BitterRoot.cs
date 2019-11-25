@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -36,12 +35,12 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.GetModPlayer<RORPlayer>().bitterRootIncrease < player.statLifeMax *3;
+			return player.GetModPlayer<RORPlayer>().bitterRootIncrease < player.statLifeMax * 3;
 		}
 
 		public override bool UseItem(Player player)
 		{
-			if (player.GetModPlayer<RORPlayer>().bitterRootIncrease + (int)((player.statLifeMax + player.GetModPlayer<RORPlayer>().bitterRootIncrease) * 0.08f) < player.statLifeMax*3)
+			if (player.GetModPlayer<RORPlayer>().bitterRootIncrease + (int)((player.statLifeMax + player.GetModPlayer<RORPlayer>().bitterRootIncrease) * 0.08f) < player.statLifeMax * 3)
 			{
 				int increase = (int)((player.statLifeMax + player.GetModPlayer<RORPlayer>().bitterRootIncrease) * 0.08f);
 				player.GetModPlayer<RORPlayer>().bitterRootIncrease += increase;

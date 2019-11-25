@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -53,7 +52,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.GrayPressurePlate, 120);
 			recipe.AddIngredient(ItemID.SnowBrick, 550);
 			recipe.AddIngredient(ItemID.CactusSword, 30);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

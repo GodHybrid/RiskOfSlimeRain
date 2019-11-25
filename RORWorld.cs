@@ -1,16 +1,10 @@
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using Terraria;
-using Terraria.ID;
-using Terraria.Localization;
-using Terraria.ModLoader;
-using Terraria.World.Generation;
 using Microsoft.Xna.Framework;
-using Terraria.GameContent.Generation;
-using Terraria.ModLoader.IO;
-using Terraria.DataStructures;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
+using System.IO;
+using Terraria;
+using Terraria.ModLoader;
+using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain
 {
@@ -19,7 +13,7 @@ namespace RiskOfSlimeRain
 		private const int saveVersion = 0;
 		public static bool downedAbomination = false;
 		public static bool downedPuritySpirit = false;
-        
+
 		//public struct Warbanner
 		//{
 		//	public byte id;

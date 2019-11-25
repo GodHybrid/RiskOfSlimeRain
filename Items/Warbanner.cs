@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
- using System.Collections.Generic;
+using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -53,7 +52,7 @@ namespace RiskOfSlimeRain.Items
 			recipe.AddIngredient(ItemID.BorealWood, 505);
 			recipe.AddIngredient(ItemID.TatteredCloth, 60);
 			recipe.AddIngredient(ItemID.InfernoPotion, 50);
-			
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

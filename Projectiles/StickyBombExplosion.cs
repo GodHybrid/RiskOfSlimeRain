@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.GameContent.Achievements;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -29,7 +26,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.alpha = 255;
 			projectile.timeLeft = 1;
 		}
-		
+
 		public override void AI()
 		{
 			foreach (NPC enemy in Main.npc)
@@ -46,7 +43,7 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void Kill(int timeLeft)
 		{
 			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
-			for (int i = 0; i < 2; i++) 
+			for (int i = 0; i < 2; i++)
 			{
 				Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f)];
 				dust.velocity *= 2f; //3f
