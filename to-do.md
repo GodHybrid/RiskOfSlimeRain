@@ -583,8 +583,8 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 ## Gameplay **-Subject to change, not fully fleshed out-**
 * [ ][ ]RoR mode\
 		* Item to activate the mode with (cannot be deactivated)\
-		* Vanilla chests become locked, can only be opened with money, do not regenerate the items
-		* Mod chests/containers become locked, can only be opened with money, regenerate the items (??% chance) during special event
+		* Vanilla chests become locked, can only be opened with money, do not regenerate the items\
+		* Mod chests/containers become locked, can only be opened with money, regenerate the items (??% chance) during special event\
 		* Disabling of armors/accesories/pets\
 		* Leveling system\
 		* Enemy scaling system\
