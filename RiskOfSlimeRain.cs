@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace RiskOfSlimeRain
 {
@@ -98,6 +100,11 @@ namespace RiskOfSlimeRain
 				ItemID.VileMushroom
 			});
 			RecipeGroup.RegisterGroup("RoR:EvilMushrooms", EvilShroom_Group);
+		}
+
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		{
+			RORInterfaceLayers.ModifyInterfaceLayers(layers);
 		}
 	}
 }
