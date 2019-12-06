@@ -5,6 +5,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	//ai0 is used to set timeLeft
 	public class SpikestripStrip : ModProjectile
 	{
 		public override void SetDefaults()
@@ -25,19 +26,22 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
-			projectile.velocity.Y = 10f;
-			foreach (NPC enemy in Main.npc)
+			if (projectile.localAI[0] == 0f)
 			{
+				projectile.localAI[0] = 1f;
+				projectile.timeLeft = (int)projectile.ai[0];
+			}
+
+			projectile.velocity.Y = 10f;
+			for (int m = 0; m < Main.maxNPCs; m++)
+			{
+
+				NPC enemy = Main.npc[m];
 				if (enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					enemy.AddBuff(ModContent.BuffType<SpikestripSlowdown>(), 60);
 				}
 			}
-		}
-
-		public override void Kill(int timeLeft)
-		{
-
 		}
 	}
 }

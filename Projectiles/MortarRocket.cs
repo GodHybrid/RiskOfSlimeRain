@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, 5, Main.myPlayer);
+			if (Main.myPlayer == projectile.owner) Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, projectile.knockBack, Main.myPlayer);
 			projectile.Kill();
 			return false;
 		}
@@ -43,16 +43,10 @@ namespace RiskOfSlimeRain.Projectiles
 				if ((enemy.CanBeChasedBy() || enemy.netID == 488) && enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					//enemy.StrikeNPC(projectile.damage, 5, 0, false);
-					Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, 5, Main.myPlayer);
+					if (Main.myPlayer == projectile.owner) Projectile.NewProjectile(projectile.Center, new Vector2(0, 0), ModContent.ProjectileType<MortarExplosion>(), projectile.damage, projectile.knockBack, Main.myPlayer);
 					projectile.Kill();
 				}
 			}
-			return;
-		}
-
-		public override void Kill(int timeLeft)
-		{
-
 		}
 	}
 }

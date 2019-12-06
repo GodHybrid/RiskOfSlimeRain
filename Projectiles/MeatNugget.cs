@@ -20,8 +20,6 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.height = 8;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			projectile.frameCounter = 2;
-			projectile.frame = 0;
 			//projectile.tileCollide = true;
 			projectile.timeLeft = 1800;
 
@@ -29,7 +27,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = new Vector2(0f, 0f);
+			projectile.velocity = Vector2.Zero;
 			projectile.frame = 1;
 			return false;
 		}
@@ -42,24 +40,20 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				projectile.velocity.Y = 13f;
 			}
-			foreach (Player player in Main.player)
+			for (int i = 0; i < Main.maxPlayers; i++)
 			{
+				Player player = Main.player[i];
 				if (player.active && player.Hitbox.Intersects(projectile.Hitbox))
 				{
-					int heals = 6 * player.GetModPlayer<RORPlayer>().meatNuggets;
+					//TODO proper MP stuff with the heal and proj kill (latter has to happen on all clients)
+					int heals = (int)projectile.ai[0];
 					player.HealEffect(heals);
 					player.statLife += Math.Min(heals, player.statLifeMax2 - player.statLife);
 					projectile.Kill();
 					break;
 				}
+
 			}
-			//if (projectile.timeLeft < 60) this.projectile.alpha += (int)255 / 60;
-			return;
-		}
-
-		public override void Kill(int timeLeft)
-		{
-
 		}
 	}
 }

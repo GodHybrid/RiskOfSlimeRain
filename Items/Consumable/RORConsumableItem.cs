@@ -1,83 +1,62 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Items.Consumable.Common;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable
 {
-	public abstract class RORConsumableItem : ModItem
+	public abstract class RORConsumableItem<T> : ModItem where T : ROREffect
 	{
-		#region boilerplate
-		//static
-		public string displayName = string.Empty;
-		public string description = string.Empty;
+		#region stuff
+		public string FlavorText => ROREffectManager.GetFlavorText<T>();
 
-		//non-static
-		public string flavorText = string.Empty;
 		//TODO change this based on rarity of item?
-		public Color flavorTextColor = Color.FloralWhite;
+		public Color FlavorTextColor => ROREffectManager.GetFlavorColor<T>();
 
-		public bool HasDisplayName => displayName != string.Empty;
-		public bool HasFlavorText => flavorText != string.Empty;
-
-		public RORConsumableItem()
-		{
-			Initialize(); //so the fields get updated (for example when hovering over the item)
-		}
+		public bool HasFlavorText => FlavorText != string.Empty;
 
 		/// <summary>
-		/// Called during mod loading, use to set up variables in it
-		/// </summary>
-		public virtual void Initialize()
-		{
-			//already declared variables with default values at the top
-		}
-
-		/// <summary>
-		/// Called whenever the item is used
-		/// </summary>
-		public abstract void ApplyEffect(RORPlayer mPlayer);
-
-		/// <summary>
-		/// Called whenever the Nullifier is used
-		/// </summary>
-		public abstract void ResetEffect(RORPlayer mPlayer);
-
-		/// <summary>
-		/// Called when the item is about to be used
+		/// Called when the item is about to be used. Default return is if the effect can still stack
 		/// </summary>
 		public virtual bool CanUse(RORPlayer mPlayer)
 		{
-			return true;
+			ROREffect effect = ROREffect.CreateInstance(typeof(T));
+			return effect.CanUse(mPlayer.player);
 		}
 		#endregion
 
 		#region tml hooks
-		public sealed override bool Autoload(ref string name)
-		{
-			if (!(this is Nullifier)) Nullifier.resetList.Add(ResetEffect);
-			return true;
-		}
-
 		public sealed override void SetStaticDefaults()
 		{
-			if (HasDisplayName)
+			ROREffectManager.SetTexture<T>(Texture);
+
+			ROREffect effect = ROREffect.CreateInstance(typeof(T));
+			if (effect.Name != string.Empty)
 			{
-				DisplayName.SetDefault(displayName);
+				DisplayName.SetDefault(effect.Name);
 			}
-			Tooltip.SetDefault(description);
+			Tooltip.SetDefault(effect.Description);
 		}
 
 		public sealed override bool CanUseItem(Player player)
 		{
-			return CanUse(player.GetModPlayer<RORPlayer>());
+			//if player has the effect already, check on that. If not, check on a fresh one
+			ROREffect effect = player.GetModPlayer<RORPlayer>().Effects.FirstOrDefault(e => e.GetType().Equals(typeof(T)));
+			if (effect == null)
+			{
+				effect = ROREffect.CreateInstance(typeof(T));
+			}
+			return effect.CanUse(player);
 		}
 
 		public sealed override bool UseItem(Player player)
 		{
-			ApplyEffect(player.GetModPlayer<RORPlayer>());
+			ROREffectManager.ApplyEffect<T>(player.GetModPlayer<RORPlayer>());
 			return true;
 		}
 
@@ -85,10 +64,10 @@ namespace RiskOfSlimeRain.Items.Consumable
 		{
 			if (HasFlavorText)
 			{
-				string color = (flavorTextColor * (Main.mouseTextColor / 255f)).Hex3();
+				string color = (FlavorTextColor * (Main.mouseTextColor / 255f)).Hex3();
 
 				//flavorText that has \n in it has to be split into single tooltiplines
-				string[] lines = flavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
+				string[] lines = FlavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
 				for (int i = 0; i < lines.Length; i++)
 				{

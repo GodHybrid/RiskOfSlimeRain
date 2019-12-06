@@ -7,15 +7,9 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.NPCs
 {
-	public class RoRGlobalNPC : GlobalNPC
+	public class RORGlobalNPC : GlobalNPC
 	{
-		public override bool InstancePerEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool InstancePerEntity => true;
 
 		public bool tasered;
 		public bool slowedBySpikestrip;
@@ -36,6 +30,7 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void AI(NPC npc)
 		{
+			//TODO make this all MP compatible
 			if (stickyBomb)
 			{
 				bombTimer++;

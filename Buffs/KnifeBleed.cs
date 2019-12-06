@@ -15,7 +15,7 @@ namespace RiskOfSlimeRain.Buffs
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-			npc.GetGlobalNPC<RoRGlobalNPC>().bleeding = true;
+			npc.GetGlobalNPC<RORGlobalNPC>().bleeding = true;
 		}
 	}
 }

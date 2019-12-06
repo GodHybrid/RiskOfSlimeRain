@@ -1,3 +1,5 @@
+using System.IO;
+using RiskOfSlimeRain.Effects;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -7,9 +9,21 @@ namespace RiskOfSlimeRain
 {
 	public class RiskOfSlimeRain : Mod
 	{
+		public static RiskOfSlimeRain Instance => ModContent.GetInstance<RiskOfSlimeRain>();
+
 		public RiskOfSlimeRain()
 		{
 			//git is gay
+		}
+
+		public override void Load()
+		{
+			ROREffectManager.Load();
+		}
+
+		public override void Unload()
+		{
+			ROREffectManager.Unload();
 		}
 
 		public override void AddRecipeGroups()
@@ -99,5 +113,35 @@ namespace RiskOfSlimeRain
 			});
 			RecipeGroup.RegisterGroup("RoR:EvilMushrooms", EvilShroom_Group);
 		}
+
+		public override void HandlePacket(BinaryReader reader, int whoAmI)
+		{
+			byte type = reader.ReadByte();
+			MessageType mType = MessageType.None;
+			try
+			{
+				mType = (MessageType)type;
+			}
+			catch
+			{
+				Logger.Info("Unknown message type: " + type);
+			}
+			switch(mType)
+			{
+				case MessageType.SyncEffectsOnEnterToClients:
+					ROREffectManager.HandleOnEnterToClients(reader);
+					break;
+				case MessageType.SyncEffectsOnEnterToServer:
+					ROREffectManager.HandleOnEnterToServer(reader);
+					break;
+			}
+		}
+	}
+
+	public enum MessageType : byte
+	{
+		None = 0,
+		SyncEffectsOnEnterToClients = 1,
+		SyncEffectsOnEnterToServer = 2
 	}
 }

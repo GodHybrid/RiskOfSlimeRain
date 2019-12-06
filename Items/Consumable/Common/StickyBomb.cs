@@ -1,0 +1,22 @@
+﻿using RiskOfSlimeRain.Effects.Common;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace RiskOfSlimeRain.Items.Consumable.Common
+{
+	public class StickyBomb : RORConsumableItem<StickyBombEffect>
+	{
+		public override void AddRecipes()
+		{
+			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddIngredient(ItemID.Bone, 999);
+			recipe.AddIngredient(ItemID.Stinger, 400);
+			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
+			recipe.AddIngredient(ItemID.CoralstoneBlock, 55);
+			recipe.AddIngredient(ItemID.SharkFin, 250);
+
+			recipe.SetResult(this, 1);
+			recipe.AddRecipe();
+		}
+	}
+}

@@ -1,10 +1,13 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Buffs;
+using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameInput;
@@ -14,208 +17,236 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain
 {
-	// ModPlayer classes provide a way to attach data to Players and act on that data
 	public class RORPlayer : ModPlayer
 	{
+		//Only used for saving/loading/housekeeping
+		//This is the thing synced to clients on world join aswell, the dict is rebuilt from that anyway
+		public List<ROREffect> Effects { get; set; }
+
+		//Actual runtime access
+		//Key: Interface, Value: List of effects implementing this interface
+		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
+
 		private const int diceIncreaseMax = 5;
 
 		#region Defensive Common
-		public int bitterRoots = 0;
-		public int bitterRootIncrease = 0;
-		public int bustlingFungi = 0;
-		public int bustlingFungusHeals = 0;
-		public bool fungalDefense = false;//
-		public bool eFungalDefense = false;//
-		public int noMoveTimer = 0;
-		public float fungalRadius = 64;//
-		public int meatNuggets = 0;
-		public int monsterTeeth = 0;
-		public int medkits = 0;
-		public int medkitTimer = -1;//
-		public int mysteriousVials = 0;
-		public int sproutingEggs = 0;
-		public int sproutingEggTimer = -1;//
+		public int bitterRoots { get; set; } = 0;
+		public int bitterRootIncrease { get; set; } = 0;
+		public int bustlingFungi { get; set; } = 0;
+		public int bustlingFungusHeals { get; set; } = 0;
+		public bool fungalDefense { get; set; } = false;//
+		public bool eFungalDefense { get; set; } = false;//
+		public int noMoveTimer { get; set; } = 0;
+		public float fungalRadius { get; set; } = 64;//
+		public int meatNuggets { get; set; } = 0;
+		public int monsterTeeth { get; set; } = 0;
+		public int medkits { get; set; } = 0;
+		public int medkitTimer { get; set; } = -1;//
+		public int mysteriousVials { get; set; } = 0;
+		public int sproutingEggs { get; set; } = 0;
+		public int sproutingEggTimer { get; set; } = -1;//
 		#endregion
 		#region Utility Common
-		public int fireShields = 0;
-		public int scarfs = 0;
-		public int lensMakersGlasses = 0;
-		public int savings = 0;
-		public int piggyBankTimer = -1;//
-		public int paulsGoatHooves = 0;
-		public int snakeEyesDice = 0;
-		public int snakeEyesDiceIncrease = 0;//
-		public bool snakeEyesDiceReady = false;//
-		public int soldiersSyringes = 0;
-		public int spikestrips = 0;
-		public int tasers = 0;
-		public int warbanners = 0;
-		public float warbannerRadius = 64;
-		public bool affectedWarbanner = false; //
+		public int fireShields { get; set; } = 0;
+		public int scarfs { get; set; } = 0;
+		public int lensMakersGlasses { get; set; } = 0;
+		public int savings { get; set; } = 0;
+		public int piggyBankTimer { get; set; } = -1;//
+		public int paulsGoatHooves { get; set; } = 0;
+		public int snakeEyesDice { get; set; } = 0;
+		public int snakeEyesDiceIncrease { get; set; } = 0;//
+		public bool snakeEyesDiceReady { get; set; } = false;//
+		public int soldiersSyringes { get; set; } = 0;
+		public int spikestrips { get; set; } = 0;
+		public int tasers { get; set; } = 0;
+		public int warbanners { get; set; } = 0;
+		public float warbannerRadius { get; set; } = 64;
+		public bool affectedWarbanner { get; set; } = false; //
 		#endregion
 		#region Offensive Common
-		public int barbedWires = 0;
-		public int wireTimer = -1;
-		public int wireRadius = 80;
-		public int crowbars = 0;
-		public int gasCanisters = 0;
-		public int stompers = 0;
-		public int mortarTubes = 0;
-		public int rustyKnives = 0;
-		public int stickyBombs = 0;
-		public int bundles = 0;
+		public int barbedWires { get; set; } = 0;
+		public int wireTimer { get; set; } = -1;
+		public int wireRadius { get; set; } = 80;
+		public int crowbars { get; set; } = 0;
+		public int gasCanisters { get; set; } = 0;
+		public int stompers { get; set; } = 0;
+		public int mortarTubes { get; set; } = 0;
+		public int rustyKnives { get; set; } = 0;
+		public int stickyBombs { get; set; } = 0;
+		public int bundles { get; set; } = 0;
 		#endregion
-
-		public override void Initialize()
-		{
-			base.Initialize();
-		}
 
 		public override void ResetEffects()
 		{
+			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
+
 			if (player == Main.player[Main.myPlayer])
 			{
-				player.statLifeMax2 += bitterRootIncrease;
-				player.lifeRegen += (int)(mysteriousVials * 1.2f);
-				player.maxRunSpeed += player.maxRunSpeed * 0.2f * paulsGoatHooves;
-				player.moveSpeed += player.moveSpeed * 0.2f * paulsGoatHooves;
-				if (stompers > 0) player.maxFallSpeed += 6f;
-				if (snakeEyesDiceIncrease > 0)
-				{
-					int sedIncrease = snakeEyesDiceIncrease * (snakeEyesDice * 3 + 3);
-					player.meleeCrit += sedIncrease;
-					player.rangedCrit += sedIncrease;
-					player.magicCrit += sedIncrease;
-					player.thrownCrit += sedIncrease;
-				}
-				if (((player.controlRight && player.velocity.X < 0) || (player.controlLeft && player.velocity.X > 0)) && paulsGoatHooves > 5) player.velocity.X = 0;
-				if (sproutingEggTimer == -1) player.lifeRegen += (int)(sproutingEggs * 2.4f);
+				//player.statLifeMax2 += bitterRootIncrease;
+				//player.lifeRegen += (int)(mysteriousVials * 1.2f);
+				//player.maxRunSpeed += player.maxRunSpeed * 0.2f * paulsGoatHooves;
+				//player.moveSpeed += player.moveSpeed * 0.2f * paulsGoatHooves;
+				//if (stompers > 0) player.maxFallSpeed += 6f;
+				//if (snakeEyesDiceIncrease > 0)
+				//{
+				//	int sedIncrease = snakeEyesDiceIncrease * (snakeEyesDice * 3 + 3);
+				//	player.meleeCrit += sedIncrease;
+				//	player.rangedCrit += sedIncrease;
+				//	player.magicCrit += sedIncrease;
+				//	player.thrownCrit += sedIncrease;
+				//}
+				//if (((player.controlRight && player.velocity.X < 0) || (player.controlLeft && player.velocity.X > 0)) && paulsGoatHooves > 5) player.velocity.X = 0;
+				//if (sproutingEggTimer == -1) player.lifeRegen += (int)(sproutingEggs * 2.4f);
 				//if (player.HasBuff(ModContent.BuffType<Slowdown>())) player.velocity.X *= 0.8f;
 			}
 		}
 
-		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public override void PostUpdateRunSpeeds()
 		{
-			if (scarfs > 0 && Main.rand.Next(100) < (scarfs * 5 + 5))
-			{
-				player.immune = true;
-				player.immuneTime = 40;
-				return false;
-			}
-			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && stompers > 0 && damageSource.SourceNPCIndex > -1 && !player.immune)
-			{
-				Main.npc[damageSource.SourceNPCIndex].StrikeNPC((int)(player.GetWeaponDamage(player.HeldItem) * ((5.07f + (0.3f * (stompers - 1))) * player.velocity.Y / 16)), 2f, 0, false);
-				player.immune = true;
-				player.immuneTime = 40;
-				return false;
-			}
-			if (snakeEyesDice > 0 && snakeEyesDiceIncrease < 5 && player.statLife - damage < player.statLifeMax2 * 0.05 && snakeEyesDiceReady)
-			{
-				snakeEyesDiceIncrease++;
-				snakeEyesDiceReady = false;
-			}
-			return true;
+			ROREffectManager.Perform<IPostUpdateRunSpeeds>(this, e => e.PostUpdateRunSpeeds(player));
 		}
 
+		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		{
+			bool ret = ROREffectManager.PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+			//if (scarfs > 0 && Main.rand.Next(100) < (scarfs * 5 + 5))
+			//{
+			//	player.immune = true;
+			//	player.immuneTime = 40;
+			//	return false;
+			//}
+			//if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && stompers > 0 && damageSource.SourceNPCIndex > -1 && !player.immune)
+			//{
+			//	Main.npc[damageSource.SourceNPCIndex].StrikeNPC((int)(player.GetWeaponDamage(player.HeldItem) * ((5.07f + (0.3f * (stompers - 1))) * player.velocity.Y / 16)), 2f, 0, false);
+			//	player.immune = true;
+			//	player.immuneTime = 40;
+			//	return false;
+			//}
+			//if (snakeEyesDice > 0 && snakeEyesDiceIncrease < 5 && player.statLife - damage < player.statLifeMax2 * 0.05 && snakeEyesDiceReady)
+			//{
+			//	snakeEyesDiceIncrease++;
+			//	snakeEyesDiceReady = false;
+			//}
+			return ret;
+		}
+		
 		public override float UseTimeMultiplier(Item item)
 		{
-			float dudChange = 1f;
-			if ((item.damage > 0 || item.axe > 0 || item.hammer > 0) && soldiersSyringes > 0) dudChange += soldiersSyringes * 0.1f; //15% is made into 10%, but it still works as 15%
+			return ROREffectManager.UseTimeMultiplier(player, item);
+			//if ((item.damage > 0 || item.axe > 0 || item.hammer > 0) && soldiersSyringes > 0) dudChange += soldiersSyringes * 0.1f; //15% is made into 10%, but it still works as 15%
 
 			//if (affectedWarbanner && player.HasBuff(ModContent.BuffType<WarCry>())) dudChange *= 1.3f;
-			return dudChange;
 		}
 
 		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			medkitTimer = 0;
-			sproutingEggTimer = 420;
-			if (fireShields > 0 && damage >= player.statLifeMax2 / 10)
-			{
-				Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<FireShieldExplosion>(), (200 + 200 * fireShields) * player.HeldItem.damage, 20 + fireShields, Main.myPlayer);
-			}
-			if (spikestrips > 0)
-			{
-				Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
-				Projectile.NewProjectile(player.position, new Vector2(2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
-				Projectile.NewProjectile(player.position, new Vector2(-2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
-			}
+			//medkitTimer = 0;
+			//sproutingEggTimer = 420;
+			//if (fireShields > 0 && damage >= player.statLifeMax2 / 10)
+			//{
+			//	Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<FireShieldExplosion>(), (200 + 200 * fireShields) * player.GetWeaponDamage(player.HeldItem), 20 + fireShields, Main.myPlayer);
+			//}
+			//if (spikestrips > 0)
+			//{
+			//	Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
+			//	Projectile.NewProjectile(player.position, new Vector2(2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
+			//	Projectile.NewProjectile(player.position, new Vector2(-2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer);
+			//}
+		}
+
+		public override void UpdateLifeRegen()
+		{
+			ROREffectManager.Perform<IUpdateLifeRegen>(this, e => e.UpdateLifeRegen(player));
 		}
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			sproutingEggTimer = 420;
-			if (meatNuggets > 0 && Main.rand.Next(100) < 8)
-			{
-				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
-				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
-			}
-			if (monsterTeeth > 0 && target.life <= 0)
-			{
-				player.HealEffect(monsterTeeth * 5 + 5);
-				player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
-			}
-			if (tasers > 0 && Main.rand.Next(100) < 7) target.AddBuff(ModContent.BuffType<TaserImmobility>(), 60 + 30 * tasers);
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
+			//foreach (var effect in effects)
+			//{
+			//	if (effect is IOnHit onHit) onHit.OnHitNPC(player, item, target, damage, knockback, crit);
+			//}
+			//sproutingEggTimer = 420;
+			//if (meatNuggets > 0 && Main.rand.Next(100) < 8)
+			//{
+			//	Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), Stack * 6, 0, Main.myPlayer);
+			//	Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), Stack * 6, 0, Main.myPlayer);
+			//}
+			//if (monsterTeeth > 0 && target.life <= 0)
+			//{
+			//	player.HealEffect(monsterTeeth * 5 + 5);
+			//	player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
+			//}
+			//if (tasers > 0 && Main.rand.Next(100) < 7) target.AddBuff(ModContent.BuffType<TaserImmobility>(), 60 + 30 * tasers);
+
 			if (warbanners > 0 && target.life <= 0) AddBanner();
-			if (crowbars > 0 && target.life < target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
-			if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), ModContent.ProjectileType<GasBallFire>(), 0, 0);
-			if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.HeldItem.damage * 1.7f * mortarTubes), 0);
-			if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(ModContent.BuffType<KnifeBleed>(), 120);
-			if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), ModContent.ProjectileType<StickyBomb>(), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
-			{
-				if (target.HasBuff(ModContent.BuffType<StickyBombBuff>()))
-				{
-					Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
-					target.DelBuff(ModContent.BuffType<StickyBombBuff>());
-				}
-				target.AddBuff(ModContent.BuffType<StickyBombBuff>(), 120);
-			}
+
+			//if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), ModContent.ProjectileType<GasBallFire>(), 0, 0, Main.myPlayer, player.GetWeaponDamage(player.HeldItem), gasCanisters);
+			//if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.GetWeaponDamage(player.HeldItem) * 1.7f * mortarTubes), 0);
+			//if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(ModContent.BuffType<KnifeBleed>(), 120);
+			//if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), ModContent.ProjectileType<StickyBomb>(), (int)((1 + 0.4f * stickyBombs) * player.GetWeaponDamage(player.HeldItem)), 1f);
+			//{
+			//	if (target.HasBuff(ModContent.BuffType<StickyBombBuff>()))
+			//	{
+			//		Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * stickyBombs) * player.GetWeaponDamage(player.HeldItem)), 1f);
+			//		target.DelBuff(ModContent.BuffType<StickyBombBuff>());
+			//	}
+			//	target.AddBuff(ModContent.BuffType<StickyBombBuff>(), 120);
+			//}
 		}
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (!crit && Main.rand.Next(100) < (lensMakersGlasses * 7)) crit = true;
-			if (crowbars > 0 && target.life >= target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
+			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+			//if (!crit && Main.rand.Next(100) < (lensMakersGlasses * 7)) crit = true;
+			//if (crowbars > 0 && target.life >= target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			sproutingEggTimer = 420;
-			if (meatNuggets > 0 && Main.rand.Next(100) < 8)
-			{
-				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
-				Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
-			}
-			if (monsterTeeth > 0 && target.life <= 0)
-			{
-				player.HealEffect(monsterTeeth * 5 + 5);
-				player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
-			}
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
+			//foreach (var effect in effects)
+			//{
+			//	if (effect is IOnHit onHit) onHit.OnHitNPCWithProj(player, proj, target, damage, knockback, crit);
+			//}
+			//sproutingEggTimer = 420;
+			//if (meatNuggets > 0 && Main.rand.Next(100) < 8)
+			//{
+			//	Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
+			//	Projectile.NewProjectile(target.position, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 2)), ModContent.ProjectileType<MeatNugget>(), 0, 0);
+			//}
+			//if (monsterTeeth > 0 && target.life <= 0)
+			//{
+			//	player.HealEffect(monsterTeeth * 5 + 5);
+			//	player.statLife += Math.Min(monsterTeeth * 5 + 5, MissingHP());
+			//}
+
 			if (warbanners > 0 && target.life <= 0) AddBanner();
-			if (crowbars > 0 && target.life < target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
-			if (tasers > 0 && Main.rand.Next(100) < 7) target.AddBuff(ModContent.BuffType<TaserImmobility>(), 60 + 30 * tasers);
-			if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.HeldItem.damage * 1.7f * mortarTubes), 0);
-			if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), ModContent.ProjectileType<GasBallFire>(), 0, 0, Main.myPlayer, player.HeldItem.damage, gasCanisters);
-			if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(ModContent.BuffType<KnifeBleed>(), 120);
-			if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), ModContent.ProjectileType<StickyBomb>(), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
-			{
-				if (target.HasBuff(ModContent.BuffType<StickyBombBuff>()))
-				{
-					Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * stickyBombs) * player.HeldItem.damage), 1f);
-				}
-				target.AddBuff(ModContent.BuffType<StickyBombBuff>(), 120);
-			}
+
+			//if (tasers > 0 && Main.rand.Next(100) < 7) target.AddBuff(ModContent.BuffType<TaserImmobility>(), 60 + 30 * tasers);
+			//if (mortarTubes > 0 && Main.rand.Next(100) < 9) Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.GetWeaponDamage(player.HeldItem) * 1.7f * mortarTubes), 0);
+			//if (gasCanisters > 0 && target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), ModContent.ProjectileType<GasBallFire>(), 0, 0, Main.myPlayer, player.GetWeaponDamage(player.HeldItem), gasCanisters);
+			//if (rustyKnives > 0 && Main.rand.Next(100) < 15 * rustyKnives) target.AddBuff(ModContent.BuffType<KnifeBleed>(), 120);
+			//if (stickyBombs > 0 && Main.rand.Next(100) < 8) //Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-5, 5), target.Center.Y + Main.rand.NextFloat(-5, 5)), new Vector2(0, 0), ModContent.ProjectileType<StickyBomb>(), (int)((1 + 0.4f * stickyBombs) * player.GetWeaponDamage(player.HeldItem)), 1f);
+			//{
+			//	if (target.HasBuff(ModContent.BuffType<StickyBombBuff>()))
+			//	{
+			//		Projectile.NewProjectile(new Vector2(target.Center.X + Main.rand.NextFloat(-target.Hitbox.Width + 2, target.Hitbox.Width - 2), target.Center.Y + Main.rand.NextFloat(-target.Hitbox.Height + 2, target.Hitbox.Height - 2)), new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * stickyBombs) * player.GetWeaponDamage(player.HeldItem)), 1f);
+			//	}
+			//	target.AddBuff(ModContent.BuffType<StickyBombBuff>(), 120);
+			//}
+		}
+
+		public override void GetWeaponCrit(Item item, ref int crit)
+		{
+			ROREffectManager.GetWeaponCrit(player, item, ref crit);
 		}
 
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			if (!crit && Main.rand.Next(100) < (lensMakersGlasses * 7)) crit = true;
-			if (crowbars > 0 && target.life > target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
-		}
-
-		private int MissingHP()
-		{
-			return player.statLifeMax2 - player.statLife;
+			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+			//if (!crit && Main.rand.Next(100) < (lensMakersGlasses * 7)) crit = true;
+			//if (crowbars > 0 && target.life > target.lifeMax * 0.8f) damage += (int)(damage * (0.2 + 0.3 * crowbars));
 		}
 
 		public void AddBanner()
@@ -234,56 +265,103 @@ namespace RiskOfSlimeRain
 			}
 		}
 
+		public override void OnEnterWorld(Player player)
+		{
+			if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+			{
+				//populate, send to server, which then broadcasts
+				ROREffectManager.Populate(this);
+				if (Main.netMode == NetmodeID.MultiplayerClient)
+				{
+					//send to server
+					ROREffectManager.SendOnEnter((byte)player.whoAmI);
+				}
+			}
+		}
+
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			//TODO no HandlePacket 
-			//ModPacket packet = mod.GetPacket();
-			//packet.Write((byte)player.whoAmI);
-			//packet.Write(bitterRootIncrease);
-			//packet.Send(toWho, fromWho);
+			//this is used when a new player joins the game. It sends its info to other players so they can update it
+			//(from server to clients) (this means the server has to know the correct data of the player beforehand)
+			ModPacket packet = mod.GetPacket();
+			packet.Write((byte)MessageType.SyncEffectsOnEnterToClients);
+			packet.Write((byte)player.whoAmI);
+			packet.Write((int)Effects.Count);
+			for (int i = 0; i < Effects.Count; i++)
+			{
+				ROREffect effect = Effects[i];
+				effect.Send(packet);
+			}
+			packet.Send(toWho, fromWho);
 		}
 
 		public override void UpdateDead()
 		{
-			eFungalDefense = false;
-			snakeEyesDiceIncrease = 0;
-			snakeEyesDiceReady = true;
+			//eFungalDefense = false;
+			//snakeEyesDiceIncrease = 0;
+			//snakeEyesDiceReady = true;
+		}
+
+		public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
+		{
+			base.Kill(damage, hitDirection, pvp, damageSource);
 		}
 
 		public override TagCompound Save()
 		{
-			return new TagCompound {
+			TagCompound tag = new TagCompound {
 				#region Bitter Root
-				{"bitterRoots", bitterRoots },
-				{"bitterRootIncrease", bitterRootIncrease },
+				//{"bitterRoots", bitterRoots },
+				//{"bitterRootIncrease", bitterRootIncrease },
 				#endregion
 				#region Bustling Fungus
-				{"bustlingFungi", bustlingFungi},
-				{"bustlingFungusHeals", bustlingFungusHeals },
-				{"fungalDefense", fungalDefense },
-				{"fungalRadius", fungalRadius },
+				//{"bustlingFungi", bustlingFungi},
+				//{"bustlingFungusHeals", bustlingFungusHeals },
+				//{"fungalDefense", fungalDefense },
+				//{"fungalRadius", fungalRadius },
 				#endregion
-				{"meatNuggets", meatNuggets },
-				{"monsterTeeth", monsterTeeth },
+				//{"meatNuggets", meatNuggets },
+				//{"monsterTeeth", monsterTeeth },
 				{"soldiersSyringes", soldiersSyringes }
 			};
+			List<TagCompound> effectCompounds = Effects.ConvertAll((effect) => effect.Save());
+			tag.Add("effects", effectCompounds);
+			return tag;
 		}
 
 		public override void Load(TagCompound tag)
 		{
 			#region Bitter Root
-			bitterRoots = tag.GetInt("bitterRoots");
-			bitterRootIncrease = tag.GetInt("bitterRootIncrease");
+			//bitterRoots = tag.GetInt("bitterRoots");
+			//bitterRootIncrease = tag.GetInt("bitterRootIncrease");
 			#endregion
 			#region Bustling Fungus
-			bustlingFungi = tag.GetInt("bustlingFungi");
-			bustlingFungusHeals = tag.GetInt("bustlingFungusHeals");
-			fungalDefense = tag.GetBool("fungalDefense");
-			fungalRadius = tag.GetFloat("fungalRadius");
+			//bustlingFungi = tag.GetInt("bustlingFungi");
+			//bustlingFungusHeals = tag.GetInt("bustlingFungusHeals");
+			//fungalDefense = tag.GetBool("fungalDefense");
+			//fungalRadius = tag.GetFloat("fungalRadius");
 			#endregion
-			meatNuggets = tag.GetInt("meatNuggets");
-			monsterTeeth = tag.GetInt("monsterTeeth");
-			soldiersSyringes = tag.GetInt("soldiersSyringes");
+			//meatNuggets = tag.GetInt("meatNuggets");
+			//monsterTeeth = tag.GetInt("monsterTeeth");
+			//soldiersSyringes = tag.GetInt("soldiersSyringes");
+			if (tag.ContainsKey("effects"))
+			{
+				List<TagCompound> effectCompounds = tag.GetList<TagCompound>("effects").ToList();
+				Effects.Clear();
+				foreach (var compound in effectCompounds)
+				{
+					Effects.Add(ROREffect.Load(compound));
+				}
+				//sort by creation time
+				Effects.Sort();
+			}
+		}
+
+		public override void Initialize()
+		{
+			Effects = new List<ROREffect>();
+			EffectByType = new Dictionary<Type, List<ROREffect>>();
+			ROREffectManager.Init(this);
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
@@ -295,81 +373,82 @@ namespace RiskOfSlimeRain
 		{
 			if (sproutingEggTimer >= 0) sproutingEggTimer--;
 			#region Medkit
-			if (medkitTimer >= 0 && medkits > 0)
-			{
-				medkitTimer++;
-				if (medkitTimer >= 66)
-				{
-					player.HealEffect(medkits * 10);
-					player.statLife += Math.Min(medkits * 10, MissingHP());
-					medkitTimer = -1;
-				}
-			}
+			//if (medkitTimer >= 0 && medkits > 0)
+			//{
+			//	medkitTimer++;
+			//	if (medkitTimer >= 66)
+			//	{
+			//		player.HealEffect(medkits * 10);
+			//		player.statLife += Math.Min(medkits * 10, MissingHP());
+			//		medkitTimer = -1;
+			//	}
+			//}
 			#endregion
 			#region Piggy Bank
-			if (piggyBankTimer == 0)
-			{
-				piggyBankTimer = 180 / savings;
-				player.QuickSpawnItem(ItemID.CopperCoin, 1);
-			}
-			piggyBankTimer--;
+			//if (piggyBankTimer == 0)
+			//{
+			//	piggyBankTimer = 180 / savings;
+			//	player.QuickSpawnItem(ItemID.CopperCoin, 1);
+			//}
+			//piggyBankTimer--;
 			#endregion
 		}
 
 		public override void PostUpdateBuffs()
 		{
-			if (player.HasBuff(BuffID.PotionSickness)) snakeEyesDiceIncrease = 0;
+			//if (player.HasBuff(BuffID.PotionSickness)) snakeEyesDiceIncrease = 0;
 		}
 
 		public override void PostUpdateEquips()
 		{
-			int totalFungusHeal = (int)(player.statLifeMax2 * 0.045f * bustlingFungusHeals);
+			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
 			if (player.statLifeMax2 == player.statLife) snakeEyesDiceReady = true;
-			if (fungalDefense && Equals(player.velocity, Vector2.Zero) && player.itemAnimation <= 0/*PlayerSolidTileCollision(player)*/)
-			{
-				noMoveTimer++;
-				if (Main.myPlayer == player.whoAmI && noMoveTimer % 120 == 0 && noMoveTimer > 120)
-				{
-					player.AddBuff(ModContent.BuffType<FungalDefenseMechanism>(), 120); //The buff is only applied after 2 seconds has passed
-					foreach (NPC n in Main.npc)
-					{
-						if (n.active && n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
-						{
-							n.HealEffect((int)(totalFungusHeal), true);
-							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
-						}
-					}
-					if (Main.player.Length > 1)
-					{
-						foreach (Player n in Main.player)
-						{
-							if (n.active && Vector2.Distance(player.position, n.position) < fungalRadius)
-							{
-								player.HealEffect((int)(totalFungusHeal), true);
-								player.statLife += (int)(totalFungusHeal);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				noMoveTimer = 0;
-				player.ClearBuff(ModContent.BuffType<FungalDefenseMechanism>());
-			}
-			if (barbedWires > 0 && wireTimer % 60 == 0)
-			{
-				for (int m = 0; m < 200; m++)
-				{
-					NPC enemy = Main.npc[m];
-					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
-					{
-						enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
-					}
-				}
-			}
-			if (wireTimer > 0) wireTimer--;
-			else wireTimer = 59;
+			//int totalFungusHeal = (int)(player.statLifeMax2 * 0.045f * bustlingFungusHeals);
+			//if (fungalDefense && Equals(player.velocity, Vector2.Zero) && player.itemAnimation <= 0/*PlayerSolidTileCollision(player)*/)
+			//{
+			//	noMoveTimer++;
+			//	if (Main.myPlayer == player.whoAmI && noMoveTimer % 120 == 0 && noMoveTimer > 120)
+			//	{
+			//		player.AddBuff(ModContent.BuffType<FungalDefenseMechanism>(), 120); //The buff is only applied after 2 seconds has passed
+			//		foreach (NPC n in Main.npc)
+			//		{
+			//			if (n.active && n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
+			//			{
+			//				n.HealEffect((int)(totalFungusHeal), true);
+			//				n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
+			//			}
+			//		}
+			//		if (Main.player.Length > 1)
+			//		{
+			//			foreach (Player n in Main.player)
+			//			{
+			//				if (n.active && Vector2.Distance(player.position, n.position) < fungalRadius)
+			//				{
+			//					player.HealEffect((int)(totalFungusHeal), true);
+			//					player.statLife += (int)(totalFungusHeal);
+			//				}
+			//			}
+			//		}
+			//	}
+			//}
+			//else
+			//{
+			//	noMoveTimer = 0;
+			//	player.ClearBuff(ModContent.BuffType<FungalDefenseMechanism>());
+			//}
+			//if (barbedWires > 0 && wireTimer % 60 == 0)
+			//{
+			//	for (int m = 0; m < 200; m++)
+			//	{
+			//		NPC enemy = Main.npc[m];
+			//		if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * barbedWires)
+			//		{
+			//			enemy.StrikeNPC((int)((0.5f + (0.2f * (barbedWires - 1))) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
+			//		}
+			//	}
+			//}
+			//if (wireTimer > 0) wireTimer--;
+			//else wireTimer = 59;
 		}
 
 		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
@@ -406,6 +485,8 @@ namespace RiskOfSlimeRain
 			//layers.Add(MiscEffects);
 		}
 
+		//TODO syncing of active effects on enter, and broadcast
+
 		#region Boring commented stuff
 		// In MP, other clients need accurate information about your player or else bugs happen.
 		// clientClone, SyncPlayer, and SendClientChanges, ensure that information is correct.
@@ -416,7 +497,7 @@ namespace RiskOfSlimeRain
 		// ExampleLifeFruits, however might be out of sync. For example, when joining a server, we need to share the exampleLifeFruits variable with all other clients.
 		public override void clientClone(ModPlayer clientClone)
 		{
-			RORPlayer clone = clientClone as RORPlayer;
+			//RORPlayer clone = clientClone as RORPlayer;
 			// Here we would make a backup clone of values that are only correct on the local players Player instance.
 			// Some examples would be RPG stats from a GUI, Hotkey states, and Extra Item Slots
 			// clone.someLocalVariable = someLocalVariable;
@@ -447,7 +528,7 @@ namespace RiskOfSlimeRain
 
 		public override bool CustomBiomesMatch(Player other)
 		{
-			RORPlayer modOther = other.GetModPlayer<RORPlayer>();
+			//RORPlayer modOther = other.GetModPlayer<RORPlayer>();
 			return true;
 			//return ZoneExample == modOther.ZoneExample;
 			//If you have several Zones, you might find the &= operator or other logic operators useful:
@@ -462,7 +543,7 @@ namespace RiskOfSlimeRain
 
 		public override void CopyCustomBiomesTo(Player other)
 		{
-			RORPlayer modOther = other.GetModPlayer<RORPlayer>();
+			//RORPlayer modOther = other.GetModPlayer<RORPlayer>();
 			//modOther.ZoneExample = ZoneExample;
 		}
 

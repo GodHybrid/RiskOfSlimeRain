@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
 	public class FireShieldExplosion : ModProjectile
 	{
 		public override void SetStaticDefaults()
@@ -14,14 +13,11 @@ namespace RiskOfSlimeRain.Projectiles
 		}
 		public override void SetDefaults()
 		{
-			// while the sprite is actually bigger than 15x15, we use 15x15 since it lets the projectile clip into tiles as it bounces. It looks better.
 			projectile.width = 200;
 			projectile.height = 200;
 			projectile.friendly = true;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
-			//projectile.frameCounter = 2;
-			//projectile.frame = 0;
 			projectile.tileCollide = false;
 			projectile.alpha = 255;
 			projectile.timeLeft = 5;
@@ -38,6 +34,12 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 			projectile.Kill();
 			return;
+		}
+
+		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			//This is needed for stuff like explosives and things that have a large hitbox, that spawn centered around the player
+			hitDirection = target.Center.X < Main.player[projectile.owner].Center.X ? -1 : 1;
 		}
 
 		public override void Kill(int timeLeft)

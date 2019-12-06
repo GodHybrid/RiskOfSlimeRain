@@ -20,8 +20,6 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.height = 14;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			projectile.frameCounter = 5;
-			projectile.frame = 0;
 			//projectile.tileCollide = true;
 			projectile.timeLeft = 300;
 		}
@@ -42,13 +40,14 @@ namespace RiskOfSlimeRain.Projectiles
 				projectile.frame = (projectile.frame + 1) % 5;
 			}
 			projectile.velocity.Y = 6f;
-			foreach (NPC enemy in Main.npc)
+			for (int m = 0; m < Main.maxNPCs; m++)
 			{
+				NPC enemy = Main.npc[m];
 				if (enemy.active && enemy.Hitbox.Intersects(projectile.Hitbox))
 				{
 					if (timer == 60)
 					{
-						enemy.StrikeNPC((int)((0.2f + (projectile.ai[1] * 0.4f)) * projectile.ai[0]), 0, 0);
+						enemy.StrikeNPC(projectile.damage, 0, 0);
 					}
 					enemy.AddBuff(BuffID.OnFire, 5);
 				}
