@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects;
-using RiskOfSlimeRain.Items.Consumable.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;

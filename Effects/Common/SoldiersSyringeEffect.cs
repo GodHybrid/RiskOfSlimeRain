@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Effects.Interfaces;
-using System;
+﻿using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common

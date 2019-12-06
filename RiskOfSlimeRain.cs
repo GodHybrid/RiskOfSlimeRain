@@ -1,5 +1,5 @@
-using System.IO;
 using RiskOfSlimeRain.Effects;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -126,7 +126,7 @@ namespace RiskOfSlimeRain
 			{
 				Logger.Info("Unknown message type: " + type);
 			}
-			switch(mType)
+			switch (mType)
 			{
 				case MessageType.SyncEffectsOnEnterToClients:
 					ROREffectManager.HandleOnEnterToClients(reader);

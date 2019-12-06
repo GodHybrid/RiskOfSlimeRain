@@ -1,8 +1,4 @@
-﻿using RiskOfSlimeRain.Effects.Common;
-using Terraria.ID;
-using Terraria.ModLoader;
-
-namespace RiskOfSlimeRain.Items.Consumable.Common
+﻿namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	//TODO BundleOfFireworks
 	/*

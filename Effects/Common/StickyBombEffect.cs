@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Buffs;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;

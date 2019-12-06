@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
-using Microsoft.Xna.Framework;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
-using System.IO;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Effects
 						if (!interfaces.Contains(type)) interfaces.Add(type);
 					}
 				}
-				else if(type.IsSubclassOf(typeof(ROREffect)))
+				else if (type.IsSubclassOf(typeof(ROREffect)))
 				{
 					ROREffect effect = ROREffect.CreateInstance(type);
 					flavorText[type] = effect.FlavorText;
