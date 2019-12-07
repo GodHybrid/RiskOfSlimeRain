@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -28,6 +29,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(NPC target)
 		{
+			if (target.type == NPCID.TargetDummy) return;
 			for (int i = 0; i < 2; i++)
 				Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), 0, 0, Main.myPlayer, Stack * increase);
 		}

@@ -1,9 +1,11 @@
 using RiskOfSlimeRain.Effects;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
+using Terraria.UI;
 
 namespace RiskOfSlimeRain
 {
@@ -135,6 +137,11 @@ namespace RiskOfSlimeRain
 					ROREffectManager.HandleOnEnterToServer(reader);
 					break;
 			}
+		}
+
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		{
+			RORInterfaceLayers.ModifyInterfaceLayers(layers);
 		}
 	}
 

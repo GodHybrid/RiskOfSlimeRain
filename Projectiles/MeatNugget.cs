@@ -5,7 +5,6 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
 	public class MeatNugget : ModProjectile
 	{
 		public override void SetStaticDefaults()
@@ -22,7 +21,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.penetrate = -1;
 			//projectile.tileCollide = true;
 			projectile.timeLeft = 1800;
-
+			drawOriginOffsetY = 2;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)

@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -108,6 +109,7 @@ namespace RiskOfSlimeRain
 			ROREffectManager.GetWeaponCrit(player, item, ref crit);
 		}
 
+		//TODO warbanner rework
 		public void AddBanner()
 		{
 			if (Main.rand.Next(2 * RORWorld.radius.Count + 4) == 1)
@@ -128,11 +130,11 @@ namespace RiskOfSlimeRain
 		{
 			if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
 			{
-				//populate, send to server, which then broadcasts
+				//populate
 				ROREffectManager.Populate(this);
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
-					//send to server
+					//send to server, which then broadcasts
 					ROREffectManager.SendOnEnter((byte)player.whoAmI);
 				}
 			}
@@ -184,41 +186,31 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Init(this);
 		}
 
-		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
-		{
-			if (drawInfo.shadow != 0f)
-			{
-				return;
-			}
-			Player drawPlayer = drawInfo.drawPlayer;
-			Mod mod = ModLoader.GetMod("RiskOfSlimeRain");
-			RORPlayer modPlayer = drawPlayer.GetModPlayer<RORPlayer>();
-
-			if (modPlayer.barbedWires > 0)
-			{
-				float scale = 3f;
-				Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Projectiles/Textures/BarbedWireTexturePic");
-				int drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-				int drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-				DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.6f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
-				Main.playerDrawData.Add(data);
-				//scale = modPlayer.wireRadius * modPlayer.barbedWires;
-				//drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-				//drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-				//data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.2f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
-				//Main.playerDrawData.Add(data);
-			}
-		});
-
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
-			MiscEffectsBack.visible = true;
-			layers.Insert(0, MiscEffectsBack);
-			//MiscEffects.visible = true;
-			//layers.Add(MiscEffects);
+			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(layers));
 		}
 
-		//TODO syncing of active effects on enter, and broadcast
+		public override void PreUpdate()
+		{
+			if (Main.myPlayer == player.whoAmI && RORInterfaceLayers.hoverIndex != -1 && !player.mouseInterface)
+			{
+				//this stuff is here cause only here resetting scrollwheel status works properly
+				if (PlayerInput.ScrollWheelDelta > 0)
+				{
+					Effects[RORInterfaceLayers.hoverIndex].Stack++;
+					PlayerInput.ScrollWheelDelta = 0;
+				}
+				else if (PlayerInput.ScrollWheelDelta < 0)
+				{
+					Effects[RORInterfaceLayers.hoverIndex].Stack--;
+					PlayerInput.ScrollWheelDelta = 0;
+				}
+				//TODO sync, with timer possibly handled elsewhere
+
+				RORInterfaceLayers.hoverIndex = -1;
+			}
+		}
 
 		#region Boring commented stuff
 		// In MP, other clients need accurate information about your player or else bugs happen.

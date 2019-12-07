@@ -47,21 +47,40 @@ namespace RiskOfSlimeRain.Effects
 
 		private TimeSpan _CreationTime = TimeSpan.Zero;
 
+		private int _UnlockedStack = 1;
+
+		/// <summary>
+		/// This is used for the "Custom stacking" config
+		/// </summary>
+		public int UnlockedStack
+		{
+			get => _UnlockedStack;
+			set => _UnlockedStack = Utils.Clamp(value, 0, MaxStack);
+		}
+
 		private int _Stack = 1;
 
 		public int Stack
 		{
 			get => _Stack;
-			set => _Stack = Utils.Clamp(value, 0, MaxStack);
+			set => _Stack = Utils.Clamp(value, 0, _UnlockedStack);
 		}
 
-		public bool CanStack => _Stack < MaxStack;
+		public bool FullStack => _Stack == _UnlockedStack;
+
+		public bool CanStack => _UnlockedStack < MaxStack;
 
 		public bool Active => Stack > 0;
 
 		public ROREffect()
 		{
 			TypeName = GetType().FullName;
+		}
+
+		public void IncreaseStack()
+		{
+			UnlockedStack++;
+			Stack++;
 		}
 
 		/// <summary>
@@ -109,14 +128,15 @@ namespace RiskOfSlimeRain.Effects
 			string typeName = reader.ReadString();
 			ROREffect effect = CreateInstance(typeName);
 			//double time = reader.ReadDouble();
+			int unlockedStack = reader.ReadInt32();
 			int stack = reader.ReadInt32();
-			//effect._CreationTime = TimeSpan.FromSeconds(time);
+			effect.UnlockedStack = unlockedStack;
 			effect.Stack = stack;
 			effect.NetRecieve(reader);
 			return effect;
 		}
 
-		public override string ToString() => $" {nameof(Stack)}: {Stack}, {nameof(Name)}: {Name}";
+		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
 
 		private void SetCreationTime()
 		{
@@ -131,6 +151,7 @@ namespace RiskOfSlimeRain.Effects
 			TagCompound tag = new TagCompound {
 				{"TypeName", TypeName },
 				{"CreationTime", _CreationTime.TotalSeconds },
+				{"UnlockedStack", UnlockedStack },
 				{"Stack", Stack }
 			};
 			PopulateTag(tag);
@@ -142,6 +163,7 @@ namespace RiskOfSlimeRain.Effects
 			string typeName = tag.GetString("TypeName");
 			ROREffect effect = CreateInstance(typeName);
 			effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
+			effect.UnlockedStack = tag.GetInt("UnlockedStack");
 			effect.Stack = tag.GetInt("Stack");
 			effect.PopulateFromTag(tag);
 			return effect;
@@ -160,7 +182,7 @@ namespace RiskOfSlimeRain.Effects
 		public void Send(BinaryWriter writer)
 		{
 			writer.Write(TypeName);
-			//writer.Write(_CreationTime.TotalSeconds);
+			writer.Write(UnlockedStack);
 			writer.Write(Stack);
 			NetSend(writer);
 		}

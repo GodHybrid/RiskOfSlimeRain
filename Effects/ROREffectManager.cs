@@ -99,7 +99,7 @@ namespace RiskOfSlimeRain.Effects
 			{
 				//effect exists, increase stack
 				//CanStack already checked in the hook ran in CanUseItem
-				existing.Stack++;
+				existing.IncreaseStack();
 			}
 			else
 			{

@@ -2,14 +2,14 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
 	public class MortarTubeEffect : ROREffect, IOnHit
 	{
-		const float initial = 0.2f;
-		const float increase = 0.4f;
+		const float increase = 1.7f;
 
 		public override string Description => "9% chance to fire a mortar for 170% damage";
 
@@ -19,17 +19,18 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player);
+			SpawnProjectile(player, target);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player);
+			SpawnProjectile(player, target);
 		}
 
-		void SpawnProjectile(Player player)
+		void SpawnProjectile(Player player, NPC target)
 		{
-			Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.GetWeaponDamage(player.HeldItem) * 1.7f * Stack), 0);
+			if (target.type == NPCID.TargetDummy) return;
+			Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.GetWeaponDamage(player.HeldItem) * increase * Stack), 0);
 		}
 	}
 }
