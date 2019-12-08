@@ -8,6 +8,8 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class StickyBombExplosion : ModProjectile, IExcludeOnHit
 	{
+		public override string Texture => "RiskOfSlimeRain/Empty";
+
 		public override void SetDefaults()
 		{
 			projectile.width = 16;

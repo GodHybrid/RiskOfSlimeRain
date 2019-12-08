@@ -1,5 +1,6 @@
-﻿using RiskOfSlimeRain.Buffs;
+﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -17,17 +18,27 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			AddBuff(target);
+			SpawnProjectile(player, target);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			AddBuff(target);
+			SpawnProjectile(player, target);
 		}
 
-		void AddBuff(NPC target)
+		void SpawnProjectile(Player player, NPC target)
 		{
-			target.AddBuff(ModContent.BuffType<KnifeBleed>(), 120);
+			//first check if there is no projectile already sticking to the target
+			for (int i = 0; i < Main.maxProjectiles; i++)
+			{
+				Projectile p = Main.projectile[i];
+				if (p.active && p.type == ModContent.ProjectileType<RustyKnifeProj>() && p.ai[1] == target.whoAmI)
+				{
+					return;
+				}
+			}
+			int damage = (int)(0.35f * player.GetWeaponDamage(player.HeldItem));
+			Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<RustyKnifeProj>(), 0, 0, Main.myPlayer, damage, target.whoAmI);
 		}
 	}
 }

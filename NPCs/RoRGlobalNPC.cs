@@ -10,8 +10,6 @@ namespace RiskOfSlimeRain.NPCs
 
 		public bool tasered;
 		public bool slowedBySpikestrip;
-		public bool bleeding;
-		public sbyte bleedTimer = 0;
 		public sbyte bombTimer = 0;
 		public sbyte frame = 0;
 		public sbyte frameCounter = 0;
@@ -20,21 +18,10 @@ namespace RiskOfSlimeRain.NPCs
 		{
 			tasered = false;
 			slowedBySpikestrip = false;
-			bleeding = false;
 		}
 
 		public override void AI(NPC npc)
 		{
-			//TODO make this all MP compatible
-			if (bleeding)
-			{
-				bleedTimer++;
-				if (bleedTimer % 30 == 0)
-				{
-					bleedTimer = 0;
-					npc.StrikeNPC((int)(Main.player[Main.myPlayer].HeldItem.damage * 0.35f), 0, 0, false);
-				}
-			}
 			if (tasered)
 			{
 				npc.velocity.X *= 0;

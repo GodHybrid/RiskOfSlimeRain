@@ -88,7 +88,7 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.localAI[1] = value;
 		}
 
-		public int Damage => (int)projectile.localAI[1];
+		public int Damage => (int)projectile.localAI[0];
 
 		public override void AI()
 		{
