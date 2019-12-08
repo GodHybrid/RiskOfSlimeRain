@@ -1,43 +1,38 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
-	public class StickyBombExplosion : ModProjectile
+	public class StickyBombExplosion : ModProjectile, IExcludeOnHit
 	{
-		public override void SetStaticDefaults()
-		{
-			//Main.projFrames[projectile.type] = 2;
-		}
 		public override void SetDefaults()
 		{
-			// while the sprite is actually bigger than 15x15, we use 15x15 since it lets the projectile clip into tiles as it bounces. It looks better.
-			projectile.width = 15;
-			projectile.height = 15;
+			projectile.width = 16;
+			projectile.height = 16;
 			projectile.friendly = true;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
-			//projectile.frameCounter = 2;
-			//projectile.frame = 0;
 			projectile.tileCollide = false;
 			projectile.alpha = 255;
-			projectile.timeLeft = 1;
+			projectile.timeLeft = 3;
+
+			projectile.usesIDStaticNPCImmunity = true;
+			projectile.idStaticNPCHitCooldown = 10;
+		}
+
+		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		{
+			//to apply proper knockback based on on what side the bomb is stuck on (left or right)
+			hitDirection = (target.Center.X > projectile.Center.X).ToDirectionInt();
 		}
 
 		public override void AI()
 		{
-			foreach (NPC enemy in Main.npc)
-			{
-				if ((enemy.CanBeChasedBy() || enemy.netID == 488) && enemy.Hitbox.Intersects(projectile.Hitbox))
-				{
-					enemy.StrikeNPC(projectile.damage, projectile.knockBack, 0);
-				}
-			}
-			projectile.Kill();
-			return;
+			projectile.Damage(); //to apply damage
+			projectile.Kill(); //do disappear right after it
 		}
 
 		public override void Kill(int timeLeft)
@@ -45,20 +40,20 @@ namespace RiskOfSlimeRain.Projectiles
 			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
 			for (int i = 0; i < 2; i++)
 			{
-				Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f)];
+				Dust dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f; //3f
 				if (Main.rand.NextBool(2))
 				{
 					dust.scale = 0.5f;
-					dust.fadeIn = 1f + (float)Main.rand.Next(10) * 0.1f;
+					dust.fadeIn = 1f + Main.rand.Next(10) * 0.1f;
 				}
 			}
 			for (int i = 0; i < 5; i++)
 			{
-				Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f)];
+				Dust dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f);
 				dust.noGravity = true;
 				dust.velocity *= 4f; //5f
-				dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f)];
+				dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f;
 			}
 			//for (int i = 0; i < 2; i++) 

@@ -8,8 +8,8 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	public class StickyBombEffect : ROREffect, IOnHit
 	{
-		const int initial = 60;
-		const int increase = 30;
+		const float initial = 1.0f;
+		const float increase = 0.4f;
 
 		public override string Description => "8% chance to attach a bomb to an enemy, detonating for 140% damage";
 
@@ -29,7 +29,22 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
-			Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<StickyBombProj>(), 0, 0, Main.myPlayer, (int)((initial + increase * Stack) * player.GetWeaponDamage(player.HeldItem)), target.whoAmI);
+			uint packedOffset = GetPackedOffset(new Point(Main.rand.Next(target.width), Main.rand.Next(4, target.height - 4)));
+			int index = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombProj>(), 0, 0, Main.myPlayer, packedOffset, target.whoAmI);
+			if (index > -1)
+			{
+				Projectile proj = Main.projectile[index];
+				int damage = (int)((initial + increase * Stack) * player.GetWeaponDamage(player.HeldItem));
+				proj.localAI[0] = damage;
+				//this doesnt need syncing cause the damage is for spawning another projectile, which is clientside
+			}
+		}
+
+		uint GetPackedOffset(Point offset)
+		{
+			uint x = ((uint)offset.X << 16) & 0xFFFF0000;
+			uint y = (uint)offset.Y;
+			return x + y;
 		}
 	}
 }

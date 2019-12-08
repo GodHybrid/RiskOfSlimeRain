@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
-	public class MortarExplosion : ModProjectile
+	public class MortarExplosion : ModProjectile, IExcludeOnHit
 	{
 		public override void SetStaticDefaults()
 		{

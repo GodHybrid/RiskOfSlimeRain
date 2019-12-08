@@ -1,9 +1,9 @@
-﻿using Terraria.ModLoader;
+﻿using RiskOfSlimeRain.Effects.Interfaces;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
-	public class BundleOfFireworks : ModProjectile
+	public class BundleOfFireworks : ModProjectile, IExcludeOnHit
 	{
 		public override void SetStaticDefaults()
 		{

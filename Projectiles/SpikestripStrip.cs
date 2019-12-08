@@ -20,7 +20,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = new Vector2(0f, 0f);
+			projectile.velocity = Vector2.Zero;
 			return false;
 		}
 

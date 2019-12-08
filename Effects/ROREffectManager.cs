@@ -171,10 +171,6 @@ namespace RiskOfSlimeRain.Effects
 
 		public static Dictionary<Type, List<ROREffect>> GetEffectByType(RORPlayer mPlayer)
 		{
-			if (IsEmpty(mPlayer))
-			{
-				Populate(mPlayer);
-			}
 			return mPlayer.EffectByType;
 		}
 

@@ -8,6 +8,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ShowAllFiles</ProjectView>
-    <ActiveDebugProfile>Terraria</ActiveDebugProfile>
+    <ActiveDebugProfile>TerrariaFast</ActiveDebugProfile>
   </PropertyGroup>
 </Project>

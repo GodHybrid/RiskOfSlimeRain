@@ -78,9 +78,11 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
-
 			if (warbanners > 0 && target.life <= 0) AddBanner();
+
+			//this stuff should be at the bottom of everything
+			if (proj.modProjectile is IExcludeOnHit) return;
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
 
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)

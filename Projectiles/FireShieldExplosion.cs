@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class FireShieldExplosion : ModProjectile
+	public class FireShieldExplosion : ModProjectile, IExcludeOnHit
 	{
 		public override void SetStaticDefaults()
 		{

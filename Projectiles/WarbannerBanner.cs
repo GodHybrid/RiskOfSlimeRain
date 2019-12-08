@@ -50,10 +50,5 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 			return;
 		}
-
-		public override void Kill(int timeLeft)
-		{
-
-		}
 	}
 }

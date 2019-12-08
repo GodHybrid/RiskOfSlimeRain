@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class GasBallFire : ModProjectile
+	public class GasBallFire : ModProjectile, IExcludeOnHit
 	{
 		byte timer = 0;
 

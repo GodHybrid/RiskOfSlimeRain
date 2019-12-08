@@ -4,7 +4,6 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
 	public class MortarRocket : ModProjectile
 	{
 		public override void SetStaticDefaults()
