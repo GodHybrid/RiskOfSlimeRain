@@ -1,4 +1,5 @@
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -136,6 +137,9 @@ namespace RiskOfSlimeRain
 				case MessageType.SyncEffectsOnEnterToServer:
 					ROREffectManager.HandleOnEnterToServer(reader);
 					break;
+				case MessageType.BroadcastSound:
+					SoundHelper.HandleBroadcastSound(reader, whoAmI);
+					break;
 			}
 		}
 
@@ -149,6 +153,7 @@ namespace RiskOfSlimeRain
 	{
 		None = 0,
 		SyncEffectsOnEnterToClients = 1,
-		SyncEffectsOnEnterToServer = 2
+		SyncEffectsOnEnterToServer = 2,
+		BroadcastSound = 3
 	}
 }

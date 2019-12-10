@@ -1,4 +1,8 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Common;
+using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -51,6 +55,12 @@ namespace RiskOfSlimeRain.NPCs
 				}
 				Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
 			}
+		}
+
+		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+		{
+			SpikestripEffect.PostDraw(npc, spriteBatch, drawColor);
+			//ROREffectManager.Perform<IPostDrawNPC>(this, e => e.PostDraw(npc, spriteBatch, drawColor));
 		}
 	}
 }

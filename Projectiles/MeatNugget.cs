@@ -33,7 +33,7 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void AI()
 		{
 			projectile.rotation = projectile.velocity.ToRotation();
-			projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+			projectile.velocity.Y += 0.2f;
 			if (projectile.velocity.Y > 13f)
 			{
 				projectile.velocity.Y = 13f;
@@ -50,7 +50,6 @@ namespace RiskOfSlimeRain.Projectiles
 					projectile.Kill();
 					break;
 				}
-
 			}
 		}
 	}

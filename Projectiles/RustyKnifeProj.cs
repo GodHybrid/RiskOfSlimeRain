@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -110,7 +108,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					Vector2 pos = center + unit;
 					pos += new Vector2(Main.rand.NextFloat(-2f, 2f), Main.rand.NextFloat(-2f, 2f));
-					Dust.NewDustPerfect(pos, 105, Vector2.Zero);
+					Dust.NewDustPerfect(pos, 105, new Vector2(npc.direction, 0f));
 				}
 				InitTimer++;
 			}

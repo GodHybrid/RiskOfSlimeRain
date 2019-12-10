@@ -18,11 +18,13 @@ namespace RiskOfSlimeRain
 {
 	public class RORPlayer : ModPlayer
 	{
-		//Only used for saving/loading/housekeeping
+		//IMPORTANT: both structures keep the same effect object in them. modifying it in one of them also modifies it in the other
+
+		//Only used for saving/loading/housekeeping/drawing
 		//This is the thing synced to clients on world join aswell, the dict is rebuilt from that anyway
 		public List<ROREffect> Effects { get; set; }
 
-		//Actual runtime access
+		//Actual access for performing the effect
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
@@ -34,7 +36,6 @@ namespace RiskOfSlimeRain
 		public bool affectedWarbanner { get; set; } = false; //
 		#endregion
 		#region Offensive Common
-		public int barbedWires { get; set; } = 0;
 		public int stickyBombs { get; set; } = 0;
 		#endregion
 
@@ -81,12 +82,24 @@ namespace RiskOfSlimeRain
 			if (warbanners > 0 && target.life <= 0) AddBanner();
 
 			//this stuff should be at the bottom of everything
+
+			//if this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
+			//if this projectile is a minion, make it only proc 10% of the time
+			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
 
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
+			//this stuff should be at the bottom of everything
+
+			//if this projectile shouldn't proc at all
+			if (proj.modProjectile is IExcludeOnHit) return;
+			//if this projectile is a minion, make it only proc 10% of the time
+			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}
 

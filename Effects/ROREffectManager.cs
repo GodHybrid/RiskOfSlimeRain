@@ -187,6 +187,11 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
+		//public static void Perform<T>(Action<T> action) where T : IROREffectInterface
+		//{
+
+		//}
+
 		#region Syncing
 		public static void HandleOnEnterToServer(BinaryReader reader)
 		{

@@ -84,7 +84,7 @@ namespace RiskOfSlimeRain
 				if (Config.Instance.CustomStacking && !effect.FullStack) text += "/" + effect.UnlockedStack;
 				Vector2 length = Main.fontItemStack.MeasureString(text);
 				bottomCenter.Y -= length.Y / 2;
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, Color.White, 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
 			return true;
 		};

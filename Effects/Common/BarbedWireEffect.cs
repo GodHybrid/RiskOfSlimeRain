@@ -22,6 +22,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void PostUpdateEquips(Player player)
 		{
+			if (Main.myPlayer != player.whoAmI) return;
 			if (++wireTimer % wireTimerMax == 0)
 			{
 				for (int m = 0; m < Main.maxNPCs; m++)
@@ -29,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 					NPC enemy = Main.npc[m];
 					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * Stack)
 					{
-						enemy.StrikeNPC((int)((initial + increase * Stack) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
+						player.ApplyDamageToNPC(enemy, (int)((initial + increase * Stack) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
 					}
 				}
 				wireTimer = 0;
@@ -48,10 +49,10 @@ namespace RiskOfSlimeRain.Effects.Common
 			RORPlayer modPlayer = drawPlayer.GetModPlayer<RORPlayer>();
 
 			float scale = 3f;
-			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Projectiles/Textures/BarbedWireTexturePic");
+			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/BarbedWire");
 			int drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-			int drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.6f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+			int drawY = (int)(drawPlayer.Center.Y + (int)drawPlayer.gfxOffY - tex.Width * 0.5f * scale - Main.screenPosition.Y);
+			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * (0.6f * (255 - drawPlayer.immuneAlpha) / 255f), 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
 			Main.playerDrawData.Add(data);
 			//scale = modPlayer.wireRadius * modPlayer.barbedWires;
 			//drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
