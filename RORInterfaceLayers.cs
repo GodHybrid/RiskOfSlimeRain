@@ -11,13 +11,13 @@ namespace RiskOfSlimeRain
 {
 	public static class RORInterfaceLayers
 	{
-		internal const int INVENTORY_SIZE = 47;
+		private const int INVENTORY_SIZE = 47;
 
 		public static string Name => ModContent.GetInstance<RiskOfSlimeRain>().Name;
 
 		public static int hoverIndex = -1;
 
-		internal static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			if (Main.gameMenu) return;
 			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));

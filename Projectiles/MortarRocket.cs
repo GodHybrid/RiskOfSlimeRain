@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	//TODO redo this
 	public class MortarRocket : ModProjectile
 	{
 		public override void SetStaticDefaults()

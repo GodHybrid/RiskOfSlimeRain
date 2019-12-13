@@ -37,8 +37,6 @@ namespace RiskOfSlimeRain.Effects.Common
 			}
 		}
 
-
-
 		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)

@@ -235,6 +235,7 @@ namespace RiskOfSlimeRain.Effects
 			Player player = Main.player[whoAmI];
 			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
 			int length = reader.ReadInt32();
+			mPlayer.Effects = new List<ROREffect>();
 			for (int i = 0; i < length; i++)
 			{
 				ROREffect effect = ROREffect.CreateInstanceFromNet(reader);
@@ -242,6 +243,52 @@ namespace RiskOfSlimeRain.Effects
 			}
 			Populate(mPlayer);
 		}
+
+		public static void HandleSingleEffectStack(BinaryReader reader)
+		{
+			byte whoAmI = reader.ReadByte();
+			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
+			int index = reader.ReadInt32();
+			ROREffect effect = mPlayer.Effects[index];
+			effect.NetRecieveStack(reader);
+
+			//if (Main.netMode == NetmodeID.MultiplayerClient)
+			//{
+			//	Main.NewText("List length: " + mPlayer.Effects.Count);
+			//	Main.NewText("received changed stack (" + effect.Stack + "): " + effect.Name + " from " + whoAmI.ToString());
+			//}
+			//else if (Main.netMode == NetmodeID.Server)
+			//{
+			//	Console.WriteLine("List length: " + mPlayer.Effects.Count);
+			//	Console.WriteLine("received changed stack (" + effect.Stack + "): " + effect.Name + " from " + whoAmI.ToString());
+			//}
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				//forward to other players
+				SendSingleEffectStack(whoAmI, index, effect, -1, whoAmI);
+			}
+		}
+
+		public static void SendSingleEffectStack(byte whoAmI, int index, ROREffect effect, int to = -1, int from = -1)
+		{
+			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
+			packet.Write((byte)MessageType.SyncSingleEffectStack);
+			packet.Write((byte)whoAmI);
+			packet.Write(index);
+			effect.NetSendStack(packet);
+			packet.Send(to, from);
+
+			//if (Main.netMode == NetmodeID.MultiplayerClient)
+			//{
+			//	Main.NewText(whoAmI.ToString() + " sent changed stack (" + effect.Stack + "): " + effect.Name + " to " + to);
+			//}
+			//else if (Main.netMode == NetmodeID.Server)
+			//{
+			//	Console.WriteLine(whoAmI.ToString() + " sent changed stack (" + effect.Stack + "): " + effect.Name + " to " + to);
+			//}
+		}
+
 		#endregion
 
 		#region Special Hooks

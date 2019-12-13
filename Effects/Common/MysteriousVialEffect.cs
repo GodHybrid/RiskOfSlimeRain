@@ -1,6 +1,9 @@
-﻿using RiskOfSlimeRain.Effects.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Dusts;
+using RiskOfSlimeRain.Effects.Interfaces;
 using System;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -16,6 +19,13 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			//the number will be halved in redcode, hence the 2
 			player.lifeRegen += (int)Math.Round(Stack * 2 * increase);
+
+			if (Main.rand.NextBool(30))
+			{
+				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDust>(), 0, 0, 0, Color.LightGreen * 0.9f);
+				dust.velocity.X *= 0f;
+				dust.velocity.Y = Main.rand.NextFloat(-0.8f, -1f);
+			}
 		}
 	}
 }

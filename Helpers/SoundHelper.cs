@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using System;
 using System.IO;
 using Terraria;
 using Terraria.Audio;
@@ -44,7 +43,7 @@ namespace RiskOfSlimeRain.Helpers
 
 			//from here, only client
 			//Main.NewText(Main.myPlayer.ToString() + " played a sound and broadcasted");
-			SendSound(type, -1, -1, x, y, Style, volumeScale, pitchOffset);
+			SendSound(type, x, y, Style, volumeScale, pitchOffset);
 
 			return instance;
 		}
@@ -52,7 +51,8 @@ namespace RiskOfSlimeRain.Helpers
 		#region Sound Netcode
 		public static void HandleBroadcastSound(BinaryReader reader, int whoAmI)
 		{
-			int type = reader.ReadInt32();
+			//only 50 sound types, hence byte
+			int type = reader.ReadByte();
 			int x = reader.ReadInt32();
 			int y = reader.ReadInt32();
 			int Style = reader.ReadInt32();
@@ -63,7 +63,7 @@ namespace RiskOfSlimeRain.Helpers
 			{
 				//forward to other players
 				//Console.WriteLine(whoAmI.ToString() + " sent a broadcast request, sending to everyone else");
-				SendSound(type, -1, whoAmI, x, y, Style, volumeScale, pitchOffset);
+				SendSound(type, x, y, Style, volumeScale, pitchOffset, -1, whoAmI);
 			}
 			else
 			{
@@ -72,11 +72,12 @@ namespace RiskOfSlimeRain.Helpers
 			}
 		}
 
-		private static void SendSound(int type, int to = -1, int from = -1, int x = -1, int y = -1, int Style = 1, float volumeScale = 1, float pitchOffset = 0)
+		private static void SendSound(int type, int x = -1, int y = -1, int Style = 1, float volumeScale = 1, float pitchOffset = 0, int to = -1, int from = -1)
 		{
 			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
 			packet.Write((byte)MessageType.BroadcastSound);
-			packet.Write(type);
+			//only 50 sound types, hence byte
+			packet.Write((byte)type);
 			packet.Write(x);
 			packet.Write(y);
 			packet.Write(Style);

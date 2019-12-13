@@ -16,7 +16,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void ModifyDamage(NPC target, ref int damage)
 		{
-			SoundHelper.PlaySound(SoundID.Shatter, (int)target.Center.X, (int)target.Center.Y, -1, 1f, -0.7f);
+			SoundHelper.PlaySound(SoundID.Shatter, (int)target.Center.X, (int)target.Center.Y, -1, 0.8f, -0.7f);
 			if (target.life >= target.lifeMax * 0.8f) damage += (int)(damage * (initial + increase * Stack));
 		}
 

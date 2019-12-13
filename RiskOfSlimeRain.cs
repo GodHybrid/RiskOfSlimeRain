@@ -137,6 +137,9 @@ namespace RiskOfSlimeRain
 				case MessageType.SyncEffectsOnEnterToServer:
 					ROREffectManager.HandleOnEnterToServer(reader);
 					break;
+				case MessageType.SyncSingleEffectStack:
+					ROREffectManager.HandleSingleEffectStack(reader);
+					break;
 				case MessageType.BroadcastSound:
 					SoundHelper.HandleBroadcastSound(reader, whoAmI);
 					break;
@@ -154,6 +157,7 @@ namespace RiskOfSlimeRain
 		None = 0,
 		SyncEffectsOnEnterToClients = 1,
 		SyncEffectsOnEnterToServer = 2,
-		BroadcastSound = 3
+		SyncSingleEffectStack = 3,
+		BroadcastSound = 4
 	}
 }

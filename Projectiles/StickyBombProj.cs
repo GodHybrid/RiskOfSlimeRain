@@ -113,8 +113,8 @@ namespace RiskOfSlimeRain.Projectiles
 			if (InitTimer < 8)
 			{
 				//167 also decent
-				if (InitTimer == 0) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 1f, 0.8f);
-				if (InitTimer == 7) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 1f, 0.6f);
+				if (InitTimer == 0) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.8f);
+				if (InitTimer == 7) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
 				InitTimer++;
 			}
 

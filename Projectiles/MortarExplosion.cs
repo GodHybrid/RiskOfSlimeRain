@@ -6,6 +6,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	//TODO redo this
 	public class MortarExplosion : ModProjectile, IExcludeOnHit
 	{
 		public override void SetStaticDefaults()

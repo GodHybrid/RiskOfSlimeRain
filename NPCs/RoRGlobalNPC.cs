@@ -1,8 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
-using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -59,8 +57,8 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
 		{
+			//hardcoded for now
 			SpikestripEffect.PostDraw(npc, spriteBatch, drawColor);
-			//ROREffectManager.Perform<IPostDrawNPC>(this, e => e.PostDraw(npc, spriteBatch, drawColor));
 		}
 	}
 }

@@ -128,10 +128,7 @@ namespace RiskOfSlimeRain.Effects
 			string typeName = reader.ReadString();
 			ROREffect effect = CreateInstance(typeName);
 			//double time = reader.ReadDouble();
-			int unlockedStack = reader.ReadInt32();
-			int stack = reader.ReadInt32();
-			effect.UnlockedStack = unlockedStack;
-			effect.Stack = stack;
+			effect.NetRecieveStack(reader);
 			effect.NetRecieve(reader);
 			return effect;
 		}
@@ -182,8 +179,7 @@ namespace RiskOfSlimeRain.Effects
 		public void Send(BinaryWriter writer)
 		{
 			writer.Write(TypeName);
-			writer.Write(UnlockedStack);
-			writer.Write(Stack);
+			NetSendStack(writer);
 			NetSend(writer);
 		}
 
@@ -195,6 +191,18 @@ namespace RiskOfSlimeRain.Effects
 		public virtual void NetRecieve(BinaryReader reader)
 		{
 
+		}
+
+		public void NetSendStack(BinaryWriter writer)
+		{
+			writer.Write(UnlockedStack);
+			writer.Write(Stack);
+		}
+
+		public void NetRecieveStack(BinaryReader reader)
+		{
+			UnlockedStack = reader.ReadInt32();
+			Stack = reader.ReadInt32();
 		}
 
 		public int CompareTo(ROREffect other)
