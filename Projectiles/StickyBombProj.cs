@@ -98,7 +98,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void Animate()
 		{
-			if (++projectile.frameCounter > 4)
+			if (++projectile.frameCounter > 5)
 			{
 				projectile.frameCounter = 0;
 				if (++projectile.frame >= Main.projFrames[projectile.type])

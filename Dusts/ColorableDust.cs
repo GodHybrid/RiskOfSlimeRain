@@ -25,7 +25,9 @@ namespace RiskOfSlimeRain.Dusts
 			}
 			if (!dust.noLight)
 			{
-				Lighting.AddLight(dust.position, ((Color)GetAlpha(dust, dust.color * 0.5f)).ToVector3());
+				Color color = (Color)GetAlpha(dust, dust.color * 0.5f);
+				if (color == null) return false;
+				Lighting.AddLight(dust.position, color.ToVector3());
 			}
 			return false;
 		}

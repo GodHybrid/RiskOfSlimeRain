@@ -1,40 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class StickyBombExplosion : ModProjectile, IExcludeOnHit
+	public class StickyBombExplosion : InstantExplosion
 	{
-		public override string Texture => "RiskOfSlimeRain/Empty";
-
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.alpha = 255;
-			projectile.timeLeft = 3;
-
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 10;
-		}
-
-		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-		{
-			//to apply proper knockback based on on what side the bomb is stuck on (left or right)
-			hitDirection = (target.Center.X > projectile.Center.X).ToDirectionInt();
-		}
-
-		public override void AI()
-		{
-			projectile.Damage(); //to apply damage
-			projectile.Kill(); //do disappear right after it
+			base.SetDefaults();
 		}
 
 		public override void Kill(int timeLeft)
@@ -58,7 +32,7 @@ namespace RiskOfSlimeRain.Projectiles
 				dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f;
 			}
-			//for (int i = 0; i < 2; i++) 
+			//for (int i = 0; i < 2; i++) //3
 			//{
 			//	float scaleFactor10 = 0.33f;
 			//	if (i == 1)
@@ -69,19 +43,19 @@ namespace RiskOfSlimeRain.Projectiles
 			//	{
 			//		scaleFactor10 = 1f;
 			//	}
-			//	Gore gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+			//	Gore gore = Gore.NewGoreDirect(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 			//	gore.velocity *= scaleFactor10;
 			//	gore.velocity.X += 1f;
 			//	gore.velocity.Y += 1f;
-			//	gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+			//	gore = Gore.NewGoreDirect(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 			//	gore.velocity *= scaleFactor10;
 			//	gore.velocity.X += -1f;
 			//	gore.velocity.Y += 1f;
-			//	gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+			//	gore = Gore.NewGoreDirect(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 			//	gore.velocity *= scaleFactor10;
 			//	gore.velocity.X += 1f;
 			//	gore.velocity.Y += -1f;
-			//	gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+			//	gore = Gore.NewGoreDirect(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 			//	gore.velocity *= scaleFactor10;
 			//	gore.velocity.X += -1f;
 			//	gore.velocity.Y += -1f;

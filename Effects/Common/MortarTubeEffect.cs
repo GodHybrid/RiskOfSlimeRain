@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string Description => "9% chance to fire a mortar for 170% damage";
 
-		public override string FlavorText => "You stick explosives down the end, then you fire the explosive.\nI suppose you can beat them with the tube afterwards.";
+		public override string FlavorText => "You stick explosives down the end, then you fire the explosive\nI suppose you can beat them with the tube afterwards";
 
 		public override float Chance => 0.09f;
 
@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		void SpawnProjectile(Player player, NPC target)
 		{
 			if (target.type == NPCID.TargetDummy) return;
-			Projectile.NewProjectile(player.Center, new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarRocket>(), (int)(player.GetWeaponDamage(player.HeldItem) * increase * Stack), 0);
+			Projectile.NewProjectile(player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, (int)(player.GetWeaponDamage(player.HeldItem) * increase * Stack));
 		}
 	}
 }
