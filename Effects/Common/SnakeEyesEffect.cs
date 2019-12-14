@@ -67,7 +67,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			writer.Write(failedAttempts);
 		}
 
-		public override void NetRecieve(BinaryReader reader)
+		public override void NetReceive(BinaryReader reader)
 		{
 			failedAttempts = reader.ReadByte();
 		}

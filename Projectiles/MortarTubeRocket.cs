@@ -97,7 +97,7 @@ namespace RiskOfSlimeRain.Projectiles
 			//First, change the period from 0 to TwoPi, to 0 to 1 by multiplying the argument with TwoPi
 			//Then, stretch that period by the maxTimer
 			//now, DustTimer is in range of 0 to 60, and our Sin is in range of 0 to 60, so everything is fine
-			//lastly, since we stretch its return values from -1 to 1, to -fanout to fanout
+			//lastly, we stretch its return values from -1 to 1, to -fanout to fanout
 
 			Vector2 direction = Vector2.Normalize(projectile.velocity);
 			//position of the fin

@@ -250,7 +250,7 @@ namespace RiskOfSlimeRain.Effects
 			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
 			int index = reader.ReadInt32();
 			ROREffect effect = mPlayer.Effects[index];
-			effect.NetRecieveStack(reader);
+			effect.NetReceiveStack(reader);
 
 			//if (Main.netMode == NetmodeID.MultiplayerClient)
 			//{
