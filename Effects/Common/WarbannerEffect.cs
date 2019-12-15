@@ -1,15 +1,19 @@
 ﻿using RiskOfSlimeRain.Buffs;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
+	//TODO
 	public class WarbannerEffect : ROREffect, IOnHit
 	{
 		public override string Description => "Chance to drop an empowering banner when killing an enemy";
 
 		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
+
+		public override bool AlwaysProc => false;
 
 		public override float Chance => 0.00f;
 

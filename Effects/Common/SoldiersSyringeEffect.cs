@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -7,9 +8,9 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const float increase = 0.1f;
 
-		public override int MaxStack => 13;
+		public override int MaxRecommendedStack => 13;
 
-		public override string Description => "Increase attack speed by 15%";
+		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}%";
 
 		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
 

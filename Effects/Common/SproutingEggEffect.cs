@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 
@@ -10,7 +11,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const int timerMax = 420;
 		int timer = timerMax;
 
-		public override string Description => "Permanently increases health regeneration by 2.4 health per second when out of combat for 7 seconds";
+		public override string Description => $"Permanently increases health regeneration by {increase} health per second when out of combat for {timerMax/60} seconds";
 
 		public override string FlavorText => "This egg seems to be somewhere between hatching and dying\nI can't bring it to myself to cook it alive";
 

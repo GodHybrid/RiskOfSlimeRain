@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.Effects
 				}
 				else if (type.IsSubclassOf(typeof(ROREffect)))
 				{
-					ROREffect effect = ROREffect.CreateInstance(type);
+					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
 					flavorColor[type] = effect.FlavorColor;
 				}
@@ -104,7 +104,7 @@ namespace RiskOfSlimeRain.Effects
 			else
 			{
 				//effect doesn't exist, add one
-				ROREffect newEffect = ROREffect.NewInstance<T>();
+				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.player);
 				//by definition of the list order, append
 				effects.Add(newEffect);
 				Type[] validInterfaces = GetValidInterfaces(typeof(T));
@@ -183,7 +183,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<T>(mPlayer);
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing && effect is T t) action(t);
+				if (effect.Proccing && effect is T t)
+				{
+					action(t);
+				}
 			}
 		}
 
@@ -238,7 +241,7 @@ namespace RiskOfSlimeRain.Effects
 			mPlayer.Effects = new List<ROREffect>();
 			for (int i = 0; i < length; i++)
 			{
-				ROREffect effect = ROREffect.CreateInstanceFromNet(reader);
+				ROREffect effect = ROREffect.CreateInstanceFromNet(player, reader);
 				mPlayer.Effects.Add(effect);
 			}
 			Populate(mPlayer);
@@ -297,7 +300,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing) ((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+				if (effect.Proccing)
+				{
+					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+				}
 			}
 		}
 
@@ -306,7 +312,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing) ((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+				if (effect.Proccing)
+				{
+					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+				}
 			}
 		}
 
@@ -315,7 +324,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing) ((IGetWeaponCrit)effect).GetWeaponCrit(player, item, ref crit);
+				if (effect.Proccing)
+				{
+					((IGetWeaponCrit)effect).GetWeaponCrit(player, item, ref crit);
+				}
 			}
 		}
 
@@ -325,7 +337,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing) ((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
+				if (effect.Proccing)
+				{
+					((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
+				}
 			}
 			return multiplier;
 		}
@@ -336,7 +351,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing) ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+				if (effect.Proccing)
+				{
+					ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+				}
 			}
 			//if atleast one PreHurt returns false, it will return false
 			return ret;

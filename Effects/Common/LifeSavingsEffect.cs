@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 
@@ -19,6 +20,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			timer--;
 			if (timer < 0)
 			{
+				//TODO player player.SellItem
 				player.QuickSpawnItem(ItemID.CopperCoin, 1);
 				timer = interval / Stack + 1;
 			}

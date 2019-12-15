@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.NPCs;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
@@ -12,8 +13,10 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const int initial = 60;
 		const int increase = 60;
+		//effect takes place in the RORGlobalNPC with different values
+		const float slow = 0.2f;
 
-		public override string Description => "Drop spikestrips on hit, slowing enemies by 20%";
+		public override string Description => $"Drop spikestrips on hit, slowing enemies by {slow.ToPercent()}";
 
 		public override string FlavorText => "The doctors say I don't have much time left\nSince you're in the force now and all, I felt obligated to return it to you";
 

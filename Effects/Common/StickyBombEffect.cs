@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
@@ -11,9 +12,11 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float initial = 1.0f;
 		const float increase = 0.4f;
 
-		public override string Description => "8% chance to attach a bomb to an enemy, detonating for 140% damage";
+		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {(initial + increase).ToPercent()} damage";
 
 		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF.";
+
+		public override bool AlwaysProc => false;
 
 		public override float Chance => 0.08f;
 

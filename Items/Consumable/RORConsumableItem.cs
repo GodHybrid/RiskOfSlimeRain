@@ -18,15 +18,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public Color FlavorTextColor => ROREffectManager.GetFlavorColor<T>();
 
 		public bool HasFlavorText => FlavorText != string.Empty;
-
-		/// <summary>
-		/// Called when the item is about to be used. Default return is if the effect can still stack
-		/// </summary>
-		public virtual bool CanUse(RORPlayer mPlayer)
-		{
-			ROREffect effect = ROREffect.CreateInstance(typeof(T));
-			return effect.CanUse(mPlayer.player);
-		}
 		#endregion
 
 		#region tml hooks
@@ -34,7 +25,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		{
 			ROREffectManager.SetTexture<T>(Texture);
 
-			ROREffect effect = ROREffect.CreateInstance(typeof(T));
+			ROREffect effect = ROREffect.CreateInstanceNoPlayer(typeof(T));
 			if (effect.Name != string.Empty)
 			{
 				DisplayName.SetDefault(effect.Name);
@@ -48,7 +39,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			ROREffect effect = player.GetModPlayer<RORPlayer>().Effects.FirstOrDefault(e => e.GetType().Equals(typeof(T)));
 			if (effect == null)
 			{
-				effect = ROREffect.CreateInstance(typeof(T));
+				effect = ROREffect.CreateInstance(player, typeof(T));
 			}
 			return effect.CanUse(player);
 		}

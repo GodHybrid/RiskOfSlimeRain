@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 
@@ -9,7 +10,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const int initial = 5;
 		const int increase = 5;
 
-		public override string Description => "Killing an enemy will heal you for 10 health";
+		public override string Description => $"Killing an enemy will heal you for {initial + increase} health";
 
 		public override string FlavorText => "Sometimes I felt like it helped me on hunts, ya know?\nLike... instincts";
 

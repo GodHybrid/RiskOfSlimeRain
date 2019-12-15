@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -16,7 +17,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float initial = 0.33f;
 		const float increase = 0.17f;
 
-		public override string Description => "Touching enemies deals 50% of your current damage every second";
+		public override string Description => $"Touching enemies deals {(initial + increase).ToPercent()} of your current damage every second";
 
 		public override string FlavorText => "Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...";
 

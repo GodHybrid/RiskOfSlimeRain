@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
@@ -11,7 +12,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float initial = 0.2f;
 		const float increase = 0.4f;
 
-		public override string Description => "Killing enemies burns the ground to deal 60% damage and set enemies on fire";
+		public override string Description => $"Killing enemies burns the ground to deal {(initial + increase).ToPercent()} damage and set enemies on fire";
 
 		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars.";
 

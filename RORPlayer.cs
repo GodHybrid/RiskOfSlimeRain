@@ -195,7 +195,7 @@ namespace RiskOfSlimeRain
 				Effects.Clear();
 				foreach (var compound in effectCompounds)
 				{
-					Effects.Add(ROREffect.Load(compound));
+					Effects.Add(ROREffect.Load(player, compound));
 				}
 				//sort by creation time
 				Effects.Sort();
@@ -225,11 +225,13 @@ namespace RiskOfSlimeRain
 				{
 					Effects[RORInterfaceLayers.hoverIndex].Stack++;
 					PlayerInput.ScrollWheelDelta = 0;
+					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
 				}
 				else if (PlayerInput.ScrollWheelDelta < 0)
 				{
 					Effects[RORInterfaceLayers.hoverIndex].Stack--;
 					PlayerInput.ScrollWheelDelta = 0;
+					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
 				}
 				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != Effects[RORInterfaceLayers.hoverIndex].Stack)
 				{

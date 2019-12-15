@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -7,9 +8,9 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const float increase = 0.07895f;
 
-		public override int MaxStack => 38;
+		public override int MaxRecommendedStack => 38;
 
-		public override string Description => "Permanently increases maximum life by roughly 8%";
+		public override string Description => $"Permanently increases maximum life by roughly {increase.ToPercent(0)}";
 
 		public override string FlavorText => "Biggest. Ginseng. Root. Ever.";
 

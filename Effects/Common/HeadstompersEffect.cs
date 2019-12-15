@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.DataStructures;
@@ -10,7 +11,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float initial = 5.07f;
 		const float increase = 0.3f;
 
-		public override string Description => "Hurt enemies by falling for up to 507% damage";
+		public override string Description => $"Hurt enemies by falling for up to {initial.ToPercent()} damage";
 
 		public override string FlavorText => "Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. \nLiterally. Vertically.";
 

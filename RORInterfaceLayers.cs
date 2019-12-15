@@ -44,8 +44,11 @@ namespace RiskOfSlimeRain
 
 			int numHorizontal = (Main.screenWidth - 3 * INVENTORY_SIZE) / 38;
 			int lineOffset = 0;
+			int numLines = effects.Count / (numHorizontal + 1);
+			int yStart = Main.screenHeight - 30 - numLines * 50;
 			ROREffect effect;
 			Texture2D texture;
+
 			for (int i = 0; i < effects.Count; i++)
 			{
 				effect = effects[i];
@@ -55,7 +58,7 @@ namespace RiskOfSlimeRain
 				//2 * INVENTORY_SIZE is the distance needed to not overlap with recipe UI
 				xPosition = 2 * INVENTORY_SIZE + (i - lineOffset * numHorizontal) * 38;
 
-				yPosition = Main.screenHeight - 130 + lineOffset * 50;
+				yPosition = yStart + lineOffset * 50;
 
 				sourceRect = texture.Bounds;
 				int width = sourceRect.Width;
@@ -78,14 +81,31 @@ namespace RiskOfSlimeRain
 				}
 
 				Main.spriteBatch.Draw(texture, destRect, sourceRect, color);
+
 				//Vector2 bottomCenter = destRect.BottomLeft();
 				Vector2 bottomCenter = new Vector2(xPosition - width / 2, yPosition + 14);
 				string text = "x" + effect.Stack.ToString();
-				if (Config.Instance.CustomStacking && !effect.FullStack) text += "/" + effect.UnlockedStack;
+				if (!effect.FullStack) text += "/" + effect.UnlockedStack;
 				Vector2 length = Main.fontItemStack.MeasureString(text);
 				bottomCenter.Y -= length.Y / 2;
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
+				color = Color.White;
+				if (effect.Capped)
+				{
+					color = Color.Green;
+				}
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
+
+			if (hoverIndex > -1)
+			{
+				effect = effects[hoverIndex];
+				Main.hoverItemName = effect.Description;
+				if (effect.Capped)
+				{
+					Main.hoverItemName += "\n" + effect.CappedMessage;
+				}
+			}
+
 			return true;
 		};
 	}

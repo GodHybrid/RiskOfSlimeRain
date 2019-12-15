@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
@@ -11,9 +12,11 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const int increase = 6;
 
-		public override string Description => "Upon use enemies will have an 8% chance to drop two meat nuggets\nEach meat nugget recovers 6 health";
+		public override string Description => $"Upon use enemies will have an {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {increase} health";
 
 		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
+
+		public override bool AlwaysProc => false;
 
 		public override float Chance => 0.08f;
 

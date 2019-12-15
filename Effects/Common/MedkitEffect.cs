@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 
@@ -6,10 +7,11 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	public class MedkitEffect : ROREffect, IPostUpdateEquips, IPostHurt
 	{
-		const int amount = 10;
 		int timer = -1;
+		const int amount = 10;
+		const int maxTimer = 66;
 
-		public override string Description => "Heal for 10 health 1.1 seconds after receiving damage";
+		public override string Description => $"Heal for {amount} health {maxTimer/10d} seconds after receiving damage";
 
 		public override string FlavorText => "Each Medkit should contain bandages, sterile dressings, soap,\nantiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen";
 
@@ -18,7 +20,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			if (timer >= 0)
 			{
 				timer++;
-				if (timer >= 66)
+				if (timer >= maxTimer)
 				{
 					player.HealEffect(Stack * amount);
 					player.statLife += Math.Min(Stack * amount, player.statLifeMax2 - player.statLife);

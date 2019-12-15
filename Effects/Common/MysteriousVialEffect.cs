@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ModLoader;
@@ -11,7 +12,7 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const float increase = 1.2f;
 
-		public override string Description => "Permanently increases health regeneration by 1.2 health per second";
+		public override string Description => $"Permanently increases health regeneration by {increase} health per second";
 
 		public override string FlavorText => "Side effects may include itching, rashes, bleeding, sensitivity of skin,\ndry patches, permanent scarring, misaligned bone regrowth, rotting of the...";
 
