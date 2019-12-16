@@ -22,11 +22,13 @@ namespace RiskOfSlimeRain
 		public override void Load()
 		{
 			ROREffectManager.Load();
+			RORInterfaceLayers.Load();
 		}
 
 		public override void Unload()
 		{
 			ROREffectManager.Unload();
+			RORInterfaceLayers.Unload();
 		}
 
 		public override void AddRecipeGroups()
@@ -117,6 +119,11 @@ namespace RiskOfSlimeRain
 			RecipeGroup.RegisterGroup("RoR:EvilMushrooms", EvilShroom_Group);
 		}
 
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		{
+			RORInterfaceLayers.ModifyInterfaceLayers(layers);
+		}
+
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			byte type = reader.ReadByte();
@@ -144,11 +151,6 @@ namespace RiskOfSlimeRain
 					SoundHelper.HandleBroadcastSound(reader, whoAmI);
 					break;
 			}
-		}
-
-		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
-		{
-			RORInterfaceLayers.ModifyInterfaceLayers(layers);
 		}
 	}
 

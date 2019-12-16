@@ -9,7 +9,6 @@ using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -27,15 +26,6 @@ namespace RiskOfSlimeRain
 		//Actual access for performing the effect
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
-
-		//Multiplayer syncing thing used when changing stack manually from the UI. Keeps track of any changed stacks and a timer
-		//When timer runs out, sync
-		/// <summary>
-		/// Value is Ref(int) because it's counted down from within the iteration loop
-		/// </summary>
-		public Dictionary<int, Ref<int>> TimeByIndex { get; set; }
-
-		private const int syncTimer = 25;
 
 		#region Defensive Common
 		#endregion
@@ -206,7 +196,6 @@ namespace RiskOfSlimeRain
 		{
 			Effects = new List<ROREffect>();
 			EffectByType = new Dictionary<Type, List<ROREffect>>();
-			TimeByIndex = new Dictionary<int, Ref<int>>();
 			ROREffectManager.Init(this);
 		}
 
@@ -217,67 +206,8 @@ namespace RiskOfSlimeRain
 
 		public override void PreUpdate()
 		{
-			if (Main.myPlayer == player.whoAmI && RORInterfaceLayers.hoverIndex != -1 && !player.mouseInterface)
-			{
-				//this stuff is here cause only here resetting scrollwheel status works properly
-				int oldStack = Effects[RORInterfaceLayers.hoverIndex].Stack;
-				if (PlayerInput.ScrollWheelDelta > 0)
-				{
-					Effects[RORInterfaceLayers.hoverIndex].Stack++;
-					PlayerInput.ScrollWheelDelta = 0;
-					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
-				}
-				else if (PlayerInput.ScrollWheelDelta < 0)
-				{
-					Effects[RORInterfaceLayers.hoverIndex].Stack--;
-					PlayerInput.ScrollWheelDelta = 0;
-					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
-				}
-				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != Effects[RORInterfaceLayers.hoverIndex].Stack)
-				{
-					SetChangedEffect(RORInterfaceLayers.hoverIndex);
-				}
-
-				RORInterfaceLayers.hoverIndex = -1;
-			}
-
-			if (Main.myPlayer == player.whoAmI && Main.netMode != NetmodeID.SinglePlayer)
-			{
-				SyncChangedEffects();
-			}
-		}
-
-		private void SetChangedEffect(int index)
-		{
-			if (TimeByIndex.ContainsKey(index))
-			{
-				TimeByIndex[index].Value = syncTimer;
-			}
-			else
-			{
-				TimeByIndex.Add(index, new Ref<int>(syncTimer));
-			}
-		}
-
-		private void SyncChangedEffects()
-		{
-			List<int> toRemove = new List<int>();
-			foreach (int index in TimeByIndex.Keys)
-			{
-				if (TimeByIndex[index].Value <= 0)
-				{
-					ROREffectManager.SendSingleEffectStack((byte)player.whoAmI, index, Effects[index]);
-					toRemove.Add(index);
-				}
-			}
-			for (int i = 0; i < toRemove.Count; i++)
-			{
-				TimeByIndex.Remove(toRemove[i]);
-			}
-			foreach (int index in TimeByIndex.Keys)
-			{
-				TimeByIndex[index].Value--;
-			}
+			//this is here because only here resetting the scrollwheel status works properly
+			RORInterfaceLayers.Update(player);
 		}
 
 		#region Boring commented stuff

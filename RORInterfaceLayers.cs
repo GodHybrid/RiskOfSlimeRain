@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameInput;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -16,6 +18,25 @@ namespace RiskOfSlimeRain
 		public static string Name => ModContent.GetInstance<RiskOfSlimeRain>().Name;
 
 		public static int hoverIndex = -1;
+
+		//Multiplayer syncing thing used when changing stack manually from the UI. Keeps track of any changed stacks and a timer
+		//When timer runs out, sync
+		/// <summary>
+		/// Value is Ref(int) because it's counted down from within the iteration loop
+		/// </summary>
+		public static Dictionary<int, Ref<int>> TimeByIndex { get; set; }
+
+		private const int syncTimer = 25;
+
+		public static void Load()
+		{
+			TimeByIndex = new Dictionary<int, Ref<int>>();
+		}
+
+		public static void Unload()
+		{
+			TimeByIndex = null;
+		}
 
 		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
@@ -108,5 +129,74 @@ namespace RiskOfSlimeRain
 
 			return true;
 		};
+
+		public static void Update(Player player)
+		{
+			if (Main.myPlayer == player.whoAmI && hoverIndex != -1 && !player.mouseInterface)
+			{
+				RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+				List<ROREffect> effects = mPlayer.Effects;
+				//this stuff is here cause only here resetting scrollwheel status works properly
+				int oldStack = effects[hoverIndex].Stack;
+				if (PlayerInput.ScrollWheelDelta > 0)
+				{
+					effects[hoverIndex].Stack++;
+					PlayerInput.ScrollWheelDelta = 0;
+					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				}
+				else if (PlayerInput.ScrollWheelDelta < 0)
+				{
+					effects[hoverIndex].Stack--;
+					PlayerInput.ScrollWheelDelta = 0;
+					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				}
+				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effects[hoverIndex].Stack)
+				{
+					SetChangedEffect(hoverIndex);
+				}
+
+				hoverIndex = -1;
+			}
+
+			if (Main.myPlayer == player.whoAmI && Main.netMode != NetmodeID.SinglePlayer)
+			{
+				SyncChangedEffects(player);
+			}
+		}
+
+		private static void SetChangedEffect(int index)
+		{
+			if (TimeByIndex.ContainsKey(index))
+			{
+				TimeByIndex[index].Value = syncTimer;
+			}
+			else
+			{
+				TimeByIndex.Add(index, new Ref<int>(syncTimer));
+			}
+		}
+
+		private static void SyncChangedEffects(Player player)
+		{
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			List<ROREffect> effects = mPlayer.Effects;
+			List<int> toRemove = new List<int>();
+			foreach (int index in TimeByIndex.Keys)
+			{
+				if (TimeByIndex[index].Value <= 0)
+				{
+					ROREffectManager.SendSingleEffectStack((byte)player.whoAmI, index, effects[index]);
+					toRemove.Add(index);
+				}
+			}
+			for (int i = 0; i < toRemove.Count; i++)
+			{
+				TimeByIndex.Remove(toRemove[i]);
+			}
+			foreach (int index in TimeByIndex.Keys)
+			{
+				TimeByIndex[index].Value--;
+			}
+		}
 	}
 }

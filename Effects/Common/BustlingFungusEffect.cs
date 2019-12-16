@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 					{
 						if (n.active && n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
 						{
-							n.HealEffect((int)(totalFungusHeal), true);
+							n.HealEffect(totalFungusHeal, true);
 							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
 						}
 					}
@@ -40,8 +40,8 @@ namespace RiskOfSlimeRain.Effects.Common
 						{
 							if (n.active && Vector2.Distance(player.position, n.position) < fungalRadius)
 							{
-								player.HealEffect((int)(totalFungusHeal), true);
-								player.statLife += (int)(totalFungusHeal);
+								player.HealEffect(totalFungusHeal, true);
+								player.statLife += totalFungusHeal;
 							}
 						}
 					}
