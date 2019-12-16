@@ -121,6 +121,10 @@ namespace RiskOfSlimeRain
 			{
 				effect = effects[hoverIndex];
 				Main.hoverItemName = effect.Description;
+				if (effect.UIInfo != string.Empty)
+				{
+					Main.hoverItemName += "\n" + effect.UIInfo;
+				}
 				if (effect.Capped)
 				{
 					Main.hoverItemName += "\n" + effect.CappedMessage;
