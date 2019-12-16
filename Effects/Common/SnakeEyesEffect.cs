@@ -1,5 +1,4 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Helpers;
 using System;
 using System.IO;
 using Terraria;

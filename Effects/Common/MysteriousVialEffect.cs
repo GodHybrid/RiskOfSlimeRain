@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ModLoader;

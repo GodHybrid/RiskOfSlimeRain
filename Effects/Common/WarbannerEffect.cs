@@ -1,6 +1,5 @@
 ﻿using RiskOfSlimeRain.Buffs;
 using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 

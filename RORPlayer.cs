@@ -1,11 +1,9 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using Terraria;
 using Terraria.DataStructures;

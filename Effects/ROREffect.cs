@@ -38,7 +38,7 @@ namespace RiskOfSlimeRain.Effects
 		public virtual string UIInfo => string.Empty;
 
 		public virtual string Texture => ROREffectManager.GetTexture(GetType());
-		
+
 		/// <summary>
 		/// Set this to false if you have a chance/proc based effect. Always override Chance too
 		/// </summary>

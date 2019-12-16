@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			totalText = MoneyToString(total);
 		}
 
-		public override string Description => $"Generate {amount} copper every {interval/60} seconds. Withdraw by opening the inventory";
+		public override string Description => $"Generate {amount} copper every {interval / 60} seconds. Withdraw by opening the inventory";
 
 		public override string FlavorText => "hi im billy and heer is money for mom thanks";
 

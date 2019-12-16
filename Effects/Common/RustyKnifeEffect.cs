@@ -1,9 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Effects.Interfaces;
+﻿using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -33,17 +31,8 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
-			//first check if there is no projectile already sticking to the target
-			for (int i = 0; i < Main.maxProjectiles; i++)
-			{
-				Projectile p = Main.projectile[i];
-				if (p.active && p.type == ModContent.ProjectileType<RustyKnifeProj>() && p.ai[1] == target.whoAmI)
-				{
-					return;
-				}
-			}
 			int damage = (int)(0.35f * player.GetWeaponDamage(player.HeldItem));
-			Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<RustyKnifeProj>(), 0, 0, Main.myPlayer, damage, target.whoAmI);
+			StickyProj.NewProjectile<RustyKnifeProj>(target, damage: damage);
 		}
 	}
 }

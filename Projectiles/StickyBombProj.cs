@@ -1,12 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class StickyBombProj : ModProjectile
+	public class StickyBombProj : StickyProj
 	{
 		public override void SetStaticDefaults()
 		{
@@ -16,33 +15,9 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 16;
-			projectile.height = 16;
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.melee = true;
-			projectile.penetrate = 3;
-			projectile.hide = true;
+			base.SetDefaults();
+			projectile.Size = new Vector2(16);
 			projectile.timeLeft = 120;
-			projectile.ignoreWater = true; //make sure the projectile ignores water
-			projectile.tileCollide = false; //make sure the projectile doesn't collide with tiles anymore
-		}
-
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
-		{
-			//if attached to an NPC, draw behind tiles (and the npc) if that NPC is behind tiles, otherwise just behind the NPC.
-			int npcIndex = TargetWhoAmI;
-			if (npcIndex >= 0 && npcIndex < 200 && Main.npc[npcIndex].active)
-			{
-				if (Main.npc[npcIndex].behindTiles)
-				{
-					drawCacheProjsBehindNPCsAndTiles.Add(index);
-				}
-				else
-				{
-					drawCacheProjsBehindProjectiles.Add(index);
-				}
-			}
 		}
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
@@ -68,36 +43,22 @@ namespace RiskOfSlimeRain.Projectiles
 			return false;
 		}
 
-		//packed offset
-		public uint PackedOffset
-		{
-			get => (uint)projectile.ai[0];
-			set => projectile.ai[0] = value;
-		}
-
-		//index of the current target
-		public int TargetWhoAmI
-		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
-		}
-
 		public int InitTimer
 		{
 			get => (int)projectile.localAI[1];
 			set => projectile.localAI[1] = value;
 		}
 
-		public int Damage => (int)projectile.localAI[0];
-
-		public override void AI()
+		public override void WhileStuck(NPC npc)
 		{
-			Animate();
-			StickyAI();
-		}
+			if (Main.myPlayer == projectile.owner && projectile.timeLeft <= 3)
+			{
+				//Explode
+				Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombExplosion>(), damage, 8, Main.myPlayer);
+				projectile.Kill();
+				return;
+			}
 
-		private void Animate()
-		{
 			if (++projectile.frameCounter > 5)
 			{
 				projectile.frameCounter = 0;
@@ -106,10 +67,7 @@ namespace RiskOfSlimeRain.Projectiles
 					projectile.frame = 0;
 				}
 			}
-		}
 
-		private void StickyAI()
-		{
 			if (InitTimer < 8)
 			{
 				//167 also decent
@@ -117,43 +75,6 @@ namespace RiskOfSlimeRain.Projectiles
 				if (InitTimer == 7) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
 				InitTimer++;
 			}
-
-			if (Main.myPlayer == projectile.owner && projectile.timeLeft <= 3)
-			{
-				//Explode
-				Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombExplosion>(), Damage, 8, Main.myPlayer);
-				projectile.Kill();
-				return;
-			}
-
-			int projTargetIndex = TargetWhoAmI;
-			if (projTargetIndex < 0 || projTargetIndex >= 200)
-			{
-				//if the index is past its limits, kill it
-				projectile.Kill();
-				return;
-			}
-			NPC npc = Main.npc[projTargetIndex];
-			if (npc.active && !npc.dontTakeDamage)
-			{
-				//if the target is active and can take damage
-				//set the projectile's position relative to the target's position + some offset
-
-				projectile.Center = npc.position + GetOffset();
-				projectile.gfxOffY = npc.gfxOffY;
-			}
-			else
-			{
-				//otherwise, kill the projectile
-				projectile.Kill();
-			}
-		}
-
-		private Vector2 GetOffset()
-		{
-			uint offY = PackedOffset & 0xFFFF;
-			uint offX = (PackedOffset >> 16) & 0xFFFF;
-			return new Vector2(offX, offY);
 		}
 	}
 }

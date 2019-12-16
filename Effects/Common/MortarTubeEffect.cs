@@ -15,8 +15,8 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string FlavorText => "You stick explosives down the end, then you fire the explosive\nI suppose you can beat them with the tube afterwards";
 
-		public override bool AlwaysProc => false; 
-		
+		public override bool AlwaysProc => false;
+
 		public override float Chance => 0.09f;
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)

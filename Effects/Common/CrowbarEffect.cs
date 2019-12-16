@@ -1,7 +1,9 @@
-﻿using RiskOfSlimeRain.Effects.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Projectiles;
 using Terraria;
-using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -15,12 +17,6 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives.";
 
-		void ModifyDamage(NPC target, ref int damage)
-		{
-			SoundHelper.PlaySound(SoundID.Shatter, (int)target.Center.X, (int)target.Center.Y, -1, 0.8f, -0.7f);
-			if (target.life >= target.lifeMax * hplimit) damage += (int)(damage * (initial + increase * Stack));
-		}
-
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
 			ModifyDamage(target, ref damage);
@@ -29,6 +25,15 @@ namespace RiskOfSlimeRain.Effects.Common
 		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			ModifyDamage(target, ref damage);
+		}
+
+		void ModifyDamage(NPC target, ref int damage)
+		{
+			if (target.life >= target.lifeMax * hplimit)
+			{
+				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<CrowbarProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
+				damage += (int)(damage * (initial + increase * Stack));
+			}
 		}
 	}
 }

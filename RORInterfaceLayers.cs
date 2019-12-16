@@ -112,7 +112,7 @@ namespace RiskOfSlimeRain
 				color = Color.White;
 				if (effect.Capped)
 				{
-					color = Color.Green;
+					color = Color.LawnGreen;
 				}
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
