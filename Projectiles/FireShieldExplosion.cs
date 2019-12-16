@@ -6,41 +6,17 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class FireShieldExplosion : ModProjectile, IExcludeOnHit
+	public class FireShieldExplosion : InstantExplosion
 	{
 		public override void SetStaticDefaults()
 		{
 			//Main.projFrames[projectile.type] = 2;
 		}
+
 		public override void SetDefaults()
 		{
-			projectile.width = 200;
-			projectile.height = 200;
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.alpha = 255;
-			projectile.timeLeft = 5;
-		}
-
-		public override void AI()
-		{
-			foreach (NPC enemy in Main.npc)
-			{
-				if (enemy.CanBeChasedBy() && enemy.Hitbox.Intersects(projectile.Hitbox))
-				{
-					enemy.StrikeNPC(projectile.damage, projectile.knockBack, 0);
-				}
-			}
-			projectile.Kill();
-			return;
-		}
-
-		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
-		{
-			//This is needed for stuff like explosives and things that have a large hitbox, that spawn centered around the player
-			hitDirection = target.Center.X < Main.player[projectile.owner].Center.X ? -1 : 1;
+			base.SetDefaults();
+			projectile.Size = new Vector2(200);
 		}
 
 		public override void Kill(int timeLeft)
@@ -48,7 +24,7 @@ namespace RiskOfSlimeRain.Projectiles
 			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
 			for (int i = 0; i < 20; i++) //40
 			{
-				Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f)];
+				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f; //3f
 				if (Main.rand.NextBool(2))
 				{
@@ -58,10 +34,10 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 			for (int i = 0; i < 35; i++) //70
 			{
-				Dust dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f)];
+				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f);
 				dust.noGravity = true;
 				dust.velocity *= 4f; //5f
-				dust = Main.dust[Dust.NewDust(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f)];
+				dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f;
 			}
 			for (int i = 0; i < 2; i++) //3
@@ -75,19 +51,19 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					scaleFactor10 = 1f;
 				}
-				Gore gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+				Gore gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 				gore.velocity *= scaleFactor10;
 				gore.velocity.X += 1f;
 				gore.velocity.Y += 1f;
-				gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 				gore.velocity *= scaleFactor10;
 				gore.velocity.X += -1f;
 				gore.velocity.Y += 1f;
-				gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 				gore.velocity *= scaleFactor10;
 				gore.velocity.X += 1f;
 				gore.velocity.Y += -1f;
-				gore = Main.gore[Gore.NewGore(new Vector2(projectile.position.X + (float)(projectile.width / 2) - 24f, projectile.position.Y + (float)(projectile.height / 2) - 24f), default(Vector2), Main.rand.Next(61, 64), 1f)];
+				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
 				gore.velocity *= scaleFactor10;
 				gore.velocity.X += -1f;
 				gore.velocity.Y += -1f;

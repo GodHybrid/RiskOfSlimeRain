@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -33,13 +34,10 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
-			projectile.frameCounter++;
 			timer++;
-			if (projectile.frameCounter >= 8)
-			{
-				projectile.frameCounter = 0;
-				projectile.frame = (projectile.frame + 1) % 5;
-			}
+
+			projectile.LoopAnimation(8);
+
 			projectile.velocity.Y = 6f;
 			for (int m = 0; m < Main.maxNPCs; m++)
 			{

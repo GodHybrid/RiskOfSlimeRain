@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -59,14 +60,7 @@ namespace RiskOfSlimeRain.Projectiles
 				return;
 			}
 
-			if (++projectile.frameCounter > 5)
-			{
-				projectile.frameCounter = 0;
-				if (++projectile.frame >= Main.projFrames[projectile.type])
-				{
-					projectile.frame = 0;
-				}
-			}
+			projectile.LoopAnimation(5);
 
 			if (InitTimer < 8)
 			{

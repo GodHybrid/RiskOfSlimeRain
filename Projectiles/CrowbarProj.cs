@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -62,14 +63,7 @@ namespace RiskOfSlimeRain.Projectiles
 				projectile.localAI[0] = 1f;
 			}
 
-			if (++projectile.frameCounter > 5)
-			{
-				projectile.frameCounter = 0;
-				if (++projectile.frame >= Main.projFrames[projectile.type])
-				{
-					projectile.frame = 0;
-				}
-			}
+			projectile.LoopAnimation(5);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

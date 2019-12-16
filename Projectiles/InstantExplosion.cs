@@ -5,6 +5,9 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	/// <summary>
+	/// Basic explosion that will spawn and instantly damage things, then despawn. No visual effects by default
+	/// </summary>
 	public abstract class InstantExplosion : ModProjectile, IExcludeOnHit
 	{
 		public override string Texture => "RiskOfSlimeRain/Empty";
