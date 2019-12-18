@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Effects.Interfaces;
+﻿using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
@@ -28,7 +27,15 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
-			if (target.life <= 0) Projectile.NewProjectile(target.position, new Vector2(0, 1), ModContent.ProjectileType<GasBallFire>(), (int)((initial + (Stack * increase)) * player.GetWeaponDamage(player.HeldItem)), 0, Main.myPlayer);
+			if (target.life <= 0)
+			{
+				int extraPerSide = 3;
+
+				for (int x = -extraPerSide; x < 1 + extraPerSide; x++)
+				{
+					Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, ModContent.ProjectileType<GasolineFire>(), (int)((initial + (Stack * increase)) * player.GetWeaponDamage(player.HeldItem)), 0, Main.myPlayer);
+				}
+			}
 		}
 	}
 }
