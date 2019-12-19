@@ -33,7 +33,9 @@ namespace RiskOfSlimeRain.Effects.Common
 
 				for (int x = -extraPerSide; x < 1 + extraPerSide; x++)
 				{
-					Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, ModContent.ProjectileType<GasolineFire>(), (int)((initial + (Stack * increase)) * player.GetWeaponDamage(player.HeldItem)), 0, Main.myPlayer);
+					int spawnLight = x == 0 ? 1 : 0;
+
+					Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, ModContent.ProjectileType<FireProj>(), (int)((initial + (Stack * increase)) * player.GetWeaponDamage(player.HeldItem)), 0, Main.myPlayer, 0, spawnLight);
 				}
 			}
 		}

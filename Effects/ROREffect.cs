@@ -56,13 +56,11 @@ namespace RiskOfSlimeRain.Effects
 		/// </summary>
 		public virtual float Chance => 1f;
 
-		private bool Proc => Main.rand.NextFloat() < GetProcChance();
-
 		/// <summary>
 		/// This is the chance that the effects stuff will be activated with. Applies to all hooks uniformly. 
 		/// So if you have one hook that has a chance, but one that doesn't, have Chance be 1f, and do the randomness in the hook itself.
 		/// </summary>
-		public bool Proccing => Active && (AlwaysProc || Proc);
+		public bool Proccing => Active && (AlwaysProc || Proc());
 
 		private TimeSpan _CreationTime = TimeSpan.Zero;
 
@@ -192,8 +190,6 @@ namespace RiskOfSlimeRain.Effects
 			return effect;
 		}
 
-		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
-
 		public float GetProcChance()
 		{
 			//0.06 for use time 2, 1 for use time 30, 2 for use time 60
@@ -206,6 +202,8 @@ namespace RiskOfSlimeRain.Effects
 			byUseTime = Utils.Clamp(byUseTime, 0, 2);
 			return byUseTime * Chance;
 		}
+
+		private bool Proc() => Main.rand.NextFloat() < GetProcChance();
 
 		private void SetupPlayer(Player player)
 		{
@@ -287,6 +285,8 @@ namespace RiskOfSlimeRain.Effects
 			UnlockedStack = reader.ReadInt32();
 			Stack = reader.ReadInt32();
 		}
+
+		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
 
 		public int CompareTo(ROREffect other)
 		{

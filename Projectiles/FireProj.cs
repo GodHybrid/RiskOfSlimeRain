@@ -6,9 +6,17 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class GasolineFire : ModProjectile, IExcludeOnHit
+	public class FireProj : ModProjectile, IExcludeOnHit
 	{
 		public Rectangle newHitbox = default(Rectangle);
+
+		public int Timer
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
+
+		public int SpawnLight => (int)projectile.ai[1];
 
 		public override string Texture => "RiskOfSlimeRain/Empty";
 
@@ -47,6 +55,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
 		{
+			//so it sticks to platforms
 			fallThrough = false;
 			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
 		}
@@ -71,11 +80,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void Movement()
 		{
-			projectile.ai[0] += 1f;
+			Timer += 1;
 
-			if (projectile.ai[0] > 5f)
+			if (Timer > 5)
 			{
-				projectile.ai[0] = 5f;
+				Timer = 5;
 				//stop spreading
 				projectile.velocity.X *= 0.9f;
 				if (projectile.velocity.X > -0.01f && projectile.velocity.X < 0.01f)
@@ -102,6 +111,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void Visuals()
 		{
+			if (SpawnLight > 0)
+			{
+				Lighting.AddLight(projectile.Center, new Vector3(1f, 0.7f, 0.7f));
+			}
+
 			if (Main.rand.NextFloat() < 0.6f) return;
 			//fire going up
 			Dust dust = Dust.NewDustDirect(newHitbox.TopLeft(), newHitbox.Width, newHitbox.Height, DustID.Fire, 0f, 0f, 100);
@@ -110,6 +124,7 @@ namespace RiskOfSlimeRain.Projectiles
 			dust.scale += Main.rand.NextFloat(0.5f);
 			dust.noGravity = true;
 			dust.velocity.Y -= 2f;
+			dust.noLight = true;
 
 			//static fire
 			if (Main.rand.NextBool(2))
@@ -120,6 +135,7 @@ namespace RiskOfSlimeRain.Projectiles
 				dust.scale += 0.3f + Main.rand.NextFloat(0.5f);
 				dust.noGravity = true;
 				dust.velocity *= 0.1f;
+				dust.noLight = true;
 			}
 		}
 	}
