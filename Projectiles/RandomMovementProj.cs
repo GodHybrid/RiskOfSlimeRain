@@ -33,6 +33,8 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.localAI[0] = value;
 		}
 
+		public bool keepIncreasingVelocity = true;
+
 		public virtual int RandomMoveTimerMax => 60;
 
 		public virtual int AlphaCutoff => 50;
@@ -151,15 +153,24 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public virtual void Movement()
 		{
-			if (projectile.velocity.LengthSquared() < MaxSpeed * MaxSpeed)
+			//since this projectile is spawned with low speed
+			if (keepIncreasingVelocity)
 			{
-				projectile.velocity *= 1.04f;
+				if (projectile.velocity.LengthSquared() < MaxSpeed * MaxSpeed)
+				{
+					projectile.velocity *= 1.04f;
+				}
+				else
+				{
+					keepIncreasingVelocity = false;
+				}
 			}
 
+			//terminal velocity cap
+			if (Math.Abs(projectile.velocity.X) > 16) projectile.velocity.X *= 0.95f;
+			if (Math.Abs(projectile.velocity.Y) > 16) projectile.velocity.Y *= 0.95f;
+
 			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
-			//projectile.velocity.Y += 0.2f; // 0.1f for arrow gravity, 0.4f for knife gravity
-			if (Math.Abs(projectile.velocity.X) > MaxSpeed) projectile.velocity.X *= 0.95f;
-			if (Math.Abs(projectile.velocity.Y) > MaxSpeed) projectile.velocity.Y *= 0.95f;
 		}
 
 		public virtual void SpawnDust()
