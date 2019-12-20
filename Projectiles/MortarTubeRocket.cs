@@ -116,14 +116,14 @@ namespace RiskOfSlimeRain.Projectiles
 				sinDirection = direction.RotatedBy(sign * MathHelper.PiOver4) * sin;
 				center = projectile.Center - backOffset + sinDirection;
 				spawn = Utils.CenteredRectangle(center, new Vector2(thickness));
-				//fire
-				Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, 6, 0f, 0f, 100, default(Color), 1f);
+
+				Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Fire, 0f, 0f, 100, default(Color), 1f);
 				dust.scale *= Main.rand.NextFloat(1f, 2f);
 				dust.velocity *= 0.2f;
 				dust.noGravity = true;
+				dust.noLight = true;
 
-				//smoke
-				dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, 31, 0f, 0f, 100, default(Color), 0.4f);
+				dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Smoke, 0f, 0f, 100, default(Color), 0.4f);
 				dust.fadeIn = Main.rand.NextFloat(1f, 1.5f);
 				dust.velocity *= 0.05f;
 			}

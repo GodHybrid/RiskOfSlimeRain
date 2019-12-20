@@ -15,5 +15,10 @@ namespace RiskOfSlimeRain.Helpers
 				}
 			}
 		}
+
+		public static Player GetOwner(this Projectile proj)
+		{
+			return Main.player[proj.owner];
+		}
 	}
 }
