@@ -8,25 +8,26 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// Entirely visual/audio focused projectile
+	/// Entirely audio focused projectile
 	/// </summary>
-	public class CrowbarProj : ModProjectile
+	public class LensmakersGlassesProj : ModProjectile
 	{
+		public override string Texture => "RiskOfSlimeRain/Empty";
+
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crowbar");
-			Main.projFrames[projectile.type] = 4;
+			DisplayName.SetDefault("Lens-Maker's Glasses");
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(26);
+			projectile.Size = new Vector2(2);
 			projectile.aiStyle = -1;
 			projectile.friendly = true;
 			projectile.melee = true;
 			projectile.penetrate = -1;
 			projectile.hide = true;
-			projectile.timeLeft = 24;
+			projectile.timeLeft = 3;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = false;
 		}
@@ -59,16 +60,9 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (projectile.localAI[0] != 1f)
 			{
-				Main.PlaySound(SoundID.Shatter, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 0.8f, -0.7f);
+				Main.PlaySound(SoundID.DoorOpen, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 1.5f, 0.75f);
 				projectile.localAI[0] = 1f;
 			}
-
-			projectile.LoopAnimation(5);
-		}
-
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return Color.White;
 		}
 	}
 }

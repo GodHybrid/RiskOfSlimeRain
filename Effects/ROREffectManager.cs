@@ -300,6 +300,10 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{
+				if (effect is Common.LensmakersGlassesEffect)
+				{
+					int i = 0;
+				}
 				if (effect.Proccing)
 				{
 					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
