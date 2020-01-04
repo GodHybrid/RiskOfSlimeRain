@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Effects.Common
 				{
 					int spawnLight = x == 0 ? 1 : 0;
 
-					Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, ModContent.ProjectileType<FireProj>(), (int)((initial + (Stack * increase)) * player.GetWeaponDamage(player.HeldItem)), 0, Main.myPlayer, 0, spawnLight);
+					Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, ModContent.ProjectileType<FireProj>(), (int)((initial + (Stack * increase)) * player.GetDamage()), 0, Main.myPlayer, 0, spawnLight);
 				}
 			}
 		}

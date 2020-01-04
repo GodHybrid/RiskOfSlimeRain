@@ -1,26 +1,11 @@
-﻿namespace RiskOfSlimeRain.Items.Consumable.Common
+﻿using RiskOfSlimeRain.Effects.Common;
+using Terraria.ID;
+using Terraria.ModLoader;
+
+namespace RiskOfSlimeRain.Items.Consumable.Common
 {
-	//TODO BundleOfFireworks
-	/*
-	public class BundleOfFireworks : RORConsumableItem<BarbedWireEffect>
+	public class BundleOfFireworks : RORConsumableItem<BundleOfFireworksEffect>
 	{
-		public override void Initialize()
-		{
-			description = "Fire 8 fireworks that deal 300% damage";
-			flavorText = "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart.";
-		}
-
-		public override void ApplyEffect(RORPlayer mPlayer)
-		{
-			//TODO change
-			mPlayer.tasers++;
-		}
-
-		public override void ResetEffect(RORPlayer mPlayer)
-		{
-			//TODO change
-			mPlayer.tasers = 0;
-		}
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
@@ -34,5 +19,4 @@
 			recipe.AddRecipe();
 		}
 	}
-	*/
 }

@@ -194,9 +194,11 @@ namespace RiskOfSlimeRain.Effects
 		{
 			//0.06 for use time 2, 1 for use time 30, 2 for use time 60
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
+			//TODO arkhalis/channel weapons
 			Item item = Player.HeldItem;
 			if (item.damage < 1) return 0f;
 			int useTime = item.useTime;
+			//fix for melee weapons
 			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
 			float byUseTime = 2 * useTime / 60f;
 			byUseTime = Utils.Clamp(byUseTime, 0, 2);

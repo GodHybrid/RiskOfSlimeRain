@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && damageSource.SourceNPCIndex > -1 && !player.immune)
 			{
 				//TODO this definitely needs balancing/testing lol
-				Main.npc[damageSource.SourceNPCIndex].StrikeNPC((int)(player.GetWeaponDamage(player.HeldItem) * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
+				Main.npc[damageSource.SourceNPCIndex].StrikeNPC((int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
 				player.immune = true;
 				player.immuneTime = 40;
 				return false;

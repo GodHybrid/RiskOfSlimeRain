@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			if (damage >= player.statLifeMax2 * hplimit)
 			{
-				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (dmg + dmg * Stack) * player.GetWeaponDamage(player.HeldItem), kb + Stack, Main.myPlayer);
+				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (dmg + dmg * Stack) * player.GetDamage(), kb + Stack, Main.myPlayer);
 			}
 		}
 	}

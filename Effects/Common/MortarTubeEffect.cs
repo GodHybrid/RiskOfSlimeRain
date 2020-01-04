@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(Player player)
 		{
-			Projectile.NewProjectile(player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, (int)(player.GetWeaponDamage(player.HeldItem) * increase * Stack));
+			Projectile.NewProjectile(player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, (int)(player.GetDamage() * increase * Stack));
 		}
 	}
 }

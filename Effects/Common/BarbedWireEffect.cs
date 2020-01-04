@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Effects.Common
 					NPC enemy = Main.npc[m];
 					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * Stack)
 					{
-						player.ApplyDamageToNPC(enemy, (int)((initial + increase * Stack) * player.GetWeaponDamage(player.HeldItem)), 0f, 0, false);
+						player.ApplyDamageToNPC(enemy, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
 					}
 				}
 				wireTimer = 0;

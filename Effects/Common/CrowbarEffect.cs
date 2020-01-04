@@ -35,9 +35,6 @@ namespace RiskOfSlimeRain.Effects.Common
 				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<CrowbarProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
 				damage += (int)(damage * (initial + increase * Stack));
 			}
-
-			//TODO remove this prototyping thing
-			Projectile.NewProjectile(target.Center, new Vector2(0f, -2f), BundleOfFireworksProj.RandomFirework, 10, 1, Main.myPlayer, (int)DateTime.Now.Ticks);
 		}
 	}
 }

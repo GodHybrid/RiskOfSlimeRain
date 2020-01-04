@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
-			int damage = (int)(0.35f * player.GetWeaponDamage(player.HeldItem));
+			int damage = (int)(0.35f * player.GetDamage());
 			StickyProj.NewProjectile<RustyKnifeProj>(target, damage: damage);
 		}
 	}
