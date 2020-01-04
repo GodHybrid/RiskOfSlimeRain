@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Helpers
 		public static int GetDamage(this Player player)
 		{
 			//TODO include ror mode check here
-			return player.GetDamage();
+			return player.GetWeaponDamage(player.HeldItem);
 		}
 	}
 }
