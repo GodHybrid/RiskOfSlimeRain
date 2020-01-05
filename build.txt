@@ -6,3 +6,4 @@ includePDB = true
 hideCode = true
 hideResources = true
 buildIgnore = *.csproj, *.sln, *.user, *.md, obj\*, bin\*, .vs\*, .git\*, .gitignore
+modReferences = WebmilioCommons
