@@ -25,7 +25,6 @@ namespace RiskOfSlimeRain.Buffs
 			player.maxRunSpeed *= 1.3f;
 			player.meleeSpeed *= 1.04f;
 			player.pickSpeed *= 1.04f;
-			player.GetModPlayer<RORPlayer>().affectedWarbanner = true;
 		}
 	}
 }

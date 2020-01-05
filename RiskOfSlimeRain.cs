@@ -1,5 +1,6 @@
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -7,6 +8,7 @@ using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
+using WebmilioCommons.Networking;
 
 namespace RiskOfSlimeRain
 {
@@ -126,7 +128,22 @@ namespace RiskOfSlimeRain
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
-			byte type = reader.ReadByte();
+			int type = reader.ReadInt32();
+			if (type < -1)
+			{
+				//OWN TYPE IDs HAVE TO BE NEGATIVE (starting with -2 and down)
+				HandleOwnPacket(type, reader, whoAmI);
+			}
+			else
+			{
+				reader.BaseStream.Position -= 4;
+				NetworkPacketLoader.Instance.HandlePacket(reader, whoAmI);
+			}
+		}
+
+		private void HandleOwnPacket(int type, BinaryReader reader, int whoAmI)
+		{
+			//our own packet
 			MessageType mType = MessageType.None;
 			try
 			{
@@ -154,12 +171,12 @@ namespace RiskOfSlimeRain
 		}
 	}
 
-	public enum MessageType : byte
+	public enum MessageType : int
 	{
-		None = 0,
-		SyncEffectsOnEnterToClients = 1,
-		SyncEffectsOnEnterToServer = 2,
-		SyncSingleEffectStack = 3,
-		BroadcastSound = 4
+		None = -1,
+		SyncEffectsOnEnterToClients = -2,
+		SyncEffectsOnEnterToServer = -3,
+		SyncSingleEffectStack = -4,
+		BroadcastSound = -5
 	}
 }

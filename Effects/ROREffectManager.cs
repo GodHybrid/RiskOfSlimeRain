@@ -150,15 +150,6 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
-		public static bool IsEmpty(RORPlayer mPlayer)
-		{
-			foreach (var effects in mPlayer.EffectByType.Values)
-			{
-				if (effects.Count > 0) return false;
-			}
-			return true;
-		}
-
 		public static List<ROREffect> GetEffectsOf<T>(RORPlayer mPlayer)
 		{
 			return GetEffectByType(mPlayer)[typeof(T)];
@@ -215,7 +206,7 @@ namespace RiskOfSlimeRain.Effects
 		{
 			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
 			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
-			packet.Write((byte)MessageType.SyncEffectsOnEnterToServer);
+			packet.Write((int)MessageType.SyncEffectsOnEnterToServer);
 			packet.Write((byte)whoAmI);
 			packet.Write((int)mPlayer.Effects.Count);
 			for (int i = 0; i < mPlayer.Effects.Count; i++)
@@ -276,7 +267,7 @@ namespace RiskOfSlimeRain.Effects
 		public static void SendSingleEffectStack(byte whoAmI, int index, ROREffect effect, int to = -1, int from = -1)
 		{
 			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
-			packet.Write((byte)MessageType.SyncSingleEffectStack);
+			packet.Write((int)MessageType.SyncSingleEffectStack);
 			packet.Write((byte)whoAmI);
 			packet.Write(index);
 			effect.NetSendStack(packet);

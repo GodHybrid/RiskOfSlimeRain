@@ -26,16 +26,6 @@ namespace RiskOfSlimeRain
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
-		#region Defensive Common
-		#endregion
-		#region Utility Common
-		public int warbanners { get; set; } = 0;
-		public float warbannerRadius { get; set; } = 64;
-		public bool affectedWarbanner { get; set; } = false; //
-		#endregion
-		#region Offensive Common
-		#endregion
-
 		public override void ResetEffects()
 		{
 			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
@@ -70,8 +60,6 @@ namespace RiskOfSlimeRain
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
-
-			if (warbanners > 0 && target.life <= 0) AddBanner();
 		}
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
@@ -81,8 +69,6 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			if (warbanners > 0 && target.life <= 0) AddBanner();
-
 			//this stuff should be at the bottom of everything
 
 			//if this projectile shouldn't proc at all
@@ -126,23 +112,6 @@ namespace RiskOfSlimeRain
 			ROREffectManager.GetWeaponCrit(player, item, ref crit);
 		}
 
-		//TODO warbanner rework
-		public void AddBanner()
-		{
-			if (Main.rand.Next(2 * RORWorld.radius.Count + 4) == 1)
-			{
-				if (RORWorld.radius.Count >= 100)
-				{
-					RORWorld.pos.RemoveAt(0);
-					RORWorld.radius.RemoveAt(0);
-				}
-				byte tmpid = (byte)RORWorld.radius.Count;
-				RORWorld.radius.Add(warbannerRadius * (warbanners * 0.4f + 0.6f));
-				RORWorld.pos.Add(new Vector2(player.position.X, player.position.Y));
-				Projectile.NewProjectile(RORWorld.pos[tmpid], new Vector2(0, 6), ModContent.ProjectileType<WarbannerBanner>(), 0, 0, Main.myPlayer, warbanners * warbannerRadius);
-			}
-		}
-
 		public override void OnEnterWorld(Player player)
 		{
 			if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
@@ -159,10 +128,11 @@ namespace RiskOfSlimeRain
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
+			if (Main.netMode != NetmodeID.Server) return;
 			//this is used when a new player joins the game. It sends its info to other players so they can update it
 			//(from server to clients) (this means the server has to know the correct data of the player beforehand)
 			ModPacket packet = mod.GetPacket();
-			packet.Write((byte)MessageType.SyncEffectsOnEnterToClients);
+			packet.Write((int)MessageType.SyncEffectsOnEnterToClients);
 			packet.Write((byte)player.whoAmI);
 			packet.Write((int)Effects.Count);
 			for (int i = 0; i < Effects.Count; i++)
@@ -176,8 +146,10 @@ namespace RiskOfSlimeRain
 		public override TagCompound Save()
 		{
 			List<TagCompound> effectCompounds = Effects.ConvertAll((effect) => effect.Save());
-			TagCompound tag = new TagCompound();
-			tag.Add("effects", effectCompounds);
+			TagCompound tag = new TagCompound
+			{
+				{ "effects", effectCompounds },
+			};
 			return tag;
 		}
 
