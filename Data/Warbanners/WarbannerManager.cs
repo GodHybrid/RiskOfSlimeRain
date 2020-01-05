@@ -71,7 +71,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (unspawnedWarbanners.Count == 0) return;
 
-			List<int> spawned = new List<int>();
+			List<Warbanner> spawned = new List<Warbanner>();
 
 			Main.player.DoActive(delegate(Player p)
 			{
@@ -83,13 +83,13 @@ namespace RiskOfSlimeRain.Data.Warbanners
 					if (p.DistanceSQ(banner.position) < distance * distance)
 					{
 						Projectile.NewProjectile(banner.position, new Vector2(0, 6), ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius);
-						spawned.Add(j);
+						spawned.Add(banner);
 					}
 				}
 
 				for (int j = 0; j < spawned.Count; j++)
 				{
-					unspawnedWarbanners.RemoveAt(spawned[j]);
+					unspawnedWarbanners.Remove(spawned[j]);
 				}
 			});
 		}

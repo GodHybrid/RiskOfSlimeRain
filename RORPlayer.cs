@@ -59,17 +59,20 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
+			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
 		}
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
+			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			//this stuff should be at the bottom of everything
+			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
 
 			//if this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -82,6 +85,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//this stuff should be at the bottom of everything
+			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
 
 			//if this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;

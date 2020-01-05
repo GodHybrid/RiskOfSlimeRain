@@ -31,6 +31,12 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.velocity = Vector2.Zero;
 			return false;
 		}
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		{
+			//so it sticks to platforms
+			fallThrough = false;
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
+		}
 
 		public override void Kill(int timeLeft)
 		{
@@ -39,30 +45,10 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Effect circle = ShaderManager.CircleEffect;
+			Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightGoldenrodYellow * 0.78f);
 			if (circle != null)
 			{
-				circle.Parameters["ScreenPos"].SetValue(Main.screenPosition);
-				circle.Parameters["ScreenDim"].SetValue(new Vector2(Main.screenWidth, Main.screenHeight));
-				circle.Parameters["EntCenter"].SetValue(projectile.Center);
-				circle.Parameters["EdgeColor"].SetValue(Color.LightGoldenrodYellow.ToVector4() * 0.78f);
-				circle.Parameters["BodyColor"].SetValue(Color.Transparent.ToVector4());
-				circle.Parameters["Radius"].SetValue(Radius);
-				circle.Parameters["HpPercent"].SetValue(1f);
-				circle.Parameters["ShrinkResistScale"].SetValue(1f / 24f);
-
-				//Apply the shader to the spritebatch from now on
-				spriteBatch.End();
-				spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.instance.Rasterizer, circle, Main.Transform);
-			}
-
-			spriteBatch.Draw(Main.magicPixel, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Transparent);
-
-			if (circle != null)
-			{
-				//Stop applying the shader, continue normal behavior
-				spriteBatch.End();
-				spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.instance.Rasterizer, null, Main.Transform);
+				ShaderManager.ApplyToScreen(spriteBatch, circle);
 			}
 
 			return true;

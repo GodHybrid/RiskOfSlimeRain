@@ -165,6 +165,11 @@ namespace RiskOfSlimeRain.Effects
 			return mPlayer.EffectByType;
 		}
 
+		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
+		{
+			return mPlayer.Effects.FirstOrDefault(e => e is T) as T;
+		}
+
 		/// <summary>
 		/// This works for regular void, non-ref methods
 		/// </summary>

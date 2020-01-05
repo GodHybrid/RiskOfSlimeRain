@@ -10,6 +10,19 @@ namespace RiskOfSlimeRain.Data.Warbanners
 	/// </summary>
 	public class Warbanner : TagSerializable
 	{
+		//because we are using warbanner in a list, we need those two
+		public override bool Equals(object obj)
+		{
+			if (obj is Warbanner other)
+				return radius == other.radius && position == other.position;
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return new { radius, position }.GetHashCode();
+		}
+
 		//From TagSerializable, required explicitely
 		public static readonly Func<TagCompound, Warbanner> DESERIALIZER = Load;
 
