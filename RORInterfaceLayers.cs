@@ -15,7 +15,7 @@ namespace RiskOfSlimeRain
 	{
 		private const int INVENTORY_SIZE = 47;
 
-		public static string Name => ModContent.GetInstance<RiskOfSlimeRain>().Name;
+		public static string Name => ModContent.GetInstance<RiskOfSlimeRainMod>().Name;
 
 		public static int hoverIndex = -1;
 

@@ -205,7 +205,7 @@ namespace RiskOfSlimeRain.Effects
 		public static void SendOnEnter(byte whoAmI, int to = -1, int from = -1)
 		{
 			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
-			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
+			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
 			packet.Write((int)MessageType.SyncEffectsOnEnterToServer);
 			packet.Write((byte)whoAmI);
 			packet.Write((int)mPlayer.Effects.Count);
@@ -266,7 +266,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void SendSingleEffectStack(byte whoAmI, int index, ROREffect effect, int to = -1, int from = -1)
 		{
-			ModPacket packet = RiskOfSlimeRain.Instance.GetPacket();
+			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
 			packet.Write((int)MessageType.SyncSingleEffectStack);
 			packet.Write((byte)whoAmI);
 			packet.Write(index);

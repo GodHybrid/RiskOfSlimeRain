@@ -174,7 +174,7 @@ namespace RiskOfSlimeRain.Effects
 		public static ROREffect CreateInstance(Player player, string typeName)
 		{
 			if (typeName == string.Empty) throw new Exception("Something went wrong loading this tag, typeName is empty");
-			return CreateInstance(player, typeof(RiskOfSlimeRain).Assembly.GetType(typeName));
+			return CreateInstance(player, typeof(RiskOfSlimeRainMod).Assembly.GetType(typeName));
 		}
 
 		/// <summary>

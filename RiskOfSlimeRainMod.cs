@@ -1,6 +1,5 @@
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -12,11 +11,11 @@ using WebmilioCommons.Networking;
 
 namespace RiskOfSlimeRain
 {
-	public class RiskOfSlimeRain : Mod
+	public class RiskOfSlimeRainMod : Mod
 	{
-		public static RiskOfSlimeRain Instance => ModContent.GetInstance<RiskOfSlimeRain>();
+		public static RiskOfSlimeRainMod Instance => ModContent.GetInstance<RiskOfSlimeRainMod>();
 
-		public RiskOfSlimeRain()
+		public RiskOfSlimeRainMod()
 		{
 			//git is gay
 		}
