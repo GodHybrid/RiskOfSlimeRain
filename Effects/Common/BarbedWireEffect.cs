@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
@@ -11,11 +12,14 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	public class BarbedWireEffect : ROREffect, IPostUpdateEquips, IModifyDrawLayers
 	{
-		int wireTimer = 0;
 		const int wireTimerMax = 60;
-		const int wireRadius = 80;
+		const int wireRadius = 2;
 		const float initial = 0.33f;
 		const float increase = 0.17f;
+		const int radIncrease = 16;
+
+		int wireTimer = 0;
+		int Radius => (wireRadius + Stack) * radIncrease;
 
 		public override string Description => $"Touching enemies deals {(initial + increase).ToPercent()} of your current damage every second";
 
@@ -24,12 +28,13 @@ namespace RiskOfSlimeRain.Effects.Common
 		public void PostUpdateEquips(Player player)
 		{
 			if (Main.myPlayer != player.whoAmI) return;
-			if (++wireTimer % wireTimerMax == 0)
+			wireTimer++;
+			if (wireTimer > wireTimerMax)
 			{
 				for (int m = 0; m < Main.maxNPCs; m++)
 				{
 					NPC enemy = Main.npc[m];
-					if (enemy.CanBeChasedBy() && Vector2.Distance(player.Center, enemy.Center) <= wireRadius * Stack)
+					if (enemy.CanBeChasedBy() && player.DistanceSQ(enemy.Center) <= (Radius + 16) * (Radius + 16))
 					{
 						player.ApplyDamageToNPC(enemy, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
 					}
@@ -45,7 +50,6 @@ namespace RiskOfSlimeRain.Effects.Common
 				return;
 			}
 			Player drawPlayer = drawInfo.drawPlayer;
-			RORPlayer modPlayer = drawPlayer.GetModPlayer<RORPlayer>();
 
 			float scale = 3f;
 			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/BarbedWire");
@@ -53,6 +57,19 @@ namespace RiskOfSlimeRain.Effects.Common
 			int drawY = (int)(drawPlayer.Center.Y + (int)drawPlayer.gfxOffY - tex.Width * 0.5f * scale - Main.screenPosition.Y);
 			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * (0.6f * (255 - drawPlayer.immuneAlpha) / 255f), 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
 			Main.playerDrawData.Add(data);
+
+			RORPlayer mPlayer = drawPlayer.GetModPlayer<RORPlayer>();
+			BarbedWireEffect bEffect = ROREffectManager.GetEffectOfType<BarbedWireEffect>(mPlayer);
+
+			if (bEffect == null) return;
+
+			Effect circle = ShaderManager.SetupCircleEffect(drawPlayer.Center + new Vector2(0f, drawPlayer.gfxOffY), bEffect.Radius, Color.SandyBrown * 0.5f);
+			if (circle != null)
+			{
+				ShaderManager.ApplyToScreen(Main.spriteBatch, circle);
+			}
+
+
 			//scale = modPlayer.wireRadius * modPlayer.barbedWires;
 			//drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
 			//drawY = (int)(drawPlayer.Center.Y - tex.Width * 0.5f * scale - Main.screenPosition.Y);
