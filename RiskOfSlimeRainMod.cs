@@ -1,4 +1,6 @@
+using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using System.IO;
@@ -23,13 +25,16 @@ namespace RiskOfSlimeRain
 		public override void Load()
 		{
 			ROREffectManager.Load();
+			ShaderManager.Load();
 			RORInterfaceLayers.Load();
 		}
 
 		public override void Unload()
 		{
 			ROREffectManager.Unload();
+			ShaderManager.Unload();
 			RORInterfaceLayers.Unload();
+			WarbannerManager.Unload();
 		}
 
 		public override void AddRecipeGroups()

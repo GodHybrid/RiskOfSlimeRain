@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void PassStatsIntoWarbanner(Player player)
 		{
-			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Center + new Vector2(0f, -32f));
+			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Center + new Vector2(0f, -64f));
 		}
 	}
 }

@@ -117,6 +117,11 @@ namespace RiskOfSlimeRain.Data.Warbanners
 			unspawnedWarbanners = new List<Warbanner>(warbanners);
 		}
 
+		public static void Unload()
+		{
+			warbanners = unspawnedWarbanners = null;
+		}
+
 		public static void Save(TagCompound tag)
 		{
 			tag.Add("warbanners", warbanners);
