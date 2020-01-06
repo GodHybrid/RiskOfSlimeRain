@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (true || Main.rand.NextFloat() < WarbannerChance)
+			if (Main.rand.NextFloat() < WarbannerChance)
 			{
 				//Find nearest solid tile below:
 				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
