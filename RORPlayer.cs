@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
@@ -17,7 +16,7 @@ namespace RiskOfSlimeRain
 {
 	public class RORPlayer : ModPlayer
 	{
-		//IMPORTANT: both structures keep the same effects object in them. modifying it in one of them also modifies it in the other
+		//IMPORTANT: both structures keep the same effect objects in them. modifying it in one of them also modifies it in the other
 
 		//Only used for saving/loading/housekeeping/drawing
 		//This is the thing synced to clients on world join aswell, the dict is rebuilt from that anyway
@@ -27,6 +26,7 @@ namespace RiskOfSlimeRain
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
+		#region Warbanner
 		private const int WarbannerTimeMax = 120;
 
 		private int WarbannerTime { get; set; }
@@ -38,6 +38,36 @@ namespace RiskOfSlimeRain
 		{
 			WarbannerTime = WarbannerTimeMax;
 		}
+		#endregion
+
+		#region Timers
+		public int NoMoveTimer { get; private set; } = 0;
+
+		public int NoItemUseTimer { get; private set; } = 0;
+
+		public int NoHitTimer { get; private set; } = 0;
+
+		/// <summary>
+		/// Time the player hasn't moved and used items
+		/// </summary>
+		public int NoInputTimer => Math.Min(NoMoveTimer, NoItemUseTimer);
+
+		/// <summary>
+		/// Time the player hasn't been in combat
+		/// </summary>
+		public int NoCombatTimer => Math.Min(NoHitTimer, NoItemUseTimer);
+
+		private void UpdateTimers()
+		{
+			if (player.velocity == Vector2.Zero) NoMoveTimer++;
+			else NoMoveTimer = 0;
+
+			if (player.itemAnimation == 0) NoItemUseTimer++;
+			else NoItemUseTimer = 0;
+
+			NoHitTimer++;
+		}
+		#endregion
 
 		public override void ResetEffects()
 		{
@@ -140,6 +170,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
+			NoHitTimer = 0;
 			ROREffectManager.Perform<IPostHurt>(this, e => e.PostHurt(player, pvp, quiet, damage, hitDirection, crit));
 		}
 
@@ -221,6 +252,11 @@ namespace RiskOfSlimeRain
 		{
 			//this is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
+		}
+
+		public override void PostUpdate()
+		{
+			UpdateTimers();
 		}
 	}
 }
