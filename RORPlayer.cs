@@ -45,7 +45,9 @@ namespace RiskOfSlimeRain
 
 		public int NoItemUseTimer { get; private set; } = 0;
 
-		public int NoHitTimer { get; private set; } = 0;
+		public int NoHurtTimer { get; private set; } = 0;
+
+		public int NoOnHitTimer { get; private set; } = 0;
 
 		/// <summary>
 		/// Time the player hasn't moved and used items
@@ -55,7 +57,7 @@ namespace RiskOfSlimeRain
 		/// <summary>
 		/// Time the player hasn't been in combat
 		/// </summary>
-		public int NoCombatTimer => Math.Min(NoHitTimer, NoItemUseTimer);
+		public int NoCombatTimer => Math.Min(NoHurtTimer, NoOnHitTimer);
 
 		private void UpdateTimers()
 		{
@@ -65,7 +67,9 @@ namespace RiskOfSlimeRain
 			if (player.itemAnimation == 0) NoItemUseTimer++;
 			else NoItemUseTimer = 0;
 
-			NoHitTimer++;
+			NoHurtTimer++;
+
+			NoOnHitTimer++;
 		}
 		#endregion
 
@@ -121,6 +125,7 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
+			NoOnHitTimer = 0;
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
 		}
@@ -133,6 +138,7 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
+			NoOnHitTimer = 0;
 			//this stuff should be at the bottom of everything
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
@@ -170,7 +176,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			NoHitTimer = 0;
+			NoHurtTimer = 0;
 			ROREffectManager.Perform<IPostHurt>(this, e => e.PostHurt(player, pvp, quiet, damage, hitDirection, crit));
 		}
 
@@ -181,7 +187,7 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
-			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(layers));
+			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(player, layers));
 			if (InRangeOfWarbanner) layers.Insert(0, WarbannerEffect.WarbannerLayer);
 		}
 

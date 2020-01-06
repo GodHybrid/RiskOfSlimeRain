@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ModLoader;
+using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -31,16 +32,17 @@ namespace RiskOfSlimeRain.Effects.Common
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
 			{
-				for (int m = 0; m < Main.maxNPCs; m++)
-				{
-					NPC enemy = Main.npc[m];
-					if (enemy.CanBeChasedBy() && player.DistanceSQ(enemy.Center) <= (Radius + 16) * (Radius + 16))
-					{
-						player.ApplyDamageToNPC(enemy, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
-					}
-				}
+				Main.npc.WhereActive(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16))
+				.Do(n =>
+					player.ApplyDamageToNPC(n, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false)
+				);
 				wireTimer = 0;
 			}
+		}
+
+		public void ModifyDrawLayers(Player player, List<PlayerLayer> layers)
+		{
+			layers.Insert(0, BarbedWireLayer);
 		}
 
 		public static readonly PlayerLayer BarbedWireLayer = new PlayerLayer("RiskOfSlimeRain", "BarbedWire", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
@@ -76,10 +78,5 @@ namespace RiskOfSlimeRain.Effects.Common
 			//data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.2f, 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
 			//Main.playerDrawData.Add(data);
 		});
-
-		public void ModifyDrawLayers(List<PlayerLayer> layers)
-		{
-			layers.Insert(0, BarbedWireLayer);
-		}
 	}
 }
