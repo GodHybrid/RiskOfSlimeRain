@@ -331,9 +331,8 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
-		public static float UseTimeMultiplier(Player player, Item item)
+		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
 		{
-			float multiplier = 1f;
 			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player.GetModPlayer<RORPlayer>());
 			foreach (var effect in effects)
 			{

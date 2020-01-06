@@ -16,7 +16,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string Description => $" {(initial + increase).ToPercent()} chance to fire {fireworkCount} fireworks that deal {damageIncrease.ToPercent()} damage";
 
-		public override string FlavorText => "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart.";
+		public override string FlavorText => "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart";
 
 
 		//Original, todo
@@ -49,8 +49,9 @@ namespace RiskOfSlimeRain.Effects.Common
 			int damage = (int)(damageIncrease * player.GetDamage());
 			for (int i = 0; i < fireworkCount; i++)
 			{
-				Vector2 velo = new Vector2(Main.rand.NextFloat(-1f, 1f), Main.rand.NextFloat(-1f, -2.5f));
-				Projectile.NewProjectile(target.Center, velo, BundleOfFireworksProj.RandomFirework, damage, 10f, Main.myPlayer, (int)DateTime.Now.Ticks);
+				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
+				int seed = (int)DateTime.Now.Ticks / (i + 1);
+				Projectile.NewProjectile(target.Center, velo, BundleOfFireworksProj.RandomFirework, damage, 10f, Main.myPlayer, seed);
 			}
 		}
 	}
