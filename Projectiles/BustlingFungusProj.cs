@@ -62,6 +62,7 @@ namespace RiskOfSlimeRain.Projectiles
 			DoHeal();
 			TryDespawn();
 			Animate();
+			//TODO sounds (click clICK)
 		}
 
 		private void TryDespawn()

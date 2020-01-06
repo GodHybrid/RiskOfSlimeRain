@@ -5,7 +5,7 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class BundleOfFireworksVisualExplosion : GravityDustProj
 	{
-		public override int DustType => ModContent.DustType<ColorableDustReduceAlpha>();
+		public override int DustType => ModContent.DustType<ColorableDustAlphaFade>();
 
 		public override float Gravity => 0.15f;
 
