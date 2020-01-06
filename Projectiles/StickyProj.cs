@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Projectiles
 				for (int i = 0; i < Main.maxProjectiles; i++)
 				{
 					Projectile p = Main.projectile[i];
-					if (p.active && p.type == ModContent.ProjectileType<T>() && p.ai[1] == target.whoAmI)
+					if (p.active && p.modProjectile is T && p.ai[1] == target.whoAmI)
 					{
 						return;
 					}

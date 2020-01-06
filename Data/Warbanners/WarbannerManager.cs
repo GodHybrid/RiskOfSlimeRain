@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -26,6 +27,8 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		/// </summary>
 		public static List<Warbanner> unspawnedWarbanners;
 
+		public static float WarbannerChance => MathHelper.Max((float)(0.04 * Math.Pow(Math.E, -0.2 * warbanners.Count)), 0.0002f);
+
 		public static int Radius = -1;
 		public static float X = 0f;
 		public static float Y = 0f;
@@ -35,9 +38,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (true)
-			//TODO prototype remove
-			//if (Main.rand.NextBool(2 * warbanners.Count + 4))
+			if (Main.rand.NextFloat() < WarbannerChance)
 			{
 				Radius = radius;
 				X = position.X;

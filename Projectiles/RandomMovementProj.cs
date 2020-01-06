@@ -9,10 +9,22 @@ using Terraria.Utilities;
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// When spawned, randomly moves about in the direction it is shot at, then starts homing in on closest target
+	/// When spawned, randomly moves about in the direction it is shot at, then starts homing in on closest target. ai0 is the random seed
 	/// </summary>
 	public abstract class RandomMovementProj : ModProjectile
 	{
+		//unused yet, will come in handy later for missiles
+		public static void NewProjectile<T>(Vector2 position, Vector2 velocity, int damage, float knockBack, Action<T> onCreate = null) where T : RandomMovementProj
+		{
+			Projectile p = Projectile.NewProjectileDirect(position, velocity, ModContent.ProjectileType<T>(), damage, knockBack, Main.myPlayer, (int)DateTime.Now.Ticks);
+			if (p.whoAmI < Main.maxProjectiles)
+			{
+				T t = p.modProjectile as T;
+
+				onCreate?.Invoke(t);
+			}
+		}
+
 		public UnifiedRandom rng;
 
 		public int RandomSeed

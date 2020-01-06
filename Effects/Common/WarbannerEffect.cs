@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -14,9 +15,8 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
 
-		public override bool AlwaysProc => true; //false
-
-		public override float Chance => 1f;
+		//Chance is handled in WarbannerManager
+		public override string UIInfo => $"Chance on a banner: {WarbannerManager.WarbannerChance.ToPercent(3)}. Active banners: {WarbannerManager.warbanners.Count}";
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
