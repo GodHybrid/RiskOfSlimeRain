@@ -1,55 +1,39 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.ModLoader;
+using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
 	public class BustlingFungusEffect : ROREffect, IPostUpdateEquips
 	{
-		int noMoveTimer = 0;
-		const int fungalRadius = 0;
 		const int noMoveTimerMax = 120;
 		const float increase = 0.045f;
 
-		public override string Description => $"Grants \"Fungal Defense Mechanism\"\nStand still for {noMoveTimerMax / 60} seconds to activate the buff\nHeals for {increase.ToPercent()} of your max HP every second";
+		public override string Description => $"After {noMoveTimerMax / 60} seconds, heal for {increase.ToPercent()} of your max HP every second";
 
 		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
 
 		public void PostUpdateEquips(Player player)
 		{
-			int totalFungusHeal = (int)(player.statLifeMax2 * increase * Stack);
-			//TODO rewrite the logic
-			if (Equals(player.velocity, Vector2.Zero) && player.itemAnimation <= 0/*PlayerSolidTileCollision(player)*/)
+			int type = ModContent.ProjectileType<BustlingFungusProj>();
+			if (player.whoAmI == Main.myPlayer && player.ownedProjectileCounts[type] < 1 && player.GetRORPlayer().NoInputTimer > noMoveTimerMax)
 			{
-				noMoveTimer++;
-				if (Main.myPlayer == player.whoAmI && noMoveTimer > noMoveTimerMax && noMoveTimer % noMoveTimerMax == 0)
+				Vector2 position = player.Center;
+				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
+					{
+						new Conditions.IsSolid()
+					}), out _))
 				{
-					foreach (NPC n in Main.npc)
-					{
-						if (n.active && n.townNPC && Vector2.Distance(player.position, n.position) < fungalRadius)
-						{
-							n.HealEffect(totalFungusHeal, true);
-							n.life += Math.Min(totalFungusHeal, n.lifeMax - n.life);
-						}
-					}
-					if (Main.player.Length > 1)
-					{
-						foreach (Player n in Main.player)
-						{
-							if (n.active && Vector2.Distance(player.position, n.position) < fungalRadius)
-							{
-								player.HealEffect(totalFungusHeal, true);
-								player.statLife += totalFungusHeal;
-							}
-						}
-					}
+					position.Y++;
 				}
-			}
-			else
-			{
-				noMoveTimer = 0;
+				position.Y -= 11; //half the projectiles height
+				int heal = (int)(player.statLifeMax2 * increase * Stack);
+				Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 			}
 		}
 	}

@@ -27,19 +27,6 @@ namespace RiskOfSlimeRain.Projectiles
 			drawOriginOffsetY = 2;
 		}
 
-		public override bool OnTileCollide(Vector2 oldVelocity)
-		{
-			projectile.velocity = Vector2.Zero;
-			return false;
-		}
-
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
-		{
-			//so it sticks to platforms
-			fallThrough = false;
-			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
-		}
-
 		public override void Kill(int timeLeft)
 		{
 			Utils.PoofOfSmoke(projectile.Center);
@@ -95,14 +82,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void Animate()
 		{
-			if (!StoppedAnimating)
-			{
-				projectile.LoopAnimation(6);
-				if (projectile.frame == Main.projFrames[projectile.type] - 1) //if on last frame, stop animating
-				{
-					StoppedAnimating = true;
-				}
-			}
+			projectile.WaterfallAnimation(6);
 		}
 	}
 }
