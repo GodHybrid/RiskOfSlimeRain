@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string Description => $"Killing enemies burns the ground to deal {(initial + increase).ToPercent()} damage and set enemies on fire";
 
-		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars.";
+		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars";
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

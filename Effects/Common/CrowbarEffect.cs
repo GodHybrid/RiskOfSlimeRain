@@ -16,7 +16,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string Description => $"Deal {(initial + increase).ToPercent()} more damage to enemies above {hplimit.ToPercent()} HP";
 
-		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives.";
+		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives";
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{

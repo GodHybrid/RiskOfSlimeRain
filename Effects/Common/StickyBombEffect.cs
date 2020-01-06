@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {(initial + increase).ToPercent()} damage";
 
-		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF.";
+		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF";
 
 		public override bool AlwaysProc => false;
 

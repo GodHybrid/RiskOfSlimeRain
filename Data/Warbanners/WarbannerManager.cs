@@ -6,6 +6,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria.World.Generation;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Data.Warbanners
@@ -38,8 +39,18 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (Main.rand.NextFloat() < WarbannerChance)
+			if (true || Main.rand.NextFloat() < WarbannerChance)
 			{
+				//Find nearest solid tile below:
+				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
+					{
+						new Conditions.IsSolid()
+					}), out _))
+				{
+					position.Y++;
+				}
+				position.Y -= 25; //half the projectiles height
+
 				Radius = radius;
 				X = position.X;
 				Y = position.Y;
@@ -83,7 +94,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 					float distance = banner.radius + (1200 >> 1); //1080 is width of the screen, add a bit of buffer
 					if (p.DistanceSQ(banner.position) < distance * distance)
 					{
-						Projectile.NewProjectile(banner.position, new Vector2(0, 6), ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius);
+						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius);
 						spawned.Add(banner);
 					}
 				}

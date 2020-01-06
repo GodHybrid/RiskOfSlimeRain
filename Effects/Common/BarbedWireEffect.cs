@@ -43,27 +43,27 @@ namespace RiskOfSlimeRain.Effects.Common
 			}
 		}
 
-		public static readonly PlayerLayer MiscEffectsBack = new PlayerLayer("RiskOfSlimeRain", "ItemEffects", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+		public static readonly PlayerLayer BarbedWireLayer = new PlayerLayer("RiskOfSlimeRain", "BarbedWire", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)
 			{
 				return;
 			}
-			Player drawPlayer = drawInfo.drawPlayer;
+			Player player = drawInfo.drawPlayer;
+			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			BarbedWireEffect bEffect = ROREffectManager.GetEffectOfType<BarbedWireEffect>(mPlayer);
 
 			float scale = 3f;
-			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/BarbedWire");
-			int drawX = (int)(drawPlayer.Center.X - tex.Width * 0.5f * scale - Main.screenPosition.X);
-			int drawY = (int)(drawPlayer.Center.Y + (int)drawPlayer.gfxOffY - tex.Width * 0.5f * scale - Main.screenPosition.Y);
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * (0.6f * (255 - drawPlayer.immuneAlpha) / 255f), 0, new Vector2(0, 0), scale, SpriteEffects.None, 0);
+			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/BarbedWire1");
+			//TODO scaled texture based on stack from bEffect
+			float drawX = (int)player.Center.X - (tex.Width >> 1) * scale - Main.screenPosition.X;
+			float drawY = (int)player.Center.Y + player.gfxOffY - (tex.Width >> 1) * scale - Main.screenPosition.Y;
+			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * (0.6f * (255 - player.immuneAlpha) / 255f), 0, Vector2.Zero, scale, SpriteEffects.None, 0);
 			Main.playerDrawData.Add(data);
-
-			RORPlayer mPlayer = drawPlayer.GetModPlayer<RORPlayer>();
-			BarbedWireEffect bEffect = ROREffectManager.GetEffectOfType<BarbedWireEffect>(mPlayer);
 
 			if (bEffect == null) return;
 
-			Effect circle = ShaderManager.SetupCircleEffect(drawPlayer.Center + new Vector2(0f, drawPlayer.gfxOffY), bEffect.Radius, Color.SandyBrown * 0.5f);
+			Effect circle = ShaderManager.SetupCircleEffect(player.Center + new Vector2(0f, player.gfxOffY), bEffect.Radius, Color.SandyBrown * 0.5f);
 			if (circle != null)
 			{
 				ShaderManager.ApplyToScreen(Main.spriteBatch, circle);
@@ -79,7 +79,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
-			layers.Insert(0, MiscEffectsBack);
+			layers.Insert(0, BarbedWireLayer);
 		}
 	}
 }

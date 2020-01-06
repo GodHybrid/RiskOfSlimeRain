@@ -1,11 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.DataStructures;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
+	/// <summary>
+	/// This effect is special because it only handles the trigger to spawning the banner. Everything else is in RORPlayer and WarbannerManager
+	/// </summary>
 	public class WarbannerEffect : ROREffect, IOnHit
 	{
 		const int initial = 4;
@@ -30,7 +36,24 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void PassStatsIntoWarbanner(Player player)
 		{
-			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Center + new Vector2(0f, -64f));
+			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Center);
 		}
+
+		public static readonly PlayerLayer WarbannerLayer = new PlayerLayer("RiskOfSlimeRain", "Warbanner", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+		{
+			if (drawInfo.shadow != 0f)
+			{
+				return;
+			}
+			Player player = drawInfo.drawPlayer;
+
+			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/Warbanner");
+			float drawX = (int)player.Center.X - Main.screenPosition.X;
+			float drawY = (int)player.Top.Y + player.gfxOffY - Main.screenPosition.Y;
+
+			drawY -= 40;
+			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * ((255 - player.immuneAlpha) / 255f), 0, tex.Size() / 2, 1f, SpriteEffects.None, 0);
+			Main.playerDrawData.Add(data);
+		});
 	}
 }

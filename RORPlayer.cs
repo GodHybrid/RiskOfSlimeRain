@@ -1,7 +1,8 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace RiskOfSlimeRain
 {
 	public class RORPlayer : ModPlayer
 	{
-		//IMPORTANT: both structures keep the same effect object in them. modifying it in one of them also modifies it in the other
+		//IMPORTANT: both structures keep the same effects object in them. modifying it in one of them also modifies it in the other
 
 		//Only used for saving/loading/housekeeping/drawing
 		//This is the thing synced to clients on world join aswell, the dict is rebuilt from that anyway
@@ -26,6 +27,18 @@ namespace RiskOfSlimeRain
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
+		private const int WarbannerTimeMax = 120;
+
+		private int WarbannerTime { get; set; }
+
+		//because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
+		public bool InRangeOfWarbanner => WarbannerTime > 0;
+
+		public void ActivateWarbanner()
+		{
+			WarbannerTime = WarbannerTimeMax;
+		}
+
 		public override void ResetEffects()
 		{
 			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
@@ -33,18 +46,37 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdateRunSpeeds()
 		{
+			if (InRangeOfWarbanner)
+			{
+				//TODO test
+				player.moveSpeed *= 1.3f;
+				player.maxRunSpeed *= 1.3f;
+			}
 			ROREffectManager.Perform<IPostUpdateRunSpeeds>(this, e => e.PostUpdateRunSpeeds(player));
 		}
 
 		public override void PostUpdateEquips()
 		{
+			if (InRangeOfWarbanner)
+			{
+				player.meleeDamage += 0.04f;
+				player.minionDamage += 0.04f;
+				player.magicDamage += 0.04f;
+				player.rangedDamage += 0.04f;
+				player.meleeSpeed += 0.04f;
+				player.pickSpeed += 0.04f;
+				WarbannerTime--;
+			}
 			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
 		}
 
 		public override float UseTimeMultiplier(Item item)
 		{
-			return ROREffectManager.UseTimeMultiplier(player, item);
-			//if (affectedWarbanner && player.HasBuff(ModContent.BuffType<WarCry>())) dudChange *= 1.3f;
+			float mult = 1f;
+			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
+			//TODO test, feels too high
+			if (InRangeOfWarbanner) mult += 0.3f;
+			return mult;
 		}
 
 		public override void UpdateLifeRegen()
@@ -59,20 +91,20 @@ namespace RiskOfSlimeRain
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
+			if (target.friendly && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
 		}
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
+			if (target.friendly && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
 
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			//this stuff should be at the bottom of everything
-			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
+			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
 			//if this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -85,7 +117,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//this stuff should be at the bottom of everything
-			if (target.friendly && target.lifeMax <= 5 && target.type != NPCID.TargetDummy) return;
+			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
 			//if this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -114,6 +146,12 @@ namespace RiskOfSlimeRain
 		public override void GetWeaponCrit(Item item, ref int crit)
 		{
 			ROREffectManager.GetWeaponCrit(player, item, ref crit);
+		}
+
+		public override void ModifyDrawLayers(List<PlayerLayer> layers)
+		{
+			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(layers));
+			if (InRangeOfWarbanner) layers.Insert(0, WarbannerEffect.WarbannerLayer);
 		}
 
 		public override void OnEnterWorld(Player player)
@@ -177,11 +215,6 @@ namespace RiskOfSlimeRain
 			Effects = new List<ROREffect>();
 			EffectByType = new Dictionary<Type, List<ROREffect>>();
 			ROREffectManager.Init(this);
-		}
-
-		public override void ModifyDrawLayers(List<PlayerLayer> layers)
-		{
-			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(layers));
 		}
 
 		public override void PreUpdate()
