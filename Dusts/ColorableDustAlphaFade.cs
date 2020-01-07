@@ -3,7 +3,7 @@
 namespace RiskOfSlimeRain.Dusts
 {
 	/// <summary>
-	/// When spawning it, assign dust.customData to it if you want to change the default of 5 (int). Make sure to spawn it with alpha 255 as a starting point
+	/// When spawning it, assign dust.customData to it if you want to change the default of 5 (int). Make sure do dust.customData = new InAndOutData() if you want to customize further
 	/// </summary>
 	public class ColorableDustAlphaFade : ColorableDust
 	{

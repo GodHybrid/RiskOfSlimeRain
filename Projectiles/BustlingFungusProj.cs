@@ -61,7 +61,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			DoHeal();
 			TryDespawn();
-			Animate();
+			AnimateAndSound();
 			//TODO sounds (click clICK)
 		}
 
@@ -84,9 +84,19 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
-		private void Animate()
+		private void AnimateAndSound()
 		{
 			projectile.WaterfallAnimation(8);
+			if (projectile.frame == 0 && projectile.frameCounter == 1)
+			{
+				//plant growing
+				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, 1.1f, 0.6f);
+			}
+			if (projectile.frame == 1 && projectile.frameCounter == 4)
+			{
+				//generic weapon swing
+				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.5f, -0.4f);
+			}
 		}
 
 		private void DoHeal()

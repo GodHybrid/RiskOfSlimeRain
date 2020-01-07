@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 			if (Main.rand.NextBool(30))
 			{
-				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDustAlphaFadeOut>(), 0, 0, 0, Color.LightGreen * 0.9f);
+				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightGreen * 0.9f);
 				dust.customData = 10;
 				dust.velocity.X *= 0f;
 				dust.velocity.Y = Main.rand.NextFloat(-2f, - 1.5f);
