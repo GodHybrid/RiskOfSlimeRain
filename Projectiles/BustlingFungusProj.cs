@@ -25,6 +25,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.penetrate = -1;
 			projectile.tileCollide = true;
 			projectile.timeLeft = 60;
+			projectile.netImportant = true;
 			drawOriginOffsetY = 2;
 		}
 
@@ -56,6 +57,8 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.localAI[1] = value ? 1f : 0f;
 		}
 
+		public bool lastAnimating = true;
+
 		public override void AI()
 		{
 			DoHeal();
@@ -84,7 +87,12 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void AnimateAndSound()
 		{
-			projectile.WaterfallAnimation(6);
+			bool animating = projectile.WaterfallAnimation(6);
+			if (Main.myPlayer == projectile.owner)
+			{
+				if (animating != lastAnimating) projectile.netUpdate = true;
+				lastAnimating = animating;
+			}
 			if (projectile.frame == 0 && projectile.frameCounter == 1)
 			{
 				//plant growing
@@ -93,7 +101,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (projectile.frame == 2 && projectile.frameCounter == 1)
 			{
 				//generic weapon swing
-				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.65f, -0.4f);
+				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.63f, -0.35f);
 			}
 		}
 
@@ -109,7 +117,11 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					//TODO web packet
 					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
-					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
+					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(delegate(Player p)
+					{
+						GeneralHelper.Print("attempt healing " + p.name);
+						p.HealMe(Heal);
+					});
 				}
 			}
 		}

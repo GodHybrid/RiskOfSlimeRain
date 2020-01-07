@@ -22,11 +22,13 @@ namespace RiskOfSlimeRain.Helpers
 		}
 
 		/// <summary>
-		/// Same as LoopAnimation, but stops at the last frame
+		/// Same as LoopAnimation, but stops at the last frame. Returns true if still animating
 		/// </summary>
-		public static void WaterfallAnimation(this Projectile proj, int speed)
+		public static bool WaterfallAnimation(this Projectile proj, int speed)
 		{
-			if (proj.frame != Main.projFrames[proj.type] - 1) proj.LoopAnimation(speed);
+			bool check = proj.frame != Main.projFrames[proj.type] - 1;
+			if (check) proj.LoopAnimation(speed);
+			return check;
 		}
 
 		public static Player GetOwner(this Projectile proj)
