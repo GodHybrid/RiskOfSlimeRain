@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameInput;
@@ -55,7 +56,7 @@ namespace RiskOfSlimeRain
 		private static readonly GameInterfaceDrawMethod Effects = delegate
 		{
 			Player player = Main.LocalPlayer;
-			List<ROREffect> effects = player.GetModPlayer<RORPlayer>().Effects;
+			List<ROREffect> effects = player.GetRORPlayer().Effects;
 			if (effects.Count == 0) return true;
 
 			int xPosition = 0;
@@ -138,7 +139,7 @@ namespace RiskOfSlimeRain
 		{
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1 && !player.mouseInterface)
 			{
-				RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+				RORPlayer mPlayer = player.GetRORPlayer();
 				List<ROREffect> effects = mPlayer.Effects;
 				//this stuff is here cause only here resetting scrollwheel status works properly
 				int oldStack = effects[hoverIndex].Stack;
@@ -182,7 +183,7 @@ namespace RiskOfSlimeRain
 
 		private static void SyncChangedEffects(Player player)
 		{
-			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = player.GetRORPlayer();
 			List<ROREffect> effects = mPlayer.Effects;
 			List<int> toRemove = new List<int>();
 			foreach (int index in TimeByIndex.Keys)

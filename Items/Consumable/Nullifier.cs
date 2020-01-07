@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
@@ -18,12 +19,12 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public sealed override bool CanUseItem(Player player)
 		{
-			return player.GetModPlayer<RORPlayer>().Effects.Count > 0 || WarbannerManager.warbanners.Count > 0;
+			return player.GetRORPlayer().Effects.Count > 0 || WarbannerManager.warbanners.Count > 0;
 		}
 
 		public sealed override bool UseItem(Player player)
 		{
-			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = player.GetRORPlayer();
 			mPlayer.Effects.Clear();
 			ROREffectManager.Clear(mPlayer);
 			WarbannerManager.Clear();

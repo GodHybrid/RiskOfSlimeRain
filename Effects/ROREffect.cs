@@ -29,14 +29,19 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
+		//Cached, so not dynamic
 		public virtual string Description => string.Empty;
 
+		//Cached, so not dynamic
 		public virtual string FlavorText => string.Empty;
 
+		//Cached, so not dynamic
 		public virtual Color FlavorColor => Color.FloralWhite;
 
+		//Dynamic
 		public virtual string UIInfo => string.Empty;
 
+		//Cached, so not dynamic
 		public virtual string Texture => ROREffectManager.GetTexture(GetType());
 
 		/// <summary>
@@ -57,11 +62,16 @@ namespace RiskOfSlimeRain.Effects
 		public virtual float Chance => 1f;
 
 		/// <summary>
-		/// This is the chance that the effects stuff will be activated with. Applies to all hooks uniformly. 
+		/// This is the check that runs when any effect method will be ran. Applies to all hooks uniformly. 
 		/// So if you have one hook that has a chance, but one that doesn't, have Chance be 1f, and do the randomness in the hook itself.
 		/// </summary>
 		public bool Proccing => Active && (AlwaysProc || Proc());
 
+		public bool Active => Stack > 0;
+
+		/// <summary>
+		/// To sort the effect when loading them
+		/// </summary>
 		private TimeSpan _CreationTime = TimeSpan.Zero;
 
 		private int _UnlockedStack = 1;
@@ -115,8 +125,6 @@ namespace RiskOfSlimeRain.Effects
 				}
 			}
 		}
-
-		public bool Active => Stack > 0;
 
 		public ROREffect()
 		{

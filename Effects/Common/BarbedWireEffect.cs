@@ -52,7 +52,7 @@ namespace RiskOfSlimeRain.Effects.Common
 				return;
 			}
 			Player player = drawInfo.drawPlayer;
-			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = player.GetRORPlayer();
 			BarbedWireEffect bEffect = ROREffectManager.GetEffectOfType<BarbedWireEffect>(mPlayer);
 
 			float scale = 3f;

@@ -18,11 +18,7 @@ namespace RiskOfSlimeRain.Dusts
 		public override bool Update(Dust dust)
 		{
 			dust.position += dust.velocity;
-			dust.scale *= 0.99f;
-			if (dust.scale < 0.5f)
-			{
-				dust.active = false;
-			}
+			ReduceScale(dust);
 			if (!dust.noLight)
 			{
 				Color color = (Color)GetAlpha(dust, dust.color * 0.5f);
@@ -30,6 +26,15 @@ namespace RiskOfSlimeRain.Dusts
 				Lighting.AddLight(dust.position, color.ToVector3());
 			}
 			return false;
+		}
+
+		protected virtual void ReduceScale(Dust dust)
+		{
+			dust.scale *= 0.99f;
+			if (dust.scale < 0.5f)
+			{
+				dust.active = false;
+			}
 		}
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)

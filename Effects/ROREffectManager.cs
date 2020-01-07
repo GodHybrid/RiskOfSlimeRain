@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -209,7 +210,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void SendOnEnter(byte whoAmI, int to = -1, int from = -1)
 		{
-			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = Main.player[whoAmI].GetRORPlayer();
 			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
 			packet.Write((int)MessageType.SyncEffectsOnEnterToServer);
 			packet.Write((byte)whoAmI);
@@ -232,7 +233,7 @@ namespace RiskOfSlimeRain.Effects
 		private static void PopulatePlayer(byte whoAmI, BinaryReader reader)
 		{
 			Player player = Main.player[whoAmI];
-			RORPlayer mPlayer = player.GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = player.GetRORPlayer();
 			int length = reader.ReadInt32();
 			mPlayer.Effects = new List<ROREffect>();
 			for (int i = 0; i < length; i++)
@@ -246,7 +247,7 @@ namespace RiskOfSlimeRain.Effects
 		public static void HandleSingleEffectStack(BinaryReader reader)
 		{
 			byte whoAmI = reader.ReadByte();
-			RORPlayer mPlayer = Main.player[whoAmI].GetModPlayer<RORPlayer>();
+			RORPlayer mPlayer = Main.player[whoAmI].GetRORPlayer();
 			int index = reader.ReadInt32();
 			ROREffect effect = mPlayer.Effects[index];
 			effect.NetReceiveStack(reader);
@@ -293,7 +294,7 @@ namespace RiskOfSlimeRain.Effects
 		#region Special Hooks
 		public static void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetModPlayer<RORPlayer>());
+			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
 				if (effect is Common.LensmakersGlassesEffect)
@@ -309,7 +310,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetModPlayer<RORPlayer>());
+			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)
@@ -321,7 +322,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void GetWeaponCrit(Player player, Item item, ref int crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player.GetModPlayer<RORPlayer>());
+			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)
@@ -333,7 +334,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
 		{
-			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player.GetModPlayer<RORPlayer>());
+			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)
@@ -347,7 +348,7 @@ namespace RiskOfSlimeRain.Effects
 		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
 			bool ret = true;
-			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player.GetModPlayer<RORPlayer>());
+			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)

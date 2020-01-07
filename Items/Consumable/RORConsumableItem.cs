@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public sealed override bool CanUseItem(Player player)
 		{
 			//if player has the effect already, check on that. If not, check on a fresh one
-			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player.GetModPlayer<RORPlayer>());
+			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player.GetRORPlayer());
 			if (effect == null)
 			{
 				effect = ROREffect.CreateInstance(player, typeof(T));
@@ -46,7 +47,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public sealed override bool UseItem(Player player)
 		{
-			ROREffectManager.ApplyEffect<T>(player.GetModPlayer<RORPlayer>());
+			ROREffectManager.ApplyEffect<T>(player.GetRORPlayer());
 			return true;
 		}
 

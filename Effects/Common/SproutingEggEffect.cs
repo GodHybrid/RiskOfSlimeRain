@@ -14,7 +14,7 @@ namespace RiskOfSlimeRain.Effects.Common
 	public class SproutingEggEffect : ROREffect, IUpdateLifeRegen, IModifyDrawLayers
 	{
 		const float increase = 2.4f;
-		const int timerMax = 60; //420
+		const int timerMax = 420;
 
 		public override string Description => $"Increases health regeneration by {increase} health per second when out of combat for {timerMax / 60} seconds";
 
@@ -22,15 +22,17 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void UpdateLifeRegen(Player player)
 		{
+			if (player.GetRORPlayer().NoCombatTimer < timerMax) return;
+
 			//the number will be halved in redcode, hence the 2
-			if (player.GetRORPlayer().NoCombatTimer > timerMax) player.lifeRegen += (int)Math.Round(Stack * 2 * increase);
+			player.lifeRegen += (int)Math.Round(Stack * 2 * increase);
 
 			if (Main.rand.NextBool(30))
 			{
 				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.Yellow * 0.78f, 1.4f);
-				dust.customData = 2;
+				dust.customData = new InAndOutData(inSpeed: 5, outSpeed: 5, reduceScale: false);
 				dust.velocity.X *= 0f;
-				dust.velocity.Y = Main.rand.NextFloat(-0.7f, - 0.2f);
+				dust.velocity.Y = Main.rand.NextFloat(-0.7f, -0.2f);
 			}
 		}
 

@@ -54,7 +54,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.timeLeft = 55;
 		}
 
-		public override void AI()
+		public sealed override void AI()
 		{
 			Movement();
 			Visuals();
@@ -80,10 +80,16 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
+		public virtual void PostCreateDust(Dust dust)
+		{
+
+		}
+
 		private void Visuals()
 		{
 			if (Main.rand.NextFloat() > DustChance) return;
-			Dust.NewDustPerfect(projectile.Center, DustType, Vector2.Zero, DustAlpha, DustColor, DustScale);
+			Dust dust = Dust.NewDustPerfect(projectile.Center, DustType, Vector2.Zero, DustAlpha, DustColor, DustScale);
+			PostCreateDust(dust);
 		}
 	}
 }
