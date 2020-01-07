@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class LensmakersGlassesEffect : ROREffect, IModifyHit, IOnHit
+	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit
 	{
 		const float increase = 0.07f;
 

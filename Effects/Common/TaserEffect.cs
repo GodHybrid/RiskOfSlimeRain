@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class TaserEffect : ROREffect, IOnHit
+	public class TaserEffect : RORCommonEffect, IOnHit
 	{
 		const int initial = 10;
 		const int increase = 5;

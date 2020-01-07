@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class FireShieldEffect : ROREffect, IPostHurt
+	public class FireShieldEffect : RORCommonEffect, IPostHurt
 	{
 		const int dmg = 200;
 		const float kb = 20;

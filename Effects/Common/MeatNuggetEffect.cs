@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class MeatNuggetEffect : ROREffect, IOnHit
+	public class MeatNuggetEffect : RORCommonEffect, IOnHit
 	{
 		const int increase = 6;
 

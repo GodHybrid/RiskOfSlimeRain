@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class MysteriousVialEffect : ROREffect, IUpdateLifeRegen
+	public class MysteriousVialEffect : RORCommonEffect, IUpdateLifeRegen
 	{
 		const float increase = 1.2f;
 

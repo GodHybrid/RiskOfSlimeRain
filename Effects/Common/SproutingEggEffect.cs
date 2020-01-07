@@ -11,7 +11,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SproutingEggEffect : ROREffect, IUpdateLifeRegen, IModifyDrawLayers
+	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen, IModifyDrawLayers
 	{
 		const float increase = 2.4f;
 		const int timerMax = 420;

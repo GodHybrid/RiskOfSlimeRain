@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class BitterRootEffect : ROREffect, IResetEffects
+	public class BitterRootEffect : RORCommonEffect, IResetEffects
 	{
 		const float increase = 0.07895f;
 

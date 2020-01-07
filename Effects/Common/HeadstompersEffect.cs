@@ -6,7 +6,7 @@ using Terraria.DataStructures;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class HeadstompersEffect : ROREffect, IPostUpdateEquips, IPreHurt
+	public class HeadstompersEffect : RORCommonEffect, IPostUpdateEquips, IPreHurt
 	{
 		const float initial = 5.07f;
 		const float increase = 0.3f;

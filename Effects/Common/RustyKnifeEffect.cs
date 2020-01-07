@@ -5,7 +5,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class RustyKnifeEffect : ROREffect, IOnHit
+	public class RustyKnifeEffect : RORCommonEffect, IOnHit
 	{
 		const float initial = 0.15f;
 

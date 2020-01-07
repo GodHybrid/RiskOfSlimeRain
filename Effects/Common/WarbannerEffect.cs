@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Effects.Common
 	/// <summary>
 	/// This effect is special because it only handles the trigger to spawning the banner. Everything else is in RORPlayer and WarbannerManager
 	/// </summary>
-	public class WarbannerEffect : ROREffect, IOnHit
+	public class WarbannerEffect : RORCommonEffect, IOnHit
 	{
 		const int initial = 4;
 		const int increase = 1;

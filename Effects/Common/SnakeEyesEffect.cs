@@ -8,7 +8,7 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SnakeEyesEffect : ROREffect, IPreHurt, IKill, IGetWeaponCrit, IPostUpdateEquips
+	public class SnakeEyesEffect : RORCommonEffect, IPreHurt, IKill, IGetWeaponCrit, IPostUpdateEquips
 	{
 		//TODO In multiplayer, another player succeeding at a shrine will remove your Snake Eyes counter. Them failing will also up your Snake Eyes count. 
 		//TODO this currently doesnt work like in ror, because no shrines yet

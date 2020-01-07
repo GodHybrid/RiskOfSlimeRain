@@ -5,7 +5,7 @@ using Terraria.DataStructures;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class HermitsScarfEffect : ROREffect, IPreHurt
+	public class HermitsScarfEffect : RORCommonEffect, IPreHurt
 	{
 		const float initial = 0.05f;
 		const float increase = 0.05f;

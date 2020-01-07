@@ -6,7 +6,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class GasolineEffect : ROREffect, IOnHit
+	public class GasolineEffect : RORCommonEffect, IOnHit
 	{
 		const float initial = 0.2f;
 		const float increase = 0.4f;

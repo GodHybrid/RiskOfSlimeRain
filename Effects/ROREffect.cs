@@ -36,7 +36,7 @@ namespace RiskOfSlimeRain.Effects
 		public virtual string FlavorText => string.Empty;
 
 		//Cached, so not dynamic
-		public virtual Color FlavorColor => Color.FloralWhite;
+		public virtual Color FlavorColor => Color.White;
 
 		//Dynamic
 		public virtual string UIInfo => string.Empty;

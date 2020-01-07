@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class PaulsGoatHoofEffect : ROREffect, IPostUpdateRunSpeeds
+	public class PaulsGoatHoofEffect : RORCommonEffect, IPostUpdateRunSpeeds
 	{
 		const float increase = 0.2f;
 

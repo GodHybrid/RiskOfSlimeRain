@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class MonsterToothEffect : ROREffect, IOnHit
+	public class MonsterToothEffect : RORCommonEffect, IOnHit
 	{
 		const int initial = 5;
 		const int increase = 5;

@@ -7,7 +7,7 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class LifeSavingsEffect : ROREffect, IPostUpdateEquips, IProcessTriggers
+	public class LifeSavingsEffect : RORCommonEffect, IPostUpdateEquips, IProcessTriggers
 	{
 		bool justOpenedInventory = false;
 		const int interval = 180;

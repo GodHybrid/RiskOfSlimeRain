@@ -8,7 +8,7 @@ using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class BustlingFungusEffect : ROREffect, IPostUpdateEquips
+	public class BustlingFungusEffect : RORCommonEffect, IPostUpdateEquips
 	{
 		const int noMoveTimerMax = 120;
 		const float increase = 0.045f;

@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SpikestripEffect : ROREffect, IPostHurt/*, IPostDrawNPC*/
+	public class SpikestripEffect : RORCommonEffect, IPostHurt/*, IPostDrawNPC*/
 	{
 		const int initial = 60;
 		const int increase = 60;

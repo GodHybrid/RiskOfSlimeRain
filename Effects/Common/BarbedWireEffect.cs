@@ -11,7 +11,7 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class BarbedWireEffect : ROREffect, IPostUpdateEquips, IModifyDrawLayers
+	public class BarbedWireEffect : RORCommonEffect, IPostUpdateEquips, IModifyDrawLayers
 	{
 		const int wireTimerMax = 60;
 		const int wireRadius = 2;

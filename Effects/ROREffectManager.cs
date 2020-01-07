@@ -40,7 +40,7 @@ namespace RiskOfSlimeRain.Effects
 						if (!interfaces.Contains(type)) interfaces.Add(type);
 					}
 				}
-				else if (type.IsSubclassOf(typeof(ROREffect)))
+				else if (!type.IsAbstract && type.IsSubclassOf(typeof(ROREffect)))
 				{
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;

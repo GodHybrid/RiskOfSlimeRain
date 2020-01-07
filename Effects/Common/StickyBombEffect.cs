@@ -6,7 +6,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class StickyBombEffect : ROREffect, IOnHit
+	public class StickyBombEffect : RORCommonEffect, IOnHit
 	{
 		const float initial = 1.0f;
 		const float increase = 0.4f;

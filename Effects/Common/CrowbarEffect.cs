@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class CrowbarEffect : ROREffect, IModifyHit
+	public class CrowbarEffect : RORCommonEffect, IModifyHit
 	{
 		const float initial = 0.2f;
 		const float increase = 0.3f;

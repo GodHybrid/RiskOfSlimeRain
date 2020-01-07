@@ -7,7 +7,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class BundleOfFireworksEffect : ROREffect, IOnHit
+	public class BundleOfFireworksEffect : RORCommonEffect, IOnHit
 	{
 		const float initial = 0.005f;
 		const float increase = 0.005f;

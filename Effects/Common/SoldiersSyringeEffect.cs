@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SoldiersSyringeEffect : ROREffect, IUseTimeMultiplier
+	public class SoldiersSyringeEffect : RORCommonEffect, IUseTimeMultiplier
 	{
 		const float increase = 0.1f;
 

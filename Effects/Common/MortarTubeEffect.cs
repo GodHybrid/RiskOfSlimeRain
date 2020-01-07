@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class MortarTubeEffect : ROREffect, IOnHit
+	public class MortarTubeEffect : RORCommonEffect, IOnHit
 	{
 		const float increase = 1.7f;
 

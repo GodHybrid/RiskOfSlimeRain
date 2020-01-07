@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class MedkitEffect : ROREffect, IPostUpdateEquips, IPostHurt
+	public class MedkitEffect : RORCommonEffect, IPostUpdateEquips, IPostHurt
 	{
 		int timer = -1;
 		const int amount = 10;
