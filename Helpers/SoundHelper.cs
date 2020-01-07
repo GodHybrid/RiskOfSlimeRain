@@ -75,7 +75,7 @@ namespace RiskOfSlimeRain.Helpers
 		private static void SendSound(int type, int x = -1, int y = -1, int Style = 1, float volumeScale = 1, float pitchOffset = 0, int to = -1, int from = -1)
 		{
 			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
-			packet.Write((int)MessageType.BroadcastSound);
+			packet.Write((int)RORMessageType.BroadcastSound);
 			//only 50 sound types, hence byte
 			packet.Write((byte)type);
 			packet.Write(x);

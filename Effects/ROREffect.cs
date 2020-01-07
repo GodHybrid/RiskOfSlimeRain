@@ -1,13 +1,17 @@
 using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Helpers;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using WebmilioCommons.Networking;
+using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Effects
 {
-	public abstract class ROREffect : IComparable<ROREffect>
+	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable
 	{
 		//Something you can save in a TagCompound, hence why string, not Type
 		public string TypeName { get; private set; }
@@ -192,9 +196,7 @@ namespace RiskOfSlimeRain.Effects
 		{
 			string typeName = reader.ReadString();
 			ROREffect effect = CreateInstance(player, typeName);
-			//double time = reader.ReadDouble();
-			effect.NetReceiveStack(reader);
-			effect.NetReceive(reader);
+			effect.Receive(reader);
 			return effect;
 		}
 
@@ -267,19 +269,30 @@ namespace RiskOfSlimeRain.Effects
 
 		}
 
-		public void Send(BinaryWriter writer)
+		public void SendOnEnter(BinaryWriter writer)
 		{
 			writer.Write(TypeName);
+			Send(writer);
+		}
+
+		public void Send(BinaryWriter writer)
+		{
 			NetSendStack(writer);
 			NetSend(writer);
 		}
 
-		public virtual void NetSend(BinaryWriter writer)
+		public void Receive(BinaryReader reader)
+		{
+			NetReceiveStack(reader);
+			NetReceive(reader);
+		}
+
+		protected virtual void NetSend(BinaryWriter writer)
 		{
 
 		}
 
-		public virtual void NetReceive(BinaryReader reader)
+		protected virtual void NetReceive(BinaryReader reader)
 		{
 
 		}
@@ -301,6 +314,16 @@ namespace RiskOfSlimeRain.Effects
 		public int CompareTo(ROREffect other)
 		{
 			return _CreationTime.CompareTo(other._CreationTime);
+		}
+
+		public void Send(NetworkPacket networkPacket, ModPacket modPacket)
+		{
+			Send(modPacket);
+		}
+
+		public void Receive(NetworkPacket networkPacket, BinaryReader reader)
+		{
+			Receive(reader);
 		}
 	}
 }

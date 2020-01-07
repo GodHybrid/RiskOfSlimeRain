@@ -2,6 +2,7 @@ using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -133,10 +134,10 @@ namespace RiskOfSlimeRain
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			int type = reader.ReadInt32();
-			if (type < -1)
+			if (Enum.IsDefined(typeof(RORMessageType), type))
 			{
 				//OWN TYPE IDs HAVE TO BE NEGATIVE (starting with -2 and down)
-				HandleOwnPacket(type, reader, whoAmI);
+				HandleOwnPacket((RORMessageType)type, reader, whoAmI);
 			}
 			else
 			{
@@ -145,42 +146,28 @@ namespace RiskOfSlimeRain
 			}
 		}
 
-		private void HandleOwnPacket(int type, BinaryReader reader, int whoAmI)
+		private void HandleOwnPacket(RORMessageType type, BinaryReader reader, int whoAmI)
 		{
 			//our own packet
-			MessageType mType = MessageType.None;
-			try
+			switch (type)
 			{
-				mType = (MessageType)type;
-			}
-			catch
-			{
-				Logger.Info("Unknown message type: " + type);
-			}
-			switch (mType)
-			{
-				case MessageType.SyncEffectsOnEnterToClients:
+				case RORMessageType.SyncEffectsOnEnterToClients:
 					ROREffectManager.HandleOnEnterToClients(reader);
 					break;
-				case MessageType.SyncEffectsOnEnterToServer:
+				case RORMessageType.SyncEffectsOnEnterToServer:
 					ROREffectManager.HandleOnEnterToServer(reader);
 					break;
-				case MessageType.SyncSingleEffectStack:
-					ROREffectManager.HandleSingleEffectStack(reader);
-					break;
-				case MessageType.BroadcastSound:
+				case RORMessageType.BroadcastSound:
 					SoundHelper.HandleBroadcastSound(reader, whoAmI);
 					break;
 			}
 		}
 	}
 
-	public enum MessageType : int
+	public enum RORMessageType : int
 	{
-		None = -1,
 		SyncEffectsOnEnterToClients = -2,
 		SyncEffectsOnEnterToServer = -3,
-		SyncSingleEffectStack = -4,
-		BroadcastSound = -5
+		BroadcastSound = -4
 	}
 }

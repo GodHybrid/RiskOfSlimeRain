@@ -62,12 +62,12 @@ namespace RiskOfSlimeRain.Effects.Common
 			failedAttempts = tag.GetByte("failedAttempts");
 		}
 
-		public override void NetSend(BinaryWriter writer)
+		protected override void NetSend(BinaryWriter writer)
 		{
 			writer.Write(failedAttempts);
 		}
 
-		public override void NetReceive(BinaryReader reader)
+		protected override void NetReceive(BinaryReader reader)
 		{
 			failedAttempts = reader.ReadByte();
 		}

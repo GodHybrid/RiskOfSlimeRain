@@ -1,8 +1,10 @@
 ﻿using System;
+using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Helpers
 {
-	public static class NumberHelper
+	public static class GeneralHelper
 	{
 		public static string ToPercent(this float percent, int additionalDecimals = 1)
 		{
@@ -20,6 +22,18 @@ namespace RiskOfSlimeRain.Helpers
 			}
 			d = Math.Round(d, steps + additionalDecimals);
 			return d.ToString() + "%";
+		}
+
+		public static void Print(string message)
+		{
+			if (Main.netMode == NetmodeID.Server)
+			{
+				Console.WriteLine(message);
+			}
+			else
+			{
+				Main.NewText(message);
+			}
 		}
 	}
 }

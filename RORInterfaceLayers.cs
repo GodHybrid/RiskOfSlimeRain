@@ -190,7 +190,7 @@ namespace RiskOfSlimeRain
 			{
 				if (TimeByIndex[index].Value <= 0)
 				{
-					ROREffectManager.SendSingleEffectStack((byte)player.whoAmI, index, effects[index]);
+					ROREffectManager.SendSingleEffectStack(mPlayer, effects[index]);
 					toRemove.Add(index);
 				}
 			}

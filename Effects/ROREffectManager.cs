@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WebmilioCommons.Extensions;
 
 namespace RiskOfSlimeRain.Effects
 {
@@ -21,6 +22,11 @@ namespace RiskOfSlimeRain.Effects
 		public static Dictionary<Type, Color> flavorColor;
 		//reverse assign from the item itself, that the effect then accesses
 		public static Dictionary<Type, string> texture;
+
+		/// <summary>
+		/// Index assigned before sending the SyncSingle packet
+		/// </summary>
+		public static int Index { get; set; } = 0;
 
 		public static void Load()
 		{
@@ -92,8 +98,8 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			List<ROREffect> effects = GetGlobalEffectList(mPlayer);
-			Dictionary<Type, List<ROREffect>> effectByType = GetEffectByType(mPlayer);
+			List<ROREffect> effects = mPlayer.Effects;
+			Dictionary<Type, List<ROREffect>> effectByType = mPlayer.EffectByType;
 			//first, check if effect exists
 			ROREffect existing = effects.FirstOrDefault(e => e.GetType().Equals(typeof(T)));
 			if (existing != null)
@@ -118,7 +124,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void Populate(RORPlayer mPlayer)
 		{
-			List<ROREffect> effects = GetGlobalEffectList(mPlayer);
+			List<ROREffect> effects = mPlayer.Effects;
 			Dictionary<Type, List<ROREffect>> effectByType = mPlayer.EffectByType;
 			Clear(mPlayer);
 			foreach (var effect in effects)
@@ -153,22 +159,17 @@ namespace RiskOfSlimeRain.Effects
 
 		public static List<ROREffect> GetEffectsOf<T>(RORPlayer mPlayer)
 		{
-			return GetEffectByType(mPlayer)[typeof(T)];
-		}
-
-		public static List<ROREffect> GetGlobalEffectList(RORPlayer mPlayer)
-		{
-			return mPlayer.Effects;
-		}
-
-		public static Dictionary<Type, List<ROREffect>> GetEffectByType(RORPlayer mPlayer)
-		{
-			return mPlayer.EffectByType;
+			return mPlayer.EffectByType[typeof(T)];
 		}
 
 		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
 		{
 			return mPlayer.Effects.FirstOrDefault(e => e is T) as T;
+		}
+
+		public static int GetIndexOfEffect(RORPlayer mPlayer, ROREffect effect)
+		{
+			return mPlayer.Effects.FindIndex(e => e == effect); //check same reference
 		}
 
 		/// <summary>
@@ -186,11 +187,6 @@ namespace RiskOfSlimeRain.Effects
 				}
 			}
 		}
-
-		//public static void Perform<T>(Action<T> action) where T : IROREffectInterface
-		//{
-
-		//}
 
 		#region Syncing
 		public static void HandleOnEnterToServer(BinaryReader reader)
@@ -212,13 +208,13 @@ namespace RiskOfSlimeRain.Effects
 		{
 			RORPlayer mPlayer = Main.player[whoAmI].GetRORPlayer();
 			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
-			packet.Write((int)MessageType.SyncEffectsOnEnterToServer);
+			packet.Write((int)RORMessageType.SyncEffectsOnEnterToServer);
 			packet.Write((byte)whoAmI);
 			packet.Write((int)mPlayer.Effects.Count);
 			for (int i = 0; i < mPlayer.Effects.Count; i++)
 			{
 				ROREffect effect = mPlayer.Effects[i];
-				effect.Send(packet);
+				effect.SendOnEnter(packet);
 			}
 			packet.Send(to, from);
 		}
@@ -244,51 +240,19 @@ namespace RiskOfSlimeRain.Effects
 			Populate(mPlayer);
 		}
 
-		public static void HandleSingleEffectStack(BinaryReader reader)
+		public static void SendSingleEffect(RORPlayer mPlayer, ROREffect effect)
 		{
-			byte whoAmI = reader.ReadByte();
-			RORPlayer mPlayer = Main.player[whoAmI].GetRORPlayer();
-			int index = reader.ReadInt32();
-			ROREffect effect = mPlayer.Effects[index];
-			effect.NetReceiveStack(reader);
-
-			//if (Main.netMode == NetmodeID.MultiplayerClient)
-			//{
-			//	Main.NewText("List length: " + mPlayer.Effects.Count);
-			//	Main.NewText("received changed stack (" + effect.Stack + "): " + effect.Name + " from " + whoAmI.ToString());
-			//}
-			//else if (Main.netMode == NetmodeID.Server)
-			//{
-			//	Console.WriteLine("List length: " + mPlayer.Effects.Count);
-			//	Console.WriteLine("received changed stack (" + effect.Stack + "): " + effect.Name + " from " + whoAmI.ToString());
-			//}
-
-			if (Main.netMode == NetmodeID.Server)
-			{
-				//forward to other players
-				SendSingleEffectStack(whoAmI, index, effect, -1, whoAmI);
-			}
+			Index = GetIndexOfEffect(mPlayer, effect);
+			if (Index == -1) return;
+			mPlayer.SendIfLocal<ROREffectSyncSinglePacket>();
 		}
 
-		public static void SendSingleEffectStack(byte whoAmI, int index, ROREffect effect, int to = -1, int from = -1)
+		public static void SendSingleEffectStack(RORPlayer mPlayer, ROREffect effect)
 		{
-			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
-			packet.Write((int)MessageType.SyncSingleEffectStack);
-			packet.Write((byte)whoAmI);
-			packet.Write(index);
-			effect.NetSendStack(packet);
-			packet.Send(to, from);
-
-			//if (Main.netMode == NetmodeID.MultiplayerClient)
-			//{
-			//	Main.NewText(whoAmI.ToString() + " sent changed stack (" + effect.Stack + "): " + effect.Name + " to " + to);
-			//}
-			//else if (Main.netMode == NetmodeID.Server)
-			//{
-			//	Console.WriteLine(whoAmI.ToString() + " sent changed stack (" + effect.Stack + "): " + effect.Name + " to " + to);
-			//}
+			Index = GetIndexOfEffect(mPlayer, effect);
+			if (Index == -1) return;
+			mPlayer.SendIfLocal<ROREffectSyncSingleStackPacket>();
 		}
-
 		#endregion
 
 		#region Special Hooks
@@ -297,10 +261,6 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
-				if (effect is Common.LensmakersGlassesEffect)
-				{
-					int i = 0;
-				}
 				if (effect.Proccing)
 				{
 					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
