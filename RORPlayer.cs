@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -194,34 +193,15 @@ namespace RiskOfSlimeRain
 
 		public override void OnEnterWorld(Player player)
 		{
-			if (Main.netMode != NetmodeID.Server && Main.myPlayer == player.whoAmI)
+			if (Main.myPlayer == player.whoAmI)
 			{
-				//populate
 				ROREffectManager.Populate(this);
-				if (Main.netMode == NetmodeID.MultiplayerClient)
-				{
-					//send to server, which then broadcasts
-					ROREffectManager.SendOnEnter((byte)player.whoAmI);
-				}
 			}
 		}
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			GeneralHelper.Print("entering " + player.name + "; " + toWho + " " + fromWho);
-			if (Main.netMode != NetmodeID.Server) return;
-			//this is used when a new player joins the game. It sends its info to other players so they can update it
-			//(from server to clients) (this means the server has to know the correct data of the player beforehand)
-			ModPacket packet = mod.GetPacket();
-			packet.Write((int)RORMessageType.SyncEffectsOnEnterToClients);
-			packet.Write((byte)player.whoAmI);
-			packet.Write((int)Effects.Count);
-			for (int i = 0; i < Effects.Count; i++)
-			{
-				ROREffect effect = Effects[i];
-				effect.SendOnEnter(packet);
-			}
-			packet.Send(toWho, fromWho);
+			ROREffectManager.SendOnEnter((byte)player.whoAmI, toWho, fromWho);
 		}
 
 		public override TagCompound Save()

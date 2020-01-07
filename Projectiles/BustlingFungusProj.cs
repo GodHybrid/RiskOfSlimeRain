@@ -6,9 +6,8 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	//ai0 is heal amount
 	/// <summary>
-	/// When spawned, heals players and town NPCs in TimerMax intervals nearby to the player they spawned on. Despawns as soon as the player moves
+	/// When spawned, heals players and town NPCs in TimerMax intervals nearby to the player they spawned on. Despawns as soon as the player moves. ai0 is heal amount
 	/// </summary>
 	public class BustlingFungusProj : ModProjectile
 	{
@@ -94,7 +93,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (projectile.frame == 2 && projectile.frameCounter == 1)
 			{
 				//generic weapon swing
-				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.6f, -0.4f);
+				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.65f, -0.4f);
 			}
 		}
 
@@ -108,6 +107,7 @@ namespace RiskOfSlimeRain.Projectiles
 				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(player.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
 				if (projectile.owner == Main.myPlayer)
 				{
+					//TODO web packet
 					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
 					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
 				}

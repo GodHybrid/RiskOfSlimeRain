@@ -124,6 +124,7 @@ namespace RiskOfSlimeRain.Effects
 
 		public static void Populate(RORPlayer mPlayer)
 		{
+			//GeneralHelper.Print("populating " + mPlayer.player.whoAmI);
 			List<ROREffect> effects = mPlayer.Effects;
 			Dictionary<Type, List<ROREffect>> effectByType = mPlayer.EffectByType;
 			Clear(mPlayer);
@@ -217,13 +218,6 @@ namespace RiskOfSlimeRain.Effects
 				effect.SendOnEnter(packet);
 			}
 			packet.Send(to, from);
-		}
-
-		public static void HandleOnEnterToClients(BinaryReader reader)
-		{
-			//from SyncPlayer
-			byte whoAmI = reader.ReadByte();
-			PopulatePlayer(whoAmI, reader);
 		}
 
 		private static void PopulatePlayer(byte whoAmI, BinaryReader reader)

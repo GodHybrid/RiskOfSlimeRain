@@ -269,6 +269,9 @@ namespace RiskOfSlimeRain.Effects
 
 		}
 
+		/// <summary>
+		/// Same as Send, but also sends the TypeName, to reconstruct in CreateInstanceFromNet
+		/// </summary>
 		public void SendOnEnter(BinaryWriter writer)
 		{
 			writer.Write(TypeName);

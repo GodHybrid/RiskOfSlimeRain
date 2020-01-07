@@ -151,9 +151,6 @@ namespace RiskOfSlimeRain
 			//our own packet
 			switch (type)
 			{
-				case RORMessageType.SyncEffectsOnEnterToClients:
-					ROREffectManager.HandleOnEnterToClients(reader);
-					break;
 				case RORMessageType.SyncEffectsOnEnterToServer:
 					ROREffectManager.HandleOnEnterToServer(reader);
 					break;
@@ -166,8 +163,7 @@ namespace RiskOfSlimeRain
 
 	public enum RORMessageType : int
 	{
-		SyncEffectsOnEnterToClients = -2,
-		SyncEffectsOnEnterToServer = -3,
-		BroadcastSound = -4
+		SyncEffectsOnEnterToServer = -2,
+		BroadcastSound = -3
 	}
 }
