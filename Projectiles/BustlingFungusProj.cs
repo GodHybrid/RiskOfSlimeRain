@@ -98,7 +98,7 @@ namespace RiskOfSlimeRain.Projectiles
 				//plant growing
 				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, 1.1f, 0.6f);
 			}
-			if (projectile.frame == 2 && projectile.frameCounter == 1)
+			if ((projectile.frame == 1 || projectile.frame == 4) && projectile.frameCounter == 1)
 			{
 				//generic weapon swing
 				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.63f, -0.35f);
@@ -115,13 +115,8 @@ namespace RiskOfSlimeRain.Projectiles
 				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(player.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
 				if (projectile.owner == Main.myPlayer)
 				{
-					//TODO web packet
 					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
-					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(delegate(Player p)
-					{
-						GeneralHelper.Print("attempt healing " + p.name);
-						p.HealMe(Heal);
-					});
+					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
 				}
 			}
 		}
