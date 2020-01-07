@@ -2,26 +2,42 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using Terraria;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public abstract class BundleOfFireworksProj : RandomMovementProj, IExcludeOnHit
+	public class BundleOfFireworksProj : RandomMovementProj, IExcludeOnHit
 	{
 		public const int ExplosionCount = 8;
 
-		public static int RandomFirework => Main.rand.Next(new int[]
+		public override void SetStaticDefaults()
 		{
-			ModContent.ProjectileType<BundleOfFireworks0>(),
-			ModContent.ProjectileType<BundleOfFireworks1>(),
-			ModContent.ProjectileType<BundleOfFireworks2>(),
-			ModContent.ProjectileType<BundleOfFireworks3>()
-		});
+			base.SetStaticDefaults();
+			Main.projFrames[projectile.type] = 4;
+		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
 			projectile.Size = new Vector2(10);
+		}
+
+		public int TextureIndex => projectile.identity % Main.projFrames[projectile.type];
+
+		public bool Spawned
+		{
+			get => projectile.localAI[1] == 1f;
+			set => projectile.localAI[1] = value ? 1f : 0f;
+		}
+
+		public override void FadeIn()
+		{
+			if (!Spawned)
+			{
+				//Assign texture once on spawn
+				projectile.frame = TextureIndex;
+				Spawned = true;
+			}
+			base.FadeIn();
 		}
 
 		public override void SpawnDust()
@@ -41,26 +57,4 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 	}
-
-	#region Firework types
-	public class BundleOfFireworks0 : BundleOfFireworksProj
-	{
-
-	}
-
-	public class BundleOfFireworks1 : BundleOfFireworksProj
-	{
-
-	}
-
-	public class BundleOfFireworks2 : BundleOfFireworksProj
-	{
-
-	}
-
-	public class BundleOfFireworks3 : BundleOfFireworksProj
-	{
-
-	}
-	#endregion
 }

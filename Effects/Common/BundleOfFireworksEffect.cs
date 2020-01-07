@@ -2,7 +2,6 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
-using System;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -18,7 +17,6 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string FlavorText => "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart";
 
-
 		//Original, todo
 		//const int initial = 6;
 		//const int increase = 2;
@@ -26,7 +24,8 @@ namespace RiskOfSlimeRain.Effects.Common
 		/*
 		 * 
 		 for loop up to initial + increase * Stack
-			//Projectile.NewProjectile(target.Center, new Vector2(0f, -2f), BundleOfFireworksProj.RandomFirework, player.GetDamage() * 3, 1, Main.myPlayer, (int)DateTime.Now.Ticks);
+			//Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
+			//RandomMovementProj.NewProjectile<BundleOfFireworksProj>(target.Center, velo, damage, 10f);
 		 * 
 		 */
 
@@ -50,8 +49,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			for (int i = 0; i < fireworkCount; i++)
 			{
 				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-				int seed = (int)DateTime.Now.Ticks / (i + 1);
-				Projectile.NewProjectile(target.Center, velo, BundleOfFireworksProj.RandomFirework, damage, 10f, Main.myPlayer, seed);
+				RandomMovementProj.NewProjectile<BundleOfFireworksProj>(target.Center, velo, damage, 10f);
 			}
 		}
 	}

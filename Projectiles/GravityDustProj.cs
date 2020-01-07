@@ -80,6 +80,9 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
+		/// <summary>
+		/// Use to customize the dust that spawns
+		/// </summary>
 		public virtual void PostCreateDust(Dust dust)
 		{
 
