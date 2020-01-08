@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (Main.rand.NextFloat() < WarbannerChance)
+			if (true || Main.rand.NextFloat() < WarbannerChance)
 			{
 				//Find nearest solid tile below:
 				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
@@ -91,10 +91,12 @@ namespace RiskOfSlimeRain.Data.Warbanners
 				for (int j = 0; j < unspawnedWarbanners.Count; j++)
 				{
 					Warbanner banner = unspawnedWarbanners[j];
-					float distance = banner.radius + (1200 >> 1); //1080 is width of the screen, add a bit of buffer
-					if (p.DistanceSQ(banner.position) < distance * distance)
+					float distance = banner.radius + 1200; //1080 is width of the screen, add a bit of buffer
+					float playerDistance = p.DistanceSQ(banner.position);
+					if (playerDistance < distance * distance)
 					{
-						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius);
+						bool IsFresh = X == banner.position.X;
+						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, IsFresh.ToDirectionInt());
 						spawned.Add(banner);
 					}
 				}

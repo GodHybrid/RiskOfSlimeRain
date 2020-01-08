@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain
 		private int WarbannerTime { get; set; }
 
 		//because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
-		public bool InRangeOfWarbanner => WarbannerTime > 0;
+		public bool WarbannerEffect => WarbannerTime > 0;
 
 		public void ActivateWarbanner()
 		{
@@ -78,9 +78,15 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
 		}
 
+		public override void ModifyWeaponDamage(Item item, ref float add, ref float mult, ref float flat)
+		{
+			//TODO hook
+			base.ModifyWeaponDamage(item, ref add, ref mult, ref flat);
+		}
+
 		public override void PostUpdateRunSpeeds()
 		{
-			if (InRangeOfWarbanner)
+			if (WarbannerEffect)
 			{
 				//TODO test
 				player.moveSpeed *= 1.3f;
@@ -91,16 +97,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdateEquips()
 		{
-			if (InRangeOfWarbanner)
-			{
-				player.meleeDamage += 0.04f;
-				player.minionDamage += 0.04f;
-				player.magicDamage += 0.04f;
-				player.rangedDamage += 0.04f;
-				player.meleeSpeed += 0.04f;
-				player.pickSpeed += 0.04f;
-				WarbannerTime--;
-			}
+			if (WarbannerEffect) WarbannerTime--;
 			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
 		}
 
@@ -109,7 +106,7 @@ namespace RiskOfSlimeRain
 			float mult = 1f;
 			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
 			//TODO test, feels too high
-			if (InRangeOfWarbanner) mult += 0.3f;
+			if (WarbannerEffect) mult += 0.3f;
 			return mult;
 		}
 
@@ -188,7 +185,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
 			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(player, layers));
-			if (InRangeOfWarbanner) layers.Insert(0, WarbannerEffect.WarbannerLayer);
+			if (WarbannerEffect) layers.Insert(0, RiskOfSlimeRain.Effects.Common.WarbannerEffect.WarbannerLayer);
 		}
 
 		public override void OnEnterWorld(Player player)
