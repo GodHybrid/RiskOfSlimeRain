@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => 0.5f; //0.08f
+		public override float Chance => 0.08f;
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

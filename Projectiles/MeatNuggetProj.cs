@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -29,8 +30,7 @@ namespace RiskOfSlimeRain.Projectiles
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
 			projectile.velocity = Vector2.Zero;
-			//1 2 3 4
-			projectile.frame = (projectile.identity % (Main.projFrames[projectile.type] - 1)) + 1;
+			projectile.frame = TextureIndex;
 			return false;
 		}
 
@@ -47,21 +47,25 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.ai[0] = value;
 		}
 
+		//1 2 3 4
+		public int TextureIndex => (projectile.identity % (Main.projFrames[projectile.type] - 1)) + 1;
+
 		public override void AI()
 		{
 			if (projectile.frame == 0) projectile.rotation = projectile.velocity.ToRotation();
 			else projectile.rotation = 0;
+
 			projectile.velocity.Y += 0.2f;
 			if (projectile.velocity.Y > 13f)
 			{
 				projectile.velocity.Y = 13f;
 			}
-			if (projectile.Hitbox.Intersects(Main.LocalPlayer.Hitbox))
+
+			if (projectile.owner == Main.myPlayer)
 			{
-				if (projectile.owner == Main.myPlayer)
-				{
-					projectile.GetOwner().HealMe(Heal);
-				}
+				if (Main.netMode == NetmodeID.SinglePlayer) Main.LocalPlayer.HealMe(Heal);
+				else Main.player.WhereActive(p => p.Hitbox.Intersects(projectile.Hitbox)).Do(p => p.HealMe(Heal));
+
 				Main.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
 				projectile.Kill();
 			}
