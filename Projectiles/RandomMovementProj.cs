@@ -1,5 +1,5 @@
-﻿using RiskOfSlimeRain.Helpers;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ID;

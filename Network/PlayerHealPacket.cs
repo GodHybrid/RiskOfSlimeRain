@@ -26,7 +26,7 @@ namespace RiskOfSlimeRain.Network
 
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{
-			Player.HealMe(HealAmount, fromNet: true);
+			Player.HealMe(HealAmount, noBroadcast: true);
 			return base.PostReceive(reader, fromWho);
 		}
 	}

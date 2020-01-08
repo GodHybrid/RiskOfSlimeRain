@@ -85,7 +85,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 
 			List<Warbanner> spawned = new List<Warbanner>();
 
-			Main.player.DoActive(delegate(Player p)
+			Main.player.DoActive(delegate (Player p)
 			{
 				spawned.Clear();
 				for (int j = 0; j < unspawnedWarbanners.Count; j++)

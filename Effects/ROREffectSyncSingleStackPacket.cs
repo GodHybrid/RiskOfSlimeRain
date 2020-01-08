@@ -1,9 +1,7 @@
 using System.IO;
+using Terraria.ModLoader;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
-using Terraria.ModLoader;
-using RiskOfSlimeRain.Helpers;
-using System;
 
 namespace RiskOfSlimeRain.Effects
 {

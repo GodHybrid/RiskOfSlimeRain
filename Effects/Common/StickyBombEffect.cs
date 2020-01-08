@@ -19,15 +19,27 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override float Chance => 0.08f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		void IOnHit.OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		void IOnHit.OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			SpawnProjectile(player, target);
 		}
+
+		//[CanProc]
+		//public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		//{
+		//	SpawnProjectile(player, target);
+		//}
+
+		//[CanProc]
+		//public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		//{
+		//	SpawnProjectile(player, target);
+		//}
 
 		void SpawnProjectile(Player player, NPC target)
 		{

@@ -23,12 +23,12 @@ namespace RiskOfSlimeRain.Helpers
 		/// <summary>
 		/// Make sure to call this only clientside (== Main.myPlayer check where appropriate)
 		/// </summary>
-		public static void HealMe(this Player player, int heal, bool fromNet = false)
+		public static void HealMe(this Player player, int heal, bool noBroadcast = false)
 		{
 			int clampHeal = Math.Min(heal, player.statLifeMax2 - player.statLife);
 			player.HealEffect(heal, false);
 			player.statLife += clampHeal;
-			if (!fromNet)
+			if (!noBroadcast)
 			{
 				PlayerHealPacket.SendPacket(heal);
 			}

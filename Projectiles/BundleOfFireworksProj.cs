@@ -7,7 +7,7 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class BundleOfFireworksProj : RandomMovementProj, IExcludeOnHit
 	{
-		public const int ExplosionCount = 8;
+		public const int explosionCount = 8;
 
 		public override void SetStaticDefaults()
 		{
@@ -50,7 +50,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			Main.PlaySound(SoundID.Item14.WithVolume(0.6f), projectile.Center);
 			Vector2 velo;
-			for (int i = 0; i <ExplosionCount; i++)
+			for (int i = 0; i < explosionCount; i++)
 			{
 				velo = Vector2.UnitX.RotatedBy(-45).RotatedByRandom(270) * 4;
 				GravityDustProj.NewProjectile<BundleOfFireworksVisualExplosion>(projectile.Center, velo);

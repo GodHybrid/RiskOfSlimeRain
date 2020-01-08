@@ -5,7 +5,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public abstract class GravityDustProj: ModProjectile
+	public abstract class GravityDustProj : ModProjectile
 	{
 		public static void NewProjectile<T>(Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : GravityDustProj
 		{

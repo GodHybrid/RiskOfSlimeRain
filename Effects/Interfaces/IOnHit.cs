@@ -1,7 +1,9 @@
-﻿using Terraria;
+﻿using RiskOfSlimeRain.Effects.Attributes;
+using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Interfaces
 {
+	[CanProc]
 	public interface IOnHit : IROREffectInterface
 	{
 		void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit);

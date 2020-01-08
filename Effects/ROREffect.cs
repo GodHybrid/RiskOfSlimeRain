@@ -1,5 +1,4 @@
 using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Helpers;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -11,6 +10,12 @@ using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Effects
 {
+	/// <summary>
+	/// The base class of all effects. Will be saved on the player once applied
+	/// </summary>
+	//IComparable because we use it in a list to sort
+	//INetworkSerializable because we manually have to sync an entire effect sometimes (from webmiliocommons)
+	//Effects are created via the ROREffect.CreateInstance method
 	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable
 	{
 		//Something you can save in a TagCompound, hence why string, not Type
@@ -49,16 +54,12 @@ namespace RiskOfSlimeRain.Effects
 		public virtual string Texture => ROREffectManager.GetTexture(GetType());
 
 		/// <summary>
-		/// Set this to false if you have a chance/proc based effect. Always override Chance too
+		/// Set this to false if you have a chance/proc based effect. Always override Chance too.
+		/// If AlwaysProc is false, it will check for the weapons use time in combination with Chance
 		/// </summary>
 		public virtual bool AlwaysProc => true;
 
 		public virtual int MaxRecommendedStack => int.MaxValue;
-
-		/// <summary>
-		/// The time in ticks it takes for the effect to apply again (0 for always)
-		/// </summary>
-		public virtual int MaxProcTimer => 0;
 
 		/// <summary>
 		/// If your effect is based on chance to take effect, also override AlwaysProc and return false
@@ -66,8 +67,7 @@ namespace RiskOfSlimeRain.Effects
 		public virtual float Chance => 1f;
 
 		/// <summary>
-		/// This is the check that runs when any effect method will be ran. Applies to all hooks uniformly. 
-		/// So if you have one hook that has a chance, but one that doesn't, have Chance be 1f, and do the randomness in the hook itself.
+		/// Check this when a proc-type method will be ran. (Has a chance and CanProc attribute on its method)
 		/// </summary>
 		public bool Proccing => Active && (AlwaysProc || Proc());
 
@@ -189,17 +189,6 @@ namespace RiskOfSlimeRain.Effects
 			return CreateInstance(player, typeof(RiskOfSlimeRainMod).Assembly.GetType(typeName));
 		}
 
-		/// <summary>
-		/// Creates an effect with values received from multiplayer
-		/// </summary>
-		public static ROREffect CreateInstanceFromNet(Player player, BinaryReader reader)
-		{
-			string typeName = reader.ReadString();
-			ROREffect effect = CreateInstance(player, typeName);
-			effect.Receive(reader);
-			return effect;
-		}
-
 		public float GetProcChance()
 		{
 			//0.06 for use time 2, 1 for use time 30, 2 for use time 60
@@ -230,6 +219,7 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
+		#region saving/loading
 		public TagCompound Save()
 		{
 			TagCompound tag = new TagCompound {
@@ -267,6 +257,19 @@ namespace RiskOfSlimeRain.Effects
 		public virtual void PopulateFromTag(TagCompound tag)
 		{
 
+		}
+		#endregion
+
+		#region networking
+		/// <summary>
+		/// Creates an effect with values received from multiplayer
+		/// </summary>
+		public static ROREffect CreateInstanceFromNet(Player player, BinaryReader reader)
+		{
+			string typeName = reader.ReadString();
+			ROREffect effect = CreateInstance(player, typeName);
+			effect.Receive(reader);
+			return effect;
 		}
 
 		/// <summary>
@@ -311,8 +314,24 @@ namespace RiskOfSlimeRain.Effects
 			UnlockedStack = reader.ReadInt32();
 			Stack = reader.ReadInt32();
 		}
+		#endregion
 
+		#region object overrides and interfaces
 		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
+
+		public override bool Equals(object obj)
+		{
+			if (obj is ROREffect other)
+			{
+				return TypeName == other.TypeName && Stack == other.Stack && UnlockedStack == other.UnlockedStack;
+			}
+			return base.Equals(obj);
+		}
+
+		public override int GetHashCode()
+		{
+			return new { TypeName, Stack, UnlockedStack }.GetHashCode();
+		}
 
 		public int CompareTo(ROREffect other)
 		{
@@ -328,5 +347,6 @@ namespace RiskOfSlimeRain.Effects
 		{
 			Receive(reader);
 		}
+		#endregion
 	}
 }

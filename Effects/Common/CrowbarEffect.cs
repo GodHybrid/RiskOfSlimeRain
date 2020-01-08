@@ -2,7 +2,6 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
-using System;
 using Terraria;
 using Terraria.ModLoader;
 

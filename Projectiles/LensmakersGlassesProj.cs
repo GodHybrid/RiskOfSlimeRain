@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;

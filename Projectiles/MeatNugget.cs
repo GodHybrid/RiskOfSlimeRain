@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -30,6 +30,12 @@ namespace RiskOfSlimeRain.Projectiles
 			return false;
 		}
 
+		public int Heal
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
+
 		public override void AI()
 		{
 			projectile.rotation = projectile.velocity.ToRotation();
@@ -38,18 +44,9 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				projectile.velocity.Y = 13f;
 			}
-			for (int i = 0; i < Main.maxPlayers; i++)
+			if (projectile.owner == Main.myPlayer)
 			{
-				Player player = Main.player[i];
-				if (player.active && player.Hitbox.Intersects(projectile.Hitbox))
-				{
-					//TODO proper MP stuff with the heal and proj kill (latter has to happen on all clients)
-					int heals = (int)projectile.ai[0];
-					player.HealEffect(heals);
-					player.statLife += Math.Min(heals, player.statLifeMax2 - player.statLife);
-					projectile.Kill();
-					break;
-				}
+				projectile.GetOwner().HealMe(Heal);
 			}
 		}
 	}

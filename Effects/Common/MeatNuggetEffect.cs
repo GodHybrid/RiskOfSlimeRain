@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const int increase = 6;
 
-		public override string Description => $"Upon use enemies will have an {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {increase} health";
+		public override string Description => $"Enemies will have an {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {increase} health";
 
 		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
 
