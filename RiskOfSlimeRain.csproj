@@ -13,4 +13,9 @@
   <ItemGroup>
     <None Remove="**\*.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="WebmilioCommons">
+      <HintPath>..\..\Mods\WebmilioCommons.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

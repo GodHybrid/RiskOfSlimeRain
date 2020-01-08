@@ -1,4 +1,7 @@
-author = Alucard I
-version = 0.2
+author = Alucard I, direwolf420
+version = 0.3
 displayName = Risk of Slime Rain
-includePDB=true
+homepage = https://forums.terraria.org/index.php?threads/wip-risk-of-slime-rain-risk-of-rain-in-terraria.80382/
+includePDB = true
+buildIgnore = *.csproj, *.sln, *.user, *.md, obj\*, Guides\*, bin\*, .vs\*, .git\*, .gitignore
+modReferences = WebmilioCommons

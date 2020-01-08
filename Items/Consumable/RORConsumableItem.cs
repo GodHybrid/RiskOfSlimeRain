@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -7,77 +9,49 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable
 {
-	public abstract class RORConsumableItem : ModItem
+	/// <summary>
+	/// Base class for all items that simply add an effect on use. Textures for the effects are assigned from here
+	/// </summary>
+	public abstract class RORConsumableItem<T> : ModItem where T : ROREffect
 	{
-		#region boilerplate
-		//static
-		public string displayName = string.Empty;
-		public string description = string.Empty;
+		#region properties
+		public string FlavorText => ROREffectManager.GetFlavorText<T>();
 
-		//non-static
-		public string flavorText = string.Empty;
-		//TODO change this based on rarity of item?
-		public Color flavorTextColor = Color.FloralWhite;
+		public int Rarity => ROREffectManager.GetRarity<T>();
 
-		public bool HasDisplayName => displayName != string.Empty;
-		public bool HasFlavorText => flavorText != string.Empty;
+		public static Color FlavorColor => new Color(220, 220, 220);
 
-		public RORConsumableItem()
-		{
-			Initialize(); //so the fields get updated (for example when hovering over the item)
-		}
-
-		/// <summary>
-		/// Called during mod loading, use to set up variables in it
-		/// </summary>
-		public virtual void Initialize()
-		{
-			//already declared variables with default values at the top
-		}
-
-		/// <summary>
-		/// Called whenever the item is used
-		/// </summary>
-		public abstract void ApplyEffect(RORPlayer mPlayer);
-
-		/// <summary>
-		/// Called whenever the Nullifier is used
-		/// </summary>
-		public abstract void ResetEffect(RORPlayer mPlayer);
-
-		/// <summary>
-		/// Called when the item is about to be used
-		/// </summary>
-		public virtual bool CanUse(RORPlayer mPlayer)
-		{
-			return true;
-		}
+		public bool HasFlavorText => FlavorText != string.Empty;
 		#endregion
 
 		#region tml hooks
-		public sealed override bool Autoload(ref string name)
-		{
-			if (!(this is Nullifier)) Nullifier.resetList.Add(ResetEffect);
-			return true;
-		}
-
 		public sealed override void SetStaticDefaults()
 		{
-			if (HasDisplayName)
+			ROREffectManager.SetTexture<T>(Texture);
+
+			ROREffect effect = ROREffect.CreateInstanceNoPlayer(typeof(T));
+			if (effect.Name != string.Empty)
 			{
-				DisplayName.SetDefault(displayName);
+				DisplayName.SetDefault(effect.Name);
 			}
-			Tooltip.SetDefault(description);
+			Tooltip.SetDefault(effect.Description);
 		}
 
 		public sealed override bool CanUseItem(Player player)
 		{
-			return CanUse(player.GetModPlayer<RORPlayer>());
+			//if player has the effect already, check on that. If not, check on a fresh one
+			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player.GetRORPlayer());
+			if (effect == null)
+			{
+				effect = ROREffect.CreateInstance(player, typeof(T));
+			}
+			return effect.CanUse(player);
 		}
 
 		public sealed override bool UseItem(Player player)
 		{
-			ApplyEffect(player.GetModPlayer<RORPlayer>());
+			//It is important that this runs on clients+server, otherwise big problems happen
+			ROREffectManager.ApplyEffect<T>(player.GetRORPlayer());
 			return true;
 		}
 
@@ -85,10 +59,10 @@ namespace RiskOfSlimeRain.Items.Consumable
 		{
 			if (HasFlavorText)
 			{
-				string color = (flavorTextColor * (Main.mouseTextColor / 255f)).Hex3();
+				string color = (FlavorColor * (Main.mouseTextColor / 255f)).Hex3();
 
 				//flavorText that has \n in it has to be split into single tooltiplines
-				string[] lines = flavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
+				string[] lines = FlavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
 				for (int i = 0; i < lines.Length; i++)
 				{
@@ -103,9 +77,9 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public override void SetDefaults()
 		{
 			item.CloneDefaults(ItemID.LifeFruit);
-			item.rare = ItemRarityID.White;
+			item.rare = Rarity;
 
-			//when wanting to add more setdefaults, call base.SetDefaults() first
+			//when wanting to add more SetDefaults, call base.SetDefaults() first
 		}
 		#endregion
 	}

@@ -1,27 +1,17 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Projectiles;
+using RiskOfSlimeRain.Effects.Common;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.NPCs
 {
-	public class RoRGlobalNPC : GlobalNPC
+	public class RORGlobalNPC : GlobalNPC
 	{
-		public override bool InstancePerEntity
-		{
-			get
-			{
-				return true;
-			}
-		}
+		public override bool InstancePerEntity => true;
 
 		public bool tasered;
 		public bool slowedBySpikestrip;
-		public bool bleeding;
-		public sbyte bleedTimer = 0;
-		public bool stickyBomb;
 		public sbyte bombTimer = 0;
 		public sbyte frame = 0;
 		public sbyte frameCounter = 0;
@@ -30,30 +20,10 @@ namespace RiskOfSlimeRain.NPCs
 		{
 			tasered = false;
 			slowedBySpikestrip = false;
-			bleeding = false;
-			stickyBomb = false;
 		}
 
 		public override void AI(NPC npc)
 		{
-			if (stickyBomb)
-			{
-				bombTimer++;
-				if (bombTimer % 120 == 0)
-				{
-					bombTimer = 0;
-					Projectile.NewProjectile(npc.Center, new Vector2(0, 0), ModContent.ProjectileType<StickyBombExplosion>(), (int)((1 + 0.4f * Main.player[Main.myPlayer].GetModPlayer<RORPlayer>().stickyBombs) * Main.player[Main.myPlayer].HeldItem.damage), 0);
-				}
-			}
-			if (bleeding)
-			{
-				bleedTimer++;
-				if (bleedTimer % 30 == 0)
-				{
-					bleedTimer = 0;
-					npc.StrikeNPC((int)(Main.player[Main.myPlayer].HeldItem.damage * 0.35f), 0, 0, false);
-				}
-			}
 			if (tasered)
 			{
 				npc.velocity.X *= 0;
@@ -63,16 +33,6 @@ namespace RiskOfSlimeRain.NPCs
 			{
 				npc.velocity.X *= 0.9f;
 			}
-		}
-
-		public override void SetDefaults(NPC npc)
-		{
-
-		}
-
-		public override void NPCLoot(NPC npc)
-		{
-
 		}
 
 		public override void DrawEffects(NPC npc, ref Color drawColor)
@@ -97,76 +57,8 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
 		{
-			if (stickyBomb)
-			{
-				frameCounter++;
-				if (frameCounter >= 6)
-				{
-					frameCounter = 0;
-					frame = (sbyte)(frame == 0 ? 1 : 0);
-				}
-				Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Buffs/Textures/StickyBombEffect");
-				spriteBatch.Draw(tex, npc.Center - Main.screenPosition, new Rectangle(0, frame * 16, 16, 16), Color.White, 0f, new Vector2(2f, 2f), 2f, SpriteEffects.None, 1f);
-			}
-		}
-
-		public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
-		{
-			//if (player.GetModPlayer<ExamplePlayer>(mod).ZoneExample)
-			//{
-			//	spawnRate = (int)(spawnRate * 5f);
-			//	maxSpawns = (int)(maxSpawns * 5f);
-			//}
-		}
-
-		public override void SetupShop(int type, Chest shop, ref int nextSlot)
-		{
-			//if (type == NPCID.Dryad)
-			//{
-			//	shop.item[nextSlot].SetDefaults(mod.ItemType<Items.CarKey>());
-			//	nextSlot++;
-
-			//	shop.item[nextSlot].SetDefaults(mod.ItemType<Items.CarKey>());
-			//	shop.item[nextSlot].shopCustomPrice = new int?(2);
-			//	shop.item[nextSlot].shopSpecialCurrency = CustomCurrencyID.DefenderMedals;
-			//	nextSlot++;
-
-			//	shop.item[nextSlot].SetDefaults(mod.ItemType<Items.CarKey>());
-			//	shop.item[nextSlot].shopCustomPrice = new int?(3);
-			//	shop.item[nextSlot].shopSpecialCurrency = ExampleMod.FaceCustomCurrencyID;
-			//	nextSlot++;
-			//}
-			//		 else if (type == NPCID.Wizard && Main.expertMode)
-			//		 {
-			//			 shop.item[nextSlot].SetDefaults(mod.ItemType<Items.Infinity>());
-			//			 nextSlot++;
-			//		 }
-		}
-
-		// Make any NPC with a chat complain to the player if they have the stinky debuff.
-		public override void GetChat(NPC npc, ref string chat)
-		{
-			//if (Main.LocalPlayer.HasBuff(BuffID.Stinky))
-			//{
-			//	switch (Main.rand.Next(3))
-			//	{
-			//		case 0:
-			//			chat = "Eugh, you smell of rancid fish!";
-			//			break;
-			//		case 1:
-			//			chat = "What's that horrid smell?!";
-			//			break;
-			//		default:
-			//			chat = "Get away from me, i'm not doing any business with you.";
-			//			break;
-			//	}
-			//}
-		}
-
-		// If the player clicks any chat button and has the stinky debuff, prevent the button from working.
-		public override bool PreChatButtonClicked(NPC npc, bool firstButton)
-		{
-			return !Main.LocalPlayer.HasBuff(BuffID.Stinky);
+			//hardcoded for now
+			SpikestripEffect.PostDraw(npc, spriteBatch, drawColor);
 		}
 	}
 }

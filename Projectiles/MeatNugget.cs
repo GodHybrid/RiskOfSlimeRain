@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using System;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	// to investigate: Projectile.Damage, (8843)
 	public class MeatNugget : ModProjectile
 	{
 		public override void SetStaticDefaults()
@@ -15,51 +14,40 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			// while the sprite is actually bigger than 15x15, we use 15x15 since it lets the projectile clip into tiles as it bounces. It looks better.
 			projectile.width = 10;
 			projectile.height = 8;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			projectile.frameCounter = 2;
-			projectile.frame = 0;
 			//projectile.tileCollide = true;
 			projectile.timeLeft = 1800;
-
+			drawOriginOffsetY = 2;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = new Vector2(0f, 0f);
+			projectile.velocity = Vector2.Zero;
 			projectile.frame = 1;
 			return false;
+		}
+
+		public int Heal
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
 		}
 
 		public override void AI()
 		{
 			projectile.rotation = projectile.velocity.ToRotation();
-			projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+			projectile.velocity.Y += 0.2f;
 			if (projectile.velocity.Y > 13f)
 			{
 				projectile.velocity.Y = 13f;
 			}
-			foreach (Player player in Main.player)
+			if (projectile.owner == Main.myPlayer)
 			{
-				if (player.active && player.Hitbox.Intersects(projectile.Hitbox))
-				{
-					int heals = 6 * player.GetModPlayer<RORPlayer>().meatNuggets;
-					player.HealEffect(heals);
-					player.statLife += Math.Min(heals, player.statLifeMax2 - player.statLife);
-					projectile.Kill();
-					break;
-				}
+				projectile.GetOwner().HealMe(Heal);
 			}
-			//if (projectile.timeLeft < 60) this.projectile.alpha += (int)255 / 60;
-			return;
-		}
-
-		public override void Kill(int timeLeft)
-		{
-
 		}
 	}
 }

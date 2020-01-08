@@ -17,7 +17,7 @@ namespace RiskOfSlimeRain.Buffs
 
 		public override void Update(NPC npc, ref int buffIndex)
 		{
-			npc.GetGlobalNPC<RoRGlobalNPC>().tasered = true;
+			npc.GetGlobalNPC<RORGlobalNPC>().tasered = true;
 		}
 	}
 }
