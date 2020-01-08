@@ -36,10 +36,10 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** +170% damage.\
 		* Activates and applies damage properly.\
 		* Animations work as intended.
-* [x][ ]Rusty Knife - on hitting an enemy, the player has a 15% chance to cause bleed debuff for 4x35% damage.\
+* [x][x]Rusty Knife - on hitting an enemy, the player has a 15% chance to cause bleed debuff for 4x35% damage.\
 **Stacking effect:** 15% extra chance to bleed, 100% chance at 7 stacks.\
 		* Applies buff properly. The buff works as intended.\
-		* Missing the image (right now it's just dust)
+		* Draws correctly
 * [x][x]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
 **Stacking effect:** +40% damage.\
 		* Damages the enemy and activates properly.\
