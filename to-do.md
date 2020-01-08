@@ -17,18 +17,17 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 
 #### Common items
 ###### Offensive items
-* [x][x]Barbed Wire - encircles the player in a small, grey, jagged circle, damaging enemies who come within. If several enemies are within range, only one of them will receive the damage.\
+* [x][ ]Barbed Wire - encircles the player in a small, grey, jagged circle, damaging enemies who come within. If several enemies are within range, only one of them will receive the damage.\
 **Stacking effect:** +20% larger radius, +17% damage/sec.\
 		* Damage scales properly. Only one enemy receives damage at a time.\
-		* Wire sprite draws correctly. *The circle that depicts radius of effect is missing and has to be added.*
-* [x][ ]Crowbar -  on hitting an enemy, deal +50% damage to enemies above 80% health.\
+		* Wire sprite draws correctly (only first stage). Circle showing the radius draws correctly
+* [x][x]Crowbar -  on hitting an enemy, deal +50% damage to enemies above 80% health.\
 **Stacking effect:** +30% damage.\
 		* Damage increases properly.\
-		* Missing on-hit/activation sound. Missing on-hit/activation damage effect.
-* [x][ ]Gasoline - on killing an enemy, burns the ground for 60% damage for 2 seconds and burns target.\
+		* on-hit sound and graphics work correctly.
+* [x][x]Gasoline - on killing an enemy, burns the ground for 60% damage for 2 seconds and burns target.\
 **Stacking effect:** +40% damage.\
 		* Applies burning and damages enemies properly.\
-		* Missing burning sounds. Probably needs a redo of effects? Falling trail of fire doesn't look good. Suggestion: enemies drop a fireball which on tile collide creates the fire trail.
 * [x][ ]Headstompers - damage enemies by falling on them.\
 **Stacking effect:** +30% max damage.\
 		* Applies damage correctly. *Needs more playtesting.*\
@@ -36,29 +35,28 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Mortar Tube - on hitting an enemy, the player has a 9% chance to fire a mortar for 170% damage and deal explosive damage in a radius of 3 blocks.\
 **Stacking effect:** +170% damage.\
 		* Activates and applies damage properly.\
-		* Animations work as intended. *Might need reworking the explosion effect?*
+		* Animations work as intended.
 * [x][ ]Rusty Knife - on hitting an enemy, the player has a 15% chance to cause bleed debuff for 4x35% damage.\
 **Stacking effect:** 15% extra chance to bleed, 100% chance at 7 stacks.\
 		* Applies buff properly. The buff works as intended.\
-		* Missing debuff animation.
-* [x][ ]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
+		* Missing the image (right now it's just dust)
+* [x][x]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
 **Stacking effect:** +40% damage.\
-		* Damages the enemy and activates properly. *Currently works as a debuff, since I couldn't code the projectile to follow the enemy. Might need to recode the item if needed, but it works fine as is.*\
-		* The animation is coded in, but doesn't activate.
-* [ ][ ]Bundle of Fireworks - fires fireworks each time a Chest or Container is opened, as well as any time you activate Shrines, Shops, Roulette Chambers, and when picking up Drones.\
+		* Damages the enemy and activates properly.\
+* [x][x]Bundle of Fireworks - fires fireworks each time a Chest or Container is opened, as well as any time you activate Shrines, Shops, Roulette Chambers, and when picking up Drones.\
 **Stacking effect:** +2 Fireworks launched.\
-		* The item has not been coded.\
-		* Missing projectile sprites. Missing projectile sounds.
+		* Wrorks under a different effect: 1% chance killed enemy launches 4 fireworks Chance increases per stack.\
 
 ###### Defensive items
 * [x][ ]Bitter Root - increases the player's maximum health by 8% and caps at 300% extra base health.\
 **Stacking effect:** Further gain 8% max HP, up to 38 stacks (300% extra HP).\
 		* Increases HP properly.\
-		* Missing dust effect.
-* [x][ ]Bustling Fungus - heals the player for 4.5% of their health after 2 seconds out of combat and being completely immobile.\
+		* No leaf visuals yet 
+* [x][x]Bustling Fungus - heals the player for 4.5% of their health after 2 seconds out of combat and being completely immobile.\
 **Stacking effect:** 4.5% more HP/s increase, increased radius of effect.\
-		* Heals the player and friendly NPCs properly. *Needs to be tested in MP.*\
-		* Missing effect sounds. Missing effect sprites.
+		* Heals the player and friendly NPCs properly.\
+		* Visuals and sounds work correctly.\
+        * Same radius all times
 * [x][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
 **Stacking effect:** +6 HP per meat nugget.\
 		* Heals the player properly.\
@@ -71,21 +69,20 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** +5 more health after kill.\
 		* Heals the player properly.\
 		* Effects aren't required.
-* [x][ ]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
+* [x][x]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
 **Stacking effect:** +1.2 HP/s.\
 		* Increases the regeneration rate properly.\
-		* Missing dust effect.
-* [x][ ]Sprouting Egg - increases the player's health regeneration by 2.4 HP/s when out of combat for 7 seconds.\
+		* Dust works properly.
+* [x][x]Sprouting Egg - increases the player's health regeneration by 2.4 HP/s when out of combat for 7 seconds.\
 **Stacking effect:** +2.4 HP/s.\
 		* Increases the regeneration rate properly.\
-		* Missing effect sprites. Missing dust effect.
+		* Player texture needs to be redone, dust works properly.
 
 ###### Utility items
 * [x][x]Fire Shield - causes an explosion that deals 200% damage after being hit for 10% of player's maximum health in one hit.\
 **Stacking effect:** Increases explosion damage by 200%, and increases knockback by 20%.\
 		* Works as intended.\
-		* Missing explosion sprites. *Are they needed?*
-* [x][x]Hermit's Scarf - gives the player a 10% chance to 'evade' the incoming damage.\
+* [x][ ]Hermit's Scarf - gives the player a 10% chance to 'evade' the incoming damage.\
 **Stacking effect:** Increases dodge chance +5%, up to a maximum of 35% at 6 stacks.\
 		* Works as intended.\
 		* Missing evasion text. *Is it needed?*
@@ -95,8 +92,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Missing effect sprites. 
 * [x][x]Life Savings - generates 1 copper coin every 3 seconds.\
 **Stacking effect:** +1 copper generation rate.\
-		* Works as intended. *Might have to change the money generation to be silent.*\
-		* Effects aren't required.
+		* Works as intended.\
 * [x][ ]Paul's Goat Hoof - increases movement speed by 20%.\
 **Stacking effect:** Further increases movement speed by 20%, caps at around 25.\
 		* Works as intended. *Definitely needs rebalancing.*\
@@ -109,14 +105,14 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:**  further increase by 15%, up to 13 times, maxing at +195%.\
 		* Works as intended.\
 		* Missing effect sprites.
-* [x][ ]Spikestrip - on hit drop spikestrips that slow enemies by 20%.\
+* [x][x]Spikestrip - on hit drop spikestrips that slow enemies by 20%.\
 **Stacking effect:** Increases the duration of spikestrips by 1 second per stack.\
 		* Works as intended.\
-		* Missing effect sprites.
-* [ ][ ]Warbanner - On level up drop a banner. Raise attack/move speed by 30% and damage by 4.\
+		* Arrow on enemy draws properly.
+* [x][x]Warbanner - On level up drop a banner. Raise attack/move speed by 30% and damage by 4.\
 **Stacking effect:** Area of effect increased by 40% of base size.\
-		* The banners spawn and increase stats properly. They don't load or save yet. *As the leveling system doesn't exist yet, the activation requirements have been changed. Will need to change them once the leveling system is in.*\
-		* Missing effect sounds. Sprite effects have not been coded.
+		* The banners spawn and increase stats properly. *As the leveling system doesn't exist yet, the activation requirements have been changed. Will need to change them once the leveling system is in.*\
+		* Missing effect sounds. Player sprite draws correctly.
 * [x][ ]Taser - 7% chance to snare enemies for 1.5 seconds.\
 **Stacking effect:** Increases snare duration by 0.5 seconds.\
 		* Works as intended. *Nullifies X-axis velocity. Might want to increase Y-axis velocity to make flying enemies fall?*\
