@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -120,16 +121,36 @@ namespace RiskOfSlimeRain
 
 			if (hoverIndex > -1)
 			{
+				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
+				player.showItemIcon = false;
 				effect = effects[hoverIndex];
-				Main.hoverItemName = effect.Description;
+				string name = effect.Name;
+				string text = "\n" + effect.Description;
 				if (effect.UIInfo != string.Empty)
 				{
-					Main.hoverItemName += "\n" + effect.UIInfo;
+					text += "\n" + effect.UIInfo;
 				}
 				if (effect.Capped)
 				{
-					Main.hoverItemName += "\n" + effect.CappedMessage;
+					text += "\n" + effect.CappedMessage;
 				}
+
+				Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+				mousePos += new Vector2(Main.ThickMouse ? 22 : 16);
+
+				Vector2 size = Main.fontMouseText.MeasureString(text);
+
+				if (mousePos.X + size.X + 4f > Main.screenWidth)
+				{
+					mousePos.X = (int)(Main.screenWidth - size.X - 4f);
+				}
+				if (mousePos.Y + size.Y + 4f > Main.screenHeight)
+				{
+					mousePos.Y = (int)(Main.screenHeight - size.Y - 4f);
+				}
+
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, name, mousePos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, mousePos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 			}
 
 			return true;

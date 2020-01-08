@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Effects
 		private static Dictionary<Type, string> texture;
 
 		/// <summary>
-		/// Index assigned before sending the SyncSingle packet
+		/// Index assigned before sending the SyncSingle(Stack) packet
 		/// </summary>
 		public static int Index { get; set; } = 0;
 
@@ -60,7 +60,7 @@ namespace RiskOfSlimeRain.Effects
 				{
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
-					rarity[type] = effect.RarityColor;
+					rarity[type] = effect.Rarity;
 				}
 			}
 			validInterfaces = interfaces.ToArray();
@@ -75,6 +75,9 @@ namespace RiskOfSlimeRain.Effects
 			texture = null;
 		}
 
+		/// <summary>
+		/// Sets up the effect dictionary on the player
+		/// </summary>
 		public static void Init(RORPlayer mPlayer)
 		{
 			foreach (var interf in validInterfaces)
@@ -107,6 +110,9 @@ namespace RiskOfSlimeRain.Effects
 			ROREffectManager.texture[typeof(T)] = texture;
 		}
 
+		/// <summary>
+		/// Adds an effect to the list (or increases the stack of an existing effect)
+		/// </summary>
 		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
 		{
 			List<ROREffect> effects = mPlayer.Effects;

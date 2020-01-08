@@ -9,6 +9,9 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable
 {
+	/// <summary>
+	/// Base class for all items that simply add an effect on use. Textures for the effects are assigned from here
+	/// </summary>
 	public abstract class RORConsumableItem<T> : ModItem where T : ROREffect
 	{
 		#region properties
@@ -47,6 +50,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public sealed override bool UseItem(Player player)
 		{
+			//It is important that this runs on clients+server, otherwise big problems happen
 			ROREffectManager.ApplyEffect<T>(player.GetRORPlayer());
 			return true;
 		}

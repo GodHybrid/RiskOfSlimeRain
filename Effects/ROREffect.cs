@@ -1,7 +1,9 @@
+using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.GameContent.UI;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
@@ -45,9 +47,15 @@ namespace RiskOfSlimeRain.Effects
 		public virtual string FlavorText => string.Empty;
 
 		//Cached, so not dynamic
-		public virtual int RarityColor => ItemRarityID.White;
+		public virtual int Rarity => ItemRarityID.White;
+
+		//Cause it returns the already pulsating mouse color if rarity is white
+		public Color RarityColor => Rarity == ItemRarityID.White ? Color.White : ItemRarity.GetColor(Rarity);
 
 		//Dynamic
+		/// <summary>
+		/// Use to display additional info when mouseovered in the UI
+		/// </summary>
 		public virtual string UIInfo => string.Empty;
 
 		//Cached, so not dynamic

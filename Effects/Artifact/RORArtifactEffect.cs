@@ -4,6 +4,6 @@ namespace RiskOfSlimeRain.Effects.Artifact
 {
 	public abstract class RORArtifactEffect : ROREffect
 	{
-		public override int RarityColor => ItemRarityID.LightPurple;
+		public override int Rarity => ItemRarityID.LightPurple;
 	}
 }
