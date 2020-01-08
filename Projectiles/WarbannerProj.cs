@@ -83,6 +83,7 @@ namespace RiskOfSlimeRain.Projectiles
 		private void Animate()
 		{
 			projectile.WaterfallAnimation(6);
+			//TODO play sound, SoundID.Item71 weapon swing
 		}
 	}
 }

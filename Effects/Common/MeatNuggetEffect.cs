@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	public class MeatNuggetEffect : RORCommonEffect, IOnHit
 	{
-		const int increase = 6;
+		const int increase = 3;
 
 		public override string Description => $"Enemies will have an {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {increase} health";
 
@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => 0.08f;
+		public override float Chance => 0.5f; //0.08f
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			if (target.type == NPCID.TargetDummy) return;
 			for (int i = 0; i < 2; i++)
-				Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 1)), ModContent.ProjectileType<MeatNugget>(), 0, 0, Main.myPlayer, Stack * increase);
+				Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 0)), ModContent.ProjectileType<MeatNuggetProj>(), 0, 0, Main.myPlayer, Stack * increase);
 		}
 	}
 }

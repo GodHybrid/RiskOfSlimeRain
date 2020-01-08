@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Buffs;
 using Terraria;
 using Terraria.ModLoader;
+using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -24,24 +25,29 @@ namespace RiskOfSlimeRain.Projectiles
 			return false;
 		}
 
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		{
+			//so it sticks to platforms
+			fallThrough = false;
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
+		}
+
+		public int Duration
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
+
 		public override void AI()
 		{
 			if (projectile.localAI[0] == 0f)
 			{
 				projectile.localAI[0] = 1f;
-				projectile.timeLeft = (int)projectile.ai[0];
+				projectile.timeLeft = Duration;
 			}
 
 			projectile.velocity.Y = 10f;
-			for (int m = 0; m < Main.maxNPCs; m++)
-			{
-
-				NPC enemy = Main.npc[m];
-				if (enemy.Hitbox.Intersects(projectile.Hitbox))
-				{
-					enemy.AddBuff(ModContent.BuffType<SpikestripSlowdown>(), 60);
-				}
-			}
+			Main.npc.WhereActive(n => n.Hitbox.Intersects(projectile.Hitbox)).Do(n => n.AddBuff(ModContent.BuffType<SpikestripSlowdown>(), 60));
 		}
 	}
 }
