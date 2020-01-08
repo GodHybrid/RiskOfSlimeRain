@@ -1,8 +1,8 @@
-using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using WebmilioCommons.Networking;
@@ -45,7 +45,7 @@ namespace RiskOfSlimeRain.Effects
 		public virtual string FlavorText => string.Empty;
 
 		//Cached, so not dynamic
-		public virtual Color FlavorColor => Color.White;
+		public virtual int RarityColor => ItemRarityID.White;
 
 		//Dynamic
 		public virtual string UIInfo => string.Empty;

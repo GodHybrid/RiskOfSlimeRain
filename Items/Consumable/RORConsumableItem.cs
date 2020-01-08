@@ -11,11 +11,12 @@ namespace RiskOfSlimeRain.Items.Consumable
 {
 	public abstract class RORConsumableItem<T> : ModItem where T : ROREffect
 	{
-		#region stuff
+		#region properties
 		public string FlavorText => ROREffectManager.GetFlavorText<T>();
 
-		//TODO change this based on rarity of item?
-		public Color FlavorTextColor => ROREffectManager.GetFlavorColor<T>();
+		public int Rarity => ROREffectManager.GetRarity<T>();
+
+		public static Color FlavorColor => new Color(220, 220, 220);
 
 		public bool HasFlavorText => FlavorText != string.Empty;
 		#endregion
@@ -54,7 +55,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		{
 			if (HasFlavorText)
 			{
-				string color = (FlavorTextColor * (Main.mouseTextColor / 255f)).Hex3();
+				string color = (FlavorColor * (Main.mouseTextColor / 255f)).Hex3();
 
 				//flavorText that has \n in it has to be split into single tooltiplines
 				string[] lines = FlavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
@@ -72,9 +73,9 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public override void SetDefaults()
 		{
 			item.CloneDefaults(ItemID.LifeFruit);
-			item.rare = ItemRarityID.White;
+			item.rare = Rarity;
 
-			//when wanting to add more setdefaults, call base.SetDefaults() first
+			//when wanting to add more SetDefaults, call base.SetDefaults() first
 		}
 		#endregion
 	}

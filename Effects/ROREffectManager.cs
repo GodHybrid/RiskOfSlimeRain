@@ -23,7 +23,7 @@ namespace RiskOfSlimeRain.Effects
 		private static Type[] interfaceCanProc;
 		//Those two need caching cause they are used in ModifyTooltips dynamically for multiline tooltips with color
 		private static Dictionary<Type, string> flavorText;
-		private static Dictionary<Type, Color> flavorColor;
+		private static Dictionary<Type, int> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
 
@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Effects
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
 			flavorText = new Dictionary<Type, string>();
-			flavorColor = new Dictionary<Type, Color>();
+			rarity = new Dictionary<Type, int>();
 			texture = new Dictionary<Type, string>();
 			foreach (var type in types)
 			{
@@ -60,7 +60,7 @@ namespace RiskOfSlimeRain.Effects
 				{
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
-					flavorColor[type] = effect.FlavorColor;
+					rarity[type] = effect.RarityColor;
 				}
 			}
 			validInterfaces = interfaces.ToArray();
@@ -71,7 +71,7 @@ namespace RiskOfSlimeRain.Effects
 		{
 			validInterfaces = null;
 			flavorText = null;
-			flavorColor = null;
+			rarity = null;
 			texture = null;
 		}
 
@@ -88,9 +88,9 @@ namespace RiskOfSlimeRain.Effects
 			return flavorText[typeof(T)];
 		}
 
-		public static Color GetFlavorColor<T>() where T : ROREffect
+		public static int GetRarity<T>() where T : ROREffect
 		{
-			return flavorColor[typeof(T)];
+			return rarity[typeof(T)];
 		}
 
 		public static string GetTexture(Type type)
