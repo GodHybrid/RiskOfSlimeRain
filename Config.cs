@@ -11,22 +11,14 @@ namespace RiskOfSlimeRain
 		public static Config Instance => ModContent.GetInstance<Config>();
 
 		[Label("Custom stacking")]
-		[Tooltip("Manually select how many stacks an item has (up to the unlocked amount)")]
+		[Tooltip("Manually select how many stacks an item has via scrollwheel (up to the unlocked amount)")]
 		[DefaultValue(false)]
 		public bool CustomStacking;
-
-		[Label("Custom stacking status: ")]
-		public string TileStatus => Status(CustomStacking);
 
 		//public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
 		//{
 		//	message = "Only the host of this world can change the config! Do so in singleplayer.";
 		//	return false;
 		//}
-
-		private string Status(bool b)
-		{
-			return b ? "Enabled" : "Disabled";
-		}
 	}
 }

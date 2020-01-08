@@ -95,7 +95,7 @@ namespace RiskOfSlimeRain
 				//Utils.DrawLine(Main.spriteBatch, new Vector2(Center.X -1, Center.Y - 1), new Vector2(Center.X + 2, Center.Y + 2), Color.Green, Color.White, 4);
 
 				Color color = Color.White * 0.8f;
-				if (Config.Instance.CustomStacking && destRect.Contains(new Point(Main.mouseX, Main.mouseY)))
+				if (destRect.Contains(new Point(Main.mouseX, Main.mouseY)))
 				{
 					hoverIndex = i;
 					destRect.Inflate(2, 2);
@@ -137,6 +137,7 @@ namespace RiskOfSlimeRain
 
 		public static void Update(Player player)
 		{
+			if (!Config.Instance.CustomStacking) return;
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1 && !player.mouseInterface)
 			{
 				RORPlayer mPlayer = player.GetRORPlayer();
