@@ -46,7 +46,7 @@ But the effect doesn't do anything at all, this is going to be the next step!
 
 Go back to the effect class, and write up the description and flavor text (and name if it contains special characters, because the name is otherwise taken from the effect name):
 ```csharp
-public class Infusion : RORConsumableItem<InfusionEffect>
+public class InfusionEffect : RORUncommonEffect
 {
 	public override string Description => "Killing an enemy increases your health permanently by 1";
 
