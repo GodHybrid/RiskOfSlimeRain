@@ -159,7 +159,7 @@ namespace RiskOfSlimeRain
 		public static void Update(Player player)
 		{
 			if (!Config.Instance.CustomStacking) return;
-			if (Main.myPlayer == player.whoAmI && hoverIndex != -1 && !player.mouseInterface)
+			if (Main.myPlayer == player.whoAmI && hoverIndex != -1)
 			{
 				RORPlayer mPlayer = player.GetRORPlayer();
 				List<ROREffect> effects = mPlayer.Effects;
