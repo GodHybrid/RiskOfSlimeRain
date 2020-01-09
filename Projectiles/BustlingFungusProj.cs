@@ -19,14 +19,14 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void SetDefaults()
 		{
 			projectile.width = 82;
-			projectile.height = 22;
+			projectile.height = 24;
 			projectile.friendly = false;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
 			projectile.tileCollide = true;
 			projectile.timeLeft = 60;
 			projectile.netImportant = true;
-			drawOriginOffsetY = 2;
+			drawOriginOffsetY = 3;
 		}
 
 		public const int TimerMax = 60;

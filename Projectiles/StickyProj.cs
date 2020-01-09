@@ -138,7 +138,7 @@ namespace RiskOfSlimeRain.Projectiles
 			else
 			{
 				//otherwise, kill the projectile
-				projectile.Kill();
+				//projectile.Kill();
 				return;
 			}
 
