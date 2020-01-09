@@ -77,7 +77,7 @@ namespace RiskOfSlimeRain.Effects
 		/// <summary>
 		/// Check this when a proc-type method will be ran. (Has a chance and CanProc attribute on its method)
 		/// </summary>
-		public bool Proccing => Active && (AlwaysProc || Proc());
+		public bool Proccing => Active && (AlwaysProc || Proc(Chance));
 
 		public bool Active => Stack > 0;
 
@@ -117,7 +117,7 @@ namespace RiskOfSlimeRain.Effects
 				}
 				else
 				{
-					return GetProcChance() >= 1f;
+					return GetProcByUseTime() * Chance >= 1f;
 				}
 			}
 		}
@@ -154,8 +154,9 @@ namespace RiskOfSlimeRain.Effects
 		/// </summary>
 		public virtual bool CanUse(Player player)
 		{
-			if (!AlwaysProc) return true;
-			else return UnlockedStack < MaxRecommendedStack;
+			//if (!AlwaysProc) return true;
+			//else return UnlockedStack < MaxRecommendedStack;
+			return true;
 		}
 
 		/// <summary>
@@ -197,7 +198,7 @@ namespace RiskOfSlimeRain.Effects
 			return CreateInstance(player, typeof(RiskOfSlimeRainMod).Assembly.GetType(typeName));
 		}
 
-		public float GetProcChance()
+		public float GetProcByUseTime()
 		{
 			//0.06 for use time 2, 1 for use time 30, 2 for use time 60
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
@@ -209,10 +210,13 @@ namespace RiskOfSlimeRain.Effects
 			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
 			float byUseTime = 2 * useTime / 60f;
 			byUseTime = Utils.Clamp(byUseTime, 0, 2);
-			return byUseTime * Chance;
+			return byUseTime;
 		}
 
-		private bool Proc() => Main.rand.NextFloat() < GetProcChance();
+		/// <summary>
+		/// Takes the proc by use time into account
+		/// </summary>
+		public bool Proc(float chance) => Main.rand.NextFloat() < GetProcByUseTime() * chance;
 
 		private void SetupPlayer(Player player)
 		{

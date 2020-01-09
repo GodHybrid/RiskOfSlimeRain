@@ -7,6 +7,8 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
+	//It doesn't use IGetWeaponDamage because we want crit rate to be dynamic based on item use time (which requires proc chance)
+	//additional crit chance won't be shown on the tooltip
 	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit
 	{
 		const float increase = 0.07f;
@@ -19,33 +21,35 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
 
-		public override bool AlwaysProc => false;
-
-		public override float Chance => increase * Stack;
+		public override bool AlwaysProc => true;
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
+			if (!Proc(increase * Stack)) return;
 			crit = true;
 		}
 
 		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
+			if (!Proc(increase * Stack)) return;
 			crit = true;
 		}
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (crit)
-			{
-				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
-			}
+			SpawnProjectile(target, crit);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
+			SpawnProjectile(target, crit);
+		}
+
+		void SpawnProjectile(NPC target, bool crit)
+		{
 			if (crit)
 			{
-				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
+				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer);
 			}
 		}
 	}

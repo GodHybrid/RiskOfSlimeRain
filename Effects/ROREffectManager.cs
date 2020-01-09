@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Effects.Attributes;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,13 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Extensions;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace RiskOfSlimeRain.Effects
 {
+	/// <summary>
+	/// Central point of the effect system. Stores various cached data, and is able to retreive things around effects and execute their hooks
+	/// </summary>
 	public static class ROREffectManager
 	{
 		//Used to build the dictionary EffectByType on RORPlayer
@@ -310,10 +315,88 @@ namespace RiskOfSlimeRain.Effects
 			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player.GetRORPlayer());
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing)
+				if (effect.Active)
 				{
 					((IGetWeaponCrit)effect).GetWeaponCrit(player, item, ref crit);
 				}
+			}
+		}
+
+		//unused
+		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
+		{
+			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player.GetRORPlayer());
+			foreach (var effect in effects)
+			{
+				if (effect.Active)
+				{
+					((IModifyWeaponDamage)effect).ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
+				}
+			}
+		}
+
+		public static List<Effect> GetScreenShaders(Player player)
+		{
+			List<Effect> shaders = new List<Effect>();
+			List<ROREffect> effects = GetEffectsOf<IScreenShader>(player.GetRORPlayer());
+			foreach (var effect in effects)
+			{
+				if (effect.Active)
+				{
+					Effect shader = ((IScreenShader)effect).GetScreenShader(player);
+					if (shader != null) shaders.Add(shader);
+				}
+			}
+			return shaders;
+		}
+
+		public static void DrawPlayerLayers(Player player, List<PlayerLayer> layers)
+		{
+			List<PlayerLayer> newLayers = new List<PlayerLayer>();
+			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(player.GetRORPlayer());
+			foreach (var effect in effects)
+			{
+				if (effect.Active)
+				{
+					PlayerLayerParams definition = ((IPlayerLayer)effect).GetPlayerLayerParams(player);
+					if (definition != null)
+					{
+						newLayers.Add(new PlayerLayer("RiskOfSlimeRain", effect.Name, PlayerLayer.MiscEffectsBack, delegate(PlayerDrawInfo drawInfo)
+						{
+							if (drawInfo.shadow != 0f)
+							{
+								return;
+							}
+							Player dPlayer = drawInfo.drawPlayer;
+
+							Texture2D tex = definition.Texture;
+							float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
+							float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
+
+							Vector2 off = definition.Offset;
+							SpriteEffects spriteEffects = SpriteEffects.None;
+							if (dPlayer.gravDir < 0f)
+							{
+								off.Y = -off.Y;
+								spriteEffects = SpriteEffects.FlipVertically;
+							}
+							drawY += off.Y + dPlayer.gfxOffY;
+							drawX += off.X;
+							Color color = definition.Color ?? Color.White;
+							if (definition.IgnoreAlpha ?? false)
+							{
+								color *= (255 - dPlayer.immuneAlpha) / 255f;
+							}
+							Rectangle sourceRect = definition.GetFrame();
+							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, definition.Scale ?? 1f, spriteEffects, 0);
+							Main.playerDrawData.Add(data);
+						}));
+					}
+				}
+			}
+			foreach (var layer in newLayers)
+			{
+				layers.Insert(0, layer);
 			}
 		}
 

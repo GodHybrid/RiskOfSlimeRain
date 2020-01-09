@@ -49,11 +49,19 @@ namespace RiskOfSlimeRain.Effects.Common
 
 			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/Warbanner");
 			float drawX = (int)player.Center.X - Main.screenPosition.X;
-			float drawY = (int)player.Top.Y + player.gfxOffY - Main.screenPosition.Y;
+			float drawY = (int)player.Center.Y + player.gfxOffY - Main.screenPosition.Y;
 
-			drawY -= 40;
+			Vector2 off = new Vector2(0, -(40 + (player.height >> 1)));
+			SpriteEffects spriteEffects = SpriteEffects.None;
+			if (player.gravDir < 0f)
+			{
+				off.Y = -off.Y;
+				spriteEffects = SpriteEffects.FlipVertically;
+			}
+
+			drawY -= player.gravDir * (40 + (player.height >> 1));
 			Color color = Color.White * ((255 - player.immuneAlpha) / 255f);
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, color, 0, tex.Size() / 2, 1f, SpriteEffects.None, 0);
+			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, color, 0, tex.Size() / 2, 1f, spriteEffects, 0);
 			Main.playerDrawData.Add(data);
 		});
 	}

@@ -1,7 +1,9 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Effects.Shaders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,7 +34,7 @@ namespace RiskOfSlimeRain
 		private int WarbannerTime { get; set; }
 
 		//because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
-		public bool WarbannerEffect => WarbannerTime > 0;
+		public bool InWarbannerRange => WarbannerTime > 0;
 
 		public void ActivateWarbanner()
 		{
@@ -80,13 +82,16 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyWeaponDamage(Item item, ref float add, ref float mult, ref float flat)
 		{
-			//TODO hook
-			base.ModifyWeaponDamage(item, ref add, ref mult, ref flat);
+			//ROREffectManager.ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
+			if (InWarbannerRange)
+			{
+				flat += 4;
+			}
 		}
 
 		public override void PostUpdateRunSpeeds()
 		{
-			if (WarbannerEffect)
+			if (InWarbannerRange)
 			{
 				//TODO test
 				player.moveSpeed *= 1.3f;
@@ -97,7 +102,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdateEquips()
 		{
-			if (WarbannerEffect) WarbannerTime--;
+			if (InWarbannerRange) WarbannerTime--;
 			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
 		}
 
@@ -106,7 +111,7 @@ namespace RiskOfSlimeRain
 			float mult = 1f;
 			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
 			//TODO test, feels too high
-			if (WarbannerEffect) mult += 0.3f;
+			if (InWarbannerRange) mult += 0.3f;
 			return mult;
 		}
 
@@ -184,8 +189,17 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
-			ROREffectManager.Perform<IModifyDrawLayers>(this, e => e.ModifyDrawLayers(player, layers));
-			if (WarbannerEffect) layers.Insert(0, RiskOfSlimeRain.Effects.Common.WarbannerEffect.WarbannerLayer);
+			ROREffectManager.DrawPlayerLayers(player, layers);
+			if (InWarbannerRange) layers.Insert(0, WarbannerEffect.WarbannerLayer);
+		}
+
+		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+		{
+			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
+			foreach (var shader in shaders)
+			{
+				ShaderManager.ApplyToScreen(Main.spriteBatch, shader);
+			}
 		}
 
 		public override void OnEnterWorld(Player player)

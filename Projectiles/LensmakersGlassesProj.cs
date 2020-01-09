@@ -31,30 +31,6 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.tileCollide = false;
 		}
 
-		//index of the current target
-		public int TargetWhoAmI
-		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
-		}
-
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
-		{
-			//if attached to an NPC, draw behind tiles (and the npc) if that NPC is behind tiles, otherwise just behind the NPC.
-			int npcIndex = TargetWhoAmI;
-			if (npcIndex >= 0 && npcIndex < 200 && Main.npc[npcIndex].active)
-			{
-				if (Main.npc[npcIndex].behindTiles)
-				{
-					drawCacheProjsBehindNPCsAndTiles.Add(index);
-				}
-				else
-				{
-					drawCacheProjsBehindProjectiles.Add(index);
-				}
-			}
-		}
-
 		public override void AI()
 		{
 			if (projectile.localAI[0] != 1f)

@@ -8,7 +8,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 	/// <summary>
 	/// Convenience class to save data about a warbanner
 	/// </summary>
-	public class Warbanner : TagSerializable
+	public sealed class Warbanner : TagSerializable
 	{
 		//because we are using warbanner in a list, we need those two
 		public override bool Equals(object obj)

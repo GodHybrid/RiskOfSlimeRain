@@ -1,17 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen, IModifyDrawLayers
+	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen, IPlayerLayer
 	{
 		const float increase = 2.4f;
 		const int timerMax = 420;
@@ -36,26 +34,16 @@ namespace RiskOfSlimeRain.Effects.Common
 			}
 		}
 
-		public void ModifyDrawLayers(Player player, List<PlayerLayer> layers)
+		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			if (player.GetRORPlayer().NoCombatTimer > timerMax) layers.Insert(0, SproutingEggLayer);
-		}
-
-		public static readonly PlayerLayer SproutingEggLayer = new PlayerLayer("RiskOfSlimeRain", "SproutingEgg", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
-		{
-			if (drawInfo.shadow != 0f)
+			if (player.GetRORPlayer().NoCombatTimer > timerMax)
 			{
-				return;
+				return new PlayerLayerParams("Textures/SproutingEgg", new Vector2(-1f, -14f), Color.White * 0.5f);
 			}
-			Player player = drawInfo.drawPlayer;
-
-			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/SproutingEgg");
-			float drawX = (int)player.Center.X - Main.screenPosition.X;
-			float drawY = (int)player.Center.Y + player.gfxOffY - Main.screenPosition.Y;
-
-			drawY -= 12f;
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * 0.5f * ((255 - player.immuneAlpha) / 255f), 0, tex.Size() / 2, 1f, SpriteEffects.None, 0);
-			Main.playerDrawData.Add(data);
-		});
+			else
+			{
+				return null;
+			}
+		}
 	}
 }
