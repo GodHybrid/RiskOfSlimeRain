@@ -123,18 +123,15 @@ namespace RiskOfSlimeRain.Effects
 		}
 
 		//TODO adjust for ror mode
-		public string CappedMessage
+		public string CappedMessage(Item item)
 		{
-			get
+			if (AlwaysProc || item.damage < 1)
 			{
-				if (AlwaysProc)
-				{
-					return "You reached the recommended stack amount!";
-				}
-				else
-				{
-					return "With the currently held weapon, you reached the recommended stack amount!";
-				}
+				return "You reached the recommended stack amount!";
+			}
+			else
+			{
+				return "With the currently held weapon, you reached the recommended stack amount!";
 			}
 		}
 
@@ -204,7 +201,7 @@ namespace RiskOfSlimeRain.Effects
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
 			//TODO arkhalis/channel weapons
 			Item item = Player.HeldItem;
-			if (item.damage < 1) return 0f;
+			if (item.damage < 1) return 1f;
 			int useTime = item.useTime;
 			//fix for melee weapons
 			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
