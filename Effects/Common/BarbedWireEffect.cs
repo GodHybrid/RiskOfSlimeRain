@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -19,6 +20,10 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float increase = 0.17f;
 		const int radIncrease = 16;
 
+		int alphaCounter = 0;
+
+		public float Alpha => (float)(Math.Sin((alphaCounter / 6d) / (Math.PI * 2))) / 5f + 3 / 5f;
+
 		int wireTimer = 0;
 		int Radius => (wireRadius + Stack) * radIncrease;
 
@@ -28,6 +33,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void PostUpdateEquips(Player player)
 		{
+			if (Main.hasFocus) alphaCounter++;
 			if (Main.myPlayer != player.whoAmI) return;
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
@@ -55,17 +61,18 @@ namespace RiskOfSlimeRain.Effects.Common
 			RORPlayer mPlayer = player.GetRORPlayer();
 			BarbedWireEffect bEffect = ROREffectManager.GetEffectOfType<BarbedWireEffect>(mPlayer);
 
+			if (bEffect == null) return;
+
 			float scale = 3f;
 			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/BarbedWire1");
 			//TODO scaled texture based on stack from bEffect
 			float drawX = (int)player.Center.X - (tex.Width >> 1) * scale - Main.screenPosition.X;
-			float drawY = (int)player.Center.Y + player.gfxOffY - (tex.Width >> 1) * scale - Main.screenPosition.Y;
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * (0.6f * (255 - player.immuneAlpha) / 255f), 0, Vector2.Zero, scale, SpriteEffects.None, 0);
+			float drawY = (int)player.Center.Y + player.gfxOffY - (tex.Height >> 1) * scale - Main.screenPosition.Y;
+			float alpha = bEffect.Alpha * ((255 - player.immuneAlpha) / 255f);
+			DrawData data = new DrawData(tex, new Vector2(drawX - 2, drawY - 2), null, Color.White *  alpha, 0, Vector2.Zero, scale, SpriteEffects.None, 0);
 			Main.playerDrawData.Add(data);
 
-			if (bEffect == null) return;
-
-			Effect circle = ShaderManager.SetupCircleEffect(player.Center + new Vector2(0f, player.gfxOffY), bEffect.Radius, Color.SandyBrown * 0.5f);
+			Effect circle = ShaderManager.SetupCircleEffect(new Vector2((int)player.Center.X, (int)player.Center.Y + player.gfxOffY), bEffect.Radius, Color.SandyBrown * alpha);
 			if (circle != null)
 			{
 				ShaderManager.ApplyToScreen(Main.spriteBatch, circle);

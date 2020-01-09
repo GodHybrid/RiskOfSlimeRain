@@ -52,7 +52,8 @@ namespace RiskOfSlimeRain.Effects.Common
 			float drawY = (int)player.Top.Y + player.gfxOffY - Main.screenPosition.Y;
 
 			drawY -= 40;
-			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, Color.White * ((255 - player.immuneAlpha) / 255f), 0, tex.Size() / 2, 1f, SpriteEffects.None, 0);
+			Color color = Color.White * ((255 - player.immuneAlpha) / 255f);
+			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, color, 0, tex.Size() / 2, 1f, SpriteEffects.None, 0);
 			Main.playerDrawData.Add(data);
 		});
 	}

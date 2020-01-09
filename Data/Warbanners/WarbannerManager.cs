@@ -34,12 +34,18 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		public static float X = 0f;
 		public static float Y = 0f;
 
+		public static float GetWarbannerCircleAlpha()
+		{
+			//0.3333f to 1f
+			return (float)(Math.Sin((Main.GameUpdateCount / 8d) / (Math.PI * 2))) / 3f + 2/3f;
+		}
+
 		/// <summary>
 		/// Checks for banner roll, and then adds a warbanner. Also syncs
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (true || Main.rand.NextFloat() < WarbannerChance)
+			if (Main.rand.NextFloat() < WarbannerChance)
 			{
 				//Find nearest solid tile below:
 				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
 using System;
@@ -39,7 +40,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightGoldenrodYellow * 0.78f);
+			Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
 			if (circle != null)
 			{
 				ShaderManager.ApplyToScreen(spriteBatch, circle);
