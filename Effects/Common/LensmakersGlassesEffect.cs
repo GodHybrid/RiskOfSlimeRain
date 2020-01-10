@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	//It doesn't use IGetWeaponDamage because we want crit rate to be dynamic based on item use time (which requires proc chance)
+	//It doesn't use IGetWeaponCrit because we want crit rate to be dynamic based on item use time (which requires proc chance)
 	//additional crit chance won't be shown on the tooltip
 	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit
 	{

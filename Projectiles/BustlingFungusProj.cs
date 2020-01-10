@@ -23,10 +23,10 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.friendly = false;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
-			projectile.tileCollide = true;
+			projectile.tileCollide = false;
 			projectile.timeLeft = 60;
 			projectile.netImportant = true;
-			drawOriginOffsetY = 3;
+			drawOriginOffsetY = 4;
 		}
 
 		public const int TimerMax = 60;
@@ -90,7 +90,10 @@ namespace RiskOfSlimeRain.Projectiles
 			bool animating = projectile.WaterfallAnimation(6);
 			if (Main.myPlayer == projectile.owner)
 			{
-				if (animating != lastAnimating) projectile.netUpdate = true;
+				if (animating != lastAnimating)
+				{
+					projectile.netUpdate = true;
+				}
 				lastAnimating = animating;
 			}
 			if (projectile.frame == 0 && projectile.frameCounter == 1)

@@ -24,7 +24,6 @@ namespace RiskOfSlimeRain.Effects.Common
 				timer++;
 				if (timer == maxTimerHeal && Main.myPlayer == player.whoAmI)
 				{
-					//TODO test in MP if timer even counts up for other clients
 					//because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe(Stack * amount);
 				}

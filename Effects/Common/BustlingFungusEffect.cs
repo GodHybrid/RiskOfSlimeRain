@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 				{
 					position.Y++;
 				}
-				position.Y -= 11; //half the projectiles height
+				position.Y -= 12; //half the projectiles height
 				int heal = (int)(player.statLifeMax2 * increase * Stack);
 				Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 			}
