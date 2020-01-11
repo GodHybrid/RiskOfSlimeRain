@@ -62,6 +62,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			drawY -= player.gravDir * (40 + (player.height >> 1));
 			Color color = Color.White * ((255 - player.immuneAlpha) / 255f);
 			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, color, 0, tex.Size() / 2, 1f, spriteEffects, 0);
+			data.ignorePlayerRotation = true;
 			Main.playerDrawData.Add(data);
 		});
 	}

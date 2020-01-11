@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Effects.Attributes;
 using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,6 @@ using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Extensions;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace RiskOfSlimeRain.Effects
 {
@@ -361,7 +361,7 @@ namespace RiskOfSlimeRain.Effects
 					PlayerLayerParams definition = ((IPlayerLayer)effect).GetPlayerLayerParams(player);
 					if (definition != null)
 					{
-						newLayers.Add(new PlayerLayer("RiskOfSlimeRain", effect.Name, PlayerLayer.MiscEffectsBack, delegate(PlayerDrawInfo drawInfo)
+						newLayers.Add(new PlayerLayer("RiskOfSlimeRain", effect.Name, PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 						{
 							if (drawInfo.shadow != 0f)
 							{
@@ -389,6 +389,7 @@ namespace RiskOfSlimeRain.Effects
 							}
 							Rectangle sourceRect = definition.GetFrame();
 							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, definition.Scale ?? 1f, spriteEffects, 0);
+							data.ignorePlayerRotation = true;
 							Main.playerDrawData.Add(data);
 						}));
 					}
