@@ -140,6 +140,8 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		public static void Unload()
 		{
 			warbanners = unspawnedWarbanners = null;
+			Radius = -1;
+			X = Y = 0;
 		}
 
 		public static void Save(TagCompound tag)
