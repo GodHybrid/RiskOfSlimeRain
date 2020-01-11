@@ -383,7 +383,7 @@ namespace RiskOfSlimeRain.Effects
 							drawY += off.Y + dPlayer.gfxOffY;
 							drawX += off.X;
 							Color color = definition.Color ?? Color.White;
-							if (definition.IgnoreAlpha ?? false)
+							if (!(definition.IgnoreAlpha ?? false))
 							{
 								color *= (255 - dPlayer.immuneAlpha) / 255f;
 							}
