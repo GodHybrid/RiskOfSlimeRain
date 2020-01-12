@@ -107,9 +107,9 @@ namespace RiskOfSlimeRain.Data.Warbanners
 					}
 				}
 
-				for (int j = 0; j < spawned.Count; j++)
+				foreach (var banner in spawned)
 				{
-					unspawnedWarbanners.Remove(spawned[j]);
+					unspawnedWarbanners.Remove(banner);
 				}
 			});
 		}

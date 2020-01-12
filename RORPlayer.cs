@@ -93,9 +93,11 @@ namespace RiskOfSlimeRain
 		{
 			if (InWarbannerRange)
 			{
-				//TODO test
-				player.moveSpeed *= 1.3f;
-				player.maxRunSpeed *= 1.3f;
+				//player.moveSpeed *= 1.3f;
+				//these next two actually do something (increase acceleration slightly and increase max speed + cap)
+				//ONLY increasing acceleration while keeping the max speed in check is not possible afaik
+				player.accRunSpeed *= 1.3f;
+				player.runAcceleration *= 1.3f;
 			}
 			ROREffectManager.Perform<IPostUpdateRunSpeeds>(this, e => e.PostUpdateRunSpeeds(player));
 		}
@@ -110,8 +112,7 @@ namespace RiskOfSlimeRain
 		{
 			float mult = 1f;
 			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
-			//TODO test, feels too high
-			if (InWarbannerRange) mult += 0.3f;
+			if (InWarbannerRange) mult += 0.15f; //seems to mimic roughly 30% dps increase 
 			return mult;
 		}
 
