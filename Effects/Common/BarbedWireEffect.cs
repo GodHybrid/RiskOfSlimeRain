@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public Effect GetScreenShader(Player player)
 		{
-			return ShaderManager.SetupCircleEffect(new Vector2((int)player.Center.X, (int)player.Center.Y + player.gfxOffY), Radius, Color.SandyBrown * Alpha * ((255 - player.immuneAlpha) / 255f));
+			return ShaderManager.SetupCircleEffect(new Vector2((int)player.Center.X, (int)player.Center.Y + player.gfxOffY), Radius, Color.SandyBrown * (Alpha / 2) * ((255 - player.immuneAlpha) / 255f));
 		}
 	}
 }

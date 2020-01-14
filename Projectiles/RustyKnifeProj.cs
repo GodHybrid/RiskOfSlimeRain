@@ -1,11 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class RustyKnifeProj : StickyProj, IOncePerNPC
+	public class RustyKnifeProj : StickyProj
 	{
 		public override void SetStaticDefaults()
 		{
@@ -18,6 +17,7 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			projectile.Size = new Vector2(26, 34);
 			projectile.timeLeft = 140;
+			projectile.spriteDirection = (Main.rand.NextBool()) ? 1 : -1;
 		}
 
 		private const int StrikeTimerMax = 30;

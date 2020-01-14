@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			player.maxRunSpeed += player.maxRunSpeed * increase * Stack;
 			player.moveSpeed += player.moveSpeed * increase * Stack;
-			if (((player.controlRight && player.velocity.X < 0) || (player.controlLeft && player.velocity.X > 0)) && Stack > 5) player.velocity.X = 0;
+			if (((player.controlRight && player.velocity.X < -9) || (player.controlLeft && player.velocity.X > 9d)) && Stack > 5) player.velocity.X /= 1.3f;
 		}
 	}
 }

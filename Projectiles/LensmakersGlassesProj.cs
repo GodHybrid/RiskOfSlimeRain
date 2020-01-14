@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -35,7 +34,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (projectile.localAI[0] != 1f)
 			{
-				Main.PlaySound(SoundID.DoorOpen, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 1.5f, 0.75f);
+				Main.PlaySound(SoundID.Shatter, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 1f, 1f);
 				projectile.localAI[0] = 1f;
 			}
 		}

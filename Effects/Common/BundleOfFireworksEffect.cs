@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -11,7 +12,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const float initial = 0.005f;
 		const float increase = 0.005f;
 		const float damageIncrease = 3f;
-		const int fireworkCount = 4;
+		const int fireworkCount = 15;
 
 		public override string Description => $" {(initial + increase).ToPercent()} chance to fire {fireworkCount} fireworks that deal {damageIncrease.ToPercent()} damage";
 
@@ -46,10 +47,11 @@ namespace RiskOfSlimeRain.Effects.Common
 		void SpawnProjectile(Player player, NPC target)
 		{
 			int damage = (int)(damageIncrease * player.GetDamage());
+			Main.PlaySound(SoundID.Item2.SoundId, (int)player.Center.X, (int)player.Center.Y, 13, 2f, 0.4f);
 			for (int i = 0; i < fireworkCount; i++)
 			{
 				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-				RandomMovementProj.NewProjectile<BundleOfFireworksProj>(target.Center, velo, damage, 10f);
+				RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
 			}
 		}
 	}

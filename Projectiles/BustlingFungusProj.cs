@@ -116,7 +116,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				Timer = 0;
 				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(player.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
-				if (projectile.owner == Main.myPlayer)
+				if (projectile.owner == Main.myPlayer && projectile.GetOwner().GetRORPlayer().NoMoveTimer != 0)
 				{
 					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
 					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));

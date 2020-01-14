@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
@@ -26,6 +27,7 @@ namespace RiskOfSlimeRain.Effects.Common
 				{
 					//because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe(Stack * amount);
+					Main.PlaySound(SoundID.Splash, (int)player.Center.X, (int)player.Center.Y, 1, 1f, 0.6f);
 				}
 				if (timer >= maxTimer)
 				{

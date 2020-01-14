@@ -10,29 +10,28 @@ namespace RiskOfSlimeRain.Projectiles
 	/// <summary>
 	/// Entirely visual/audio focused projectile
 	/// </summary>
-	public class CrowbarProj : ModProjectile
+	class HeadstompersProj : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crowbar");
-			Main.projFrames[projectile.type] = 4;
+			DisplayName.SetDefault("Headstompers");
+			Main.projFrames[projectile.type] = 7;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(26);
+			projectile.Size = new Vector2(22);
+			projectile.scale = 3;
 			projectile.aiStyle = -1;
 			projectile.friendly = true;
 			projectile.melee = true;
 			projectile.penetrate = -1;
 			projectile.hide = true;
-			projectile.timeLeft = 14;
+			projectile.timeLeft = 48;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = false;
-			projectile.spriteDirection = (Main.rand.NextBool() == true) ? 1 : -1;
 		}
 
-		//index of the current target
 		public int TargetWhoAmI
 		{
 			get => (int)projectile.ai[1];
@@ -60,11 +59,11 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (projectile.localAI[0] != 1f)
 			{
-				Main.PlaySound(SoundID.Shatter, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 0.8f, Main.rand.NextFloat(-0.9f, -0.6f));
+				Main.PlaySound(SoundID.Splash, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 4f, Main.rand.NextFloat(0.4f, 0.9f));
 				projectile.localAI[0] = 1f;
 			}
 
-			projectile.LoopAnimation(3);
+			projectile.LoopAnimation(6);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

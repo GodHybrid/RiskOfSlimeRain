@@ -17,7 +17,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 
 #### Common items
 ###### Offensive items
-* [x][ ]Barbed Wire - encircles the player in a small, grey, jagged circle, damaging enemies who come within. If several enemies are within range, only one of them will receive the damage.\
+* [x][x]Barbed Wire - encircles the player in a small, grey, jagged circle, damaging enemies who come within. If several enemies are within range, only one of them will receive the damage.\
 **Stacking effect:** +20% larger radius, +17% damage/sec.\
 		* Damage scales properly. Only one enemy receives damage at a time.\
 		* Wire sprite draws correctly (only first stage). Circle showing the radius draws correctly
@@ -28,10 +28,10 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Gasoline - on killing an enemy, burns the ground for 60% damage for 2 seconds and burns target.\
 **Stacking effect:** +40% damage.\
 		* Applies burning and damages enemies properly.\
-* [x][ ]Headstompers - damage enemies by falling on them.\
+* [x][x]Headstompers - damage enemies by falling on them.\
 **Stacking effect:** +30% max damage.\
-		* Applies damage correctly. *Needs more playtesting.*\
-		* Missing landing sounds. Missing damage sounds. Missing damage animation.
+		* Applies damage correctly. *DOES NOT WORK IN MULTIPLAYER.*\
+		* Missing damage sounds (not needed, the on-hit default sound does the job).
 * [x][x]Mortar Tube - on hitting an enemy, the player has a 9% chance to fire a mortar for 170% damage and deal explosive damage in a radius of 3 blocks.\
 **Stacking effect:** +170% damage.\
 		* Activates and applies damage properly.\
@@ -39,40 +39,41 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Rusty Knife - on hitting an enemy, the player has a 15% chance to cause bleed debuff for 4x35% damage.\
 **Stacking effect:** 15% extra chance to bleed, 100% chance at 7 stacks.\
 		* Applies buff properly. The buff works as intended.\
-		* Draws correctly
+		* Draws correctly.
 * [x][x]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
 **Stacking effect:** +40% damage.\
 		* Damages the enemy and activates properly.\
 * [x][x]Bundle of Fireworks - fires fireworks each time a Chest or Container is opened, as well as any time you activate Shrines, Shops, Roulette Chambers, and when picking up Drones.\
 **Stacking effect:** +2 Fireworks launched.\
-		* Wrorks under a different effect: 1% chance killed enemy launches 4 fireworks Chance increases per stack.\
+		* Works under a different effect: 1% chance killed enemy launches 4 fireworks. Chance increases per stack (+ 0.5%).\
+		* Effects work properly.
 
 ###### Defensive items
 * [x][ ]Bitter Root - increases the player's maximum health by 8% and caps at 300% extra base health.\
 **Stacking effect:** Further gain 8% max HP, up to 38 stacks (300% extra HP).\
 		* Increases HP properly.\
-		* No leaf visuals yet 
+		* No leaf visuals yet.
 * [x][x]Bustling Fungus - heals the player for 4.5% of their health after 2 seconds out of combat and being completely immobile.\
 **Stacking effect:** 4.5% more HP/s increase, increased radius of effect.\
 		* Heals the player and friendly NPCs properly.\
 		* Visuals and sounds work correctly.\
-        * Same radius all times
-* [x][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
+        * Same radius all times.
+* [ ][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
 **Stacking effect:** +6 HP per meat nugget.\
-		* Heals the player properly.\
-		* Effects work properly. *Might want to make the nuggets stick to walls?*
-* [x][ ]Medkit - restores 10 health after a short delay after being hit.\
+		* Heals the player properly. *The projectiles don't spawn now.*\
+		* Effects work properly.
+* [x][x]Medkit - restores 10 health after a short delay after being hit.\
 **Stacking effect:** +10 HP restored.\
 		* Heals the player properly.\
-		* Missing effect sprites. Missing effect sounds.
-* [x][x]Monster Tooth - on killing an enemy, heals 10 health.\
+		* Sprites and sounds play out properly.
+* [x][ ]Monster Tooth - on killing an enemy, heals 10 health.\
 **Stacking effect:** +5 more health after kill.\
 		* Heals the player properly.\
-		* Effects aren't required.
-* [x][x]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
+		* Healing projectile missing.
+* [x][ ]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
 **Stacking effect:** +1.2 HP/s.\
 		* Increases the regeneration rate properly.\
-		* Dust works properly.
+		* Dust doesn't work properly.
 * [x][x]Sprouting Egg - increases the player's health regeneration by 2.4 HP/s when out of combat for 7 seconds.\
 **Stacking effect:** +2.4 HP/s.\
 		* Increases the regeneration rate properly.\
@@ -104,7 +105,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][ ]Soldier's Syringe - Increased attack speed by 15%.\
 **Stacking effect:**  further increase by 15%, up to 13 times, maxing at +195%.\
 		* Works as intended.\
-		* Missing effect sprites.
+		* Missing shader.
 * [x][x]Spikestrip - on hit drop spikestrips that slow enemies by 20%.\
 **Stacking effect:** Increases the duration of spikestrips by 1 second per stack.\
 		* Works as intended.\
