@@ -2,7 +2,6 @@
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -15,13 +14,13 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Headstompers");
-			Main.projFrames[projectile.type] = 7;
+			Main.projFrames[projectile.type] = 8;
 		}
 
 		public override void SetDefaults()
 		{
 			projectile.Size = new Vector2(22);
-			projectile.scale = 3;
+			projectile.scale = 1.5f;
 			projectile.aiStyle = -1;
 			projectile.friendly = true;
 			projectile.melee = true;
@@ -57,18 +56,17 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
-			if (projectile.localAI[0] != 1f)
+			projectile.WaterfallAnimation(3);
+			if (projectile.alpha < 255)
 			{
-				Main.PlaySound(SoundID.Splash, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 4f, Main.rand.NextFloat(0.4f, 0.9f));
-				projectile.localAI[0] = 1f;
+				projectile.alpha += 6;
+				if (projectile.alpha > 255) projectile.alpha = 255;
 			}
-
-			projectile.LoopAnimation(6);
 		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Color.White;
+			return Color.White * ((255 - projectile.alpha) / 255f);
 		}
 	}
 }

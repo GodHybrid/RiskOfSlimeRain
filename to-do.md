@@ -10,7 +10,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 -All items are consumable and provide permanent buffs or boosts to the character.\
 -Items have a specific amount of various ingredients to craft with: common - 4 ingredients, uncommon - 6, rare - 8.\
 -Usable items are not craftable (found in chests? Rare drop? There should definitely be a limit on how many a player can carry. Use time limitation can be a debuff akin to Potion Sickness)\
--Items have a use cap after which they become unusable. (Remove the cap but give diminishing upgrades?)\
+-Items have a use cap after which they become ineffective.
 
 **All items need their sprites/effects redrawn/resized to fit Terraria's aesthetic**
 **All damage scaling/percentage is based off of the currently held weapon. This is a subject to change.**
@@ -27,7 +27,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* on-hit sound and graphics work correctly.
 * [x][x]Gasoline - on killing an enemy, burns the ground for 60% damage for 2 seconds and burns target.\
 **Stacking effect:** +40% damage.\
-		* Applies burning and damages enemies properly.\
+		* Applies burning and damages enemies properly.
 * [x][x]Headstompers - damage enemies by falling on them.\
 **Stacking effect:** +30% max damage.\
 		* Applies damage correctly. *DOES NOT WORK IN MULTIPLAYER.*\
@@ -42,7 +42,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Draws correctly.
 * [x][x]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
 **Stacking effect:** +40% damage.\
-		* Damages the enemy and activates properly.\
+		* Damages the enemy and activates properly.
 * [x][x]Bundle of Fireworks - fires fireworks each time a Chest or Container is opened, as well as any time you activate Shrines, Shops, Roulette Chambers, and when picking up Drones.\
 **Stacking effect:** +2 Fireworks launched.\
 		* Works under a different effect: 1% chance killed enemy launches 4 fireworks. Chance increases per stack (+ 0.5%).\
@@ -73,7 +73,6 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][ ]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
 **Stacking effect:** +1.2 HP/s.\
 		* Increases the regeneration rate properly.\
-		* Dust doesn't work properly.
 * [x][x]Sprouting Egg - increases the player's health regeneration by 2.4 HP/s when out of combat for 7 seconds.\
 **Stacking effect:** +2.4 HP/s.\
 		* Increases the regeneration rate properly.\
@@ -93,7 +92,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Missing effect sprites. 
 * [x][x]Life Savings - generates 1 copper coin every 3 seconds.\
 **Stacking effect:** +1 copper generation rate.\
-		* Works as intended.\
+		* Works as intended. (Gives money whenever player opens inventory)
 * [x][ ]Paul's Goat Hoof - increases movement speed by 20%.\
 **Stacking effect:** Further increases movement speed by 20%, caps at around 25.\
 		* Works as intended. *Definitely needs rebalancing.*\

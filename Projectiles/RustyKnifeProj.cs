@@ -17,7 +17,6 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			projectile.Size = new Vector2(26, 34);
 			projectile.timeLeft = 140;
-			projectile.spriteDirection = (Main.rand.NextBool()) ? 1 : -1;
 		}
 
 		private const int StrikeTimerMax = 30;
@@ -45,6 +44,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void OtherAI()
 		{
+			if (projectile.localAI[0] != 1f)
+			{
+				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
+				projectile.localAI[0] = 1f;
+			}
 			projectile.WaterfallAnimation(5);
 		}
 

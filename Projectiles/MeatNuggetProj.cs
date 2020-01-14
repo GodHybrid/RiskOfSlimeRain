@@ -11,7 +11,7 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			//DisplayName.SetDefault("Meat Nugget");
+			DisplayName.SetDefault("Meat Nugget");
 			Main.projFrames[projectile.type] = 5;
 			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
 		}
@@ -31,6 +31,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			projectile.velocity = Vector2.Zero;
 			projectile.frame = TextureIndex;
+			projectile.rotation = 0;
 			return false;
 		}
 
@@ -63,18 +64,29 @@ namespace RiskOfSlimeRain.Projectiles
 
 			if (projectile.owner == Main.myPlayer)
 			{
-				if (Main.netMode == NetmodeID.SinglePlayer && Main.LocalPlayer.Hitbox.Intersects(projectile.Hitbox))
+				if (Main.netMode == NetmodeID.SinglePlayer)
 				{
-					Main.LocalPlayer.HealMe(Heal);
-					projectile.Kill();
+					if (Main.LocalPlayer.Hitbox.Intersects(projectile.Hitbox))
+					{
+						Main.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
+						Main.LocalPlayer.HealMe(Heal);
+						projectile.Kill();
+					}
 				}
 				else
 				{
-					Main.player.WhereActive(p => p.Hitbox.Intersects(projectile.Hitbox)).Do(p => p.HealMe(Heal));
-					projectile.Kill();
+					bool healed = false;
+					Main.player.WhereActive(p => p.Hitbox.Intersects(projectile.Hitbox)).Do(delegate(Player p)
+					{
+						if (!healed)
+						{
+							healed = true;
+							SoundHelper.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
+							p.HealMe(Heal);
+							projectile.Kill();
+						}
+					});
 				}
-
-				SoundHelper.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
 			}
 		}
 	}

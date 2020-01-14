@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override int MaxRecommendedStack => 13;
 
-		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}%";
+		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}";
 
 		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
 

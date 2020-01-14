@@ -36,18 +36,18 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) SpawnProjectile(player, target);
+			if (target.life <= 0) SpawnProjectile(player);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) SpawnProjectile(player, target);
+			if (target.life <= 0) SpawnProjectile(player);
 		}
 
-		void SpawnProjectile(Player player, NPC target)
+		void SpawnProjectile(Player player)
 		{
 			int damage = (int)(damageIncrease * player.GetDamage());
-			Main.PlaySound(SoundID.Item2.SoundId, (int)player.Center.X, (int)player.Center.Y, 13, 2f, 0.4f);
+			SoundHelper.PlaySound(SoundID.Item2.SoundId, (int)player.Center.X, (int)player.Center.Y, 13, SoundHelper.FixVolume(2f), 0.4f);
 			for (int i = 0; i < fireworkCount; i++)
 			{
 				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);

@@ -25,9 +25,9 @@ namespace RiskOfSlimeRain.Effects.Common
 				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightGreen * 0.9f);
 				//TODO - customData 10
 				//dust.customData = 10;
-				dust.customData = new InAndOutData(reduceScale: false);
+				dust.customData = new InAndOutData(inSpeed: 10, outSpeed: 10, reduceScale: false);
 				dust.velocity.X *= 0f;
-				dust.velocity.Y = Main.rand.NextFloat(-2f, -1.5f);
+				dust.velocity.Y = Main.rand.NextFloat(-1f, -0.5f);
 			}
 		}
 	}

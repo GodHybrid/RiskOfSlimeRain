@@ -99,7 +99,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (projectile.frame == 0 && projectile.frameCounter == 1)
 			{
 				//plant growing
-				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, 1.1f, 0.6f);
+				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, SoundHelper.FixVolume(1.1f), 0.6f);
 			}
 			if ((projectile.frame == 1 || projectile.frame == 4) && projectile.frameCounter == 1)
 			{
@@ -112,11 +112,11 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			Timer++;
 			Player player = projectile.GetOwner();
-			if (Timer > TimerMax)
+			if (Timer > TimerMax && !StartDespawning)
 			{
 				Timer = 0;
 				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(player.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
-				if (projectile.owner == Main.myPlayer && projectile.GetOwner().GetRORPlayer().NoMoveTimer != 0)
+				if (projectile.owner == Main.myPlayer)
 				{
 					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
 					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));

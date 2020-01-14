@@ -1,5 +1,5 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
-using System;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -28,8 +28,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			if (target.life <= 0)
 			{
 				int heal = Stack * increase + initial;
-				player.HealEffect(heal);
-				player.statLife += Math.Min(heal, player.statLifeMax2 - player.statLife);
+				player.HealMe(heal);
 			}
 		}
 	}

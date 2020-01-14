@@ -28,12 +28,12 @@ namespace RiskOfSlimeRain.Effects.Common
 			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && damageSource.SourceNPCIndex > -1)
 			{
 				//TODO make it work for MP, cuz right now it doesn't >:C (but at least it looks funny)
-				NPC tmp = Main.npc[damageSource.SourceNPCIndex];
-				tmp.StrikeNPC((int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
+				NPC npc = Main.npc[damageSource.SourceNPCIndex];
+				player.ApplyDamageToNPC(npc, (int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
 				player.velocity.Y = -player.velocity.Y * velocityDecrease;
 				player.immune = true;
 				player.immuneTime = 5;
-				Projectile.NewProjectile(tmp.Center.X, tmp.Bottom.Y, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, 0, damageSource.SourceNPCIndex);
+				Projectile.NewProjectile(npc.Center.X, npc.Bottom.Y, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, 0, damageSource.SourceNPCIndex);
 				return false;
 			}
 			return true;

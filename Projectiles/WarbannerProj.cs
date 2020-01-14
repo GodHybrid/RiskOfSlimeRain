@@ -20,6 +20,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			Main.projFrames[projectile.type] = 5;
 		}
+
 		public override void SetDefaults()
 		{
 			projectile.width = 32;
@@ -30,7 +31,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.tileCollide = true;
 			projectile.timeLeft = 60;
 			projectile.netImportant = true;
-			drawOriginOffsetY = 4;
+			drawOriginOffsetY = 2;
 		}
 
 		public override void Kill(int timeLeft)

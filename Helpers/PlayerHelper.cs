@@ -1,6 +1,7 @@
 ﻿using RiskOfSlimeRain.Network;
 using System;
 using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Helpers
 {
@@ -28,7 +29,7 @@ namespace RiskOfSlimeRain.Helpers
 			int clampHeal = Math.Min(heal, player.statLifeMax2 - player.statLife);
 			player.HealEffect(heal, false);
 			player.statLife += clampHeal;
-			if (!noBroadcast)
+			if (!noBroadcast && Main.netMode != NetmodeID.SinglePlayer)
 			{
 				PlayerHealPacket.SendPacket(heal);
 			}

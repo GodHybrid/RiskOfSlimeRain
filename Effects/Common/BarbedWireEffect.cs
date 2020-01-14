@@ -36,17 +36,23 @@ namespace RiskOfSlimeRain.Effects.Common
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
 			{
+				bool damaged = false;
 				Main.npc.WhereActive(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16))
-				.Do(n =>
-					player.ApplyDamageToNPC(n, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false)
-				);
+				.Do(delegate(NPC n)
+				{
+					if (!damaged)
+					{
+						damaged = true;
+						player.ApplyDamageToNPC(n, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
+					}
+				});
 				wireTimer = 0;
 			}
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return new PlayerLayerParams("Textures/BarbedWire1", Vector2.Zero, Color.White * Alpha, scale: 3f);
+			return new PlayerLayerParams("Textures/BarbedWire", Vector2.Zero, Color.White * Alpha, scale: 3f);
 		}
 
 		public Effect GetScreenShader(Player player)

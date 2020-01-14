@@ -29,7 +29,6 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.timeLeft = 14;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = false;
-			projectile.spriteDirection = (Main.rand.NextBool() == true) ? 1 : -1;
 		}
 
 		//index of the current target
@@ -61,6 +60,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (projectile.localAI[0] != 1f)
 			{
 				Main.PlaySound(SoundID.Shatter, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 0.8f, Main.rand.NextFloat(-0.9f, -0.6f));
+				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
 				projectile.localAI[0] = 1f;
 			}
 
