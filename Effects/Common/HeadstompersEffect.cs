@@ -10,9 +10,9 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	public class HeadstompersEffect : RORCommonEffect, IPostUpdateEquips, IPreHurt
 	{
+		public const float velocityDecrease = 0.9f;
 		const float initial = 5.07f;
 		const float increase = 0.3f;
-		const float velocityDecrease = 0.9f;
 
 		public override string Description => $"Hurt enemies by falling for up to {initial.ToPercent()} damage";
 
@@ -30,10 +30,9 @@ namespace RiskOfSlimeRain.Effects.Common
 				//TODO make it work for MP, cuz right now it doesn't >:C (but at least it looks funny)
 				NPC npc = Main.npc[damageSource.SourceNPCIndex];
 				player.ApplyDamageToNPC(npc, (int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
-				player.velocity.Y = -player.velocity.Y * velocityDecrease;
 				player.immune = true;
 				player.immuneTime = 5;
-				Projectile.NewProjectile(npc.Center.X, npc.Bottom.Y, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, 0, damageSource.SourceNPCIndex);
+				Projectile.NewProjectile(npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, damageSource.SourceNPCIndex);
 				return false;
 			}
 			return true;

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
@@ -7,7 +8,7 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// Entirely visual/audio focused projectile
+	/// Headstomper visuals and the velocity jump
 	/// </summary>
 	class HeadstompersProj : ModProjectile
 	{
@@ -29,6 +30,12 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.timeLeft = 48;
 			projectile.ignoreWater = true;
 			projectile.tileCollide = false;
+		}
+
+		public int TargetTopY
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
 		}
 
 		public int TargetWhoAmI
@@ -56,6 +63,21 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
+			int npcIndex = TargetWhoAmI;
+			if (npcIndex >= 0 && npcIndex < 200 && Main.npc[npcIndex].active)
+			{
+				if (projectile.localAI[0] != 1f)
+				{
+					Player player = projectile.GetOwner();
+
+					if (player.Bottom.Y > TargetTopY)
+					{
+						player.velocity.Y = -player.velocity.Y * HeadstompersEffect.velocityDecrease;
+						projectile.localAI[0] = 1f;
+					}
+				}
+			}
+
 			projectile.WaterfallAnimation(3);
 			if (projectile.alpha < 255)
 			{
