@@ -24,7 +24,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Crowbar -  on hitting an enemy, deal +50% damage to enemies above 80% health.\
 **Stacking effect:** +30% damage.\
 		* Damage increases properly.\
-		* on-hit sound and graphics work correctly.
+		* On-hit sound and graphics work correctly.
 * [x][x]Gasoline - on killing an enemy, burns the ground for 60% damage for 2 seconds and burns target.\
 **Stacking effect:** +40% damage.\
 		* Applies burning and damages enemies properly.
@@ -58,9 +58,9 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Heals the player and friendly NPCs properly.\
 		* Visuals and sounds work correctly.\
         * Same radius all times.
-* [ ][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
+* [x][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
 **Stacking effect:** +6 HP per meat nugget.\
-		* Heals the player properly. *The projectiles don't spawn now.*\
+		* Heals the player properly.\
 		* Effects work properly.
 * [x][x]Medkit - restores 10 health after a short delay after being hit.\
 **Stacking effect:** +10 HP restored.\
@@ -82,14 +82,14 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Fire Shield - causes an explosion that deals 200% damage after being hit for 10% of player's maximum health in one hit.\
 **Stacking effect:** Increases explosion damage by 200%, and increases knockback by 20%.\
 		* Works as intended.\
-* [x][ ]Hermit's Scarf - gives the player a 10% chance to 'evade' the incoming damage.\
+* [x][x]Hermit's Scarf - gives the player a 10% chance to 'evade' the incoming damage.\
 **Stacking effect:** Increases dodge chance +5%, up to a maximum of 35% at 6 stacks.\
 		* Works as intended.\
-		* Missing evasion text. *Is it needed?*
-* [x][ ]Lens Maker's Glasses - increases the critical strike chance by 7%.\
+		* Graphics work as intended.
+* [x][x]Lens Maker's Glasses - increases the critical strike chance by 7%.\
 **Stacking effect:** +7% crit chance. 100% chance to crit on 14 stacks.\
 		* Works as intended.\
-		* Missing effect sprites. 
+		* Graphics work as intended. 
 * [x][x]Life Savings - generates 1 copper coin every 3 seconds.\
 **Stacking effect:** +1 copper generation rate.\
 		* Works as intended. (Gives money whenever player opens inventory)
@@ -97,10 +97,10 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** Further increases movement speed by 20%, caps at around 25.\
 		* Works as intended. *Definitely needs rebalancing.*\
 		* Missing effect sprites.
-* [x][ ]Snake Eyes - falling below 10% increases the critical chance by 6%. The effect 6 times.\
+* [x][x]Snake Eyes - falling below 10% increases the critical chance by 6%. The effect 6 times.\
 **Stacking effect:** Further increases crit chance by 3% for each time the player's in peril.\
 		* Works as intended. *As the shrines don't exist yet, the activation requirements have been changed. Will need to change them once the shrines are in.*\
-		* Missing effect sprites.
+		* Graphics work as intended.
 * [x][ ]Soldier's Syringe - Increased attack speed by 15%.\
 **Stacking effect:**  further increase by 15%, up to 13 times, maxing at +195%.\
 		* Works as intended.\

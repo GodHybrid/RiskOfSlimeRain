@@ -1,4 +1,6 @@
-﻿using RiskOfSlimeRain.Effects.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Data;
+using RiskOfSlimeRain.Effects.Interfaces;
 using System;
 using System.IO;
 using Terraria;
@@ -8,20 +10,20 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	public class SnakeEyesEffect : RORCommonEffect, IPreHurt, IKill, IGetWeaponCrit, IPostUpdateEquips
+	public class SnakeEyesEffect : RORCommonEffect, IPreHurt, IKill, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
 		//TODO In multiplayer, another player succeeding at a shrine will remove your Snake Eyes counter. Them failing will also up your Snake Eyes count. 
 		//TODO this currently doesnt work like in ror, because no shrines yet
 		const int initial = 3;
 		const int increase = 3;
 
-		const int maxIncrease = 4;
+		const int maxIncrease = 6;
 		byte failedAttempts = 0;
 		bool ready = false;
 
 		int CritIncrease => failedAttempts * (initial + Stack * increase);
 
-		public override string Description => "Increase crit chance by 6% for each time you're in peril, up to 4 times. Resets upon dying or drinking a potion";
+		public override string Description => "Increase crit chance by 6% for each time you're in peril, up to 6 times. Resets upon dying or drinking a potion";
 
 		public override string FlavorText => "You dirty----------er\nYou KNEW I had to win to pay off my debts";
 
@@ -29,6 +31,12 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			failedAttempts = 0;
 			ready = true;
+		}
+
+		public PlayerLayerParams GetPlayerLayerParams(Player player)
+		{
+			if (failedAttempts > 0) return new PlayerLayerParams("Textures/SnakeEyesEffect", new Vector2(0, -50), ignoreAlpha: true, frame: failedAttempts - 1, frameCount: 6);
+			else return null;
 		}
 
 		public void PostUpdateEquips(Player player)

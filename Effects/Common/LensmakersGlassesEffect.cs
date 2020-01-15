@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Data;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
@@ -9,7 +10,7 @@ namespace RiskOfSlimeRain.Effects.Common
 {
 	//It doesn't use IGetWeaponCrit because we want crit rate to be dynamic based on item use time (which requires proc chance)
 	//additional crit chance won't be shown on the tooltip
-	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit
+	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit, IPlayerLayer
 	{
 		const float increase = 0.07f;
 
@@ -22,6 +23,11 @@ namespace RiskOfSlimeRain.Effects.Common
 		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
 
 		public override bool AlwaysProc => true;
+
+		public PlayerLayerParams GetPlayerLayerParams(Player player)
+		{
+			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50), scale: 1f);
+		}
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
