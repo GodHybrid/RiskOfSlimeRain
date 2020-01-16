@@ -32,6 +32,11 @@ namespace RiskOfSlimeRain.Projectiles
 			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
 		}
 
+		public override bool? CanCutTiles()
+		{
+			return false;
+		}
+
 		public int Duration
 		{
 			get => (int)projectile.ai[0];

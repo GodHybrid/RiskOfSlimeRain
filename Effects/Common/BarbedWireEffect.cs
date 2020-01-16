@@ -36,16 +36,11 @@ namespace RiskOfSlimeRain.Effects.Common
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
 			{
-				bool damaged = false;
-				Main.npc.WhereActive(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16))
-				.Do(delegate(NPC n)
+				NPC npc = Main.npc.FirstActiveOrDefault(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16));
+				if (npc != null)
 				{
-					if (!damaged)
-					{
-						damaged = true;
-						player.ApplyDamageToNPC(n, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
-					}
-				});
+					player.ApplyDamageToNPC(npc, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
+				}
 				wireTimer = 0;
 			}
 		}

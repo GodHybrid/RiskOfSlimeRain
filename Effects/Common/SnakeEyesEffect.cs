@@ -23,7 +23,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		int CritIncrease => failedAttempts * (initial + Stack * increase);
 
-		public override string Description => "Increase crit chance by 6% for each time you're in peril, up to 6 times. Resets upon dying or drinking a potion";
+		public override string Description => $"Increases crit chance by 6% for each time you're in peril, up to {maxIncrease} times. Resets upon dying or drinking a potion";
 
 		public override string FlavorText => "You dirty----------er\nYou KNEW I had to win to pay off my debts";
 
@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			if (failedAttempts > 0) return new PlayerLayerParams("Textures/SnakeEyesEffect", new Vector2(0, -50), ignoreAlpha: true, frame: failedAttempts - 1, frameCount: 6);
+			if (failedAttempts > 0) return new PlayerLayerParams("Textures/SnakeEyes", new Vector2(0, -50), frame: failedAttempts - 1, frameCount: 6);
 			else return null;
 		}
 

@@ -75,17 +75,14 @@ namespace RiskOfSlimeRain.Projectiles
 				}
 				else
 				{
-					bool healed = false;
-					Main.player.WhereActive(p => p.Hitbox.Intersects(projectile.Hitbox)).Do(delegate(Player p)
+					Player player = Main.player.FirstActiveOrDefault(p => p.Hitbox.Intersects(projectile.Hitbox));
+
+					if (player != null)
 					{
-						if (!healed)
-						{
-							healed = true;
-							SoundHelper.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
-							p.HealMe(Heal);
-							projectile.Kill();
-						}
-					});
+						SoundHelper.PlaySound(SoundID.Item86.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item86.Style, 0.7f, 0.6f);
+						player.HealMe(Heal);
+						projectile.Kill();
+					}
 				}
 			}
 		}

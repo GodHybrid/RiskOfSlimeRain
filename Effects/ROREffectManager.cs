@@ -358,8 +358,8 @@ namespace RiskOfSlimeRain.Effects
 			{
 				if (effect.Active)
 				{
-					PlayerLayerParams definition = ((IPlayerLayer)effect).GetPlayerLayerParams(player);
-					if (definition != null)
+					PlayerLayerParams parameters = ((IPlayerLayer)effect).GetPlayerLayerParams(player);
+					if (parameters != null)
 					{
 						newLayers.Add(new PlayerLayer("RiskOfSlimeRain", effect.Name, PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 						{
@@ -369,11 +369,11 @@ namespace RiskOfSlimeRain.Effects
 							}
 							Player dPlayer = drawInfo.drawPlayer;
 
-							Texture2D tex = definition.Texture;
+							Texture2D tex = parameters.Texture;
 							float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
 							float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
 
-							Vector2 off = definition.Offset;
+							Vector2 off = parameters.Offset;
 							SpriteEffects spriteEffects = SpriteEffects.None;
 							if (dPlayer.gravDir < 0f)
 							{
@@ -382,14 +382,16 @@ namespace RiskOfSlimeRain.Effects
 							}
 							drawY += off.Y + dPlayer.gfxOffY;
 							drawX += off.X;
-							Color color = definition.Color ?? Color.White;
-							if (!(definition.IgnoreAlpha ?? false))
+							Color color = parameters.Color ?? Color.White;
+							if (!(parameters.IgnoreAlpha ?? false))
 							{
 								color *= (255 - dPlayer.immuneAlpha) / 255f;
 							}
-							Rectangle sourceRect = definition.GetFrame();
-							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, definition.Scale ?? 1f, spriteEffects, 0);
-							data.ignorePlayerRotation = true;
+							Rectangle sourceRect = parameters.GetFrame();
+							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
+							{
+								ignorePlayerRotation = true
+							};
 							Main.playerDrawData.Add(data);
 						}));
 					}

@@ -1,5 +1,6 @@
 ﻿using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using System;
 using Terraria;
 
 namespace RiskOfSlimeRain.Effects.Common
@@ -19,6 +20,11 @@ namespace RiskOfSlimeRain.Effects.Common
 			player.maxRunSpeed += player.maxRunSpeed * increase * Stack;
 			player.moveSpeed += player.moveSpeed * increase * Stack;
 			if (((player.controlRight && player.velocity.X < -9) || (player.controlLeft && player.velocity.X > 9d)) && Stack > 5) player.velocity.X /= 1.3f;
+
+			if (Math.Abs(player.velocity.X) > 5f)
+			{
+				//TODO visuals (those lines)
+			}
 		}
 	}
 }
