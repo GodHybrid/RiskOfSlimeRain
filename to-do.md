@@ -19,8 +19,8 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 ###### Offensive items
 * [x][x]Barbed Wire - encircles the player in a small, grey, jagged circle, damaging enemies who come within. If several enemies are within range, only one of them will receive the damage.\
 **Stacking effect:** +20% larger radius, +17% damage/sec.\
-		* Damage scales properly. Only one enemy receives damage at a time.\
-		* Wire sprite draws correctly (only first stage). Circle showing the radius draws correctly
+		* Damage scales properly. Works as intended.\
+		* Wire sprite draws correctly. Circle showing the radius draws correctly.
 * [x][x]Crowbar -  on hitting an enemy, deal +50% damage to enemies above 80% health.\
 **Stacking effect:** +30% damage.\
 		* Damage increases properly.\
@@ -30,8 +30,8 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Applies burning and damages enemies properly.
 * [x][x]Headstompers - damage enemies by falling on them.\
 **Stacking effect:** +30% max damage.\
-		* Applies damage correctly. *DOES NOT WORK IN MULTIPLAYER.*\
-		* Missing damage sounds (not needed, the on-hit default sound does the job).
+		* Applies damage correctly.\
+		* Graphics work properly.
 * [x][x]Mortar Tube - on hitting an enemy, the player has a 9% chance to fire a mortar for 170% damage and deal explosive damage in a radius of 3 blocks.\
 **Stacking effect:** +170% damage.\
 		* Activates and applies damage properly.\
@@ -42,11 +42,12 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Draws correctly.
 * [x][x]Sticky Bomb - on hitting an enemy, the player has a 8% chance to attach a bomb, detonating for 140% damage and deal explosive damage in a radius of 1 block.\
 **Stacking effect:** +40% damage.\
-		* Damages the enemy and activates properly.
+		* Damages the enemy and activates properly.\
+		* Draws correctly.
 * [x][x]Bundle of Fireworks - fires fireworks each time a Chest or Container is opened, as well as any time you activate Shrines, Shops, Roulette Chambers, and when picking up Drones.\
 **Stacking effect:** +2 Fireworks launched.\
 		* Works under a different effect: 1% chance killed enemy launches 4 fireworks. Chance increases per stack (+ 0.5%).\
-		* Effects work properly.
+		* Visual effects work properly.
 
 ###### Defensive items
 * [x][ ]Bitter Root - increases the player's maximum health by 8% and caps at 300% extra base health.\
@@ -56,8 +57,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Bustling Fungus - heals the player for 4.5% of their health after 2 seconds out of combat and being completely immobile.\
 **Stacking effect:** 4.5% more HP/s increase, increased radius of effect.\
 		* Heals the player and friendly NPCs properly.\
-		* Visuals and sounds work correctly.\
-        * Same radius all times.
+		* Visuals and sounds work correctly.
 * [x][x]Meat Nugget - on hitting an enemy, the player has a 8% chance to drop 2 meat nuggets that heal for 6 health.\
 **Stacking effect:** +6 HP per meat nugget.\
 		* Heals the player properly.\
@@ -70,18 +70,20 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** +5 more health after kill.\
 		* Heals the player properly.\
 		* Healing projectile missing.
-* [x][ ]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
+* [x][x]Mysterious Vial - increases health regeneration by 1.2 HP/s.\
 **Stacking effect:** +1.2 HP/s.\
 		* Increases the regeneration rate properly.\
+		* Dust is working fine.
 * [x][x]Sprouting Egg - increases the player's health regeneration by 2.4 HP/s when out of combat for 7 seconds.\
 **Stacking effect:** +2.4 HP/s.\
 		* Increases the regeneration rate properly.\
-		* Player texture needs to be redone, dust works properly.
+		* Player texture remastered, dust works properly.
 
 ###### Utility items
 * [x][x]Fire Shield - causes an explosion that deals 200% damage after being hit for 10% of player's maximum health in one hit.\
 **Stacking effect:** Increases explosion damage by 200%, and increases knockback by 20%.\
 		* Works as intended.\
+		* Explosion looks fine.
 * [x][x]Hermit's Scarf - gives the player a 10% chance to 'evade' the incoming damage.\
 **Stacking effect:** Increases dodge chance +5%, up to a maximum of 35% at 6 stacks.\
 		* Works as intended.\
@@ -92,14 +94,15 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Graphics work as intended. 
 * [x][x]Life Savings - generates 1 copper coin every 3 seconds.\
 **Stacking effect:** +1 copper generation rate.\
-		* Works as intended. (Gives money whenever player opens inventory)
+		* Works as intended. (Gives money whenever player opens inventory)\
+		* No graphics needed.
 * [x][ ]Paul's Goat Hoof - increases movement speed by 20%.\
 **Stacking effect:** Further increases movement speed by 20%, caps at around 25.\
-		* Works as intended. *Definitely needs rebalancing.*\
+		* Works as intended.\
 		* Missing effect sprites.
 * [x][x]Snake Eyes - falling below 10% increases the critical chance by 6%. The effect 6 times.\
 **Stacking effect:** Further increases crit chance by 3% for each time the player's in peril.\
-		* Works as intended. *As the shrines don't exist yet, the activation requirements have been changed. Will need to change them once the shrines are in.*\
+		* Works as intended. *As the shrines don't exist yet, the activation requirements have been changed to a state of peril(<2% HP). Will need to change them once the shrines are in.*\
 		* Graphics work as intended.
 * [x][ ]Soldier's Syringe - Increased attack speed by 15%.\
 **Stacking effect:**  further increase by 15%, up to 13 times, maxing at +195%.\
@@ -108,12 +111,12 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Spikestrip - on hit drop spikestrips that slow enemies by 20%.\
 **Stacking effect:** Increases the duration of spikestrips by 1 second per stack.\
 		* Works as intended.\
-		* Arrow on enemy draws properly.
+		* Debuff sprite on enemy draws properly.
 * [x][x]Warbanner - On level up drop a banner. Raise attack/move speed by 30% and damage by 4.\
 **Stacking effect:** Area of effect increased by 40% of base size.\
 		* The banners spawn and increase stats properly. *As the leveling system doesn't exist yet, the activation requirements have been changed. Will need to change them once the leveling system is in.*\
-		* Effect sounds unfinished. Player sprite draws correctly.
-* [x][ ]Taser - 7% chance to snare enemies for 1.5 seconds.\
+		* Effect sounds unfinished. Buff sprite draws correctly.
+* [x][x]Taser - 7% chance to snare enemies for 1.5 seconds.\
 **Stacking effect:** Increases snare duration by 0.5 seconds.\
 		* Works as intended. *Nullifies X-axis velocity. Might want to increase Y-axis velocity to make flying enemies fall?*\
 		* Graphics work as intended.
