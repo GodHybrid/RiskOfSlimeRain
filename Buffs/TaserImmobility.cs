@@ -12,7 +12,6 @@ namespace RiskOfSlimeRain.Buffs
 			Description.SetDefault("You cannot move or attack.");
 			Main.debuff[Type] = true;
 			Main.buffNoSave[Type] = true;
-			Main.buffNoTimeDisplay[Type] = true;
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)

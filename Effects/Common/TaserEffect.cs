@@ -1,6 +1,9 @@
-﻿using RiskOfSlimeRain.Buffs;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Buffs;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.NPCs;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -23,6 +26,18 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			//TODO visuals
 			AddBuff(target);
+		}
+
+		public static void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+		{
+			if (npc.GetGlobalNPC<RORGlobalNPC>().tasered)
+			{
+				Vector2 drawCenter = new Vector2(npc.Center.X, npc.Top.Y + npc.gfxOffY - 20) - Main.screenPosition;
+				Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Tasered");
+				Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
+				destination.Inflate(10, 0);
+				spriteBatch.Draw(texture, destination, drawColor);
+			}
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)

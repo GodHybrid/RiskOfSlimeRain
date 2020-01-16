@@ -11,6 +11,7 @@ namespace RiskOfSlimeRain.Buffs
 			DisplayName.SetDefault("Slowdown");
 			Main.debuff[Type] = true;
 			Main.buffNoSave[Type] = true;
+			Main.buffNoTimeDisplay[Type] = true;
 		}
 
 		public override void Update(NPC npc, ref int buffIndex)

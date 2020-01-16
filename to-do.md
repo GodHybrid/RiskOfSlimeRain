@@ -112,11 +112,11 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 * [x][x]Warbanner - On level up drop a banner. Raise attack/move speed by 30% and damage by 4.\
 **Stacking effect:** Area of effect increased by 40% of base size.\
 		* The banners spawn and increase stats properly. *As the leveling system doesn't exist yet, the activation requirements have been changed. Will need to change them once the leveling system is in.*\
-		* Missing effect sounds. Player sprite draws correctly.
+		* Effect sounds unfinished. Player sprite draws correctly.
 * [x][ ]Taser - 7% chance to snare enemies for 1.5 seconds.\
 **Stacking effect:** Increases snare duration by 0.5 seconds.\
 		* Works as intended. *Nullifies X-axis velocity. Might want to increase Y-axis velocity to make flying enemies fall?*\
-		* Missing effect sounds. Missing effect sprites.
+		* Graphics work as intended.
 
 #### Uncommon items **-NONE IMPLEMENTED-**
 ###### Offensive items
