@@ -27,7 +27,6 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && damageSource.SourceNPCIndex > -1)
 			{
-				//TODO make it work for MP, cuz right now it doesn't >:C (but at least it looks funny)
 				NPC npc = Main.npc[damageSource.SourceNPCIndex];
 				player.ApplyDamageToNPC(npc, (int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16)), 2f, 0, false);
 				player.immune = true;

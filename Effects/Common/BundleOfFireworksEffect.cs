@@ -11,8 +11,8 @@ namespace RiskOfSlimeRain.Effects.Common
 	{
 		const float initial = 0.005f;
 		const float increase = 0.005f;
-		const float damageIncrease = 3f;
-		const int fireworkCount = 15;
+		const float damageIncrease = 9f;
+		const int fireworkCount = 5;
 
 		public override string Description => $" {(initial + increase).ToPercent()} chance to fire {fireworkCount} fireworks that deal {damageIncrease.ToPercent()} damage";
 
@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => initial + increase * Stack;
+		public override float Chance => 1f/*initial + increase * Stack*/;
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -47,7 +47,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		void SpawnProjectile(Player player)
 		{
 			int damage = (int)(damageIncrease * player.GetDamage());
-			SoundHelper.PlaySound(SoundID.Item2.SoundId, (int)player.Center.X, (int)player.Center.Y, 13, SoundHelper.FixVolume(2f), 0.4f);
+			SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
 			for (int i = 0; i < fireworkCount; i++)
 			{
 				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);

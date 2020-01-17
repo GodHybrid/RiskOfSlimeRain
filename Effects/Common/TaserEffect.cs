@@ -28,6 +28,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			AddBuff(target);
 		}
 
+		//TODO draw manually for now
 		public static void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
 		{
 			if (npc.GetGlobalNPC<RORGlobalNPC>().tasered)

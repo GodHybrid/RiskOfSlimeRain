@@ -129,6 +129,7 @@ namespace RiskOfSlimeRain
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			NoOnHitTimer = 0;
+
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
 		}
@@ -142,26 +143,35 @@ namespace RiskOfSlimeRain
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			NoOnHitTimer = 0;
-			//this stuff should be at the bottom of everything
+
+			//This stuff should be at the bottom of everything
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
-			//if this projectile shouldn't proc at all
+			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
-			//if this projectile is a minion, make it only proc 10% of the time
+			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+
+			//If this projectile hits faster than default
+			float immuneRatio = target.immune[proj.owner] / NPC.immuneTime;
+			if (immuneRatio < 1f && Main.rand.NextFloat() > immuneRatio) return;
 
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
 
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			//this stuff should be at the bottom of everything
+			//This stuff should be at the bottom of everything
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
-			//if this projectile shouldn't proc at all
+			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
-			//if this projectile is a minion, make it only proc 10% of the time
+			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+
+			//If this projectile hits faster than default
+			float immuneRatio = target.immune[proj.owner] / NPC.immuneTime;
+			if (immuneRatio < 1f && Main.rand.NextFloat() > immuneRatio) return;
 
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}
