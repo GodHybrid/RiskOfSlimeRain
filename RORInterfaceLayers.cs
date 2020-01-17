@@ -134,7 +134,7 @@ namespace RiskOfSlimeRain
 				}
 				if (effect.Capped)
 				{
-					text += "\n" + effect.CappedMessage(player.HeldItem);
+					text += "\n" + effect.CappedMessage;
 				}
 
 				Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);

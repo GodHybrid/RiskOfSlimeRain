@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class HermitsScarfEffectProj : ModProjectile
+	public class HermitsScarfProj : ModProjectile
 	{
 		public override void SetStaticDefaults()
 		{

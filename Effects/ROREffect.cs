@@ -107,31 +107,43 @@ namespace RiskOfSlimeRain.Effects
 
 		public bool FullStack => _Stack == _UnlockedStack;
 
+		/// <summary>
+		/// Only returns true for things that reached their cap, that don't already do their desired effect
+		/// </summary>
 		public bool Capped
 		{
 			get
 			{
-				if (AlwaysProc)
+				if (!AlwaysProc)
 				{
-					return Stack >= MaxRecommendedStack;
+					if (Main.LocalPlayer.HeldItem.damage < 1)
+					{
+						return Stack >= MaxRecommendedStack;
+					}
+					else
+					{
+						return GetProcByUseTime() * Chance >= 1f;
+					}
 				}
 				else
 				{
-					return GetProcByUseTime() * Chance >= 1f;
+					return false;
 				}
 			}
 		}
 
-		//TODO adjust for ror mode
-		public string CappedMessage(Item item)
+		public string CappedMessage
 		{
-			if (AlwaysProc || item.damage < 1)
+			get
 			{
-				return "You reached the recommended stack amount!";
-			}
-			else
-			{
-				return "With the currently held weapon, you reached the recommended stack amount!";
+				if (Main.LocalPlayer.HeldItem.damage < 1)
+				{
+					return "You reached the recommended stack amount!";
+				}
+				else
+				{
+					return "With the currently held weapon, you reached the recommended stack amount!";
+				}
 			}
 		}
 

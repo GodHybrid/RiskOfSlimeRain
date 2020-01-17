@@ -8,7 +8,6 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects.Common
 {
-	//TODO: add support for soft cap text 
 	public class HermitsScarfEffect : RORCommonEffect, IPreHurt
 	{
 		const float initial = 0.05f;
@@ -31,7 +30,7 @@ namespace RiskOfSlimeRain.Effects.Common
 			damage = 0;
 			player.immune = true;
 			player.immuneTime = 60;
-			Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfEffectProj>(), 0, 0, Main.myPlayer);
+			Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
 			return false;
 		}
 	}
