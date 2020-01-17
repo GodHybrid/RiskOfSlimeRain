@@ -59,22 +59,22 @@ namespace RiskOfSlimeRain.Projectiles
 					drawCacheProjsBehindProjectiles.Add(index);
 				}
 			}
+			else
+			{
+				drawCacheProjsBehindProjectiles.Add(index);
+			}
 		}
 
 		public override void AI()
 		{
-			int npcIndex = TargetWhoAmI;
-			if (npcIndex >= 0 && npcIndex < 200 && Main.npc[npcIndex].active)
+			if (projectile.localAI[0] != 1f)
 			{
-				if (projectile.localAI[0] != 1f)
-				{
-					Player player = projectile.GetOwner();
+				Player player = projectile.GetOwner();
 
-					if (player.Bottom.Y > TargetTopY)
-					{
-						player.velocity.Y = -player.velocity.Y * HeadstompersEffect.velocityDecrease;
-						projectile.localAI[0] = 1f;
-					}
+				if (player.Bottom.Y > TargetTopY)
+				{
+					player.velocity.Y = -player.velocity.Y * HeadstompersEffect.velocityDecrease;
+					projectile.localAI[0] = 1f;
 				}
 			}
 
