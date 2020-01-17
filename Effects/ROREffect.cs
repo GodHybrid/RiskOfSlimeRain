@@ -157,6 +157,14 @@ namespace RiskOfSlimeRain.Effects
 		}
 
 		/// <summary>
+		/// Called when the effect is applied for the first time on the player
+		/// </summary>
+		public void OnCreate()
+		{
+			//TODO ror mode something?
+		}
+
+		/// <summary>
 		/// This returns a new effect of the given type with its creation time set accordingly
 		/// </summary>
 		public static ROREffect NewInstance<T>(Player player) where T : ROREffect

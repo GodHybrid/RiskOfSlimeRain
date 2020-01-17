@@ -120,10 +120,8 @@ namespace RiskOfSlimeRain.Effects
 		/// </summary>
 		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			List<ROREffect> effects = mPlayer.Effects;
-			Dictionary<Type, List<ROREffect>> effectByType = mPlayer.EffectByType;
 			//first, check if effect exists
-			ROREffect existing = effects.FirstOrDefault(e => e.GetType().Equals(typeof(T)));
+			ROREffect existing = GetEffectOfType<T>(mPlayer);
 			if (existing != null)
 			{
 				//effect exists, increase stack
@@ -134,12 +132,13 @@ namespace RiskOfSlimeRain.Effects
 			{
 				//effect doesn't exist, add one
 				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.player);
+				newEffect.OnCreate();
 				//by definition of the list order, append
-				effects.Add(newEffect);
+				mPlayer.Effects.Add(newEffect);
 				Type[] validInterfaces = GetValidInterfaces(typeof(T));
 				foreach (var interf in validInterfaces)
 				{
-					effectByType[interf].Add(newEffect);
+					mPlayer.EffectByType[interf].Add(newEffect);
 				}
 			}
 		}
