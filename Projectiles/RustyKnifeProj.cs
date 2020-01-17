@@ -44,10 +44,10 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void OtherAI()
 		{
-			if (projectile.localAI[0] != 1f)
+			if (projectile.localAI[1] != 1f)
 			{
 				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
-				projectile.localAI[0] = 1f;
+				projectile.localAI[1] = 1f;
 			}
 			projectile.WaterfallAnimation(5);
 		}
