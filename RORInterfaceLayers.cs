@@ -4,12 +4,13 @@ using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.GameContent.UI;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using Terraria.DataStructures;
+using RiskOfSlimeRain.Effects.Common;
 
 namespace RiskOfSlimeRain
 {
@@ -33,6 +34,7 @@ namespace RiskOfSlimeRain
 		public static void Load()
 		{
 			TimeByIndex = new Dictionary<int, Ref<int>>();
+			On.Terraria.Main.DrawPlayer_DrawAllLayers += Main_DrawPlayer_DrawAllLayers;
 		}
 
 		public static void Unload()
@@ -155,6 +157,50 @@ namespace RiskOfSlimeRain
 
 			return true;
 		};
+
+		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
+		{
+			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer.GetRORPlayer());
+			if (effect == null)
+			{
+				orig(self, drawPlayer, projectileDrawPosition, cHead);
+				return;
+			}
+
+			//Modify Main.playerDrawData first
+			List<DrawData> drawDatas = new List<DrawData>(Main.playerDrawData);
+
+			//Get the layers that contain the data about where they are from
+			List<PlayerLayer> layers = PlayerHooks.GetDrawLayers(drawPlayer);
+
+			//Exclude those layers that we add (because drawDatas is just raw data, no indication of where it's from)
+			List<int> ourModded = new List<int>();
+			for (int i = 0; i < layers.Count; i++)
+			{
+				if (layers[i].mod == RiskOfSlimeRainMod.Instance.Name)
+				{
+					ourModded.Add(i);
+				}
+			}
+
+			for (int i = 0; i < drawDatas.Count; i++)
+			{
+				if (ourModded.Contains(i)) continue;
+				DrawData data = drawDatas[i];
+				//data.position += shakePosOffset * shakeTimer;
+				//data.scale += shakeScaleOffset * shakeTimer;
+				data.position += effect.shakePosOffset * effect.shakeTimer;
+				data.scale += effect.shakeScaleOffset * effect.shakeTimer;
+				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
+				data.color *= 0.05f * effect.shakeTimer;
+				drawDatas[i] = data;
+				//data.color *= 0.5f;
+			}
+
+			Main.playerDrawData.AddRange(drawDatas);
+
+			orig(self, drawPlayer, projectileDrawPosition, cHead);
+		}
 
 		public static void Update(Player player)
 		{

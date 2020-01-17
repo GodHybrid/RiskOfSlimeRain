@@ -180,13 +180,13 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
-		public static List<ROREffect> GetEffectsOf<T>(RORPlayer mPlayer)
+		public static List<ROREffect> GetEffectsOf<T>(RORPlayer mPlayer) where T : IROREffectInterface
 		{
 			return mPlayer.EffectByType[typeof(T)];
 		}
 
 		/// <summary>
-		/// Used to retreive an effect of type T on the player 
+		/// Used to retreive an effect of type T on the player. null if not found
 		/// </summary>
 		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
 		{
@@ -204,7 +204,7 @@ namespace RiskOfSlimeRain.Effects
 		/// <summary>
 		/// Compact way to check if an effect can trigger (but slower, only used in Perform()
 		/// </summary>
-		public static bool CanDoEffect<T>(ROREffect effect)
+		public static bool CanDoEffect<T>(ROREffect effect) where T : IROREffectInterface
 		{
 			bool can = interfaceCanProc.Contains(typeof(T));
 			return can ? effect.Proccing : effect.Active;
