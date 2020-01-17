@@ -43,10 +43,10 @@ namespace RiskOfSlimeRain
 		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			if (Main.gameMenu) return;
-			int inventoryIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Inventory"));
-			if (inventoryIndex != -1)
+			int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
+			if (mouseIndex != -1)
 			{
-				layers.Insert(inventoryIndex, new LegacyGameInterfaceLayer(
+				layers.Insert(mouseIndex, new LegacyGameInterfaceLayer(
 					$"{Name}: {nameof(Effects)}",
 					Effects,
 					InterfaceScaleType.UI
