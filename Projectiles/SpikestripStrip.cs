@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Buffs;
+using RiskOfSlimeRain.Data.NPCEffects;
 using Terraria;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
@@ -52,7 +52,7 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			projectile.velocity.Y = 10f;
-			Main.npc.WhereActive(n => n.Hitbox.Intersects(projectile.Hitbox)).Do(n => n.AddBuff(ModContent.BuffType<SpikestripSlowdown>(), 60));
+			Main.npc.WhereActive(n => n.Hitbox.Intersects(projectile.Hitbox)).Do(n => NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60));
 		}
 	}
 }

@@ -246,7 +246,7 @@ namespace RiskOfSlimeRain
 				{
 					Effects.Add(ROREffect.Load(player, compound));
 				}
-				//sort by creation time
+				//Sort by creation time
 				Effects.Sort();
 			}
 		}
@@ -260,7 +260,7 @@ namespace RiskOfSlimeRain
 
 		public override void PreUpdate()
 		{
-			//this is here because only here resetting the scrollwheel status works properly
+			//This is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
 		}
 

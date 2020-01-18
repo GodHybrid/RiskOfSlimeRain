@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => 1f/*initial + increase * Stack*/;
+		public override float Chance => initial + increase * Stack;
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

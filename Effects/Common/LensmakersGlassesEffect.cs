@@ -26,7 +26,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50), scale: 1f);
+			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50));
 		}
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)

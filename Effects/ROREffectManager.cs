@@ -120,20 +120,20 @@ namespace RiskOfSlimeRain.Effects
 		/// </summary>
 		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			//first, check if effect exists
+			//First, check if effect exists
 			ROREffect existing = GetEffectOfType<T>(mPlayer);
 			if (existing != null)
 			{
-				//effect exists, increase stack
+				//Effect exists, increase stack
 				//CanStack already checked in the hook ran in CanUseItem
 				existing.IncreaseStack();
 			}
 			else
 			{
-				//effect doesn't exist, add one
+				//Effect doesn't exist, add one
 				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.player);
 				newEffect.OnCreate();
-				//by definition of the list order, append
+				//By definition of the list order, append
 				mPlayer.Effects.Add(newEffect);
 				Type[] validInterfaces = GetValidInterfaces(typeof(T));
 				foreach (var interf in validInterfaces)
@@ -164,7 +164,7 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
-		//used in a place where the type is dynamic
+		//Used in a place where the type is dynamic
 		public static Type[] GetValidInterfaces(Type effectType)
 		{
 			Type[] interfaces = effectType.GetInterfaces();
@@ -212,8 +212,8 @@ namespace RiskOfSlimeRain.Effects
 		#region Syncing
 		public static void HandleOnEnterToServer(BinaryReader reader)
 		{
-			//if this is server: from OnEnterWorld
-			//if this is client: from here
+			//If this is server: from OnEnterWorld
+			//If this is client: from here
 
 			byte whoAmI = reader.ReadByte();
 			PopulatePlayer(whoAmI, reader);
@@ -374,6 +374,7 @@ namespace RiskOfSlimeRain.Effects
 
 							Vector2 off = parameters.Offset;
 							SpriteEffects spriteEffects = SpriteEffects.None;
+
 							if (dPlayer.gravDir < 0f)
 							{
 								off.Y = -off.Y;
@@ -381,12 +382,15 @@ namespace RiskOfSlimeRain.Effects
 							}
 							drawY += off.Y + dPlayer.gfxOffY;
 							drawX += off.X;
+
 							Color color = parameters.Color ?? Color.White;
 							if (!(parameters.IgnoreAlpha ?? false))
 							{
 								color *= (255 - dPlayer.immuneAlpha) / 255f;
 							}
+
 							Rectangle sourceRect = parameters.GetFrame();
+
 							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
 							{
 								ignorePlayerRotation = true

@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 	/// </summary>
 	public sealed class Warbanner : TagSerializable
 	{
-		//because we are using warbanner in a list, we need those two
+		//because we are using Warbanner in a list, we need those two
 		public override bool Equals(object obj)
 		{
 			if (obj is Warbanner other)

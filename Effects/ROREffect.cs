@@ -192,7 +192,7 @@ namespace RiskOfSlimeRain.Effects
 		//can't be generic cause it's used dynamically when loading from a tag
 		public static ROREffect CreateInstance(Player player, Type type)
 		{
-			ROREffect effect = (ROREffect)Activator.CreateInstance(type);
+			ROREffect effect = CreateInstanceNoPlayer(type);
 			effect.SetupPlayer(player);
 			return effect;
 		}

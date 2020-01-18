@@ -30,8 +30,10 @@ namespace RiskOfSlimeRain.Projectiles
 				Dust dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f);
 				dust.noGravity = true;
 				dust.velocity *= 4f; //5f
+				dust.noLight = true;
 				dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
 				dust.velocity *= 2f;
+				dust.noLight = true;
 			}
 			for (int i = 0; i < 2; i++) //3
 			{
