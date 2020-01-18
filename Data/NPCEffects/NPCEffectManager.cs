@@ -1,4 +1,5 @@
-﻿using RiskOfSlimeRain.NPCs;
+﻿using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.NPCs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 	/// </summary>
 	public static class NPCEffectManager
 	{
+		public static readonly string path = "RiskOfSlimeRain.Data.NPCEffects.";
+
 		/// <summary>
 		/// Decrements each effects' time, and removes it if 0
 		/// </summary>
@@ -42,34 +45,57 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 
 		public static int GetEffectIndexOfType(RORGlobalNPC globalNPC, Type type)
 		{
-			return globalNPC.NPCEffects.FindIndex(e => e.Name == type.Name);
+			return GetEffectIndexOfName(globalNPC, type.Name);
 		}
 
-		public static void ApplyNPCEffect<T>(NPC npc, int duration) where T : NPCEffect
+		public static int GetEffectIndexOfName(RORGlobalNPC globalNPC, string typeName)
 		{
-			ApplyNPCEffect(typeof(T), npc, duration);
+			return globalNPC.NPCEffects.FindIndex(e => e.Name.EndsWith(typeName));
 		}
 
-		public static void ApplyNPCEffect(Type type, NPC npc, int duration, bool noBroadcast = false)
+		public static void ApplyNPCEffect<T>(NPC npc, int duration, bool broadcast = false) where T : NPCEffect
+		{
+			ApplyNPCEffect(typeof(T), npc, duration, broadcast);
+		}
+
+		public static void ApplyNPCEffect(string typeName, NPC npc, int duration, bool broadcast = false)
+		{
+			try
+			{
+				Type type = typeof(NPCEffectManager).Assembly.GetType(path + typeName);
+				ApplyNPCEffect(type, npc, duration, broadcast);
+			}
+			catch
+			{
+				RiskOfSlimeRainMod.Instance.Logger.Info("ApplyNPCEffect: type " + (path + typeName) + " not valid!");
+			}
+		}
+
+		//No spam protection when broadcasting, so only do it when it's a "one time" apply
+		public static void ApplyNPCEffect(Type type, NPC npc, int duration, bool broadcast = false)
 		{
 			RORGlobalNPC globalNPC = npc.GetGlobalNPC<RORGlobalNPC>();
 			int index = GetEffectIndexOfType(globalNPC, type);
+			NPCEffect effect;
+
 			if (index > -1)
 			{
 				//Effect exists
-				globalNPC.NPCEffects[index].SetTime(duration);
+				effect = globalNPC.NPCEffects[index];
+				effect.SetTime(duration);
+				GeneralHelper.Print("reset duration");
 			}
 			else
 			{
 				//Effect doesn't exist, add one
-				NPCEffect newEffect = NPCEffect.CreateInstance(type, duration);
-				globalNPC.NPCEffects.Add(newEffect);
+				effect = NPCEffect.CreateInstance(type, duration);
+				GeneralHelper.Print("applied new");
+				globalNPC.NPCEffects.Add(effect);
 			}
 
-			if (!noBroadcast && Main.netMode != NetmodeID.SinglePlayer)
+			if (broadcast && Main.netMode != NetmodeID.SinglePlayer)
 			{
-				//TODO syncing
-				//PlayerHealPacket.SendPacket((byte)player.whoAmI, heal);
+				NPCEffectPacket.SendPacket(npc, effect);
 			}
 		}
 	}

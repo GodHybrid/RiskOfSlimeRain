@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Data.NPCEffects;
+using RiskOfSlimeRain.Data.NPCEffects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
@@ -30,7 +31,7 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		void AddBuff(NPC target)
 		{
-			NPCEffectManager.ApplyNPCEffect<TaserNPCEffect>(target, (initial + increase * Stack) * 6);
+			NPCEffectManager.ApplyNPCEffect<TaserNPCEffect>(target, (initial + increase * Stack) * 6, true);
 		}
 	}
 }

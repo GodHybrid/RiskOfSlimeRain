@@ -1,10 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 
 namespace RiskOfSlimeRain.Data.NPCEffects
@@ -16,13 +12,16 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 	{
 		public int Time { get; private set; }
 
-		public string Name => GetType().Name;
+		/// <summary>
+		/// Shortened name including first namespace after NPCEffects
+		/// </summary>
+		public string Name { get; private set; }
 
 		public bool RanOut { get; private set; }
 
 		public NPCEffect()
 		{
-
+			Name = GetType().FullName.Replace(NPCEffectManager.path, "");
 		}
 
 		//Because we are using NPCEffect in a list, we need those two
@@ -37,6 +36,8 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 		{
 			return new { Time, Name }.GetHashCode();
 		}
+
+		public override string ToString() => $"{Name} {Time}";
 
 		public void DecrementTime()
 		{
@@ -63,9 +64,6 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 		}
 
 		#region Hooks
-		/// <summary>
-		/// Ran in GlobalNPC.ResetEffects
-		/// </summary>
 		public virtual void AI(NPC npc)
 		{
 

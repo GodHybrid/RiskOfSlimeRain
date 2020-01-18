@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.ModLoader;
 
-namespace RiskOfSlimeRain.Data.NPCEffects
+namespace RiskOfSlimeRain.Data.NPCEffects.Common
 {
 	public class SpikestripNPCEffect : NPCEffect
 	{

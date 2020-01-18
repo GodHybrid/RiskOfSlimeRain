@@ -37,7 +37,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		public static float GetWarbannerCircleAlpha()
 		{
 			//0.3333f to 1f
-			return (float)(Math.Sin((Main.GameUpdateCount / 8d) / (Math.PI * 2))) / 3f + 2/3f;
+			return (float)(Math.Sin((Main.GameUpdateCount / 8d) / (Math.PI * 2))) / 3f + 2 / 3f;
 		}
 
 		/// <summary>

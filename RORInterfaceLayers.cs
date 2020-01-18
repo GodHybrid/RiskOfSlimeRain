@@ -1,16 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using Terraria.DataStructures;
-using RiskOfSlimeRain.Effects.Common;
 
 namespace RiskOfSlimeRain
 {
