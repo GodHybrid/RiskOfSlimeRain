@@ -161,7 +161,7 @@ namespace RiskOfSlimeRain
 		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
 		{
 			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer.GetRORPlayer());
-			if (effect == null)
+			if (effect == null || effect?.Active == false)
 			{
 				orig(self, drawPlayer, projectileDrawPosition, cHead);
 				return;
