@@ -83,13 +83,11 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 				//Effect exists
 				effect = globalNPC.NPCEffects[index];
 				effect.SetTime(duration);
-				GeneralHelper.Print("reset duration");
 			}
 			else
 			{
 				//Effect doesn't exist, add one
 				effect = NPCEffect.CreateInstance(type, duration);
-				GeneralHelper.Print("applied new");
 				globalNPC.NPCEffects.Add(effect);
 			}
 
