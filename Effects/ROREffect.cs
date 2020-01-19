@@ -21,6 +21,9 @@ namespace RiskOfSlimeRain.Effects
 	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable
 	{
 		//Something you can save in a TagCompound, hence why string, not Type
+		/// <summary>
+		/// Shortened identifier name, unique
+		/// </summary>
 		public string TypeName { get; private set; }
 
 		public Player Player { get; private set; }
@@ -63,7 +66,8 @@ namespace RiskOfSlimeRain.Effects
 
 		/// <summary>
 		/// Set this to false if you have a chance/proc based effect. Always override Chance too.
-		/// If AlwaysProc is false, it will check for the weapons use time in combination with Chance
+		/// If AlwaysProc is false, it will check for the weapons use time in combination with Chance.
+		/// In the UI, if AlwaysProc is true, it will only highlight it as "recommended limit" if max stack is reached
 		/// </summary>
 		public virtual bool AlwaysProc => true;
 
@@ -149,7 +153,23 @@ namespace RiskOfSlimeRain.Effects
 
 		public ROREffect()
 		{
-			TypeName = GetType().FullName;
+			string fullName = GetType().FullName;
+			int length = fullName.Length;
+			if (fullName.EndsWith(ROREffectManager.suffix))
+			{
+				//Cut off suffix
+				string name;
+				name = fullName.Substring(0, length - ROREffectManager.suffix.Length);
+				if (name.StartsWith(ROREffectManager.prefix))
+				{
+					//Cut off prefix
+					TypeName = name.Substring(ROREffectManager.prefix.Length, name.Length - ROREffectManager.prefix.Length);
+				}
+			}
+			else
+			{
+				throw new Exception("wtf");
+			}
 		}
 
 		public void IncreaseStack()
@@ -207,12 +227,22 @@ namespace RiskOfSlimeRain.Effects
 		}
 
 		/// <summary>
-		/// Creates an effect of the given type (string version)
+		/// Creates an effect of the given type (string version, suffix+prefix)
 		/// </summary>
 		public static ROREffect CreateInstance(Player player, string typeName)
 		{
 			if (typeName == string.Empty) throw new Exception("Something went wrong loading this tag, typeName is empty");
-			return CreateInstance(player, typeof(RiskOfSlimeRainMod).Assembly.GetType(typeName));
+			string fullName = ROREffectManager.prefix + typeName + ROREffectManager.suffix;
+			return CreateInstance(player, typeof(ROREffect).Assembly.GetType(fullName));
+		}
+
+		/// <summary>
+		/// Creates an effect of the given type (string version, full name, deprecated)
+		/// </summary>
+		public static ROREffect CreateInstanceFullName(Player player, string fullName)
+		{
+			if (fullName == string.Empty) throw new Exception("Something went wrong loading this tag, typeName is empty");
+			return CreateInstance(player, typeof(ROREffect).Assembly.GetType(fullName));
 		}
 
 		public float GetProcByUseTime()
@@ -261,15 +291,34 @@ namespace RiskOfSlimeRain.Effects
 			return tag;
 		}
 
-		public static ROREffect Load(Player player, TagCompound tag)
+		public static ROREffect Load(Player player, TagCompound tag, byte version)
 		{
-			string typeName = tag.GetString("TypeName");
-			ROREffect effect = CreateInstance(player, typeName);
-			effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
-			effect.UnlockedStack = tag.GetInt("UnlockedStack");
-			effect.Stack = tag.GetInt("Stack");
-			effect.PopulateFromTag(tag);
-			return effect;
+			//Newer versions here
+			if (version == 2)
+			{
+
+			}
+			if (version == 1)
+			{
+				string typeName = tag.GetString("TypeName");
+				ROREffect effect = CreateInstance(player, typeName);
+				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
+				effect.UnlockedStack = tag.GetInt("UnlockedStack");
+				effect.Stack = tag.GetInt("Stack");
+				effect.PopulateFromTag(tag);
+				return effect;
+			}
+			//Oldest version
+			else
+			{
+				string typeName = tag.GetString("TypeName");
+				ROREffect effect = CreateInstanceFullName(player, typeName);
+				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
+				effect.UnlockedStack = tag.GetInt("UnlockedStack");
+				effect.Stack = tag.GetInt("Stack");
+				effect.PopulateFromTag(tag);
+				return effect;
+			}
 		}
 
 		/// <summary>

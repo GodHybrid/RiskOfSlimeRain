@@ -36,6 +36,11 @@ namespace RiskOfSlimeRain
 		//because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
 		public bool InWarbannerRange => WarbannerTime > 0;
 
+		/// <summary>
+		/// For major changes in loading/saving tags and migration. Make sure to increase it by 1 and add backwards compatibility in ROREffect.Load
+		/// </summary>
+		private const byte LATEST_VERSION = 1;
+
 		public void ActivateWarbanner()
 		{
 			WarbannerTime = WarbannerTimeMax;
@@ -231,6 +236,7 @@ namespace RiskOfSlimeRain
 			List<TagCompound> effectCompounds = Effects.ConvertAll((effect) => effect.Save());
 			TagCompound tag = new TagCompound
 			{
+				{ "version", LATEST_VERSION },
 				{ "effects", effectCompounds },
 			};
 			return tag;
@@ -240,11 +246,12 @@ namespace RiskOfSlimeRain
 		{
 			if (tag.ContainsKey("effects"))
 			{
+				byte version = tag.GetByte("version");
 				List<TagCompound> effectCompounds = tag.GetList<TagCompound>("effects").ToList();
 				Effects.Clear();
 				foreach (var compound in effectCompounds)
 				{
-					Effects.Add(ROREffect.Load(player, compound));
+					Effects.Add(ROREffect.Load(player, compound, version));
 				}
 				//Sort by creation time
 				Effects.Sort();

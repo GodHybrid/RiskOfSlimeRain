@@ -22,6 +22,11 @@ namespace RiskOfSlimeRain.Effects
 	/// </summary>
 	public static class ROREffectManager
 	{
+		//Makes sure that effects are only loaded from this namespace (error otherwise)
+		public static readonly string prefix = "RiskOfSlimeRain.Effects.";
+		//And that they end with this
+		public static readonly string suffix = "Effect";
+
 		//Used to build the dictionary EffectByType on RORPlayer
 		private static Type[] validInterfaces;
 		//Used to check if an effect procs or not
@@ -43,6 +48,7 @@ namespace RiskOfSlimeRain.Effects
 			Type[] types = typeof(ROREffectManager).Assembly.GetTypes();
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
+			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
 			flavorText = new Dictionary<Type, string>();
 			rarity = new Dictionary<Type, int>();
 			texture = new Dictionary<Type, string>();
@@ -63,9 +69,20 @@ namespace RiskOfSlimeRain.Effects
 				}
 				else if (!type.IsAbstract && type.IsSubclassOf(typeof(ROREffect)))
 				{
+					if (!(type.FullName.StartsWith(prefix) && type.FullName.EndsWith(suffix)))
+					{
+						throw new Exception($"Error loading ROREffect [{type.FullName}], it doesn't start with [{prefix}] and end with [{suffix}]");
+					}
+					else if (loadedTypeNamespaceToName.ContainsKey(type.Name))
+					{
+						throw new Exception($"Error loading ROREffect [{type.FullName}], an effect with that same name already exists in [{loadedTypeNamespaceToName[type.Name]}]! Make sure to make effect names unique");
+					}
+
+
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
 					rarity[type] = effect.Rarity;
+					loadedTypeNamespaceToName.Add(type.Name, type.Namespace);
 				}
 			}
 			validInterfaces = interfaces.ToArray();
