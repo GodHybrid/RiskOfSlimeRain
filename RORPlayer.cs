@@ -157,10 +157,6 @@ namespace RiskOfSlimeRain
 			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
 
-			//If this projectile hits faster than default
-			float immuneRatio = target.immune[proj.owner] / NPC.immuneTime;
-			if (immuneRatio < 1f && Main.rand.NextFloat() > immuneRatio) return;
-
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
 
@@ -173,10 +169,6 @@ namespace RiskOfSlimeRain
 			if (proj.modProjectile is IExcludeOnHit) return;
 			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
-
-			//If this projectile hits faster than default
-			float immuneRatio = target.immune[proj.owner] / NPC.immuneTime;
-			if (immuneRatio < 1f && Main.rand.NextFloat() > immuneRatio) return;
 
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}

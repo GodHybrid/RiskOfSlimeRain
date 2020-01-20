@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -21,7 +22,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		{
 			if (damage >= player.statLifeMax2 * hplimit)
 			{
-				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (dmg + dmg * Stack) * player.GetDamage(), kb + Stack, Main.myPlayer);
+				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), Math.Max(20, 2 * Stack * player.GetDamage()), kb + Stack, Main.myPlayer);
 			}
 		}
 	}
