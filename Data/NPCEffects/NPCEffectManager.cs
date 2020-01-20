@@ -144,7 +144,7 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 				effect = NPCEffect.CreateInstance(type, duration);
 				globalNPC.NPCEffects.Add(effect);
 
-				if (!forceBroadcast && broadcast && Main.netMode != NetmodeID.SinglePlayer)
+				if (broadcast && Main.netMode != NetmodeID.SinglePlayer)
 				{
 					NPCEffectPacket.SendPacket(npc, effect);
 				}
