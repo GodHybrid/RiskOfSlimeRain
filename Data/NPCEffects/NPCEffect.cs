@@ -12,17 +12,9 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 	{
 		public int Time { get; private set; }
 
-		/// <summary>
-		/// Shortened name including first namespace after NPCEffects
-		/// </summary>
-		public string Name { get; private set; }
+		public string Name => GetType().Name;
 
-		public bool RanOut { get; private set; }
-
-		public NPCEffect()
-		{
-			Name = GetType().FullName.Replace(NPCEffectManager.path, "");
-		}
+		public sbyte Type => NPCEffectManager.NPCEffectType(GetType());
 
 		//Because we are using NPCEffect in a list, we need those two
 		public override bool Equals(object obj)
@@ -37,12 +29,16 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 			return new { Time, Name }.GetHashCode();
 		}
 
-		public override string ToString() => $"{Name} {Time}";
+		public override string ToString() => $"{Name}; {Time}";
 
-		public void DecrementTime()
+		/// <summary>
+		/// Returns true if the timer reached 0
+		/// </summary>
+		public bool DecrementTime()
 		{
 			Time--;
-			if (Time <= 0) RanOut = true;
+			if (Time <= 0) return true;
+			return false;
 		}
 
 		/// <summary>

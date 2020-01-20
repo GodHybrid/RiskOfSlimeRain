@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using RiskOfSlimeRain.Helpers;
+using System.IO;
 using Terraria;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
@@ -9,61 +10,40 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 	{
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
-		//Need to "wrap" variables for the packet to see them
-		public int WhoAmI
-		{
-			get => whoAmI;
-			set => whoAmI = value;
-		}
-
-		public int Type
-		{
-			get => type;
-			set => type = value;
-		}
-
-		public int Duration
-		{
-			get => duration;
-			set => duration = value;
-		}
-
-		public string TypeName
-		{
-			get => typeName;
-			set => typeName = value;
-		}
-
 		//To identify the NPC fully
-		public static int whoAmI;
-		public static int type;
+		public int NPCWhoAmI { get; set; }
+
+		public int NPCType { get; set; }
 
 		//Effect parameters
-		public static int duration;
-		public static string typeName = string.Empty;
+		public int EffectTime { get; set; }
+
+		public sbyte EffectType { get; set; }
 
 		public static void SendPacket(NPC npc, NPCEffect effect)
 		{
-			SendPacket(npc.whoAmI, npc.type, effect.Time, effect.Name);
+			SendPacket(npc.whoAmI, npc.type, effect.Time, effect.Type);
 		}
 
-		public static void SendPacket(int nPCwhoAmI, int npcType, int effectDuration, string effectTypeName)
+		public static void SendPacket(int nWhoAmI, int nType, int eTime, sbyte eType)
 		{
-			whoAmI = nPCwhoAmI;
-			type = npcType;
-			duration = effectDuration;
-			typeName = effectTypeName;
-			new NPCEffectPacket().Send();
+			new NPCEffectPacket()
+			{
+				NPCWhoAmI = nWhoAmI,
+				NPCType = nType,
+				EffectTime = eTime,
+				EffectType = eType
+			}.Send();
 		}
 
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{
 			//Do something with the received data, which is now in the variables we wrapped previously
-			if (WhoAmI < 0 || WhoAmI >= Main.maxNPCs) return base.PostReceive(reader, fromWho);
-			NPC npc = Main.npc[WhoAmI];
-			if (npc.type != Type) return base.PostReceive(reader, fromWho);
+			if (NPCWhoAmI < 0 || NPCWhoAmI >= Main.maxNPCs) return base.PostReceive(reader, fromWho);
+			NPC npc = Main.npc[NPCWhoAmI];
+			if (npc.type != NPCType) return base.PostReceive(reader, fromWho);
 
-			NPCEffectManager.ApplyNPCEffect(TypeName, npc, Duration);
+			NPCEffectManager.ApplyNPCEffect(EffectType, npc, EffectTime);
 			return base.PostReceive(reader, fromWho);
 		}
 	}

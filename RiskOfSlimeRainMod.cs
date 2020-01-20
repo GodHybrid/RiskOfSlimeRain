@@ -1,3 +1,4 @@
+using RiskOfSlimeRain.Data.NPCEffects;
 using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Shaders;
@@ -26,6 +27,7 @@ namespace RiskOfSlimeRain
 		public override void Load()
 		{
 			ROREffectManager.Load();
+			NPCEffectManager.Load();
 			ShaderManager.Load();
 			RORInterfaceLayers.Load();
 		}
@@ -33,6 +35,7 @@ namespace RiskOfSlimeRain
 		public override void Unload()
 		{
 			ROREffectManager.Unload();
+			NPCEffectManager.Unload();
 			ShaderManager.Unload();
 			RORInterfaceLayers.Unload();
 			WarbannerManager.Unload();
