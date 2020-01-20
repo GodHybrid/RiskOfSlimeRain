@@ -8,7 +8,7 @@ using WebmilioCommons.Tinq;
 namespace RiskOfSlimeRain.Projectiles
 {
 	//ai0 is used to set timeLeft
-	public class SpikestripStrip : ModProjectile
+	public class SpikestripProj : ModProjectile
 	{
 		public override void SetDefaults()
 		{
@@ -53,7 +53,7 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			projectile.velocity.Y = 10f;
-			Main.npc.WhereActive(n => n.Hitbox.Intersects(projectile.Hitbox)).Do(n => NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60));
+			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n => NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60));
 		}
 	}
 }

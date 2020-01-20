@@ -20,9 +20,9 @@ namespace RiskOfSlimeRain.Effects.Common
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer, initial + Stack * increase);
-			Projectile.NewProjectile(player.position, new Vector2(2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer, initial + Stack * increase);
-			Projectile.NewProjectile(player.position, new Vector2(-2, 0), ModContent.ProjectileType<SpikestripStrip>(), 0, 0, Main.myPlayer, initial + Stack * increase);
+			Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
+			Projectile.NewProjectile(player.position, new Vector2(2, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
+			Projectile.NewProjectile(player.position, new Vector2(-2, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
 		}
 	}
 }
