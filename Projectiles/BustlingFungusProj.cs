@@ -1,4 +1,6 @@
-﻿using RiskOfSlimeRain.Helpers;
+﻿using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Effects.Common;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -69,7 +71,8 @@ namespace RiskOfSlimeRain.Projectiles
 		private void TryDespawn()
 		{
 			RORPlayer mPlayer = projectile.GetOwner().GetRORPlayer();
-			if (mPlayer.NoInputTimer == 0)
+			BustlingFungusEffect effect = ROREffectManager.GetEffectOfType<BustlingFungusEffect>(mPlayer);
+			if (mPlayer.NoInputTimer == 0 || effect?.Active == false || effect == null)
 			{
 				StartDespawning = true;
 			}
