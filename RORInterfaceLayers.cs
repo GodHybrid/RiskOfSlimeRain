@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Network.Effects;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -258,7 +259,7 @@ namespace RiskOfSlimeRain
 			{
 				if (TimeByIndex[index].Value <= 0)
 				{
-					ROREffectManager.SendSingleEffectStack(mPlayer, effects[index]);
+					new ROREffectSyncSingleStackPacket(mPlayer, effects[index]).Send();
 					toRemove.Add(index);
 				}
 			}

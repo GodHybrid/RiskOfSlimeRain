@@ -10,26 +10,16 @@ namespace RiskOfSlimeRain.Network
 	{
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
-		public int HealAmount
-		{
-			get => healAmount;
-			set => healAmount = value;
-		}
+		public int HealAmount { get; set; }
 
-		public byte HealWhoAmI
-		{
-			get => healWhoAmI;
-			set => healWhoAmI = value;
-		}
+		public byte HealWhoAmI { get; set; }
 
-		private static byte healWhoAmI = 0;
-		private static int healAmount = 0;
+		public PlayerHealPacket() { }
 
-		public static void SendPacket(byte healPlayer, int heal)
+		public PlayerHealPacket(byte whoAmI, int healAmount)
 		{
-			healWhoAmI = healPlayer;
-			healAmount = heal;
-			new PlayerHealPacket().Send();
+			HealAmount = healAmount;
+			HealWhoAmI = whoAmI;
 		}
 
 		protected override bool PostReceive(BinaryReader reader, int fromWho)

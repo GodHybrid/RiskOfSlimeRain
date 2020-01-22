@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Helpers
 			player.statLife += clampHeal;
 			if (!noBroadcast && Main.netMode != NetmodeID.SinglePlayer)
 			{
-				PlayerHealPacket.SendPacket((byte)player.whoAmI, heal);
+				new PlayerHealPacket((byte)player.whoAmI, heal).Send();
 			}
 			//NetMessage.SendData(MessageID.SpiritHeal, -1, -1, null, player.whoAmI, clampHeal);
 		}

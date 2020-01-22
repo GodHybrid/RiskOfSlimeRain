@@ -1,10 +1,10 @@
-﻿using RiskOfSlimeRain.Helpers;
+﻿using RiskOfSlimeRain.Data.NPCEffects;
 using System.IO;
 using Terraria;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
-namespace RiskOfSlimeRain.Data.NPCEffects
+namespace RiskOfSlimeRain.Network.Data
 {
 	public class NPCEffectPacket : NetworkPacket
 	{
@@ -20,21 +20,17 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 
 		public sbyte EffectType { get; set; }
 
-		public static void SendPacket(NPC npc, NPCEffect effect)
+		public NPCEffectPacket() { }
+
+		public NPCEffectPacket(int nWhoAmI, int nType, int eTime, sbyte eType)
 		{
-			SendPacket(npc.whoAmI, npc.type, effect.Time, effect.Type);
+			NPCWhoAmI = nWhoAmI;
+			NPCType = nType;
+			EffectTime = eTime;
+			EffectType = eType;
 		}
 
-		public static void SendPacket(int nWhoAmI, int nType, int eTime, sbyte eType)
-		{
-			new NPCEffectPacket()
-			{
-				NPCWhoAmI = nWhoAmI,
-				NPCType = nType,
-				EffectTime = eTime,
-				EffectType = eType
-			}.Send();
-		}
+		public NPCEffectPacket(NPC npc, NPCEffect effect) : this(npc.whoAmI, npc.type, effect.Time, effect.Type) { }
 
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{

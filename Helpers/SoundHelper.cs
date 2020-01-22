@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using System.IO;
+using RiskOfSlimeRain.Network;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
-using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Helpers
 {
@@ -41,9 +40,9 @@ namespace RiskOfSlimeRain.Helpers
 
 			if (Main.netMode != NetmodeID.MultiplayerClient) return instance;
 
-			//from here, only client
+			//From here, only client
 			//Main.NewText(Main.myPlayer.ToString() + " played a sound and broadcasted");
-			SendSound(type, x, y, Style, volumeScale, pitchOffset);
+			new PlaySoundPacket(type, x, y, Style, volumeScale, pitchOffset).Send();
 
 			return instance;
 		}
@@ -55,44 +54,5 @@ namespace RiskOfSlimeRain.Helpers
 		{
 			return Main.soundVolume * volume > 1 ? Main.soundVolume / volume : volume;
 		}
-
-		#region Sound Netcode
-		public static void HandleBroadcastSound(BinaryReader reader, int whoAmI)
-		{
-			//only 50 sound types, hence byte
-			int type = reader.ReadByte();
-			int x = reader.ReadInt32();
-			int y = reader.ReadInt32();
-			int Style = reader.ReadInt32();
-			float volumeScale = reader.ReadSingle();
-			float pitchOffset = reader.ReadSingle();
-
-			if (Main.netMode == NetmodeID.Server)
-			{
-				//forward to other players
-				//Console.WriteLine(whoAmI.ToString() + " sent a broadcast request, sending to everyone else");
-				SendSound(type, x, y, Style, volumeScale, pitchOffset, -1, whoAmI);
-			}
-			else
-			{
-				//Main.NewText(Main.myPlayer.ToString() + " received a sound from " + whoAmI);
-				Main.PlaySound(type, x, y, Style, volumeScale, pitchOffset);
-			}
-		}
-
-		private static void SendSound(int type, int x = -1, int y = -1, int Style = 1, float volumeScale = 1, float pitchOffset = 0, int to = -1, int from = -1)
-		{
-			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
-			packet.Write((int)RORMessageType.BroadcastSound);
-			//only 50 sound types, hence byte
-			packet.Write((byte)type);
-			packet.Write(x);
-			packet.Write(y);
-			packet.Write(Style);
-			packet.Write(volumeScale);
-			packet.Write(pitchOffset);
-			packet.Send(to, from);
-		}
-		#endregion
 	}
 }

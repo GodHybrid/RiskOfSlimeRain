@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
-using System.IO;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Data.Warbanners
@@ -30,18 +29,28 @@ namespace RiskOfSlimeRain.Data.Warbanners
 
 		public Vector2 position;
 
-		public Warbanner(int radius, Vector2 position)
+		/// <summary>
+		/// Used to play a sound if the warbanner does not originate from the previous session
+		/// </summary>
+		public bool fresh;
+
+		public Warbanner() { }
+
+		public Warbanner(int radius, Vector2 position, bool fresh = true)
 		{
 			this.radius = radius;
 			this.position = position;
+			this.fresh = fresh;
 		}
+
+		public Warbanner(int radius, float x, float y, bool fresh = true) : this(radius, new Vector2(x, y), fresh) { }
 
 		public override string ToString() => "Radius (tiles): " + (radius >> 4) + "; Position: " + position;
 
 		//From TagSerializable, required explicitely
 		public static Warbanner Load(TagCompound tag)
 		{
-			return new Warbanner(tag.GetInt("radius"), tag.Get<Vector2>("position"));
+			return new Warbanner(tag.GetInt("radius"), tag.Get<Vector2>("position"), fresh: false);
 		}
 
 		//From TagSerializable, required implicitely
@@ -51,20 +60,6 @@ namespace RiskOfSlimeRain.Data.Warbanners
 				{"radius", radius },
 				{"position", position },
 			};
-		}
-
-		public void NetRecieve(BinaryReader reader)
-		{
-			radius = reader.ReadInt32();
-			position.X = reader.ReadSingle();
-			position.Y = reader.ReadSingle();
-		}
-
-		public void NetSend(BinaryWriter writer)
-		{
-			writer.Write((int)radius);
-			writer.Write((float)position.X);
-			writer.Write((float)position.Y);
 		}
 	}
 }

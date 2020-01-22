@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Common;
 using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Effects.Shaders;
+using RiskOfSlimeRain.Network.Effects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -220,7 +221,14 @@ namespace RiskOfSlimeRain
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			ROREffectManager.SendOnEnter((byte)player.whoAmI, toWho, fromWho);
+			if (Main.netMode == NetmodeID.Server)
+			{
+				new RORPlayerSyncToAllClientsPacket(this).Send(fromWho, toWho);
+			}
+			else
+			{
+				new RORPlayerSyncToServerPacket(this).Send(fromWho, toWho);
+			}
 		}
 
 		public override TagCompound Save()

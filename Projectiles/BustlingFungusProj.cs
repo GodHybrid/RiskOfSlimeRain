@@ -61,6 +61,10 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public bool lastAnimating = true;
 
+		public int effectReallyGoneTimer = 0;
+
+		public const int effectReallyGoneTimerMax = 60;
+
 		public override void AI()
 		{
 			DoHeal();
@@ -71,10 +75,30 @@ namespace RiskOfSlimeRain.Projectiles
 		private void TryDespawn()
 		{
 			RORPlayer mPlayer = projectile.GetOwner().GetRORPlayer();
-			BustlingFungusEffect effect = ROREffectManager.GetEffectOfType<BustlingFungusEffect>(mPlayer);
-			if (mPlayer.NoInputTimer == 0 || effect?.Active == false || effect == null)
+			if (!StartDespawning)
 			{
-				StartDespawning = true;
+				BustlingFungusEffect effect = ROREffectManager.GetEffectOfType<BustlingFungusEffect>(mPlayer);
+				if (effect == null || effect?.Active == false)
+				{
+					if (Main.netMode == NetmodeID.SinglePlayer)
+					{
+						StartDespawning = true;
+					}
+					else
+					{
+						//In MP, the projectile spawns from the client, but if the client just changed the stack from 0 to 1, it takes a while for the information to arrive. 
+						//Not waiting will cause the projectile to despawn immediately
+						effectReallyGoneTimer++;
+						if (effectReallyGoneTimer > effectReallyGoneTimerMax)
+						{
+							StartDespawning = true;
+						}
+					}
+				}
+				if (mPlayer.NoInputTimer == 0)
+				{
+					StartDespawning = true;
+				}
 			}
 
 			if (StartDespawning)

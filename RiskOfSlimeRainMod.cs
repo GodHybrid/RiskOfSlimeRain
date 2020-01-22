@@ -3,7 +3,6 @@ using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Helpers;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -136,37 +135,7 @@ namespace RiskOfSlimeRain
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
-			int type = reader.ReadInt32();
-			if (Enum.IsDefined(typeof(RORMessageType), type))
-			{
-				//OWN TYPE IDs HAVE TO BE NEGATIVE (starting with -2 and down)
-				HandleOwnPacket((RORMessageType)type, reader, whoAmI);
-			}
-			else
-			{
-				reader.BaseStream.Position -= 4;
-				NetworkPacketLoader.Instance.HandlePacket(reader, whoAmI);
-			}
+			NetworkPacketLoader.Instance.HandlePacket(reader, whoAmI);
 		}
-
-		private void HandleOwnPacket(RORMessageType type, BinaryReader reader, int whoAmI)
-		{
-			//our own packet
-			switch (type)
-			{
-				case RORMessageType.SyncEffectsOnEnterToServer:
-					ROREffectManager.HandleOnEnterToServer(reader);
-					break;
-				case RORMessageType.BroadcastSound:
-					SoundHelper.HandleBroadcastSound(reader, whoAmI);
-					break;
-			}
-		}
-	}
-
-	public enum RORMessageType : int
-	{
-		SyncEffectsOnEnterToServer = -2,
-		BroadcastSound = -3
 	}
 }

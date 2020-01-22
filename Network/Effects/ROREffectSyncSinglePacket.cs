@@ -1,24 +1,28 @@
+using RiskOfSlimeRain.Effects;
+using Terraria;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
-namespace RiskOfSlimeRain.Effects
+namespace RiskOfSlimeRain.Network.Effects
 {
 	public class ROREffectSyncSinglePacket : ModPlayerNetworkPacket<RORPlayer>
 	{
-		//to do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
-		public int Index
-		{
-			get => ROREffectManager.Index;
-			set => ROREffectManager.Index = value;
-		}
+		public int Index { get; set; }
 
 		//ROREffect implements INetworkSerializable
 		public ROREffect Effect
 		{
 			get => ModPlayer.Effects[Index];
 			set { }
+		}
+
+		public ROREffectSyncSinglePacket() { }
+
+		public ROREffectSyncSinglePacket(RORPlayer mPlayer, ROREffect effect)
+		{
+			Index = ROREffectManager.GetIndexOfEffect(mPlayer, effect);
 		}
 	}
 }

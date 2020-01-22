@@ -6,14 +6,11 @@ using RiskOfSlimeRain.Effects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Extensions;
 
 namespace RiskOfSlimeRain.Effects
 {
@@ -36,11 +33,6 @@ namespace RiskOfSlimeRain.Effects
 		private static Dictionary<Type, int> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
-
-		/// <summary>
-		/// Index assigned before sending the SyncSingle(Stack) packet
-		/// </summary>
-		public static int Index { get; set; } = 0;
 
 		public static void Load()
 		{
@@ -77,7 +69,6 @@ namespace RiskOfSlimeRain.Effects
 					{
 						throw new Exception($"Error loading ROREffect [{type.FullName}], an effect with that same name already exists in [{loadedTypeNamespaceToName[type.Name]}]! Make sure to make effect names unique");
 					}
-
 
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
@@ -160,6 +151,9 @@ namespace RiskOfSlimeRain.Effects
 			}
 		}
 
+		/// <summary>
+		/// Populates the dictionary with the right effects
+		/// </summary>
 		public static void Populate(RORPlayer mPlayer)
 		{
 			//GeneralHelper.Print("populating " + mPlayer.player.whoAmI);
@@ -225,66 +219,6 @@ namespace RiskOfSlimeRain.Effects
 			bool can = interfaceCanProc.Contains(typeof(T));
 			return can ? effect.Proccing : effect.Active;
 		}
-
-		#region Syncing
-		public static void HandleOnEnterToServer(BinaryReader reader)
-		{
-			//If this is server: from OnEnterWorld
-			//If this is client: from here
-
-			byte whoAmI = reader.ReadByte();
-			PopulatePlayer(whoAmI, reader);
-
-			if (Main.netMode == NetmodeID.Server)
-			{
-				//forward to other players
-				SendOnEnter(whoAmI, -1, whoAmI);
-			}
-		}
-
-		public static void SendOnEnter(byte whoAmI, int to = -1, int from = -1)
-		{
-			RORPlayer mPlayer = Main.player[whoAmI].GetRORPlayer();
-			ModPacket packet = RiskOfSlimeRainMod.Instance.GetPacket();
-			packet.Write((int)RORMessageType.SyncEffectsOnEnterToServer);
-			packet.Write((byte)whoAmI);
-			packet.Write((int)mPlayer.Effects.Count);
-			for (int i = 0; i < mPlayer.Effects.Count; i++)
-			{
-				ROREffect effect = mPlayer.Effects[i];
-				effect.SendOnEnter(packet);
-			}
-			packet.Send(to, from);
-		}
-
-		private static void PopulatePlayer(byte whoAmI, BinaryReader reader)
-		{
-			Player player = Main.player[whoAmI];
-			RORPlayer mPlayer = player.GetRORPlayer();
-			int length = reader.ReadInt32();
-			mPlayer.Effects = new List<ROREffect>();
-			for (int i = 0; i < length; i++)
-			{
-				ROREffect effect = ROREffect.CreateInstanceFromNet(player, reader);
-				mPlayer.Effects.Add(effect);
-			}
-			Populate(mPlayer);
-		}
-
-		public static void SendSingleEffect(RORPlayer mPlayer, ROREffect effect)
-		{
-			Index = GetIndexOfEffect(mPlayer, effect);
-			if (Index == -1) return;
-			mPlayer.SendIfLocal<ROREffectSyncSinglePacket>();
-		}
-
-		public static void SendSingleEffectStack(RORPlayer mPlayer, ROREffect effect)
-		{
-			Index = GetIndexOfEffect(mPlayer, effect);
-			if (Index == -1) return;
-			mPlayer.SendIfLocal<ROREffectSyncSingleStackPacket>();
-		}
-		#endregion
 
 		#region Hooks
 		/// <summary>

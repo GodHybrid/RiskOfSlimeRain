@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Network.Data;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
@@ -57,26 +58,23 @@ namespace RiskOfSlimeRain.Data.Warbanners
 				}
 				position.Y -= 25; //half the projectiles height
 
-				Radius = radius;
-				X = position.X;
-				Y = position.Y;
-				new WarbannerPacket().Send();
-				AddWarbanner();
+				new WarbannerPacket(radius, position).Send();
+				AddWarbanner(radius, position.X, position.Y);
 			}
 		}
 
 		/// <summary>
 		/// To add a new banner to the list, using the static Radius, X and Y variables
 		/// </summary>
-		public static void AddWarbanner()
+		public static void AddWarbanner(int radius, float x, float y)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
-			if (Radius == -1) return;
+			if (radius == -1) return;
 			if (warbanners.Count >= LIMIT)
 			{
 				warbanners.RemoveAt(0);
 			}
-			Warbanner banner = new Warbanner(Radius, new Vector2(X, Y));
+			Warbanner banner = new Warbanner(radius, x, y);
 			warbanners.Add(banner);
 			unspawnedWarbanners.Add(banner);
 		}
@@ -89,11 +87,9 @@ namespace RiskOfSlimeRain.Data.Warbanners
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (unspawnedWarbanners.Count == 0) return;
 
-			List<Warbanner> spawned = new List<Warbanner>();
-
 			Main.player.DoActive(delegate (Player p)
 			{
-				spawned.Clear();
+				List<Warbanner> spawned = new List<Warbanner>();
 				for (int j = 0; j < unspawnedWarbanners.Count; j++)
 				{
 					Warbanner banner = unspawnedWarbanners[j];
@@ -101,8 +97,7 @@ namespace RiskOfSlimeRain.Data.Warbanners
 					float playerDistance = p.DistanceSQ(banner.position);
 					if (playerDistance < distance * distance)
 					{
-						bool IsFresh = X == banner.position.X;
-						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, IsFresh.ToDirectionInt());
+						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
 						spawned.Add(banner);
 					}
 				}
@@ -140,8 +135,6 @@ namespace RiskOfSlimeRain.Data.Warbanners
 		public static void Unload()
 		{
 			warbanners = unspawnedWarbanners = null;
-			Radius = -1;
-			X = Y = 0;
 		}
 
 		public static void Save(TagCompound tag)

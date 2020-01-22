@@ -23,6 +23,7 @@ namespace RiskOfSlimeRain.Helpers
 
 		public static void Print(string message)
 		{
+			RiskOfSlimeRainMod.Instance.Logger.Info(message);
 			if (Main.netMode == NetmodeID.Server)
 			{
 				Console.WriteLine(message);

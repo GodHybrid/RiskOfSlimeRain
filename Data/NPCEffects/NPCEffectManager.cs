@@ -1,4 +1,4 @@
-﻿using RiskOfSlimeRain.Helpers;
+﻿using RiskOfSlimeRain.Network.Data;
 using RiskOfSlimeRain.NPCs;
 using System;
 using System.Collections.Generic;
@@ -135,7 +135,7 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 
 				if (forceBroadcast && broadcast && Main.netMode != NetmodeID.SinglePlayer)
 				{
-					NPCEffectPacket.SendPacket(npc, effect);
+					new NPCEffectPacket(npc, effect).Send();
 				}
 			}
 			else
@@ -146,7 +146,7 @@ namespace RiskOfSlimeRain.Data.NPCEffects
 
 				if (broadcast && Main.netMode != NetmodeID.SinglePlayer)
 				{
-					NPCEffectPacket.SendPacket(npc, effect);
+					new NPCEffectPacket(npc, effect).Send();
 				}
 			}
 		}
