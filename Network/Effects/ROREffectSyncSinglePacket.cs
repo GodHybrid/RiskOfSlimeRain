@@ -1,10 +1,10 @@
 using RiskOfSlimeRain.Effects;
-using Terraria;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
+	//unused
 	public class ROREffectSyncSinglePacket : ModPlayerNetworkPacket<RORPlayer>
 	{
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;

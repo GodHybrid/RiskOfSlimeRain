@@ -11,7 +11,7 @@ namespace RiskOfSlimeRain.Effects.Common
 		const int initial = 10;
 		const int increase = 5;
 
-		public override string Description => $"{Chance.ToPercent()} chance to snare enemies for {(initial + increase) / 10} seconds";
+		public override string Description => $"{Chance.ToPercent()} chance to snare enemies for {(initial + increase) / 10f} seconds";
 
 		public override string FlavorText => "You say you can fix 'em?\nThese tasers are very very faulty";
 

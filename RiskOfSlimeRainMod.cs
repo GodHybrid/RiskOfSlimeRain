@@ -2,7 +2,6 @@ using RiskOfSlimeRain.Data.NPCEffects;
 using RiskOfSlimeRain.Data.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Effects.Shaders;
-using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;

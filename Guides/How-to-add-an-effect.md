@@ -183,5 +183,5 @@ public override void MeleeEffects(Item item, Rectangle hitbox)
 You can now use this interface in any new effects you make.
 
 # Other
-If you want a chance based effect, look into overriding `AlwaysProc` and `Chance`. That chance will apply the same way to all methods you implement.
+If you want a chance based effect, look into overriding `AlwaysProc` and `Chance`. That chance will apply the same way to all methods that proc (from Interfaces with the `CanProc` attribute).
 So mostly use them for the OnHit stuff.

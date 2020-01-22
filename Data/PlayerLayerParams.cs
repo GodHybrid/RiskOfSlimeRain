@@ -5,6 +5,9 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Data
 {
+	/// <summary>
+	/// Class holding the arguments for DrawData
+	/// </summary>
 	public sealed class PlayerLayerParams
 	{
 		public Vector2 Offset;
@@ -34,6 +37,10 @@ namespace RiskOfSlimeRain.Data
 
 		public Texture2D Texture => ModContent.GetTexture("RiskOfSlimeRain/" + TexturePath);
 
+		/// <summary>
+		/// Returns the sourceRectangle of the texture. Only vertical spritesheets supported
+		/// </summary>
+		/// <returns></returns>
 		public Rectangle GetFrame()
 		{
 			Rectangle frame = Texture.Bounds;
