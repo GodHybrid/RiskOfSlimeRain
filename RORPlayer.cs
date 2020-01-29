@@ -1,9 +1,8 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Data.ROREffects.Common;
+using RiskOfSlimeRain.Data.ROREffects.Interfaces;
 using RiskOfSlimeRain.Effects;
-using RiskOfSlimeRain.Effects.Common;
-using RiskOfSlimeRain.Effects.Interfaces;
-using RiskOfSlimeRain.Effects.Shaders;
 using RiskOfSlimeRain.Network.Effects;
 using System;
 using System.Collections.Generic;
@@ -14,6 +13,7 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using RiskOfSlimeRain.Data.ROREffects;
 
 namespace RiskOfSlimeRain
 {

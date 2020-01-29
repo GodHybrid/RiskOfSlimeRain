@@ -8,9 +8,9 @@ First, go to the `Effects` folder and choose the rarity the effect is gonna be b
 Then create a new file called `InfusionEffect.cs` and a new class template like this:
 
 ```csharp
-using RiskOfSlimeRain.Effects.Interfaces;
+using RiskOfSlimeRain.Data.ROREffects.Interfaces;
 
-namespace RiskOfSlimeRain.Effects.Uncommon
+namespace RiskOfSlimeRain.Data.ROREffects.Uncommon
 {
 	public class InfusionEffect : RORUncommonEffect
 	{
@@ -26,7 +26,7 @@ Now, go to Items/Consumable and choose the rarity the effect is gonna be based o
 Then create a new file called `Infusion.cs` and a new class template like this:
 
 ```csharp
-using RiskOfSlimeRain.Effects.Uncommon;
+using RiskOfSlimeRain.Data.ROREffects.Uncommon;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
@@ -38,7 +38,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 ```
 
 As always, if you get red underlines, add the using by mouseovering and pressing Alt+Enter.
-In this case, `using RiskOfSlimeRain.Effects.Uncommon;`
+In this case, `using RiskOfSlimeRain.Data.ROREffects.Uncommon;`
 Finally, add a texture in that same place for the item called `Infusion.png`, and you are done.
 But the effect doesn't do anything at all, this is going to be the next step!
 
@@ -163,7 +163,7 @@ Then go into the `Effects\Interfaces` folder and add a new file called `IMeleeEf
 using Microsoft.Xna.Framework;
 using Terraria;
 
-namespace RiskOfSlimeRain.Effects.Interfaces
+namespace RiskOfSlimeRain.Data.ROREffects.Interfaces
 {
 	public interface IMeleeEffects : IROREffectInterface
 	{

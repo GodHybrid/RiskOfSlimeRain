@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Data.Warbanners;
-using RiskOfSlimeRain.Effects.Shaders;
+using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;

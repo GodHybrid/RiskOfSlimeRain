@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Effects;
-using RiskOfSlimeRain.Effects.Common;
+using RiskOfSlimeRain.Data.ROREffects;
+using RiskOfSlimeRain.Data.ROREffects.Common;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
 using System.Collections.Generic;

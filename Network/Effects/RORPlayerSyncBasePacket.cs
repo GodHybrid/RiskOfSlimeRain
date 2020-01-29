@@ -1,4 +1,4 @@
-using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Data.ROREffects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.IO;
