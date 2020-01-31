@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Data.ROREffects.Interfaces;
+using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using System;
 using Terraria;
 using Terraria.ID;

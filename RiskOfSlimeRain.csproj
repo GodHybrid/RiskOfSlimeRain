@@ -18,7 +18,4 @@
       <HintPath>..\..\Mods\WebmilioCommons.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Data\ROREffects\" />
-  </ItemGroup>
 </Project>

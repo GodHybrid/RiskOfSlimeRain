@@ -1,5 +1,5 @@
-﻿using RiskOfSlimeRain.Data.ROREffects;
-using RiskOfSlimeRain.Data.ROREffects.Common;
+﻿using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;

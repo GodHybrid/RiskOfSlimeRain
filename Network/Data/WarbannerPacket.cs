@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Data.Warbanners;
+using RiskOfSlimeRain.Core.Warbanners;
 using System.IO;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;

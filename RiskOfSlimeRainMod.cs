@@ -1,6 +1,6 @@
-using RiskOfSlimeRain.Data.NPCEffects;
-using RiskOfSlimeRain.Data.Warbanners;
-using RiskOfSlimeRain.Data.ROREffects;
+using RiskOfSlimeRain.Core.NPCEffects;
+using RiskOfSlimeRain.Core.Warbanners;
+using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Effects;
 using System.Collections.Generic;
 using System.IO;

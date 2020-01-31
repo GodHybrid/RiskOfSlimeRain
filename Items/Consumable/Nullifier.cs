@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Data.Warbanners;
-using RiskOfSlimeRain.Data.ROREffects;
+using RiskOfSlimeRain.Core.Warbanners;
+using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;

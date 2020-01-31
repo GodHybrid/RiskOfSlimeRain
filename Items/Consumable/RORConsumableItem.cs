@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Data.ROREffects;
+using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;

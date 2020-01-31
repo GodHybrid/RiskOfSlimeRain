@@ -1,4 +1,4 @@
-using RiskOfSlimeRain.Data.ROREffects;
+using RiskOfSlimeRain.Core.ROREffects;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 

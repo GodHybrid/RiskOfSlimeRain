@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Data.Warbanners;
+using RiskOfSlimeRain.Core.Warbanners;
 using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;

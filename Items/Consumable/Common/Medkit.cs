@@ -1,4 +1,4 @@
-﻿using RiskOfSlimeRain.Data.ROREffects.Common;
+﻿using RiskOfSlimeRain.Core.ROREffects.Common;
 using Terraria.ID;
 using Terraria.ModLoader;
 

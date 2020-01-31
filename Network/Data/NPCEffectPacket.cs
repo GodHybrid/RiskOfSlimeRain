@@ -1,4 +1,4 @@
-﻿using RiskOfSlimeRain.Data.NPCEffects;
+﻿using RiskOfSlimeRain.Core.NPCEffects;
 using System.IO;
 using Terraria;
 using WebmilioCommons.Networking;

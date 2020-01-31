@@ -1,6 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Data.NPCEffects;
+using RiskOfSlimeRain.Core.NPCEffects;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;

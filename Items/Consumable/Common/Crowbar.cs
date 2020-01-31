@@ -1,4 +1,4 @@
-﻿using RiskOfSlimeRain.Data.ROREffects.Common;
+﻿using RiskOfSlimeRain.Core.ROREffects.Common;
 
 namespace RiskOfSlimeRain.Items.Consumable.Common
 {

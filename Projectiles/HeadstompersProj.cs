@@ -1,5 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Data.ROREffects.Common;
+using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
