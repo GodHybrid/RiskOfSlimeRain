@@ -7,7 +7,7 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
-	public class BundleOfFireworksEffect : RORCommonEffect, IOnHit
+	public class BundleOfFireworksEffect : RORCommonEffect, IOnKill
 	{
 		const float initial = 0.005f;
 		const float increase = 0.005f;
@@ -34,14 +34,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => initial + increase * Stack;
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) SpawnProjectile(player);
+			SpawnProjectile(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) SpawnProjectile(player);
+			SpawnProjectile(player);
 		}
 
 		void SpawnProjectile(Player player)

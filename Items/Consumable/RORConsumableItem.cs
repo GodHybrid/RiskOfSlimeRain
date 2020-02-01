@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public sealed override bool CanUseItem(Player player)
 		{
-			//if player has the effect already, check on that. If not, check on a fresh one
+			//If player has the effect already, check on that. If not, check on a fresh one
 			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player);
 			if (effect == null)
 			{
@@ -61,7 +62,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			{
 				string color = (FlavorColor * (Main.mouseTextColor / 255f)).Hex3();
 
-				//flavorText that has \n in it has to be split into single tooltiplines
+				//FlavorText that has \n in it has to be split into single tooltiplines
 				string[] lines = FlavorText.Split(new char[] { '\n' }, 2, StringSplitOptions.RemoveEmptyEntries);
 
 				for (int i = 0; i < lines.Length; i++)
@@ -71,7 +72,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 				}
 			}
 
-			//when wanting to add more tooltips without flavorTextColor, call base.ModifyTooltips(tooltips) first
+			//When wanting to add more tooltips without flavorTextColor, call base.ModifyTooltips(tooltips) first
 		}
 
 		public override void SetDefaults()
@@ -79,7 +80,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			item.CloneDefaults(ItemID.LifeFruit);
 			item.rare = Rarity;
 
-			//when wanting to add more SetDefaults, call base.SetDefaults() first
+			//When wanting to add more SetDefaults, call base.SetDefaults() first
 		}
 		#endregion
 	}

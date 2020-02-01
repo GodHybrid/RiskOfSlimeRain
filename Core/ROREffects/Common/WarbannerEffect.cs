@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	/// <summary>
 	/// This effect is special because it only handles the trigger to spawning the banner. Everything else is in RORPlayer and WarbannerManager
 	/// </summary>
-	public class WarbannerEffect : RORCommonEffect, IOnHit
+	public class WarbannerEffect : RORCommonEffect, IOnKill
 	{
 		const int initial = 4;
 		const int increase = 1;
@@ -24,14 +24,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//Chance is handled in WarbannerManager
 		public override string UIInfo => $"Chance on a banner: {WarbannerManager.WarbannerChance.ToPercent(3)}. Active banners: {WarbannerManager.warbanners.Count}";
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) PassStatsIntoWarbanner(player);
+			PassStatsIntoWarbanner(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			if (target.life <= 0) PassStatsIntoWarbanner(player);
+			PassStatsIntoWarbanner(player);
 		}
 
 		void PassStatsIntoWarbanner(Player player)

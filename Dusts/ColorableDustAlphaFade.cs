@@ -80,6 +80,9 @@ namespace RiskOfSlimeRain.Dusts
 			ReduceScale = reduceScale;
 		}
 
+		/// <summary>
+		/// Called on spawn, sets alpha to whatever edge value specified (inEnd/outEnd), ignores the Alpha from NewDust
+		/// </summary>
 		public void Init(Dust dust)
 		{
 			if (!spawned)

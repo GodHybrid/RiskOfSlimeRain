@@ -3,6 +3,9 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Interfaces
 {
+	/// <summary>
+	/// Use this for on-hit only, not for on-kill stuff (use IOnKill instead)
+	/// </summary>
 	[CanProc]
 	public interface IOnHit : IROREffectInterface
 	{

@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Dusts
 
 		public override Color? GetAlpha(Dust dust, Color lightColor)
 		{
-			return lightColor * ((255 - dust.alpha) / 255f);
+			return dust.color.MultiplyRGBA(lightColor) * ((255 - dust.alpha) / 255f);
 		}
 	}
 }

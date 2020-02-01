@@ -1,14 +1,20 @@
-﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Projectiles;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	//TODO, not implemented yet, the item to receive this effect is uncommented
 	public class InfusionEffect : RORUncommonEffect, IOnHit, IResetEffects
 	{
-		public float bonusLife = 0f;
+		public const float initial = 0.5f;
+		public const float increase = 0.5f;
+
+		public float BonusLife { get; private set; }
+
+		public float CurrentIncrease => initial + Stack * increase;
 
 		public override string Description => "Killing an enemy increases your health permanently by 1";
 
@@ -26,35 +32,41 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void ResetEffects(Player player)
 		{
-			player.statLifeMax2 += (int)bonusLife;
+			player.statLifeMax2 += (int)BonusLife;
 		}
 
 		public override void PopulateTag(TagCompound tag)
 		{
-			tag.Add("bonusLife", bonusLife);
+			tag.Add("BonusLife", BonusLife);
 		}
 
 		public override void PopulateFromTag(TagCompound tag)
 		{
-			bonusLife = tag.GetFloat("bonusLife");
+			BonusLife = tag.GetFloat("BonusLife");
 		}
 
 		protected override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(bonusLife);
+			writer.Write(BonusLife);
 		}
 
 		protected override void NetReceive(BinaryReader reader)
 		{
-			bonusLife = reader.ReadSingle();
+			BonusLife = reader.ReadSingle();
 		}
 
-		void SpawnProjectile(Player player, NPC target)
+		private void SpawnProjectile(Player player, NPC target)
 		{
 			if (target.life <= 0)
 			{
-				//Spawn projectile here via Projectile.NewProjectile, and pass the life increase * Stack as ai0 or ai1
+				//The projectile reads from the effect of the owner how much health it gives him
+				PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
 			}
+		}
+
+		public void IncreaseBonusLife()
+		{
+			BonusLife += CurrentIncrease;
 		}
 	}
 }

@@ -29,32 +29,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			SpawnProjectile(player, target);
 		}
 
-		//[CanProc]
-		//public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
-		//{
-		//	SpawnProjectile(player, target);
-		//}
-
-		//[CanProc]
-		//public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
-		//{
-		//	SpawnProjectile(player, target);
-		//}
-
 		void SpawnProjectile(Player player, NPC target)
 		{
 			int damage = (int)((initial + increase * Stack) * player.GetDamage());
 			Vector2 offset = new Vector2(Main.rand.Next(target.width), Main.rand.Next(4, target.height - 4));
 			StickyProj.NewProjectile<StickyBombProj>(target, offset, damage);
-			//uint packedOffset = GetPackedOffset(new Point(Main.rand.Next(target.width), Main.rand.Next(4, target.height - 4)));
-			//int index = Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombProj>(), 0, 0, Main.myPlayer, packedOffset, target.whoAmI);
-			//if (index > -1)
-			//{
-			//	Projectile proj = Main.projectile[index];
-			//	int damage = (int)((initial + increase * Stack) * player.GetDamage());
-			//	proj.localAI[0] = damage;
-			//	//this doesnt need syncing cause the damage is for spawning another projectile, which is clientside
-			//}
 		}
 	}
 }

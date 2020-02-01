@@ -50,6 +50,11 @@ namespace RiskOfSlimeRain.Projectiles
 		/// </summary>
 		public abstract void ApplyBonus(Player target);
 
+		/// <summary>
+		/// Return true if a target is found, and targetIndex is set accordingly. By default, player with lowest health
+		/// </summary>
+		public abstract bool FindTarget(out int targetIndex);
+
 		public override void SetDefaults()
 		{
 			projectile.Size = new Vector2(16);
@@ -62,16 +67,23 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public sealed override void AI()
 		{
-			if (StartHomingTimer > StartHomingTimerMax && FindTarget(out int targetIndex))
+			if (StartHomingTimer > StartHomingTimerMax)
 			{
-				Player target = Main.player[targetIndex];
-				Homing(target);
-
-				if (projectile.Hitbox.Intersects(target.Hitbox))
+				if (FindTarget(out int targetIndex))
 				{
-					if (projectile.owner == Main.myPlayer) ApplyBonus(target);
+					Player target = Main.player[targetIndex];
+					Homing(target);
+
+					if (projectile.Hitbox.Intersects(target.Hitbox))
+					{
+						if (projectile.owner == Main.myPlayer) ApplyBonus(target);
+						projectile.Kill();
+						return;
+					}
+				}
+				else
+				{
 					projectile.Kill();
-					return;
 				}
 			}
 			else
@@ -80,28 +92,6 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			OtherAI();
-		}
-
-		/// <summary>
-		/// Return true if a target is found, and targetIndex is set accordingly. By default, player with lowest health
-		/// </summary>
-		public virtual bool FindTarget(out int targetIndex)
-		{
-			targetIndex = -1;
-			int minHealth = int.MaxValue;
-			for (int i = 0; i < Main.maxPlayers; i++)
-			{
-				Player player = Main.player[i];
-				if (!player.active) continue;
-
-				int health = player.statLife;
-				if (health < minHealth)
-				{
-					minHealth = health;
-					targetIndex = i;
-				}
-			}
-			return targetIndex != -1;
 		}
 
 		public virtual void SlowDown()

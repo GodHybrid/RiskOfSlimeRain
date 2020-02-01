@@ -8,6 +8,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		const float increase = 0.07895f;
 
+		bool spawned = false;
+
 		public override int MaxRecommendedStack => 38;
 
 		public override string Description => $"Permanently increases maximum life by roughly {increase.ToPercent(0)}";
@@ -16,8 +18,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void ResetEffects(Player player)
 		{
-			int increaseAmount = (int)(player.statLifeMax * Stack * increase);
-			player.statLifeMax2 += increaseAmount;
+			player.statLifeMax2 += GetIncreaseAmount(player);
+		}
+
+		public int GetIncreaseAmount(Player player)
+		{
+			return (int)(player.statLifeMax * Stack * increase);
 		}
 	}
 }

@@ -20,7 +20,7 @@ namespace RiskOfSlimeRain.Projectiles
 		/// <summary>
 		/// Radius of the circle surrounding this projectile (additional, 0 for default)
 		/// </summary>
-		public abstract int Radius { get; }
+		public virtual int Radius => 0;
 
 		public override Color? GetAlpha(Color lightColor)
 		{

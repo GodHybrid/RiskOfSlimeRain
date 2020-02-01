@@ -83,6 +83,12 @@ namespace RiskOfSlimeRain
 
 		public override void ResetEffects()
 		{
+			if (Main.gameMenu)
+			{
+				//Because the game loads player data and then calls ResetEffects (to show proper health/mana and stuff like that), we need to acknowledge that.
+				//Usually we populate in OnEnterWorld
+				ROREffectManager.Populate(this);
+			}
 			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
 		}
 
@@ -100,7 +106,7 @@ namespace RiskOfSlimeRain
 			if (InWarbannerRange)
 			{
 				//player.moveSpeed *= 1.3f;
-				//these next two actually do something (increase acceleration slightly and increase max speed + cap)
+				//These next two actually do something (increase acceleration slightly and increase max speed + cap)
 				//ONLY increasing acceleration while keeping the max speed in check is not possible afaik
 				player.accRunSpeed *= 1.3f;
 				player.runAcceleration *= 1.3f;
@@ -118,7 +124,7 @@ namespace RiskOfSlimeRain
 		{
 			float mult = 1f;
 			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
-			if (InWarbannerRange) mult += 0.15f; //seems to mimic roughly 30% dps increase 
+			if (InWarbannerRange) mult += 0.15f; //Seems to mimic roughly 30% dps increase 
 			return mult;
 		}
 
@@ -137,6 +143,12 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer = 0;
 
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
+
+			if (target.life <= 0)
+			{
+				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPC(player, item, target, damage, knockback, crit));
+			}
+
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
 		}
 
@@ -153,10 +165,16 @@ namespace RiskOfSlimeRain
 			//This stuff should be at the bottom of everything
 			if (target.friendly && target.type != NPCID.TargetDummy) return;
 
-			//If this projectile shouldn't proc at all
-			if (proj.modProjectile is IExcludeOnHit) return;
 			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+
+			if (target.life <= 0)
+			{
+				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithProj(player, proj, target, damage, knockback, crit));
+			}
+
+			//If this projectile shouldn't proc at all
+			if (proj.modProjectile is IExcludeOnHit) return;
 
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
