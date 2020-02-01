@@ -44,7 +44,7 @@ namespace RiskOfSlimeRain.Projectiles
 			Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
 			if (circle != null)
 			{
-				ShaderManager.ApplyToScreen(spriteBatch, circle);
+				ShaderManager.ApplyToScreenOnce(spriteBatch, circle);
 			}
 
 			return true;

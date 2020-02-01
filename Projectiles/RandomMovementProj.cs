@@ -52,19 +52,19 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public virtual int AlphaDecrease => 35;
 
-		public virtual int Thickness => 6;
+		public virtual int DustBoxThickness => 6;
 
 		public virtual int RandomMoveDirectionChangeFrequency => 4;
 
 		public virtual double RandomMoveDirectionChangeMagnitude => 0.3;
 
-		public virtual float MaxSpeed => 8f;
+		public virtual float MaxHomingSpeed => 8f;
 
 		public virtual int MaxHomingRangeSQ => 1080 * 1080;
 
-		public virtual int MinAccel => 4;
+		public virtual int MinHomingAccel => 4;
 
-		public virtual int MaxAccel => 30;
+		public virtual int MaxHomingAccel => 30;
 
 		public override void SetStaticDefaults()
 		{
@@ -106,13 +106,13 @@ namespace RiskOfSlimeRain.Projectiles
 		}
 
 		/// <summary>
-		/// return true if a target is found, and targetIndex is set accordingly
+		/// Return true if a target is found, and targetIndex is set accordingly
 		/// </summary>
 		public virtual bool FindTarget(out int targetIndex)
 		{
 			targetIndex = -1;
 			float minDistance = float.MaxValue;
-			for (int i = 0; i < 200; i++)
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC npc = Main.npc[i];
 				if (npc.CanBeChasedBy())
@@ -160,19 +160,19 @@ namespace RiskOfSlimeRain.Projectiles
 			HomingTimer++;
 			Vector2 direction = Main.npc[targetIndex].Center + Main.npc[targetIndex].velocity * 5f - projectile.Center;
 			direction.Normalize();
-			direction *= MaxSpeed;
-			//for that nice initial curving
-			//accel starts at 30, then goes down to 4
-			float accel = Utils.Clamp(-(HomingTimer - MaxAccel), MinAccel, MaxAccel);
+			direction *= MaxHomingSpeed;
+			//For that nice initial curving
+			//Accel starts at 30, then goes down to 4
+			float accel = Utils.Clamp(MaxHomingAccel - HomingTimer, MinHomingAccel, MaxHomingAccel);
 			projectile.velocity = (projectile.velocity * (accel - 1) + direction) / accel;
 		}
 
 		public virtual void Movement()
 		{
-			//since this projectile is spawned with low speed
+			//Since this projectile is spawned with low speed
 			if (keepIncreasingVelocity)
 			{
-				if (projectile.velocity.LengthSquared() < MaxSpeed * MaxSpeed)
+				if (projectile.velocity.LengthSquared() < MaxHomingSpeed * MaxHomingSpeed)
 				{
 					projectile.velocity *= 1.04f;
 				}
@@ -182,7 +182,7 @@ namespace RiskOfSlimeRain.Projectiles
 				}
 			}
 
-			//terminal velocity cap
+			//Terminal velocity cap
 			if (Math.Abs(projectile.velocity.X) > 16) projectile.velocity.X *= 0.95f;
 			if (Math.Abs(projectile.velocity.Y) > 16) projectile.velocity.Y *= 0.95f;
 
@@ -192,10 +192,10 @@ namespace RiskOfSlimeRain.Projectiles
 		public virtual void SpawnDust()
 		{
 			Vector2 direction = Vector2.Normalize(projectile.velocity);
-			//position of the fin
+			//Position of the fin
 			Vector2 backOffset = direction * projectile.height;
 			Vector2 center = projectile.Center - backOffset;
-			Rectangle spawn = Utils.CenteredRectangle(center, new Vector2(Thickness));
+			Rectangle spawn = Utils.CenteredRectangle(center, new Vector2(DustBoxThickness));
 
 			Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Fire, 0f, 0f, 100);
 			dust.scale *= Main.rand.NextFloat(1f, 2f);

@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Effects;
@@ -13,7 +14,6 @@ using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using RiskOfSlimeRain.Core.ROREffects;
 
 namespace RiskOfSlimeRain
 {
@@ -207,7 +207,7 @@ namespace RiskOfSlimeRain
 			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
 			foreach (var shader in shaders)
 			{
-				ShaderManager.ApplyToScreen(Main.spriteBatch, shader);
+				ShaderManager.ApplyToScreenOnce(Main.spriteBatch, shader);
 			}
 		}
 

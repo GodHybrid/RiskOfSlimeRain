@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Core;
-using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;

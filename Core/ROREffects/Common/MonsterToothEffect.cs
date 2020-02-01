@@ -1,5 +1,6 @@
-﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
-using RiskOfSlimeRain.Helpers;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Projectiles;
 using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -15,20 +16,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			Heal(player, target);
+			SpawnProjectile(target);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			Heal(player, target);
+			SpawnProjectile(target);
 		}
 
-		void Heal(Player player, NPC target)
+		void SpawnProjectile(NPC target)
 		{
 			if (target.life <= 0)
 			{
-				int heal = Stack * increase + initial;
-				player.HealMe(heal);
+				PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
+				{
+					proj.HealAmount = Stack * increase + initial;
+				});
 			}
 		}
 	}

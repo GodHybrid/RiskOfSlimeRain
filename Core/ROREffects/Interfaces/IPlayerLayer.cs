@@ -1,5 +1,4 @@
-﻿using RiskOfSlimeRain.Core;
-using Terraria;
+﻿using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Interfaces
 {

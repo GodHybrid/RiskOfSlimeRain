@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.DataStructures;

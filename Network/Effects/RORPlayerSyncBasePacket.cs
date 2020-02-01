@@ -1,6 +1,4 @@
 using RiskOfSlimeRain.Core.ROREffects;
-using RiskOfSlimeRain.Helpers;
-using System;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;

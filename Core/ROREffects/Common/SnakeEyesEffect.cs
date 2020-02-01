@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Core;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using System;
 using System.IO;
