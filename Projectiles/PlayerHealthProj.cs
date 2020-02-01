@@ -38,7 +38,8 @@ namespace RiskOfSlimeRain.Projectiles
 				if (!player.active) continue;
 
 				int health = player.statLife;
-				if (health < minHealth && player.DistanceSQ(projectile.Center) < maxRangeSQ)
+				bool maxHealth = player.statLife == player.statLifeMax2;
+				if (!maxHealth && health < minHealth && player.DistanceSQ(projectile.Center) < maxRangeSQ)
 				{
 					minHealth = health;
 					targetIndex = i;

@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -38,7 +39,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				NPC npc = Main.npc.FirstActiveOrDefault(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16));
 				if (npc != null)
 				{
-					player.ApplyDamageToNPC(npc, (int)((initial + increase * Stack) * player.GetDamage()), 0f, 0, false);
+					int damage = (int)((initial + increase * Stack) * player.GetDamage());
+					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
+					ItemLoader.OnHitNPC(player.HeldItem, player, npc, damage, 0f, false);
+					NPCLoader.OnHitByItem(npc, player, player.HeldItem, damage, 0f, false);
+					PlayerHooks.OnHitNPC(player, player.HeldItem, npc, damage, 0f, false);
 				}
 				wireTimer = 0;
 			}
