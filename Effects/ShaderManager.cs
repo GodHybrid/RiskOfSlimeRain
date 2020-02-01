@@ -67,7 +67,7 @@ namespace RiskOfSlimeRain.Effects
 		{
 			if (Main.netMode != NetmodeID.Server)
 			{
-				CircleEffect = RiskOfSlimeRainMod.Instance.GetEffect("Effects/CircleShader/Barrier");
+				CircleEffect = RiskOfSlimeRainMod.Instance.GetEffect("Effects/CircleShader/Circle");
 			}
 		}
 

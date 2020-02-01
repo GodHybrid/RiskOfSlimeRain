@@ -53,7 +53,7 @@ namespace RiskOfSlimeRain.Projectiles
 					{
 						Effect circle;
 						//Outer ring
-						circle = ShaderManager.SetupCircleEffect(p.Center, radius + Radius, Color, Color * 0.5f);
+						circle = ShaderManager.SetupCircleEffect(p.Center, radius + Radius, Color, Color * 0.15f);
 						if (circle != null)
 						{
 							ShaderManager.ApplyToScreenOnce(spriteBatch, circle, restore: false);

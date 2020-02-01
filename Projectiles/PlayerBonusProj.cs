@@ -127,7 +127,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			/*
 			 * What happens here is: Initially, the projectile flies in the opposite direction (6 * 30 = 180 degrees)
-			 * And then curves counterclockwise towards the destination for 30 ticks
+			 * And then curves towards the destination for 30 ticks
 			 */
 			HomingTimer++;
 			Vector2 direction = target.Center + target.velocity * 5f - projectile.Center;
