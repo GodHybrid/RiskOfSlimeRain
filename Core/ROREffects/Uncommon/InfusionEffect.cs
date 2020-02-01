@@ -7,7 +7,7 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class InfusionEffect : RORUncommonEffect, IOnHit, IResetEffects
+	public class InfusionEffect : RORUncommonEffect, IOnKill, IResetEffects
 	{
 		public const float initial = 0.5f;
 		public const float increase = 0.5f;
@@ -20,12 +20,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -57,11 +57,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private void SpawnProjectile(Player player, NPC target)
 		{
-			if (target.life <= 0)
-			{
-				//The projectile reads from the effect of the owner how much health it gives him
-				PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
-			}
+			//The projectile reads from the effect of the owner how much health it gives him
+			PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
 		}
 
 		public void IncreaseBonusLife()

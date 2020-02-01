@@ -8,8 +8,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		const float increase = 0.07895f;
 
-		bool spawned = false;
-
 		public override int MaxRecommendedStack => 38;
 
 		public override string Description => $"Permanently increases maximum life by roughly {increase.ToPercent(0)}";

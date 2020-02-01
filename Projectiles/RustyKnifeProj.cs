@@ -4,6 +4,9 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	/// <summary>
+	/// This projectile, when dealing damage, won't trigger OnHitNPC by design
+	/// </summary>
 	public class RustyKnifeProj : StickyProj
 	{
 		public override void SetStaticDefaults()
