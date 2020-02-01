@@ -1,4 +1,5 @@
 using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -16,7 +17,7 @@ namespace RiskOfSlimeRain.Network.Effects
 
 		private Player Player => Main.player[WhoAmI];
 
-		private RORPlayer ModPlayer => Player.GetModPlayer<RORPlayer>();
+		private RORPlayer ModPlayer => Player.GetRORPlayer();
 
 		public RORPlayerSyncBasePacket() { }
 
@@ -40,7 +41,6 @@ namespace RiskOfSlimeRain.Network.Effects
 
 		protected override bool MidReceive(BinaryReader reader, int fromWho)
 		{
-			RORPlayer ModPlayer = Player.GetModPlayer<RORPlayer>();
 			for (int i = 0; i < Count; i++)
 			{
 				ROREffect effect = ROREffect.CreateInstanceFromNet(Player, reader);

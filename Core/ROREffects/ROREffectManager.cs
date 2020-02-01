@@ -189,9 +189,22 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		public static List<ROREffect> GetEffectsOf<T>(Player player) where T : IROREffectInterface
+		{
+			return GetEffectsOf<T>(player.GetRORPlayer());
+		}
+
 		public static List<ROREffect> GetEffectsOf<T>(RORPlayer mPlayer) where T : IROREffectInterface
 		{
 			return mPlayer.EffectByType[typeof(T)];
+		}
+
+		/// <summary>
+		/// Used to retreive an effect of type T on the player. null if not found
+		/// </summary>
+		public static T GetEffectOfType<T>(Player player) where T : ROREffect
+		{
+			return GetEffectOfType<T>(player.GetRORPlayer());
 		}
 
 		/// <summary>
@@ -237,7 +250,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)
@@ -249,7 +262,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)
@@ -261,7 +274,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void GetWeaponCrit(Player player, Item item, ref int crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
@@ -274,7 +287,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		//unused
 		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
 		{
-			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
@@ -287,7 +300,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static List<Effect> GetScreenShaders(Player player)
 		{
 			List<Effect> shaders = new List<Effect>();
-			List<ROREffect> effects = GetEffectsOf<IScreenShader>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IScreenShader>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
@@ -302,7 +315,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static void DrawPlayerLayers(Player player, List<PlayerLayer> layers)
 		{
 			List<PlayerLayer> newLayers = new List<PlayerLayer>();
-			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
@@ -358,7 +371,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
 		{
-			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
@@ -372,7 +385,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
 			bool ret = true;
-			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player.GetRORPlayer());
+			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Proccing)

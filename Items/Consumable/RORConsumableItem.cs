@@ -40,7 +40,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public sealed override bool CanUseItem(Player player)
 		{
 			//if player has the effect already, check on that. If not, check on a fresh one
-			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player.GetRORPlayer());
+			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player);
 			if (effect == null)
 			{
 				effect = ROREffect.CreateInstance(player, typeof(T));
