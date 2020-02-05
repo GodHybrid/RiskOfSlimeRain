@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain
 
 		private int WarbannerTime { get; set; }
 
-		//because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
+		//Because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
 		public bool InWarbannerRange => WarbannerTime > 0;
 
 		/// <summary>
@@ -216,12 +216,14 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
+			if (Main.gameMenu) return;
 			ROREffectManager.DrawPlayerLayers(player, layers);
 			if (InWarbannerRange) layers.Insert(0, WarbannerEffect.WarbannerLayer);
 		}
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
+			if (Main.gameMenu) return;
 			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
 			foreach (var shader in shaders)
 			{
@@ -245,6 +247,7 @@ namespace RiskOfSlimeRain
 			}
 			else
 			{
+				ROREffectManager.Populate(this);
 				new RORPlayerSyncToServerPacket(this).Send(fromWho, toWho);
 			}
 		}
