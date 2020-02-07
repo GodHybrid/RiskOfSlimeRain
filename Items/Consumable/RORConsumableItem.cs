@@ -27,8 +27,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 		#region tml hooks
 		public sealed override void SetStaticDefaults()
 		{
-			ROREffectManager.SetTexture<T>(Texture);
-
 			ROREffectManager.RegisterItem(this);
 
 			ROREffect effect = ROREffect.CreateInstanceNoPlayer(typeof(T));

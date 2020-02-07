@@ -125,18 +125,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		}
 
 		/// <summary>
-		/// This is called in the items code to set the effects texture to the item texture
-		/// </summary>
-		public static void SetTexture<T>(string texture) where T : ROREffect
-		{
-			ROREffectManager.texture[typeof(T)] = texture;
-		}
-
-		/// <summary>
 		/// This is called in the items code to register it in various data structures for further reference
 		/// </summary>
 		public static void RegisterItem<T>(RORConsumableItem<T> rItem) where T : ROREffect
 		{
+			//To set the effects texture to the item texture
+			texture[typeof(T)] = rItem.Texture;
+
+			//To register this item type in an according rarity entry
 			List<int> list = GetItemTypesOfRarity(rItem.Rarity);
 			int type = rItem.item.type;
 			if (!list.Contains(type))
@@ -145,12 +141,18 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		/// <summary>
+		/// Returns the list of item types associated with this rarity
+		/// </summary>
 		public static List<int> GetItemTypesOfRarity(ROREffectRarity rarity)
 		{
 			if (itemRarityToItemTypes.TryGetValue(rarity, out List<int> list)) return list;
 			else return new List<int>();
 		}
 
+		/// <summary>
+		/// Returns all RORConsumableItem types
+		/// </summary>
 		public static List<int> GetAllItemTypes()
 		{
 			List<int> list = new List<int>();
