@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.NPCEffects;
+using RiskOfSlimeRain.Core.ROREffects;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -36,11 +37,32 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void NPCLoot(NPC npc)
 		{
+			//Makeshift for now
+
 			if (npc.boss)
 			{
-				int effectsPresent = 0;
-				Main.player[(int)Player.FindClosest(npc.position, npc.width, npc.height)].GetModPlayer<RORPlayer>().Effects.ForEach(x => effectsPresent += x.Stack);
-				if (Main.rand.NextFloat(1f) < (2f / (Math.Max(1, effectsPresent)))) Item.NewItem((int)npc.position.X, (int)npc.position.Y, npc.width, npc.height, mod.ItemType("shit"), 1);
+				ROREffectRarity rarity = ROREffectRarity.Common;
+				//float rarityRand = Main.rand.NextFloat();
+				//if (rarityRand < 0.05f)
+				//{
+				//	rarity = ROREffectRarity.Rare;
+				//}
+				//else if (rarityRand < 0.25f)
+				//{
+				//	rarity = ROREffectRarity.Uncommon;
+				//}
+				//else common
+
+				List<int> items = ROREffectManager.GetItemTypesOfRarity(rarity);
+				if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
+
+				int itemType = Main.rand.Next(items);
+				float chance = 2f / Math.Max(1, RORWorld.downedBossCount);
+				if (Main.rand.NextFloat() < chance)
+				{
+					Item.NewItem(npc.getRect(), itemType, 1);
+					RORWorld.downedBossCount++;
+				}
 			}
 		}
 	}
