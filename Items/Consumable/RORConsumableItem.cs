@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects;
-using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
@@ -18,7 +17,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		#region properties
 		public string FlavorText => ROREffectManager.GetFlavorText<T>();
 
-		public int Rarity => ROREffectManager.GetRarity<T>();
+		public ROREffectRarity Rarity => ROREffectManager.GetRarity<T>();
 
 		public static Color FlavorColor => new Color(220, 220, 220);
 
@@ -29,6 +28,8 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public sealed override void SetStaticDefaults()
 		{
 			ROREffectManager.SetTexture<T>(Texture);
+
+			ROREffectManager.RegisterItem(this);
 
 			ROREffect effect = ROREffect.CreateInstanceNoPlayer(typeof(T));
 			if (effect.Name != string.Empty)
@@ -78,7 +79,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public override void SetDefaults()
 		{
 			item.CloneDefaults(ItemID.LifeFruit);
-			item.rare = Rarity;
+			item.rare = (int)Rarity;
 
 			//When wanting to add more SetDefaults, call base.SetDefaults() first
 		}

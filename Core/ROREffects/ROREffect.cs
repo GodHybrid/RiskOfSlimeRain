@@ -50,10 +50,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public virtual string FlavorText => string.Empty;
 
 		//Cached, so not dynamic
-		public virtual int Rarity => ItemRarityID.White;
+		public virtual ROREffectRarity Rarity => ROREffectRarity.Common;
 
 		//Cause it returns the already pulsating mouse color if rarity is white
-		public Color RarityColor => Rarity == ItemRarityID.White ? Color.White : ItemRarity.GetColor(Rarity);
+		public Color RarityColor => Rarity == ROREffectRarity.Common ? Color.White : ItemRarity.GetColor((int)Rarity);
 
 		//Dynamic
 		/// <summary>
