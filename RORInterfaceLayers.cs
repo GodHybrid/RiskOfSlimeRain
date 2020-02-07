@@ -171,23 +171,10 @@ namespace RiskOfSlimeRain
 			//Modify Main.playerDrawData first
 			List<DrawData> drawDatas = new List<DrawData>(Main.playerDrawData);
 
-			//Get the layers that contain the data about where they are from
-			List<PlayerLayer> layers = PlayerHooks.GetDrawLayers(drawPlayer);
-
-			//Exclude those layers that we add (because drawDatas is just raw data, no indication of where it's from)
-			List<int> ourModded = new List<int>();
-			for (int i = 0; i < layers.Count; i++)
-			{
-				if (layers[i].mod == RiskOfSlimeRainMod.Instance.Name)
-				{
-					ourModded.Add(i);
-				}
-			}
-
 			for (int i = 0; i < drawDatas.Count; i++)
 			{
-				if (ourModded.Contains(i)) continue;
 				DrawData data = drawDatas[i];
+				if (data.texture.Name.StartsWith("RiskOfSlimeRain")) continue;
 				//data.position += shakePosOffset * shakeTimer;
 				//data.scale += shakeScaleOffset * shakeTimer;
 				data.position += effect.shakePosOffset * effect.shakeTimer;
@@ -195,7 +182,6 @@ namespace RiskOfSlimeRain
 				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
 				data.color *= 0.05f * effect.shakeTimer;
 				drawDatas[i] = data;
-				//data.color *= 0.5f;
 			}
 
 			Main.playerDrawData.AddRange(drawDatas);
