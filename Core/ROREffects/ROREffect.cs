@@ -4,10 +4,9 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
 using Terraria.GameContent.UI;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WebmilioCommons.Networking;
+using WebmilioCommons.Networking.Serializing;
 using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Core.ROREffects

@@ -11,10 +11,10 @@ When you make such a class you have to override the `Behavior` field. It can be 
 ```csharp
 public enum NetworkPacketBehavior
     {
-    SendToClient = 0, //Only works from the server and sends to a single specified client
-    SendToAllClients = 1, //Only works from the server and sends to all clients
-    SendToServer = 2, //Only works from the client and sends to the server
-    SendToAll = 3 //Only works from the client and sends to the server, which then broadcasts to other clients (not quite sure)
+    SendToClient = 0, //Sends to a single specified client
+    SendToAllClients = 1, //Sends to all clients
+    SendToServer = 2, //Sends to the server
+    SendToAll = 3 //Sends to the server, which then broadcasts to other clients
 }
 ```
 
