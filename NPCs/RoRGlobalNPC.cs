@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.NPCs
 
 			if (npc.boss)
 			{
-				ROREffectRarity rarity = ROREffectRarity.Common;
+				RORRarity rarity = RORRarity.Common;
 				//float rarityRand = Main.rand.NextFloat();
 				//if (rarityRand < 0.05f)
 				//{

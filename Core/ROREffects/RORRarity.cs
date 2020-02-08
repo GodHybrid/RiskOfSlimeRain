@@ -2,7 +2,7 @@
 
 namespace RiskOfSlimeRain.Core.ROREffects
 {
-	public enum ROREffectRarity : int
+	public enum RORRarity : int
 	{
 		Common = ItemRarityID.White,
 		Uncommon = ItemRarityID.Green,

@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		//And that they end with this
 		public static readonly string suffix = "Effect";
 
-		private static Dictionary<ROREffectRarity, List<int>> itemRarityToItemTypes;
+		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
 		//Used to build the dictionary EffectByType on RORPlayer
 		private static Type[] validInterfaces;
@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		private static Type[] interfaceCanProc;
 		//Those two need caching cause they are used in ModifyTooltips dynamically for multiline tooltips with color
 		private static Dictionary<Type, string> flavorText;
-		private static Dictionary<Type, ROREffectRarity> rarity;
+		private static Dictionary<Type, RORRarity> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
 
@@ -44,7 +44,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<Type> canProcs = new List<Type>();
 			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
 			flavorText = new Dictionary<Type, string>();
-			rarity = new Dictionary<Type, ROREffectRarity>();
+			rarity = new Dictionary<Type, RORRarity>();
 			texture = new Dictionary<Type, string>();
 			foreach (var type in types)
 			{
@@ -81,9 +81,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			validInterfaces = interfaces.ToArray();
 			interfaceCanProc = canProcs.ToArray();
 
-			itemRarityToItemTypes = new Dictionary<ROREffectRarity, List<int>>();
+			itemRarityToItemTypes = new Dictionary<RORRarity, List<int>>();
 
-			foreach (ROREffectRarity rarity in Enum.GetValues(typeof(ROREffectRarity)))
+			foreach (RORRarity rarity in Enum.GetValues(typeof(RORRarity)))
 			{
 				itemRarityToItemTypes.Add(rarity, new List<int>());
 			}
@@ -113,7 +113,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return flavorText[typeof(T)];
 		}
 
-		public static ROREffectRarity GetRarity<T>() where T : ROREffect
+		public static RORRarity GetRarity<T>() where T : ROREffect
 		{
 			return rarity[typeof(T)];
 		}
@@ -144,7 +144,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// <summary>
 		/// Returns the list of item types associated with this rarity
 		/// </summary>
-		public static List<int> GetItemTypesOfRarity(ROREffectRarity rarity)
+		public static List<int> GetItemTypesOfRarity(RORRarity rarity)
 		{
 			if (itemRarityToItemTypes.TryGetValue(rarity, out List<int> list)) return list;
 			else return new List<int>();
@@ -157,7 +157,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			List<int> list = new List<int>();
 
-			foreach (ROREffectRarity rarity in Enum.GetValues(typeof(ROREffectRarity)))
+			foreach (RORRarity rarity in Enum.GetValues(typeof(RORRarity)))
 			{
 				list.AddRange(GetItemTypesOfRarity(rarity));
 			}

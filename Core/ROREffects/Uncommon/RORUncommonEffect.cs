@@ -4,6 +4,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public abstract class RORUncommonEffect : ROREffect
 	{
-		public override ROREffectRarity Rarity => ROREffectRarity.Uncommon;
+		public override RORRarity Rarity => RORRarity.Uncommon;
 	}
 }

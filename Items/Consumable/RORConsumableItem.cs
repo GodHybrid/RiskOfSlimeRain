@@ -17,7 +17,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		#region properties
 		public string FlavorText => ROREffectManager.GetFlavorText<T>();
 
-		public ROREffectRarity Rarity => ROREffectManager.GetRarity<T>();
+		public RORRarity Rarity => ROREffectManager.GetRarity<T>();
 
 		public static Color FlavorColor => new Color(220, 220, 220);
 

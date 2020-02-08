@@ -4,6 +4,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 {
 	public abstract class RORBossEffect : ROREffect
 	{
-		public override ROREffectRarity Rarity => ROREffectRarity.Boss;
+		public override RORRarity Rarity => RORRarity.Boss;
 	}
 }
