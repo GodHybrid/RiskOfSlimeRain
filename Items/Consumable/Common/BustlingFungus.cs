@@ -13,6 +13,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.JungleSpores, 250);
 			recipe.AddIngredient(ItemID.TealMushroom, 10);
 			recipe.AddIngredient(ItemID.GreenMushroom, 10);
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

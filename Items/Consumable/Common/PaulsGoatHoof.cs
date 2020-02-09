@@ -9,9 +9,9 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
+			recipe.AddRecipeGroup("RoR:FastBoots", 1);
 			recipe.AddIngredient(ItemID.Bone, 355);
 			recipe.AddIngredient(ItemID.FossilOre, 280);
-			recipe.AddRecipeGroup("RoR:FastBoots", 1);
 			recipe.AddIngredient(ItemID.Rally, 3);
 
 			recipe.SetResult(this, 1);

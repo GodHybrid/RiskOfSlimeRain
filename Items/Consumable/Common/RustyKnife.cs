@@ -9,8 +9,8 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.ThrowingKnife, 900);
 			recipe.AddRecipeGroup("RoR:EvilWater", 60);
+			recipe.AddIngredient(ItemID.ThrowingKnife, 900);
 			recipe.AddIngredient(ItemID.SharkFin, 18);
 			recipe.AddIngredient(ItemID.Swordfish, 5);
 

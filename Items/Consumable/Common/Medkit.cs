@@ -13,6 +13,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Daybloom, 650);
 			recipe.AddIngredient(ItemID.BottledHoney, 260);
 			recipe.AddIngredient(ItemID.Bezoar, 1);
+
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

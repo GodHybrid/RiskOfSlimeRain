@@ -6,24 +6,6 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	public class Warbanner : RORConsumableItem<WarbannerEffect>
 	{
-		//public override void Initialize()
-		//{
-		//	description = "Chance to drop an empowering banner";
-		//	flavorText = "Very very valuable\nDon't drop it; it's worth more than you";
-		//}
-
-		//public override void ApplyEffect(RORPlayer mPlayer)
-		//{
-		//	mPlayer.warbanners++;
-		//}
-
-		//public override void ResetEffect(RORPlayer mPlayer)
-		//{
-		//	mPlayer.warbanners = 0;
-		//	RORWorld.pos.Clear();
-		//	RORWorld.radius.Clear();
-		//}
-
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
