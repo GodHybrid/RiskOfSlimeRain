@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Projectiles
 			for (int i = 0; i < Main.maxPlayers; i++)
 			{
 				Player player = Main.player[i];
-				if (!player.active) continue;
+				if (!player.active || player.dead) continue;
 
 				int health = player.statLife;
 				bool maxHealth = player.statLife == player.statLifeMax2;

@@ -11,7 +11,6 @@ namespace RiskOfSlimeRain.Network
 	{
 		public static void Load()
 		{
-			//NetworkPacketLoader.Instance.TryLoad();
 			NetworkTypeSerializers.AddSerializer<CombatText>(new NetworkTypeSerializer(ReadCombatText, WriteCombatText));
 		}
 
@@ -23,7 +22,7 @@ namespace RiskOfSlimeRain.Network
 			Color color = reader.ReadRGB();
 			string text = reader.ReadString();
 			BitsByte bits = reader.ReadByte();
-			return CombatText.NewText(new Rectangle((int)position.X, (int)position.Y, 1, 1), color, text, bits[0], bits[1]);
+			return CombatText.NewText(new Rectangle((int)position.X, (int)position.Y, 0, 0), color, text, bits[0], bits[1]);
 		}
 
 		public static void WriteCombatText(this NetworkPacket networkPacket, ModPacket modPacket, object value)
