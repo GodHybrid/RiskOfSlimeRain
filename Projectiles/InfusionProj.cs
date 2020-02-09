@@ -32,10 +32,9 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				effect.IncreaseBonusLife();
 				int index = CombatText.NewText(target.getRect(), CombatText.DamagedHostileCrit, (int)effect.CurrentIncrease, false, false);
-				if (Main.netMode == NetmodeID.MultiplayerClient && index != 100)
+				if (Main.netMode == NetmodeID.MultiplayerClient && index != Main.maxCombatText)
 				{
-					CombatText combatText = Main.combatText[index];
-					new CombatTextPacket(combatText).Send();
+					new CombatTextPacket(index).Send();
 				}
 			}
 		}

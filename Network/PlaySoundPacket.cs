@@ -1,7 +1,6 @@
 using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
-using Terraria.ID;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
@@ -9,7 +8,7 @@ namespace RiskOfSlimeRain.Network
 {
 	public class PlaySoundPacket : NetworkPacket
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
 
 		public byte Type { get; set; }
 
@@ -37,10 +36,7 @@ namespace RiskOfSlimeRain.Network
 
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				Main.PlaySound(Type, X, Y, Style, SoundHelper.FixVolume(VolumeScale), PitchOffset);
-			}
+			Main.PlaySound(Type, X, Y, Style, SoundHelper.FixVolume(VolumeScale), PitchOffset);
 			return base.PostReceive(reader, fromWho);
 		}
 	}
