@@ -28,10 +28,9 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.FieryGreatsword, 2);
-			recipe.AddIngredient(ItemID.HellwingBow, 1);
 			recipe.AddIngredient(ItemID.BorealWood, 505);
 			recipe.AddIngredient(ItemID.TatteredCloth, 60);
-			recipe.AddIngredient(ItemID.InfernoPotion, 50);
+			recipe.AddIngredient(ItemID.InfernoPotion, 9);
 
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();

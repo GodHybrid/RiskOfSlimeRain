@@ -9,11 +9,10 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bone, 999);
-			recipe.AddIngredient(ItemID.Stinger, 400);
-			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
-			recipe.AddIngredient(ItemID.CoralstoneBlock, 55);
-			recipe.AddIngredient(ItemID.SharkFin, 250);
+			recipe.AddIngredient(ItemID.FireblossomSeeds, 600);
+			recipe.AddIngredient(ItemID.Gel, 800);
+			recipe.AddIngredient(ItemID.Hellstone, 260);
+			recipe.AddIngredient(ItemID.TinCan, 45);
 
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
