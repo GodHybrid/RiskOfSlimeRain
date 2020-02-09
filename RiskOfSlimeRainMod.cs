@@ -54,6 +54,13 @@ namespace RiskOfSlimeRain
 			});
 			RecipeGroup.RegisterGroup("RoR:Tier3HMBar", HMTier3Bar_Group);
 
+			RecipeGroup SilvTung_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Tier 3 incipient bar", new int[]
+				{
+					ItemID.SilverBar,
+					ItemID.TungstenBar
+				});
+			RecipeGroup.RegisterGroup("RoR:SilvTungBar", SilvTung_Group);
+
 			RecipeGroup GoldPlat_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Tier 4 incipient bar", new int[]
 			{
 				ItemID.PlatinumBar,
@@ -109,6 +116,21 @@ namespace RiskOfSlimeRain
 				#endregion
 			});
 			RecipeGroup.RegisterGroup("RoR:AnyChest", Chest_Group);
+
+			RecipeGroup Jellyfish_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Jellyfish", new int[]
+			{
+				ItemID.BlueJellyfish,
+				ItemID.GreenJellyfish,
+				ItemID.PinkJellyfish
+			});
+			RecipeGroup.RegisterGroup("RoR:Jellyfish", Jellyfish_Group);
+
+			RecipeGroup EvilWater_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil water", new int[]
+			{
+				ItemID.UnholyWater,
+				ItemID.BloodWater
+			});
+			RecipeGroup.RegisterGroup("RoR:EvilWater", EvilWater_Group);
 
 			RecipeGroup EvilMat_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " common evil material", new int[]
 			{

@@ -9,11 +9,10 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.GlowingMushroom, 500);
-			recipe.AddIngredient(ItemID.RestorationPotion, 200);
+			recipe.AddIngredient(ItemID.GlowingMushroom, 300);
 			recipe.AddIngredient(ItemID.JungleSpores, 250);
-			recipe.AddIngredient(ItemID.TealMushroom, 50);
-			recipe.AddIngredient(ItemID.GreenMushroom, 50);
+			recipe.AddIngredient(ItemID.TealMushroom, 10);
+			recipe.AddIngredient(ItemID.GreenMushroom, 10);
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

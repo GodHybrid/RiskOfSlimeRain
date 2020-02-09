@@ -10,10 +10,9 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Bottle, 1);
-			recipe.AddIngredient(ItemID.RegenerationPotion, 400);
-			recipe.AddIngredient(ItemID.NeonTetra, 250);
+			recipe.AddIngredient(ItemID.RegenerationPotion, 45);
+			recipe.AddIngredient(ItemID.NeonTetra, 35);
 			recipe.AddIngredient(ItemID.DaybloomSeeds, 600);
-			recipe.AddIngredient(ItemID.Damselfish, 200);
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

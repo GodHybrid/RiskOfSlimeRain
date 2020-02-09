@@ -9,11 +9,12 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddIngredient(ItemID.Bone, 999);
-			recipe.AddIngredient(ItemID.Stinger, 400);
+			//RORPlayer p = ModContent.GetInstance<RORPlayer>();
+			//int present = ROREffectManager.GetEffectOfType<BarbedWireEffect>(p).Stack;
+			recipe.AddIngredient(RecipeGroupID.IronBar, 60);
+			recipe.AddIngredient(ItemID.ThornChakram, 3);
 			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
-			recipe.AddIngredient(ItemID.CoralstoneBlock, 55);
-			recipe.AddIngredient(ItemID.SharkFin, 250);
+			recipe.AddIngredient(ItemID.Wire, 210);
 
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();

@@ -28,6 +28,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			mPlayer.Effects.Clear();
 			ROREffectManager.Clear(mPlayer);
 			WarbannerManager.Clear();
+			RORWorld.downedBossCount = 0;
 			return true;
 		}
 

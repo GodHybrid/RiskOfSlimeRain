@@ -10,10 +10,9 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.RedCounterweight, 5);
-			recipe.AddIngredient(ItemID.Ruby, 172);
-			recipe.AddIngredient(ItemID.RichMahogany, 500);
+			recipe.AddIngredient(ItemID.Ruby, 62);
+			recipe.AddIngredient(ItemID.RichMahogany, 410);
 			recipe.AddIngredient(ItemID.RedAcidDye, 10);
-			recipe.AddIngredient(ItemID.SharkFin, 150);
 
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
