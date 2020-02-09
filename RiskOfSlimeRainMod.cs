@@ -3,8 +3,12 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Network;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
@@ -31,9 +35,95 @@ namespace RiskOfSlimeRain
 			RORInterfaceLayers.Load();
 		}
 
+		internal const BindingFlags BF_STATIC = BindingFlags.Static | BindingFlags.NonPublic;
+		internal const BindingFlags BF_INSTANCE = BindingFlags.Instance | BindingFlags.NonPublic;
+
+		//static List<BossInfo>
+
+		public static IList bossList;
+
+		public static List<Func<bool>> downedPreHMBossList;
+
+		public static List<Func<bool>> downedHMBossList;
+
+		public static void BossesDefeated(out int preHM, out int HM)
+		{
+			preHM = 0;
+			HM = 0;
+			foreach (var downed in downedPreHMBossList)
+			{
+				if (downed()) preHM++;
+			}
+			if (NPC.downedBoss2) preHM--;
+
+			foreach (var downed in downedHMBossList)
+			{
+				if (downed()) HM++;
+			}
+		}
+
 		public override void PostSetupContent()
 		{
 			RORNetworkTypeSerializers.Load();
+
+			Type BossChecklistModType = ModLoader.GetMod("BossChecklist").GetType();
+
+			FieldInfo bossTrackerField = BossChecklistModType.GetField("bossTracker", BF_STATIC);
+			Type bossTrackerType = bossTrackerField.FieldType;
+			FieldInfo SortedBossesField = bossTrackerType.GetField("SortedBosses", BF_INSTANCE);
+
+			Type BossInfoType = ModLoader.GetMod("BossChecklist").Code.GetType("BossChecklist.BossInfo");
+
+			//Type t;
+			//Type listType = typeof(List<>);
+			//Type constructedListType = listType.MakeGenericType(bossTrackerType);
+
+
+			//var instancedList = (IList)typeof(List<>)//Create a Generic List that can hold our type
+			// .MakeGenericType(SortedBossesType)
+			// .GetConstructor(Type.EmptyTypes)
+			// .Invoke(null);
+
+			object bossTracker = bossTrackerField.GetValue(null);
+
+			IList bossInfoList = (IList)SortedBossesField.GetValue(bossTracker);
+			bossList = (IList)typeof(List<>)//Create a Generic List that can hold our type
+				.MakeGenericType(BossInfoType)
+				.GetConstructor(Type.EmptyTypes)
+				.Invoke(null);
+
+			downedPreHMBossList = new List<Func<bool>>();
+
+			downedHMBossList = new List<Func<bool>>();
+
+			foreach (object bossInfo in bossInfoList)
+			{
+				FieldInfo typeField = BossInfoType.GetField("type", BF_INSTANCE);
+				Type EntryTypeType = typeField.FieldType;
+				object type = typeField.GetValue(bossInfo);
+
+				object boss = Enum.Parse(EntryTypeType, "Boss");
+
+				if (type.Equals(boss))
+				{
+					bossList.Add(bossInfo);
+
+					FieldInfo progressionField = BossInfoType.GetField("progression", BF_INSTANCE);
+					float progression = (float)progressionField.GetValue(bossInfo);
+
+					FieldInfo downedField = BossInfoType.GetField("downed", BF_INSTANCE);
+					Func<bool> downed = (Func<bool>)downedField.GetValue(bossInfo);
+
+					if (progression <= 6f)
+					{
+						downedPreHMBossList.Add(downed);
+					}
+					else
+					{
+						downedHMBossList.Add(downed);
+					}
+				}
+			}
 		}
 
 		public override void Unload()

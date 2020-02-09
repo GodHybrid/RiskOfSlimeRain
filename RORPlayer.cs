@@ -290,6 +290,10 @@ namespace RiskOfSlimeRain
 		{
 			//This is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
+
+			RiskOfSlimeRainMod.BossesDefeated(out int preHM, out int HM);
+			Main.NewText("prehm: " + preHM + "/" + RiskOfSlimeRainMod.downedPreHMBossList.Count.ToString());
+			Main.NewText("hm: " + HM + "/" + RiskOfSlimeRainMod.downedHMBossList.Count.ToString());
 		}
 
 		public override void PostUpdate()
