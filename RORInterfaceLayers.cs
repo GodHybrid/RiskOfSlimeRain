@@ -17,7 +17,11 @@ namespace RiskOfSlimeRain
 {
 	public static class RORInterfaceLayers
 	{
-		private const int INVENTORY_SIZE = 47;
+		private const int inventorySize = 47;
+
+		private const int iconSize = 32;
+		private const int iconPadding = iconSize + 6;
+		private const int verticalLineHeight = 50;
 
 		public static string Name => ModContent.GetInstance<RiskOfSlimeRainMod>().Name;
 
@@ -59,6 +63,10 @@ namespace RiskOfSlimeRain
 
 		private static readonly GameInterfaceDrawMethod Effects = delegate
 		{
+			if (!Main.playerInventory && Config.Instance.OnlyShowWhenOpenInventory)
+			{
+				return true;
+			}
 			Player player = Main.LocalPlayer;
 			List<ROREffect> effects = player.GetRORPlayer().Effects;
 			if (effects.Count == 0) return true;
@@ -68,10 +76,15 @@ namespace RiskOfSlimeRain
 			Rectangle sourceRect;
 			Rectangle destRect;
 
-			int numHorizontal = (Main.screenWidth - 3 * INVENTORY_SIZE) / 38;
+
+			//int initialVerticalOffset = Main.screenHeight - 30;
+			int initialVerticalOffset = (int)(Main.screenHeight * (1 - Config.Instance.ItemUIVerticalOffset));
+
+			int numHorizontal = (Main.screenWidth - 3 * inventorySize) / iconPadding;
+			if (numHorizontal == 0) numHorizontal = 1;
 			int lineOffset = 0;
 			int numLines = effects.Count / (numHorizontal + 1);
-			int yStart = Main.screenHeight - 30 - numLines * 50;
+			int yStart = initialVerticalOffset - numLines * verticalLineHeight;
 			ROREffect effect;
 			Texture2D texture;
 
@@ -82,24 +95,37 @@ namespace RiskOfSlimeRain
 
 				lineOffset = i / numHorizontal;
 				//2 * INVENTORY_SIZE is the distance needed to not overlap with recipe UI
-				xPosition = 2 * INVENTORY_SIZE + (i - lineOffset * numHorizontal) * 38;
+				xPosition = 2 * inventorySize + (i - lineOffset * numHorizontal) * iconPadding;
 
-				yPosition = yStart + lineOffset * 50;
+				yPosition = yStart + lineOffset * verticalLineHeight;
 
 				sourceRect = texture.Bounds;
 				int width = sourceRect.Width;
 				int height = sourceRect.Height;
+
+				//SCALING
+				float scale = 1f;
+				if (width > height) scale = (float)iconSize / width;
+				else scale = (float)iconSize / height;
+
+				width = (int)(width * scale);
+				height = (int)(height * scale);
+
 				destRect = Utils.CenteredRectangle(new Vector2(xPosition, yPosition), new Vector2(width, height));
+
 				Vector2 Bottom = new Vector2(xPosition, yPosition) + Main.screenPosition;
+
 				//destRect.Y = (int)yPosition - height;
-				if (i == 0)
-				{
-					//Utils.DrawLine(Main.spriteBatch, Bottom, new Vector2(Bottom.X + 500, Bottom.Y), Color.White, Color.White, 1);
-				}
-				//Utils.DrawLine(Main.spriteBatch, new Vector2(Center.X -1, Center.Y - 1), new Vector2(Center.X + 2, Center.Y + 2), Color.Green, Color.White, 4);
+				//if (i == 0)
+				//{
+				//	Utils.DrawLine(Main.spriteBatch, Bottom, new Vector2(Bottom.X + 500, Bottom.Y), Color.White, Color.White, 1);
+				//}
+				//Vector2 Center = destRect.Center.ToVector2() + Main.screenPosition;
+				//Utils.DrawLine(Main.spriteBatch, new Vector2(Center.X - 10, Center.Y - 10), new Vector2(Center.X + 20, Center.Y + 20), Color.Green, Color.White, 4);
 
 				Color color = Color.White * 0.8f;
-				if (destRect.Contains(new Point(Main.mouseX, Main.mouseY)))
+				Rectangle mouseCheck = Utils.CenteredRectangle(new Vector2(xPosition, yPosition), new Vector2(32));
+				if (mouseCheck.Contains(new Point(Main.mouseX, Main.mouseY)))
 				{
 					hoverIndex = i;
 					destRect.Inflate(2, 2);
@@ -113,6 +139,7 @@ namespace RiskOfSlimeRain
 				string text = "x" + effect.Stack.ToString();
 				if (!effect.FullStack) text += "/" + effect.UnlockedStack;
 				Vector2 length = Main.fontItemStack.MeasureString(text);
+
 				bottomCenter.Y -= length.Y / 2;
 				color = Color.White;
 				if (effect.Capped)
@@ -175,8 +202,6 @@ namespace RiskOfSlimeRain
 			{
 				DrawData data = drawDatas[i];
 				if (data.texture.Name.StartsWith("RiskOfSlimeRain")) continue;
-				//data.position += shakePosOffset * shakeTimer;
-				//data.scale += shakeScaleOffset * shakeTimer;
 				data.position += effect.shakePosOffset * effect.shakeTimer;
 				data.scale += effect.shakeScaleOffset * effect.shakeTimer;
 				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
@@ -191,12 +216,16 @@ namespace RiskOfSlimeRain
 
 		public static void Update(Player player)
 		{
-			if (!Config.Instance.CustomStacking) return;
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1)
 			{
+				if (!Config.Instance.CustomStacking)
+				{
+					hoverIndex = -1;
+					return;
+				}
 				RORPlayer mPlayer = player.GetRORPlayer();
 				List<ROREffect> effects = mPlayer.Effects;
-				//this stuff is here cause only here resetting scrollwheel status works properly
+				//This stuff is here cause only here resetting scrollwheel status works properly
 				int oldStack = effects[hoverIndex].Stack;
 				if (PlayerInput.ScrollWheelDelta > 0)
 				{
