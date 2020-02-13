@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return new PlayerLayerParams("Textures/BarbedWire", Vector2.Zero, Color.White * Alpha, scale: 3f);
+			return new PlayerLayerParams("Textures/BarbedWire", Vector2.Zero, Color.White * Alpha, scale: 1f);
 		}
 
 		public Effect GetScreenShader(Player player)
