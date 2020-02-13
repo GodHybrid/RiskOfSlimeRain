@@ -354,61 +354,64 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return shaders;
 		}
 
-		public static void DrawPlayerLayers(Player player, List<PlayerLayer> layers)
+		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
 		{
-			List<PlayerLayer> newLayers = new List<PlayerLayer>();
-			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(player);
+			if (drawInfo.shadow != 0f)
+			{
+				return;
+			}
+			Player dPlayer = drawInfo.drawPlayer;
+
+			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
+			List<PlayerLayerParams> allParameters = new List<PlayerLayerParams>();
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
 				{
-					PlayerLayerParams parameters = ((IPlayerLayer)effect).GetPlayerLayerParams(player);
+					PlayerLayerParams parameters = ((IPlayerLayer)effect).GetPlayerLayerParams(dPlayer);
 					if (parameters != null)
 					{
-						newLayers.Add(new PlayerLayer("RiskOfSlimeRain", effect.Name, PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
-						{
-							if (drawInfo.shadow != 0f)
-							{
-								return;
-							}
-							Player dPlayer = drawInfo.drawPlayer;
-
-							Texture2D tex = parameters.Texture;
-							float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
-							float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
-
-							Vector2 off = parameters.Offset;
-							SpriteEffects spriteEffects = SpriteEffects.None;
-
-							if (dPlayer.gravDir < 0f)
-							{
-								off.Y = -off.Y;
-								spriteEffects = SpriteEffects.FlipVertically;
-							}
-							drawY += off.Y + dPlayer.gfxOffY;
-							drawX += off.X;
-
-							Color color = parameters.Color ?? Color.White;
-							if (!(parameters.IgnoreAlpha ?? false))
-							{
-								color *= (255 - dPlayer.immuneAlpha) / 255f;
-							}
-
-							Rectangle sourceRect = parameters.GetFrame();
-
-							DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
-							{
-								ignorePlayerRotation = true
-							};
-							Main.playerDrawData.Add(data);
-						}));
+						allParameters.Add(parameters);
 					}
 				}
 			}
-			foreach (var layer in newLayers)
+
+			foreach (var parameters in allParameters)
 			{
-				layers.Insert(0, layer);
+				Texture2D tex = parameters.Texture;
+				float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
+				float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
+
+				Vector2 off = parameters.Offset;
+				SpriteEffects spriteEffects = SpriteEffects.None;
+
+				if (dPlayer.gravDir < 0f)
+				{
+					off.Y = -off.Y;
+					spriteEffects = SpriteEffects.FlipVertically;
+				}
+				drawY += off.Y + dPlayer.gfxOffY;
+				drawX += off.X;
+
+				Color color = parameters.Color ?? Color.White;
+				if (!(parameters.IgnoreAlpha ?? false))
+				{
+					color *= (255 - dPlayer.immuneAlpha) / 255f;
+				}
+
+				Rectangle sourceRect = parameters.GetFrame();
+
+				DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
+				{
+					ignorePlayerRotation = true
+				};
+				Main.playerDrawData.Add(data);
 			}
+		});
+
+		public static void DrawPlayerLayers(Player player, List<PlayerLayer> layers)
+		{
+			layers.Insert(0, AllInOne);
 		}
 
 		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
