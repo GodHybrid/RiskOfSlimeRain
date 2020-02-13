@@ -354,7 +354,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return shaders;
 		}
 
-		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+		public static readonly PlayerLayer ParentLayer = PlayerLayer.MiscEffectsBack;
+
+		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", ParentLayer, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)
 			{

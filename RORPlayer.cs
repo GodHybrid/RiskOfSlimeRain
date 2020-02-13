@@ -224,6 +224,8 @@ namespace RiskOfSlimeRain
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
 			if (Main.gameMenu) return;
+			if (!ROREffectManager.ParentLayer.visible) return;
+
 			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
 			foreach (var shader in shaders)
 			{
