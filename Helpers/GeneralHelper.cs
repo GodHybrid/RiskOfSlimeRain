@@ -35,14 +35,5 @@ namespace RiskOfSlimeRain.Helpers
 				Main.NewText(message);
 			}
 		}
-
-		/// <summary>
-		/// For using it like this: recipe.AddRecipeGroupID(RecipeGroupID.IronBar, 10);
-		/// </summary>
-		public static void AddRecipeGroupID(this ModRecipe recipe, int id, int stack)
-		{
-			string groupName = RecipeGroup.recipeGroupIDs.FirstOrDefault(x => x.Value == id).Key;
-			recipe.AddRecipeGroup(groupName, stack);
-		}
 	}
 }
