@@ -46,7 +46,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
-			if (ready && failedAttempts < maxIncrease && player.statLife - damage < player.statLifeMax2 * 0.05)
+			if (ready && failedAttempts < maxIncrease && player.statLife - damage < player.statLifeMax2 * 0.1)
 			{
 				failedAttempts++;
 				ready = false;

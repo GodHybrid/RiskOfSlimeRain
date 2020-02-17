@@ -102,7 +102,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Missing effect sprites.
 * [x][x]Snake Eyes - falling below 10% increases the critical chance by 6%. The effect 6 times.\
 **Stacking effect:** Further increases crit chance by 3% for each time the player's in peril.\
-		* Works as intended. *As the shrines don't exist yet, the activation requirements have been changed to a state of peril(<2% HP). Will need to change them once the shrines are in.*\
+		* Works as intended. *As the shrines don't exist yet, the activation requirements have been changed to a state of peril(<10% HP). Will need to change them once the shrines are in.*\
 		* Graphics work as intended.
 * [x][ ]Soldier's Syringe - Increased attack speed by 15%.\
 **Stacking effect:**  further increase by 15%, up to 13 times, maxing at +195%.\
