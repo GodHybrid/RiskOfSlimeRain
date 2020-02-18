@@ -21,6 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public bool increment = true;
 
+		public override string Name => "Soldier's Syringe";
 		public override int MaxRecommendedStack => 13;
 
 		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}";
