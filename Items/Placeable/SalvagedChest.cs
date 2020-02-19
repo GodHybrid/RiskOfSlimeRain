@@ -3,6 +3,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Placeable
 {
+	/*
 	public class SalvagedChest : ModItem
 	{
 		public override void SetStaticDefaults()
@@ -34,4 +35,5 @@ namespace RiskOfSlimeRain.Items.Placeable
 			recipe.AddRecipe();
 		}
 	}
+	*/
 }

@@ -11,6 +11,7 @@ using Terraria.ObjectData;
 
 namespace RiskOfSlimeRain.Tiles
 {
+	/*
 	public class SalvagedChestTile : ModTile
 	{
 		public override void SetDefaults()
@@ -199,4 +200,5 @@ namespace RiskOfSlimeRain.Tiles
 			}
 		}
 	}
+	*/
 }
