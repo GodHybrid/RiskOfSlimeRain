@@ -44,6 +44,7 @@ namespace RiskOfSlimeRain.Network.Effects
 			for (int i = 0; i < Count; i++)
 			{
 				ROREffect effect = ROREffect.CreateInstanceFromNet(Player, reader);
+				if (effect == null) return base.MidReceive(reader, fromWho);
 				ModPlayer.Effects.Add(effect);
 			}
 			//GeneralHelper.Print(GetType().Name + " " + (DateTime.Now.Ticks % 1000) + " receiving " + Player.name + " " + Count + " effects");

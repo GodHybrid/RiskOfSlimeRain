@@ -25,6 +25,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public string TypeName { get; private set; }
 
+		/// <summary>
+		/// The ID of this effect for mp purposes
+		/// </summary>
+		public int Id => ROREffectManager.GetIdOfEffect(GetType());
+
 		public Player Player { get; private set; }
 
 		/// <summary>
@@ -345,8 +350,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static ROREffect CreateInstanceFromNet(Player player, BinaryReader reader)
 		{
-			string typeName = reader.ReadString();
-			ROREffect effect = CreateInstance(player, typeName);
+			byte id = reader.ReadByte();
+			Type effectType = ROREffectManager.GetEffectOfId(id);
+			if (effectType == null) return null;
+			ROREffect effect = CreateInstance(player, effectType);
 			effect.Receive(reader);
 			return effect;
 		}
@@ -356,7 +363,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public void SendOnEnter(BinaryWriter writer)
 		{
-			writer.Write(TypeName);
+			writer.Write((byte)Id);
 			Send(writer);
 		}
 

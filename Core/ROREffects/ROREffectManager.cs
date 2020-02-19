@@ -26,6 +26,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
+		//Used to index each effect type for mp
+		private static Type[] indexedEffects;
 		//Used to build the dictionary EffectByType on RORPlayer
 		private static Type[] validInterfaces;
 		//Used to check if an effect procs or not
@@ -40,6 +42,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			//Reflection shenanigans
 			Type[] types = typeof(ROREffectManager).Assembly.GetTypes();
+			List<Type> effectTypes = new List<Type>();
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
 			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
@@ -75,9 +78,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
 					flavorText[type] = effect.FlavorText;
 					rarity[type] = effect.Rarity;
+					effectTypes.Add(type);
 					loadedTypeNamespaceToName.Add(type.Name, type.Namespace);
 				}
 			}
+			indexedEffects = effectTypes.ToArray();
 			validInterfaces = interfaces.ToArray();
 			interfaceCanProc = canProcs.ToArray();
 
@@ -229,6 +234,31 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				value.Clear();
 			}
+		}
+
+		/// <summary>
+		/// Used to retreive the type of an effect based on its ID
+		/// </summary>
+		public static Type GetEffectOfId(int id)
+		{
+			if (id >= 0 && id < indexedEffects.Length) return indexedEffects[id];
+			else return null; //needs to be catched
+		}
+
+		/// <summary>
+		/// Used to retreive ID of an effect
+		/// </summary>
+		public static int GetIdOfEffect<T>() where T : ROREffect
+		{
+			return GetIdOfEffect(typeof(T));
+		}
+
+		/// <summary>
+		/// Used to retreive ID of an effect type
+		/// </summary>
+		public static int GetIdOfEffect(Type type)
+		{
+			return Array.IndexOf(indexedEffects, type);
 		}
 
 		public static List<ROREffect> GetEffectsOf<T>(Player player) where T : IROREffectInterface
