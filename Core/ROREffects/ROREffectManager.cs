@@ -120,7 +120,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static string GetTexture(Type type)
 		{
-			if (!texture.ContainsKey(type)) return "";
+			if (!texture.ContainsKey(type)) return "RiskOfSlimeRain/Empty";
 			return texture[type];
 		}
 
