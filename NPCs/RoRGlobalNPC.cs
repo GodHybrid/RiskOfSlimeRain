@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.NPCs
@@ -56,14 +57,54 @@ namespace RiskOfSlimeRain.NPCs
 				List<int> items = ROREffectManager.GetItemTypesOfRarity(rarity);
 				if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
 
-				int itemType = Main.rand.Next(items);
+				//int itemType = Main.rand.Next(items);
+				RORWorld.downedBossCount = 0;
+				int itemTypeFunc() => Main.rand.Next(items);
 				float chance = 2f / Math.Max(1, RORWorld.downedBossCount);
 				if (Main.rand.NextFloat() < chance)
 				{
-					Item.NewItem(npc.getRect(), itemType, 1);
+					DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), itemTypeFunc);
+					//Item.NewItem(npc.getRect(), itemType, 1);
 					RORWorld.downedBossCount++;
 				}
 			}
+		}
+
+		/// <summary>
+		/// Alternative, static version of npc.DropItemInstanced. Checks the playerCondition delegate before syncing/spawning the item
+		/// </summary>
+		public static void DropItemInstanced(NPC npc, Vector2 Position, Vector2 HitboxSize, Func<int> itemTypeFunc, int itemStack = 1, Func<NPC, Player, bool> condition = null, bool interactionRequired = true)
+		{
+			if (Main.netMode == NetmodeID.Server)
+			{
+				//Slightly modified from vanilla here: instead of spawning 1 item, then sending each player this item, spawn a new item and only send it to that player
+				for (int p = 0; p < 255; p++)
+				{
+					if (Main.player[p].active && (npc.playerInteraction[p] || !interactionRequired))
+					{
+						if (condition != null && condition(npc, Main.player[p]) ||
+							condition == null)
+						{
+							int itemType = itemTypeFunc();
+							int item = Item.NewItem((int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemType, itemStack, true);
+							Main.itemLockoutTime[item] = 54000;
+							NetMessage.SendData(MessageID.InstancedItem, p, -1, null, item);
+							Main.item[item].active = false;
+						}
+					}
+				}
+			}
+			else if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				if (condition != null && condition(npc, Main.LocalPlayer) ||
+					condition == null)
+					Item.NewItem((int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemTypeFunc(), itemStack);
+			}
+		}
+
+		public static void DropItemInstanced(NPC npc, Vector2 Position, Vector2 HitboxSize, int itemType, int itemStack = 1, Func<NPC, Player, bool> condition = null, bool interactionRequired = true)
+		{
+			DropItemInstanced(npc, Position, HitboxSize, () => itemType, itemStack, condition, interactionRequired);
 		}
 	}
 }
