@@ -126,6 +126,84 @@ namespace RiskOfSlimeRain
 			}
 		}
 
+		internal class BossInfo
+		{
+			internal string key = "";
+			internal float progression = 0f;
+			internal string displayName = "";
+			internal List<int> npcIDs = new List<int>();
+			internal Func<bool> downed = () => false;
+
+			internal bool isBoss = false;
+			internal bool isMiniboss = false;
+			internal bool isEvent = false;
+
+			internal List<int> spawnItem = new List<int>();
+			internal List<int> loot = new List<int>();
+			internal List<int> collection = new List<int>();
+
+			internal BossInfo()
+			{
+
+			}
+		}
+
+		List<BossInfo> bossInfos = new List<BossInfo>();
+
+		public override void PostAddRecipes()
+		{
+			Mod bc = ModLoader.GetMod("BossChecklist");
+			if (bc != null)
+			{
+				object data = bc.Call("GetCurrentBossInfo");
+
+				if (data is List<Dictionary<string, object>> list)
+				{
+					foreach (var boss in list)
+					{
+						var tinyBossInfo = new BossInfo()
+						{
+							key = boss.ContainsKey("key") ? boss["key"] as string : "",
+							progression = boss.ContainsKey("progression") ? Convert.ToSingle(boss["progression"]) : 0f,
+							displayName = boss.ContainsKey("displayName") ? boss["displayName"] as string : "",
+							npcIDs = boss.ContainsKey("npcIDs") ? boss["npcIDs"] as List<int> : new List<int>(),
+							downed = boss.ContainsKey("downed") ? boss["downed"] as Func<bool> : () => false,
+
+							isBoss = boss.ContainsKey("isBoss") ? Convert.ToBoolean(boss["isBoss"]) : false,
+							isMiniboss = boss.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss["isMiniboss"]) : false,
+							isEvent = boss.ContainsKey("isEvent") ? Convert.ToBoolean(boss["isEvent"]) : false,
+
+							spawnItem = boss.ContainsKey("spawnItem") ? boss["spawnItem"] as List<int> : new List<int>(),
+							loot = boss.ContainsKey("loot") ? boss["loot"] as List<int> : new List<int>(),
+							collection = boss.ContainsKey("collection") ? boss["collection"] as List<int> : new List<int>(),
+						};
+						bossInfos.Add(tinyBossInfo);
+					}
+				}
+			}
+		}
+
+		//internal Dictionary<string, object> ConvertToDictionary()
+		//{
+		//	var dict = new Dictionary<string, object> {
+		//		{ "key", Key },
+		//		{ "progression", progression },
+		//		{ "displayName", name },
+		//		{ "npcIDs", new List<int>(npcIDs) },
+		//		{ "downed", new Func<bool>(downed) },
+
+		//		{ "isBoss", type.Equals(EntryType.Boss) },
+		//		{ "isMiniboss", type.Equals(EntryType.MiniBoss) },
+		//		{ "isEvent", type.Equals(EntryType.Event) },
+
+		//		{ "spawnItem", new List<int>(spawnItem) },
+		//		{ "loot", new List<int>(loot) },
+		//		{ "collection", new List<int>(collection) }
+		//	};
+
+		//	return dict;
+		//}
+
 		public override void Unload()
 		{
 			ROREffectManager.Unload();
