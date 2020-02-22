@@ -58,10 +58,9 @@ namespace RiskOfSlimeRain.NPCs
 				if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
 
 				//int itemType = Main.rand.Next(items);
-				int itemTypeFunc() => Main.rand.Next(items);
-				float chance = 2f / Math.Max(1, RORWorld.downedBossCount);
-				if (Main.rand.NextFloat() < chance)
+				if (Main.rand.NextFloat() < RORWorld.DropChance)
 				{
+					int itemTypeFunc() => Main.rand.Next(items);
 					DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), itemTypeFunc);
 					//Item.NewItem(npc.getRect(), itemType, 1);
 					RORWorld.downedBossCount++;

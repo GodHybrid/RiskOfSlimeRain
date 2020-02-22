@@ -130,7 +130,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 					else
 					{
-						return GetProcByUseTime() * Chance >= 1f;
+						return GetProcByUseTime(Player) * Chance >= 1f;
 					}
 				}
 				else
@@ -249,13 +249,13 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return CreateInstance(player, typeof(ROREffect).Assembly.GetType(fullName));
 		}
 
-		public float GetProcByUseTime()
+		public static float GetProcByUseTime(Player player)
 		{
 			//0.06 for use time 2, 1 for use time 30, 2 for use time 60
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
 			//TODO arkhalis/channel weapons
-			Item item = Player.HeldItem;
-			if (item.damage < 1) return 1f;
+			Item item = player.HeldItem;
+			if (item.damage < 1 || item.summon) return 1f;
 			int useTime = item.useTime;
 			//fix for melee weapons
 			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
@@ -267,7 +267,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// <summary>
 		/// Takes the proc by use time into account
 		/// </summary>
-		public bool Proc(float chance) => Main.rand.NextFloat() < GetProcByUseTime() * chance;
+		public bool Proc(float chance) => Main.rand.NextFloat() < GetProcByUseTime(Player) * chance;
 
 		private void SetupPlayer(Player player)
 		{
