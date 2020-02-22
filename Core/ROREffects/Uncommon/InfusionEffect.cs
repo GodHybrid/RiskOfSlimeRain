@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Network.Effects;
 using RiskOfSlimeRain.Projectiles;
 using System.IO;
 using Terraria;
@@ -64,6 +65,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		public void IncreaseBonusLife()
 		{
 			BonusLife += CurrentIncrease;
+			new ROREffectSyncSinglePacket(this).Send();
+		}
+
+		public override string ToString()
+		{
+			return base.ToString() + " bonus: " + BonusLife;
 		}
 	}
 }

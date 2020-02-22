@@ -290,9 +290,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// <summary>
 		/// Used to retreive the index of an effect on the player
 		/// </summary>
-		public static int GetIndexOfEffect(RORPlayer mPlayer, ROREffect effect)
+		public static int GetIndexOfEffect(ROREffect effect)
 		{
-			return mPlayer.Effects.FindIndex(e => e == effect); //check same reference
+			return effect.Player.GetRORPlayer().Effects.FindIndex(e => e == effect); //Check same reference
 		}
 
 		/// <summary>
@@ -441,7 +441,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		});
 
-		public static void DrawPlayerLayers(Player player, List<PlayerLayer> layers)
+		public static void DrawPlayerLayers(List<PlayerLayer> layers)
 		{
 			layers.Insert(0, AllInOne);
 		}

@@ -29,11 +29,7 @@ namespace RiskOfSlimeRain
 			NPCEffectManager.Load();
 			ShaderManager.Load();
 			RORInterfaceLayers.Load();
-		}
-
-		public override void PostSetupContent()
-		{
-			RORNetworkTypeSerializers.Load();
+			//RORNetworkTypeSerializers.Load(); //uncomment later when infusion gets in the game
 		}
 
 		public override void Unload()
