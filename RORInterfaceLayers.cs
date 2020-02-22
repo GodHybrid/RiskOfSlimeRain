@@ -88,6 +88,12 @@ namespace RiskOfSlimeRain
 			ROREffect effect;
 			Texture2D texture;
 
+			//Draw the info icon on the very left
+			xPosition = 2 * inventorySize + (-1 - 0) * iconPadding;
+			yPosition = yStart + 0;
+			bool drawingMisc = true;
+
+
 			for (int i = 0; i < effects.Count; i++)
 			{
 				effect = effects[i];
@@ -98,6 +104,12 @@ namespace RiskOfSlimeRain
 				xPosition = 2 * inventorySize + (i - lineOffset * numHorizontal) * iconPadding;
 
 				yPosition = yStart + lineOffset * verticalLineHeight;
+
+				if (drawingMisc)
+				{
+					texture = Main.npcHeadTexture[0];
+					xPosition -= iconPadding;
+				}
 
 				sourceRect = texture.Bounds;
 				int width = sourceRect.Width;
@@ -124,35 +136,55 @@ namespace RiskOfSlimeRain
 				//Utils.DrawLine(Main.spriteBatch, new Vector2(Center.X - 10, Center.Y - 10), new Vector2(Center.X + 20, Center.Y + 20), Color.Green, Color.White, 4);
 
 				Color color = Color.White * 0.8f;
+
+				if (drawingMisc)
+				{
+					color = Color.White;
+				}
+
 				Rectangle mouseCheck = Utils.CenteredRectangle(new Vector2(xPosition, yPosition), new Vector2(32));
 				if (mouseCheck.Contains(new Point(Main.mouseX, Main.mouseY)))
 				{
 					hoverIndex = i;
 					destRect.Inflate(2, 2);
 					color = Color.White;
+					if (drawingMisc)
+					{
+						hoverIndex = -2;
+					}
 				}
 
 				Main.spriteBatch.Draw(texture, destRect, sourceRect, color);
 
-				//Vector2 bottomCenter = destRect.BottomLeft();
 				Vector2 bottomCenter = new Vector2(xPosition - width / 2, yPosition + 14);
-				string text = "x" + effect.Stack.ToString();
-				if (!effect.FullStack) text += "/" + effect.UnlockedStack;
-				Vector2 length = Main.fontItemStack.MeasureString(text);
+				//Vector2 bottomCenter = destRect.BottomLeft();
 
-				bottomCenter.Y -= length.Y / 2;
-				color = Color.White;
-				if (effect.Capped)
+				if (drawingMisc)
 				{
-					color = Color.LawnGreen;
+					drawingMisc = false;
+					i--;
 				}
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+				else
+				{
+					string text = "x" + effect.Stack.ToString();
+					if (!effect.FullStack) text += "/" + effect.UnlockedStack;
+					Vector2 length = Main.fontItemStack.MeasureString(text);
+
+					bottomCenter.Y -= length.Y / 2;
+					color = Color.White;
+					if (effect.Capped)
+					{
+						color = Color.LawnGreen;
+					}
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+				}
 			}
 
 			if (hoverIndex > -1)
 			{
 				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
 				player.showItemIcon = false;
+
 				effect = effects[hoverIndex];
 				string name = effect.Name;
 				string text = "\n" + effect.Description;
@@ -165,22 +197,25 @@ namespace RiskOfSlimeRain
 					text += "\n" + effect.CappedMessage;
 				}
 
-				Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
-				mousePos += new Vector2(Main.ThickMouse ? 22 : 16);
+				Vector2 textPos = SetTextPos(text);
 
-				Vector2 size = Main.fontMouseText.MeasureString(text);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, name, textPos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+			}
+			else if (hoverIndex == -2) //Misc
+			{
+				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
+				player.showItemIcon = false;
 
-				if (mousePos.X + size.X + 4f > Main.screenWidth)
-				{
-					mousePos.X = (int)(Main.screenWidth - size.X - 4f);
-				}
-				if (mousePos.Y + size.Y + 4f > Main.screenHeight)
-				{
-					mousePos.Y = (int)(Main.screenHeight - size.Y - 4f);
-				}
+				string text = $"This UI shows all your currently used items from '{RiskOfSlimeRainMod.Instance.DisplayName}'";
+				text += "\nCheck the config of this mod to customize the UI";
+				text += "\nMisc Info:";
+				text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
+				text += "\nItem drop chance from bosses: " + RORWorld.DropChance.ToPercent(2);
 
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, name, mousePos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, mousePos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				Vector2 textPos = SetTextPos(text);
+
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 			}
 
 			return true;
@@ -214,11 +249,32 @@ namespace RiskOfSlimeRain
 			orig(self, drawPlayer, projectileDrawPosition, cHead);
 		}
 
+		/// <summary>
+		/// Returns mouse position based on text and screen edges
+		/// </summary>
+		private static Vector2 SetTextPos(string text)
+		{
+			Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
+			mousePos += new Vector2(Main.ThickMouse ? 22 : 16);
+
+			Vector2 size = Main.fontMouseText.MeasureString(text);
+
+			if (mousePos.X + size.X + 4f > Main.screenWidth)
+			{
+				mousePos.X = (int)(Main.screenWidth - size.X - 4f);
+			}
+			if (mousePos.Y + size.Y + 4f > Main.screenHeight)
+			{
+				mousePos.Y = (int)(Main.screenHeight - size.Y - 4f);
+			}
+			return mousePos;
+		}
+
 		public static void Update(Player player)
 		{
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1)
 			{
-				if (!Config.Instance.CustomStacking)
+				if (!Config.Instance.CustomStacking || hoverIndex == -2)
 				{
 					hoverIndex = -1;
 					return;
@@ -226,20 +282,21 @@ namespace RiskOfSlimeRain
 				RORPlayer mPlayer = player.GetRORPlayer();
 				List<ROREffect> effects = mPlayer.Effects;
 				//This stuff is here cause only here resetting scrollwheel status works properly
-				int oldStack = effects[hoverIndex].Stack;
+				ROREffect effect = effects[hoverIndex];
+				int oldStack = effect.Stack;
 				if (PlayerInput.ScrollWheelDelta > 0)
 				{
-					effects[hoverIndex].Stack++;
+					effect.Stack++;
 					PlayerInput.ScrollWheelDelta = 0;
 					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
 				}
 				else if (PlayerInput.ScrollWheelDelta < 0)
 				{
-					effects[hoverIndex].Stack--;
+					effect.Stack--;
 					PlayerInput.ScrollWheelDelta = 0;
 					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
 				}
-				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effects[hoverIndex].Stack)
+				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effect.Stack)
 				{
 					SetChangedEffect(hoverIndex);
 				}
