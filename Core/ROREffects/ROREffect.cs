@@ -6,8 +6,8 @@ using Terraria;
 using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using WebmilioCommons.Networking.Serializing;
 using WebmilioCommons.Networking.Packets;
+using WebmilioCommons.Networking.Serializing;
 
 namespace RiskOfSlimeRain.Core.ROREffects
 {

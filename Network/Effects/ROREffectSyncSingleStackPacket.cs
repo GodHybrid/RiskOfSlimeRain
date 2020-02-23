@@ -1,7 +1,5 @@
 using RiskOfSlimeRain.Core.ROREffects;
-using RiskOfSlimeRain.Core.ROREffects.Common;
 using System.IO;
-using Terraria;
 using Terraria.ModLoader;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;

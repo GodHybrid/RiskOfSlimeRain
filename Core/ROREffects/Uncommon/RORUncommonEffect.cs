@@ -1,5 +1,3 @@
-using Terraria.ID;
-
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public abstract class RORUncommonEffect : ROREffect

@@ -17,9 +17,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float CurrentIncrease => initial + Stack * increase;
 
-		public override string Description => "Killing an enemy increases your health permanently by 1";
+		public override string Description => $"Killing an enemy increases your health permanently by {initial + increase}";
 
 		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
+
+		public override string UIInfo => $"Bonus life: {BonusLife}";
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

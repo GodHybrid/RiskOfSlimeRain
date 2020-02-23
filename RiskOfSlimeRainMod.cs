@@ -2,7 +2,6 @@ using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
-using RiskOfSlimeRain.Network;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -29,7 +28,7 @@ namespace RiskOfSlimeRain
 			NPCEffectManager.Load();
 			ShaderManager.Load();
 			RORInterfaceLayers.Load();
-			//RORNetworkTypeSerializers.Load(); //uncomment later when infusion gets in the game
+			//RORNetworkTypeSerializers.Load(); //Uncomment later when infusion gets in the game AND WC updates
 		}
 
 		public override void Unload()

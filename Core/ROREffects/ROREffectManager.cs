@@ -204,19 +204,16 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			//GeneralHelper.Print("populating " + mPlayer.player.whoAmI);
 			List<ROREffect> effects = mPlayer.Effects;
-			Dictionary<Type, List<ROREffect>> effectByType = mPlayer.EffectByType;
 			Clear(mPlayer);
 			foreach (var effect in effects)
 			{
-				Type[] interfaces = GetValidInterfaces(effect.GetType()); //because this is dynamic
+				Type[] interfaces = GetValidInterfaces(effect.GetType()); //Because this is dynamic
 				foreach (var interf in interfaces)
 				{
+					List<ROREffect> byType = mPlayer.EffectByType[interf];
 					//If this interface is one in effectByType, add this effect as a value to this list
-					effectByType[interf].Add(effect);
-				}
-				foreach (var interf in interfaces)
-				{
-					effectByType[interf].Sort();
+					byType.Add(effect);
+					byType.Sort();
 				}
 			}
 		}

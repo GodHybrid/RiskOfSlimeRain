@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
