@@ -1,4 +1,4 @@
-[c/64bbde:"Risk of Slime Rain"] is a mod, that adds all the existing items from [c/334a8a:Risk of Rain 1] into [c/64a851:Terraria], with some tweaks to fit Terraria's gameplay and world. 
+[c/64bbde:"Risk of Slime Rain"] is a mod that aims to add all the existing items from [c/334a8a:Risk of Rain 1] into [c/64a851:Terraria], with some tweaks to fit Terraria's gameplay and world. 
 
 This mod offers [c/d18660:permanent upgrades] to the player character through items of varying rarity. Every item is a [c/d18660:consumable] and most of them stack infinitely for increased effect, [c/d18660:upgrading] your various [c/d18660:stats] to your heart's content. 
 However the recipes for them are quite expensive. Even low-tier items will require plenty of grinding! Get a nice [c/d18660:headstart by defeating bosses]: but the more items you get - the lower your chance to get a new one will be, effectively forcing you to craft them!
