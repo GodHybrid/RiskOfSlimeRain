@@ -68,7 +68,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			Rectangle explosionArea = new Rectangle(projectile.Hitbox.X - addRadiusX / 2, projectile.Hitbox.Y - addRadiusY / 2, projectile.Hitbox.Width + addRadiusX, projectile.Hitbox.Height + addRadiusY);
+			Rectangle explosionArea = projectile.Hitbox;
+			explosionArea.Inflate(addRadiusX / 2, addRadiusY / 2);
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
 			{
 				n.StrikeNPC((int)projectile.ai[0], 0, 0);
