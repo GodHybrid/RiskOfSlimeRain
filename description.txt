@@ -9,3 +9,12 @@ The mod also features a config setting where you can selectively pick the amount
 
 
 [c/d18660:Multiplayer compatible, no pvp support.]
+
+[c/888888:Changelog:]
+v0.3.0.4: 
+	+ Added visuals and radii options to the configs
+	+ Added informational UI icon to the item tray
+
+v0.3:
+	Release
+	
