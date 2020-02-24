@@ -11,9 +11,9 @@ namespace RiskOfSlimeRain.Projectiles
 	public class PanicMinesProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
-		public byte timer = 30;
-		public byte addRadiusX = 40;
-		public byte addRadiusY = 20;
+		public byte timer = 25;
+		public byte addRadiusX = 50;
+		public byte addRadiusY = 30;
 
 		public override void SetStaticDefaults()
 		{
@@ -57,7 +57,7 @@ namespace RiskOfSlimeRain.Projectiles
 				activate = true;
 			});
 
-			if (timer % 6 == 0 && activate) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
+			if (timer % 5 == 0 && activate) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
 			if (activate) timer--;
 			if (timer == 0)
 			{

@@ -169,7 +169,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** +0.5 health on kill.\
 		* The item hasn't been coded yet.\
 		* Projectile animates correctly. Visual effects work as intended.
-* [x][ ]Harvester's Scythe - On getting a critical hit on an enemy, gain additional 5% critical chance. Critical strikes heal for 12 health.\
+* [x][x]Harvester's Scythe - On getting a critical hit on an enemy, gain additional 5% critical chance. Critical strikes heal for 12 health.\
 **Stacking effect:** +2 health on critical strike.\
 		* Flat crit chance increase works, heals the player properly.\
 		* The effects haven't been coded yet. (Player-locked texture.)
@@ -177,10 +177,10 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 **Stacking effect:** +60 Shield.\
 		* The item hasn't been coded yet.\
 		* The effects haven't been coded yet. (Heart texture + player-locked texture.)
-* [ ][ ]Dead Man's Foot -  At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
+* [x][/]Dead Man's Foot -  At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
 **Stacking effect:** +1 poison tick.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Player-locked dust + projectiles.)
+		* Works as intended.\
+		* Projectiles animate correctly, dust missing.
 * [x][x]Panic Mines - drop a landmine when the player reaches low health that deals 500% damage.\
 **Stacking effect:** +1 mine dropped.\
 		* Effects work as intended, projectiles work properly.\

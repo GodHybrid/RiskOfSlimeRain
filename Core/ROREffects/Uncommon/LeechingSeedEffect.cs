@@ -19,12 +19,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			player.HealMe((int)CurrentHeal);
+			if (target.CanBeChasedBy()) player.HealMe((int)CurrentHeal);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			player.HealMe((int)CurrentHeal);
+			if (target.CanBeChasedBy()) player.HealMe((int)CurrentHeal);
 		}
 	}
 }

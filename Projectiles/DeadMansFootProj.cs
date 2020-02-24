@@ -67,7 +67,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.LoopAnimation(7);
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n =>
 			{
-				Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<PanicMinesExplosionProj>(), 0, 0, Main.myPlayer);
+				Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
 				projectile.Kill();
 			});
 		}
@@ -84,7 +84,7 @@ namespace RiskOfSlimeRain.Projectiles
 					int damage = (int)(1.5f * Damage);
 					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate(DeadMansFootDoTProj t)
 					{
-						t.TimeLeft = (ushort)(30 * Ticks);
+						t.TimeLeft = (ushort)(30 * (Ticks) + 20) ;
 					});
 				});
 			}

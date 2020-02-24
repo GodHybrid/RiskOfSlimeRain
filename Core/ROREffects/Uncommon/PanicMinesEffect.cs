@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 						new Conditions.IsSolid()
 					}), out _))
 					{
-						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 16, position.Y + 1), new Vector2(0, 0),
+						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 24, position.Y + 1), new Vector2(0, 0),
 													ModContent.ProjectileType<PanicMinesProj>(), 0, 0, Main.myPlayer, (int)(dmg * player.GetDamage()));
 					}
 					else Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<PanicMinesProj>(), 0, 0, Main.myPlayer, (int)(dmg * player.GetDamage()));

@@ -9,7 +9,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	//It doesn't use IGetWeaponCrit because we want crit rate to be dynamic based on item use time (which requires proc chance)
 	//additional crit chance won't be shown on the tooltip
-	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit, IPlayerLayer
+	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IPlayerLayer//,IOnHit
 	{
 		const float increase = 0.07f;
 
@@ -40,22 +40,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			crit = true;
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
-		{
-			SpawnProjectile(target, crit);
-		}
+		//public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		//{
+		//	SpawnProjectile(target, crit);
+		//}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
-		{
-			SpawnProjectile(target, crit);
-		}
+		//public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		//{
+		//	SpawnProjectile(target, crit);
+		//}
 
-		void SpawnProjectile(NPC target, bool crit)
-		{
-			if (crit)
-			{
-				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer);
-			}
-		}
+		//void SpawnProjectile(NPC target, bool crit)
+		//{
+		//	if (crit)
+		//	{
+		//		Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer);
+		//	}
+		//}
 	}
 }
