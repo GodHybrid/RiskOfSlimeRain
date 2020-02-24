@@ -13,8 +13,8 @@ namespace RiskOfSlimeRain.Projectiles
 	public class DeadMansFootProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
-		public byte addRadiusX = 40;
-		public byte addRadiusY = 20;
+		public byte addRadiusX = 20;
+		public byte addRadiusY = 10;
 
 		public override void SetStaticDefaults()
 		{
@@ -25,11 +25,11 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(13, 10);
+			projectile.Size = new Vector2(26, 20);
 			projectile.timeLeft = 3600;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			drawOriginOffsetY = 8;
+			drawOriginOffsetY = 4;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -49,6 +49,18 @@ namespace RiskOfSlimeRain.Projectiles
 			return false;
 		}
 
+		public int Damage
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
+
+		public int Ticks
+		{
+			get => (int)projectile.ai[1];
+			set => projectile.ai[1] = value;
+		}
+
 		public override void AI()
 		{
 			projectile.velocity.Y = 10f;
@@ -62,15 +74,23 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			Rectangle explosionArea = new Rectangle(projectile.Hitbox.X - addRadiusX / 2, projectile.Hitbox.Y - addRadiusY / 2, projectile.Hitbox.Width + addRadiusX, projectile.Hitbox.Height + addRadiusY);
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
+			if (Main.myPlayer == projectile.owner)
 			{
-				n.AddBuff(BuffID.Venom, 30 * (int)projectile.ai[1]);
-				int damage = (int)(1.5f * projectile.ai[0]);
-				//StickyProj.NewProjectile<RustyKnifeProj>(n, damage: damage);
-			});
+				Rectangle explosionArea = projectile.Hitbox;
+				explosionArea.Inflate(addRadiusX, addRadiusY);
+				Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
+				{
+					n.AddBuff(BuffID.Venom, 30 * Ticks);
+					int damage = (int)(1.5f * Damage);
+					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate(DeadMansFootDoTProj t)
+					{
+						t.TimeLeft = (ushort)(30 * Ticks);
+					});
+				});
+			}
 			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode); // Change soundeffect
 		}
+
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;

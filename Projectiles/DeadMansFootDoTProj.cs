@@ -1,35 +1,41 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Helpers;
+using System.IO;
 using Terraria;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// This projectile, when dealing damage, won't trigger OnHitNPC by design
+	/// This projectile, when dealing damage, won't trigger OnHitNPC by design. It also has dynamic timeleft.
 	/// </summary>
-	public class RustyKnifeProj : StickyProj
+	public class DeadMansFootDoTProj : StickyProj
 	{
+		public override string Texture => "RiskOfSlimeRain/Empty";
+
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Rusty Knife");
-			Main.projFrames[projectile.type] = 6;
+			DisplayName.SetDefault("Dead Man's DoT");
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(26, 34);
-			projectile.timeLeft = 140;
+			projectile.Size = new Vector2(8);
+			projectile.timeLeft = 420; //Default, changed in OtherAI
 		}
 
 		private const int StrikeTimerMax = 30;
 
-		//timer for strikes on only that NPC
+		//Timer for strikes on only that NPC
 		public int StrikeTimer
 		{
 			get => (int)projectile.localAI[0];
 			set => projectile.localAI[0] = value;
 		}
+
+		public ushort TimeLeft { get; set; } //Synced
+
+		public bool appliedTimeLeft = false;
 
 		public override void WhileStuck(NPC npc)
 		{
@@ -47,17 +53,26 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void OtherAI()
 		{
-			if (projectile.localAI[1] != 1f)
+			if (!appliedTimeLeft && TimeLeft != 0)
 			{
-				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
-				projectile.localAI[1] = 1f;
+				appliedTimeLeft = true;
+				projectile.timeLeft = TimeLeft;
 			}
-			projectile.WaterfallAnimation(5);
 		}
 
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;
+		}
+
+		public override void SendExtraAI(BinaryWriter writer)
+		{
+			writer.Write(TimeLeft);
+		}
+
+		public override void ReceiveExtraAI(BinaryReader reader)
+		{
+			TimeLeft = reader.ReadUInt16();
 		}
 	}
 }
