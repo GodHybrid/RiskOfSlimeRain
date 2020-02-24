@@ -13,8 +13,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float Shield => initial + increase * Stack;
 
-
-		//public override bool AlwaysProc => true;
 		public override string Description => $"Gain {initial} SP shields. Recharges in {time} seconds";
 		public override string FlavorText => "While living, the subject had advanced muscle growth, cell regeneration, higher agility...\nHis heart seems to still beat independent of the rest of the body.";
 		public override string Name => "Guardian's Heart";

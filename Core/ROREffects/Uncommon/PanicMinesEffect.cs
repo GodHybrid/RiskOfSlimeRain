@@ -8,7 +8,6 @@ using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	//TODO Makes mines drop
 	public class PanicMinesEffect : RORUncommonEffect, IPostHurt
 	{
 		public const int initial = 0;
@@ -17,7 +16,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public int MinesDropped => initial + increase * Stack;
 
-		public override string Description => $"Drop a mine at low health for {dmg.ToPercent()} damage.";
+		public override string Description => $"Drop a mine at low health for {dmg.ToPercent()} damage";
 		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
