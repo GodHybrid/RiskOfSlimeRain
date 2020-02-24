@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class PanicMines : RORConsumableItem<PanicMinesEffect>
+	public class PanicMines : RORConsumableItem<PanicMinesEffect>
 	{
 		public override void AddRecipes()
 		{

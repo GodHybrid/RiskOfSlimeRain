@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	class ToughTimesEffect : RORUncommonEffect, IPostUpdateEquips
+	public class ToughTimesEffect : RORUncommonEffect, IPostUpdateEquips
 	{
 		public const float initial = 0;
 		public const float increase = 14;

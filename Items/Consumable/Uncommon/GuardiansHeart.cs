@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class GuardiansHeart : RORConsumableItem<GuardiansHeartEffect>
+	public class GuardiansHeart : RORConsumableItem<GuardiansHeartEffect>
 	{
 		public override void AddRecipes()
 		{

@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class LeechingSeed : RORConsumableItem<LeechingSeedEffect>
+	public class LeechingSeed : RORConsumableItem<LeechingSeedEffect>
 	{
 		public override void AddRecipes()
 		{

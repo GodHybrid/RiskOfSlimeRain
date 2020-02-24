@@ -9,7 +9,7 @@ using Terraria.World.Generation;
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	//TODO Makes mines drop
-	class PanicMinesEffect : RORUncommonEffect, IPostHurt
+	public class PanicMinesEffect : RORUncommonEffect, IPostHurt
 	{
 		public const int initial = 0;
 		public const int increase = 1;
@@ -32,7 +32,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 						new Conditions.IsSolid()
 					}), out _))
 					{
-						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 16, position.Y + 1), new Vector2(0, 0), ModContent.ProjectileType<PanicMinesProj>(), 0, 0, Main.myPlayer, (int)(dmg * player.GetDamage()));
+						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 16, position.Y + 1), new Vector2(0, 0),
+													ModContent.ProjectileType<PanicMinesProj>(), 0, 0, Main.myPlayer, (int)(dmg * player.GetDamage()));
 					}
 					else Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<PanicMinesProj>(), 0, 0, Main.myPlayer, (int)(dmg * player.GetDamage()));
 				}

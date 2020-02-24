@@ -121,7 +121,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Works as intended. *Nullifies X-axis velocity. Might want to increase Y-axis velocity to make flying enemies fall?*\
 		* Graphics work as intended.
 
-#### Uncommon items **-NONE IMPLEMENTED-**
+#### Uncommon items
 ###### Offensive items
 * [ ][ ]Golden Gun - Deals bonus damage per gold coins, up to 40% damage at 70 platinum coins.\
 **Stacking effect:** Halves the gold required for the maximum damage bonus.\

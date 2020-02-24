@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class DeadMansFoot : RORConsumableItem<DeadMansFootEffect>
+	public class DeadMansFoot : RORConsumableItem<DeadMansFootEffect>
 	{
 		public override void AddRecipes()
 		{

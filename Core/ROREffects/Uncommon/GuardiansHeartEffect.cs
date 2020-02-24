@@ -5,7 +5,7 @@
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	//TODO Make it actually work lol
-	class GuardiansHeartEffect : RORUncommonEffect
+	public class GuardiansHeartEffect : RORUncommonEffect
 	{
 		public const float initial = 60;
 		public const float increase = 60;

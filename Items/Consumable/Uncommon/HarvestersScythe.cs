@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class HarvestersScythe : RORConsumableItem<HarvestersScytheEffect>
+	public class HarvestersScythe : RORConsumableItem<HarvestersScytheEffect>
 	{
 		public override void AddRecipes()
 		{

@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	class LeechingSeedEffect : RORUncommonEffect, IOnHit
+	public class LeechingSeedEffect : RORUncommonEffect, IOnHit
 	{
 		public const float initial = 1;
 		public const float increase = 1;

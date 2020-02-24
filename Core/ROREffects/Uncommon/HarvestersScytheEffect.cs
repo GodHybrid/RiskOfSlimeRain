@@ -4,7 +4,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	class HarvestersScytheEffect : RORUncommonEffect, IModifyHit, IOnHit, IGetWeaponCrit
+	public class HarvestersScytheEffect : RORUncommonEffect, IModifyHit, IOnHit, IGetWeaponCrit
 	{
 		public const float initial = 6;
 		public const float increase = 2;

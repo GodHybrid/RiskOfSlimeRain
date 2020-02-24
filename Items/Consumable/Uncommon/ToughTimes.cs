@@ -4,7 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable.Uncommon
 {
-	class ToughTimes : RORConsumableItem<ToughTimesEffect>
+	public class ToughTimes : RORConsumableItem<ToughTimesEffect>
 	{
 		public override void AddRecipes()
 		{

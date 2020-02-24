@@ -8,23 +8,24 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	public class PanicMinesProj : ModProjectile, IExcludeOnHit
+	//ai0 - player damage
+	//ai1 - ticks
+	public class DeadMansFootProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
-		public byte timer = 30;
 		public byte addRadiusX = 40;
 		public byte addRadiusY = 20;
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Panic Mines");
-			Main.projFrames[projectile.type] = 4;
+			DisplayName.SetDefault("Dead Man's Mine");
+			Main.projFrames[projectile.type] = 7;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(14, 36);
+			projectile.Size = new Vector2(13, 10);
 			projectile.timeLeft = 3600;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
@@ -51,19 +52,12 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void AI()
 		{
 			projectile.velocity.Y = 10f;
-			projectile.LoopAnimation(4);
+			projectile.LoopAnimation(7);
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n =>
-			{
-				activate = true;
-			});
-
-			if (timer % 6 == 0 && activate) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
-			if (activate) timer--;
-			if (timer == 0)
 			{
 				Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<PanicMinesExplosionProj>(), 0, 0, Main.myPlayer);
 				projectile.Kill();
-			}
+			});
 		}
 
 		public override void Kill(int timeLeft)
@@ -71,9 +65,11 @@ namespace RiskOfSlimeRain.Projectiles
 			Rectangle explosionArea = new Rectangle(projectile.Hitbox.X - addRadiusX / 2, projectile.Hitbox.Y - addRadiusY / 2, projectile.Hitbox.Width + addRadiusX, projectile.Hitbox.Height + addRadiusY);
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
 			{
-				n.StrikeNPC((int)projectile.ai[0], 0, 0);
+				n.AddBuff(BuffID.Venom, 30 * (int)projectile.ai[1]);
+				int damage = (int)(1.5f * projectile.ai[0]);
+				//StickyProj.NewProjectile<RustyKnifeProj>(n, damage: damage);
 			});
-			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
+			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode); // Change soundeffect
 		}
 		public override Color? GetAlpha(Color lightColor)
 		{
