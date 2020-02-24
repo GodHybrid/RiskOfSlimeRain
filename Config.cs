@@ -41,6 +41,11 @@ namespace RiskOfSlimeRain
 		[DefaultValue(false)]
 		public bool HideOtherVisuals;
 
+		[Label("Hide warbanner radius")]
+		[Tooltip("Toggle the warbanner circle")]
+		[DefaultValue(false)]
+		public bool HideWarbannerRadius;
+
 		/// <summary>
 		/// Check if visuals are hidden for this player (clientside)
 		/// </summary>

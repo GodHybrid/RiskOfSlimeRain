@@ -39,15 +39,50 @@ namespace RiskOfSlimeRain.Projectiles
 			Utils.PoofOfSmoke(projectile.Center);
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		//public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		//{
+		//	Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
+		//	if (circle != null)
+		//	{
+		//		ShaderManager.ApplyToScreenOnce(spriteBatch, circle);
+		//	}
+
+		//	return true;
+		//}
+
+		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
-			Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
-			if (circle != null)
+			if (Config.Instance.HideWarbannerRadius) return;
+			bool iAmLast = false;
+			for (int i = Main.maxProjectiles - 1; i >= 0; i--)
 			{
-				ShaderManager.ApplyToScreenOnce(spriteBatch, circle);
+				Projectile p = Main.projectile[i];
+				if (p.active && p.modProjectile is WarbannerProj)
+				{
+					if (p.whoAmI == projectile.whoAmI)
+					{
+						iAmLast = true;
+					}
+					break;
+				}
 			}
 
-			return true;
+			if (iAmLast)
+			{
+				for (int i = 0; i < Main.maxProjectiles; i++)
+				{
+					Projectile p = Main.projectile[i];
+					if (p.active && p.modProjectile is WarbannerProj w)
+					{
+						Effect circle = ShaderManager.SetupCircleEffect(p.Center, w.Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
+						if (circle != null)
+						{
+							ShaderManager.ApplyToScreenOnce(spriteBatch, circle, restore: false);
+						}
+					}
+				}
+				ShaderManager.RestoreVanillaSpriteBatchSettings(spriteBatch);
+			}
 		}
 
 		public int Radius
