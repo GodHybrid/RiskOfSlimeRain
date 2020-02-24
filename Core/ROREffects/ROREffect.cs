@@ -235,8 +235,12 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static ROREffect CreateInstance(Player player, string typeName)
 		{
-			if (typeName == string.Empty) throw new Exception("Something went wrong loading this tag, typeName is empty");
 			string fullName = ROREffectManager.prefix + typeName + ROREffectManager.suffix;
+			if (typeName == string.Empty || !ROREffectManager.IsValidEffectFullName(fullName))
+			{
+				RiskOfSlimeRainMod.Instance.Logger.Warn($"Something went wrong loading this type: ({typeName})");
+				return null;
+			}
 			return CreateInstance(player, typeof(ROREffect).Assembly.GetType(fullName));
 		}
 
@@ -245,7 +249,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static ROREffect CreateInstanceFullName(Player player, string fullName)
 		{
-			if (fullName == string.Empty) throw new Exception("Something went wrong loading this tag, typeName is empty");
+			if (!ROREffectManager.IsValidEffectFullName(fullName))
+			{
+				RiskOfSlimeRainMod.Instance.Logger.Warn($"Something went wrong loading this type: ({fullName})");
+				return null;
+			}
 			return CreateInstance(player, typeof(ROREffect).Assembly.GetType(fullName));
 		}
 
@@ -306,6 +314,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				string typeName = tag.GetString("TypeName");
 				ROREffect effect = CreateInstance(player, typeName);
+				if (effect == null) return null;
 				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
 				effect.UnlockedStack = tag.GetInt("UnlockedStack");
 				effect.Stack = tag.GetInt("Stack");
@@ -319,6 +328,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				string typeName = tag.GetString("TypeName");
 				typeName = typeName.Replace("RiskOfSlimeRain.Effects", "RiskOfSlimeRain.Core.ROREffects");
 				ROREffect effect = CreateInstanceFullName(player, typeName);
+				if (effect == null) return null;
 				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
 				effect.UnlockedStack = tag.GetInt("UnlockedStack");
 				effect.Stack = tag.GetInt("Stack");

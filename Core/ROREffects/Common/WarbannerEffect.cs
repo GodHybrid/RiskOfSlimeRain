@@ -39,12 +39,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Center);
 		}
 
-		public static readonly PlayerLayer WarbannerLayer = new PlayerLayer("RiskOfSlimeRain", "Warbanner", PlayerLayer.MiscEffectsBack, delegate (PlayerDrawInfo drawInfo)
+		public static readonly PlayerLayer WarbannerLayer = new PlayerLayer("RiskOfSlimeRain", "Warbanner", ROREffectManager.ParentLayer, delegate (PlayerDrawInfo drawInfo)
 		{
 			if (drawInfo.shadow != 0f)
 			{
 				return;
 			}
+
 			Player player = drawInfo.drawPlayer;
 
 			Texture2D tex = ModContent.GetTexture("RiskOfSlimeRain/Textures/Warbanner");

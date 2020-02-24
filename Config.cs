@@ -30,6 +30,32 @@ namespace RiskOfSlimeRain
 		[Range(0f, 1f)]
 		public float ItemUIVerticalOffset;
 
+		[Header("Visuals")]
+		[Label("Hide own player visuals")]
+		[Tooltip("Toggle visuals created by effects (not including particles)")]
+		[DefaultValue(false)]
+		public bool HideOwnVisuals;
+
+		[Label("Hide other player visuals")]
+		[Tooltip("Toggle visuals created by effects (not including particles)")]
+		[DefaultValue(false)]
+		public bool HideOtherVisuals;
+
+		/// <summary>
+		/// Check if visuals are hidden for this player (clientside)
+		/// </summary>
+		public static bool HiddenVisuals(Player player)
+		{
+			if (Main.myPlayer == player.whoAmI)
+			{
+				return Instance.HideOwnVisuals;
+			}
+			else
+			{
+				return Instance.HideOtherVisuals;
+			}
+		}
+
 		//public override bool AcceptClientChanges(ModConfig pendingConfig, int whoAmI, ref string message)
 		//{
 		//	message = "Only the host of this world can change the config! Do so in singleplayer.";

@@ -217,6 +217,8 @@ namespace RiskOfSlimeRain
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
 			if (Main.gameMenu) return;
+			if (Config.HiddenVisuals(player)) return; 
+
 			ROREffectManager.DrawPlayerLayers(layers);
 			if (InWarbannerRange) layers.Insert(0, WarbannerEffect.WarbannerLayer);
 		}
@@ -224,6 +226,7 @@ namespace RiskOfSlimeRain
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
 			if (Main.gameMenu) return;
+			if (Config.HiddenVisuals(player)) return;
 			if (!ROREffectManager.ParentLayer.visible) return;
 
 			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
@@ -274,7 +277,8 @@ namespace RiskOfSlimeRain
 				Effects.Clear();
 				foreach (var compound in effectCompounds)
 				{
-					Effects.Add(ROREffect.Load(player, compound, version));
+					ROREffect effect = ROREffect.Load(player, compound, version);
+					if (effect != null) Effects.Add(effect);
 				}
 				//Sort by creation time
 				Effects.Sort();

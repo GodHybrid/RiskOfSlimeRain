@@ -26,7 +26,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
-		//Used to index each effect type for mp
+		//Used to index each effect type for mp, and check for type validity
 		private static Type[] indexedEffects;
 		//Used to build the dictionary EffectByType on RORPlayer
 		private static Type[] validInterfaces;
@@ -258,6 +258,18 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return Array.IndexOf(indexedEffects, type);
 		}
 
+		/// <summary>
+		/// Check for validity during loading
+		/// </summary>
+		public static bool IsValidEffectFullName(string fullName)
+		{
+			for (int i = 0; i < indexedEffects.Length; i++)
+			{
+				if (indexedEffects[i].FullName == fullName) return true;
+			}
+			return false;
+		}
+
 		public static List<ROREffect> GetEffectsOf<T>(Player player) where T : IROREffectInterface
 		{
 			return GetEffectsOf<T>(player.GetRORPlayer());
@@ -389,6 +401,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				return;
 			}
+
 			Player dPlayer = drawInfo.drawPlayer;
 
 			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
