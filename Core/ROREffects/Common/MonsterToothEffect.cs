@@ -1,7 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -26,6 +28,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(NPC target)
 		{
+			if (MiscManager.IsWormBodyOrTail(target)) return;
+			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 			PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
 			{
 				proj.HealAmount = Stack * increase + initial;

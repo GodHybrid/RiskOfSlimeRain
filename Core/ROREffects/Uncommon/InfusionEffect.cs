@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Network.Effects;
 using RiskOfSlimeRain.Projectiles;
 using System.IO;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -60,6 +62,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private void SpawnProjectile(Player player, NPC target)
 		{
+			if (MiscManager.IsWormBodyOrTail(target)) return;
+			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 			//The projectile reads from the effect of the owner how much health it gives him
 			PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
 		}
