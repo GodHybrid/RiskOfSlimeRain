@@ -142,7 +142,7 @@ namespace RiskOfSlimeRain
 		{
 			NoOnHitTimer = 0;
 
-			if (target.friendly && target.type != NPCID.TargetDummy) return;
+			if (!target.CanBeChasedBy()) return;
 
 			if (target.life <= 0)
 			{
@@ -154,7 +154,8 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (target.friendly && target.type != NPCID.TargetDummy) return;
+			if (!target.CanBeChasedBy()) return;
+
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
 
@@ -163,7 +164,7 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer = 0;
 
 			//This stuff should be at the bottom of everything
-			if (target.friendly && target.type != NPCID.TargetDummy) return;
+			if (!target.CanBeChasedBy()) return;
 
 			if (target.life <= 0)
 			{
@@ -182,13 +183,15 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//This stuff should be at the bottom of everything
-			if (target.friendly && target.type != NPCID.TargetDummy) return;
+			if (!target.CanBeChasedBy()) return;
+			//if (target.friendly && target.type != NPCID.TargetDummy) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
 			//If this projectile is a minion, make it only proc 10% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
 
+			Main.NewText("proc");
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}
 
