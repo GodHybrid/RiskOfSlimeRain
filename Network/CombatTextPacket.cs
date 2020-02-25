@@ -1,4 +1,7 @@
+using Microsoft.Xna.Framework;
+using System.IO;
 using Terraria;
+using Terraria.ID;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
@@ -8,48 +11,53 @@ namespace RiskOfSlimeRain.Network
 	{
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
 
-		public CombatText CombatText { get; set; }
+		public Vector2 Position { get; set; }
+
+		public Color Color { get; set; }
+
+		public string Text { get; set; }
+
+		public byte Flags { get; set; }
+
+		private BitsByte Bits => Flags;
+
+		private Rectangle Location => new Rectangle((int)Position.X, (int)Position.Y, 0, 0);
 
 		public CombatTextPacket() { }
 
-		public CombatTextPacket(int index) : this(Main.combatText[index]) { }
-
-		public CombatTextPacket(CombatText combatText)
+		public CombatTextPacket(Rectangle location, Color color, string text, bool dramatic = false, bool dot = false)
 		{
-			CombatText = combatText;
+			Position = location.TopLeft();
+			Color = color;
+			Text = text;
+			Flags = new BitsByte(b1: dramatic, b2: dot);
 		}
 
-		//public Color Color { get; set; }
+		/// <summary>
+		/// <seealso cref="CombatText.NewText(Rectangle, Color, int, bool, bool)"/> but with syncing
+		/// </summary>
+		public static int NewText(Rectangle location, Color color, int number, bool dramatic = false, bool dot = false)
+		{
+			return NewText(location, color, number.ToString(), dramatic, dot);
+		}
 
-		//public string Text { get; set; }
+		/// <summary>
+		/// <seealso cref="CombatText.NewText(Rectangle, Color, string, bool, bool)"/> but with syncing
+		/// </summary>
+		public static int NewText(Rectangle location, Color color, string text, bool dramatic = false, bool dot = false)
+		{
+			int index = CombatText.NewText(location, color, text, dramatic, dot);
+			if (Main.netMode == NetmodeID.MultiplayerClient && index != Main.maxCombatText)
+			{
+				new CombatTextPacket(location, color, text, dramatic, dot).Send();
+			}
+			return index;
+		}
 
-		//public Vector2 Position { get; set; }
-
-		//public CombatTextPacket() { }
-
-		//private Rectangle Location => new Rectangle((int)Position.X, (int)Position.Y, 1, 1);
-
-		//public CombatTextPacket(CombatText combatText) : this(combatText.position, combatText.color, combatText.text)
-		//{
-
-		//}
-
-		//public CombatTextPacket(Vector2 center, Color color, int number) : this(center, color, number.ToString())
-		//{
-
-		//}
-
-		//public CombatTextPacket(Vector2 center, Color color, string text)
-		//{
-		//	Position = center;
-		//	Color = color;
-		//	Text = text;
-		//}
-
-		//protected override bool PostReceive(BinaryReader reader, int fromWho)
-		//{
-		//	CombatText.NewText(Location, Color, Text, false, false);
-		//	return base.PostReceive(reader, fromWho);
-		//}
+		protected override bool PostReceive(BinaryReader reader, int fromWho)
+		{
+			CombatText.NewText(Location, Color, Text, Bits[0], Bits[1]);
+			return base.PostReceive(reader, fromWho);
+		}
 	}
 }
