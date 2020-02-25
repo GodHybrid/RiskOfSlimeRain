@@ -24,7 +24,19 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
-		public UnifiedRandom rng;
+		private UnifiedRandom rng;
+
+		public UnifiedRandom Rng
+		{
+			get
+			{
+				if (rng == null)
+				{
+					rng = new UnifiedRandom(RandomSeed / (1 + projectile.identity));
+				}
+				return rng;
+			}
+		}
 
 		public int RandomSeed
 		{
@@ -145,13 +157,9 @@ namespace RiskOfSlimeRain.Projectiles
 		public virtual void RandomMovement()
 		{
 			RandomMoveTimer++;
-			if (rng == null)
-			{
-				rng = new UnifiedRandom(RandomSeed / (1 + projectile.identity));
-			}
 			if (RandomMoveTimer % RandomMoveDirectionChangeFrequency == 0)
 			{
-				projectile.velocity = projectile.velocity.RotatedBy((rng.NextDouble() - 0.5) * RandomMoveDirectionChangeMagnitude);
+				projectile.velocity = projectile.velocity.RotatedBy((Rng.NextDouble() - 0.5) * RandomMoveDirectionChangeMagnitude);
 			}
 		}
 
