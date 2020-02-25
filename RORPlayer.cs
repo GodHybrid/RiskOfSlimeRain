@@ -142,7 +142,7 @@ namespace RiskOfSlimeRain
 		{
 			NoOnHitTimer = 0;
 
-			if (!target.CanBeChasedBy()) return;
+			if (!IsHostile(target)) return;
 
 			if (target.life <= 0)
 			{
@@ -154,7 +154,7 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (!target.CanBeChasedBy()) return;
+			if (!IsHostile(target)) return;
 
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
@@ -164,7 +164,7 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer = 0;
 
 			//This stuff should be at the bottom of everything
-			if (!target.CanBeChasedBy()) return;
+			if (!IsHostile(target)) return;
 
 			if (target.life <= 0)
 			{
@@ -183,8 +183,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//This stuff should be at the bottom of everything
-			if (!target.CanBeChasedBy()) return;
-			//if (target.friendly && target.type != NPCID.TargetDummy) return;
+			if (!IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -304,6 +303,11 @@ namespace RiskOfSlimeRain
 		public override void PostUpdate()
 		{
 			UpdateTimers();
+		}
+
+		private bool IsHostile(NPC npc)
+		{
+			return !npc.friendly && !npc.immortal && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.chaseable;
 		}
 	}
 }
