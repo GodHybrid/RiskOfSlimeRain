@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain
 		[DefaultValue(false)]
 		public bool OnlyShowWhenOpenInventory;
 
-		[Label("Item UI vertical offset")]
+		[Label("Vertical offset")]
 		[Tooltip("Adjust how far away the UI starts off vertically from the bottom")]
 		[DefaultValue(0.05f)]
 		[Range(0f, 1f)]
