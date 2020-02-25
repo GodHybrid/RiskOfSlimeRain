@@ -30,6 +30,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (MiscManager.IsWormBodyOrTail(target)) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
+
 			PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
 			{
 				proj.HealAmount = Stack * increase + initial;

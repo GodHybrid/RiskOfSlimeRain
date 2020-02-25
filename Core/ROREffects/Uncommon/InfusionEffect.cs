@@ -63,7 +63,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		private void SpawnProjectile(Player player, NPC target)
 		{
 			if (MiscManager.IsWormBodyOrTail(target)) return;
+			if (MiscManager.IsBossPiece(target)) return; //No free max health from creepers/probes
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
+
 			//The projectile reads from the effect of the owner how much health it gives him
 			PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
 		}

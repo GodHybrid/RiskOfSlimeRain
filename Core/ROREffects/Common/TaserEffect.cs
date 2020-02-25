@@ -31,6 +31,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void AddBuff(NPC target)
 		{
+			if (target.boss && !Main.rand.NextBool(10)) return;
+
 			NPCEffectManager.ApplyNPCEffect<TaserNPCEffect>(target, (initial + increase * Stack) * 6, true, true);
 		}
 	}
