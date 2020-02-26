@@ -32,11 +32,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		private static Type[] validInterfaces;
 		//Used to check if an effect procs or not
 		private static Type[] interfaceCanProc;
+
 		//Those two need caching cause they are used in ModifyTooltips dynamically for multiline tooltips with color
 		private static Dictionary<Type, string> flavorText;
 		private static Dictionary<Type, RORRarity> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
+		//Assign type of effect to its associated item type (no key == no item assigned)
+		private static Dictionary<Type, int> itemType;
 
 		public static void Load()
 		{
@@ -49,6 +52,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			flavorText = new Dictionary<Type, string>();
 			rarity = new Dictionary<Type, RORRarity>();
 			texture = new Dictionary<Type, string>();
+			itemType = new Dictionary<Type, int>();
+
 			foreach (var type in types)
 			{
 				if (type.IsInterface)
@@ -100,6 +105,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			flavorText = null;
 			rarity = null;
 			texture = null;
+			itemType = null;
 		}
 
 		/// <summary>
@@ -134,12 +140,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static void RegisterItem<T>(RORConsumableItem<T> rItem) where T : ROREffect
 		{
+			int type = rItem.item.type;
+
 			//To set the effects texture to the item texture
 			texture[typeof(T)] = rItem.Texture;
+			itemType[typeof(T)] = type;
 
 			//To register this item type in an according rarity entry
 			List<int> list = GetItemTypesOfRarity(rItem.Rarity);
-			int type = rItem.item.type;
 			if (!list.Contains(type))
 			{
 				list.Add(type);
@@ -231,6 +239,18 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				value.Clear();
 			}
+		}
+
+		/// <summary>
+		/// Used to retreive the associated item type of an effect (-1 if item nonexistant)
+		/// </summary>
+		public static int GetItemTypeOfEffect(ROREffect effect)
+		{
+			if (itemType.TryGetValue(effect.GetType(), out int value))
+			{
+				return value;
+			}
+			return -1;
 		}
 
 		/// <summary>

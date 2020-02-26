@@ -76,8 +76,16 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public override void SetDefaults()
 		{
-			item.CloneDefaults(ItemID.LifeFruit);
+			item.maxStack = 99;
+			item.consumable = true;
+			item.width = 18;
+			item.height = 18;
+			item.useStyle = 4;
+			item.useTime = 30;
+			item.useAnimation = 30;
+			item.value = Item.sellPrice(0, 2, 0, 0);
 			item.rare = (int)Rarity;
+			item.UseSound = SoundID.Item4;
 
 			//When wanting to add more SetDefaults, call base.SetDefaults() first
 		}
