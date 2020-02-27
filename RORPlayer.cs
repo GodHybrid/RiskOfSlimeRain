@@ -219,7 +219,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)
 		{
 			if (Main.gameMenu) return;
-			if (Config.HiddenVisuals(player)) return; 
+			if (Config.HiddenVisuals(player)) return;
 
 			ROREffectManager.DrawPlayerLayers(layers);
 			if (InWarbannerRange) layers.Insert(0, WarbannerEffect.WarbannerLayer);

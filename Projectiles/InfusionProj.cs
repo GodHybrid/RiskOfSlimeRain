@@ -5,7 +5,6 @@ using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -38,7 +37,8 @@ namespace RiskOfSlimeRain.Projectiles
 		public override bool FindTarget(out int targetIndex)
 		{
 			targetIndex = projectile.owner;
-			return projectile.GetOwner().active;
+			Player player = projectile.GetOwner();
+			return player.active && !player.dead;
 		}
 
 		public override void OtherAI()
