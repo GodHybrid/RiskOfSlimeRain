@@ -9,7 +9,7 @@ namespace RiskOfSlimeRain.Items.Placeable.Paintings
 	public abstract class PaintingItemBase<T> : PlaceableItem<T> where T : ModTile
 	{
 		/// <summary>
-		/// Name of the painting without the "Painting" at the end
+		/// Name of the painting
 		/// </summary>
 		public abstract string PaintingName { get; }
 
