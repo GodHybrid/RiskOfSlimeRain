@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Effects;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,10 @@ namespace RiskOfSlimeRain
 				//Because the game loads player data and then calls ResetEffects (to show proper health/mana and stuff like that), we need to acknowledge that.
 				//Usually we populate in OnEnterWorld
 				ROREffectManager.Populate(this);
+			}
+			else
+			{
+				PlayerHelper.SetLocalRORPlayer(this);
 			}
 			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
 		}

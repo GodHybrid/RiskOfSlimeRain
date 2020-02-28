@@ -11,7 +11,26 @@ namespace RiskOfSlimeRain.Helpers
 		/// Cached RORPlayer of Main.LocalPlayer 
 		/// </summary>
 		private static RORPlayer localRORPlayer;
-		private static Player lastLocalPlayer; //Needed so there will be no mismatch of localRORPlayer in the player select menu
+
+		/// <summary>
+		/// Update localRORPlayer
+		/// </summary>
+		public static void SetLocalRORPlayer(RORPlayer mPlayer)
+		{
+			if (Main.myPlayer == mPlayer.player.whoAmI)
+			{
+				localRORPlayer = mPlayer;
+			}
+		}
+
+		public static RORPlayer GetRORPlayer(this Player player)
+		{
+			if (!Main.gameMenu && player.whoAmI == Main.myPlayer && localRORPlayer != null)
+			{
+				return localRORPlayer;
+			}
+			return player.GetModPlayer<RORPlayer>();
+		}
 
 		/// <summary>
 		/// Returns the damage of the players held item. Respects ROR-Mode
@@ -20,26 +39,6 @@ namespace RiskOfSlimeRain.Helpers
 		{
 			//TODO include ror mode check here
 			return player.GetWeaponDamage(player.HeldItem);
-		}
-
-		public static RORPlayer GetRORPlayer(this Player player)
-		{
-			if (player.whoAmI == Main.myPlayer)
-			{
-				if (lastLocalPlayer == null)
-				{
-					lastLocalPlayer = player;
-				}
-
-				if (localRORPlayer == null || lastLocalPlayer != player)
-				{
-					localRORPlayer = player.GetModPlayer<RORPlayer>();
-				}
-				lastLocalPlayer = player;
-
-				return localRORPlayer;
-			}
-			return player.GetModPlayer<RORPlayer>();
 		}
 
 		/// <summary>
@@ -60,7 +59,6 @@ namespace RiskOfSlimeRain.Helpers
 		public static void Unload()
 		{
 			localRORPlayer = null;
-			lastLocalPlayer = null;
 		}
 	}
 }
