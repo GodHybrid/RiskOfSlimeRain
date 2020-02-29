@@ -36,7 +36,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void PassStatsIntoWarbanner(Player player)
 		{
-			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, player.Top);
+			WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, new Vector2(player.Center.X, player.Top.Y));
 		}
 
 		public static readonly PlayerLayer WarbannerLayer = new PlayerLayer("RiskOfSlimeRain", "Warbanner", ROREffectManager.ParentLayer, delegate (PlayerDrawInfo drawInfo)
