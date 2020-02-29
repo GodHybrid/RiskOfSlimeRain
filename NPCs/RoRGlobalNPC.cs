@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void ResetEffects(NPC npc)
 		{
-			NPCEffectManager.UpdateStatus(this);
+			NPCEffectManager.UpdateStatus(npc, this);
 		}
 
 		public override void AI(NPC npc)

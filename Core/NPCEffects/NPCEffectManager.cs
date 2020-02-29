@@ -68,17 +68,16 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 		/// <summary>
 		/// Decrements each effects' time, and removes it if 0
 		/// </summary>
-		public static void UpdateStatus(RORGlobalNPC globalNPC)
+		public static void UpdateStatus(NPC npc, RORGlobalNPC globalNPC)
 		{
-			List<NPCEffect> toRemove = new List<NPCEffect>();
-			foreach (var effect in globalNPC.NPCEffects)
+			for (int i = globalNPC.NPCEffects.Count - 1; i >= 0; i--)
 			{
-				if (effect.DecrementTime()) toRemove.Add(effect);
-			}
-
-			foreach (var effect in toRemove)
-			{
-				globalNPC.NPCEffects.Remove(effect);
+				NPCEffect effect = globalNPC.NPCEffects[i];
+				if (effect.DecrementTime())
+				{
+					effect.OnRemove(npc);
+					globalNPC.NPCEffects.Remove(effect);
+				}
 			}
 		}
 
@@ -105,26 +104,26 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 		/// <summary>
 		/// Applies an effect of the given type to an npc. Only broadcasts if it's not on the npc before. If both booleans are true, it will do so anyway
 		/// </summary>
-		public static void ApplyNPCEffect<T>(NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false) where T : NPCEffect
+		public static NPCEffect ApplyNPCEffect<T>(NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false) where T : NPCEffect
 		{
-			ApplyNPCEffect(typeof(T), npc, duration, broadcast, forceBroadcast);
+			return ApplyNPCEffect(typeof(T), npc, duration, broadcast, forceBroadcast);
 		}
 
 		/// <summary>
 		/// Applies an effect of the given type to an npc. Only broadcasts if it's not on the npc before. If both booleans are true, it will do so anyway
 		/// </summary>
-		public static void ApplyNPCEffect(int type, NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false)
+		public static NPCEffect ApplyNPCEffect(int type, NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false)
 		{
 			Type t = GetNPCEffectType(type);
-			ApplyNPCEffect(t, npc, duration, broadcast, forceBroadcast);
+			return ApplyNPCEffect(t, npc, duration, broadcast, forceBroadcast);
 		}
 
 		/// <summary>
 		/// Applies an effect of the given type to an npc. Only broadcasts if it's not on the npc before. If both booleans are true, it will do so anyway
 		/// </summary>
-		public static void ApplyNPCEffect(Type type, NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false)
+		public static NPCEffect ApplyNPCEffect(Type type, NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false)
 		{
-			if (MiscManager.IsBuffImmune(npc)) return;
+			if (MiscManager.IsBuffImmune(npc)) return null;
 
 			RORGlobalNPC globalNPC = npc.GetGlobalNPC<RORGlobalNPC>();
 			int index = GetEffectIndexOfType(globalNPC, type);
@@ -144,7 +143,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 			else
 			{
 				//Effect doesn't exist, add one
-				effect = NPCEffect.CreateInstance(type, duration);
+				effect = NPCEffect.CreateInstance(npc, type, duration);
 				globalNPC.NPCEffects.Add(effect);
 
 				if (broadcast && Main.netMode != NetmodeID.SinglePlayer)
@@ -152,6 +151,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 					new NPCEffectPacket(npc, effect).Send();
 				}
 			}
+			return effect;
 		}
 	}
 }

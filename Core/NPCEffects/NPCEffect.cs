@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.IO;
 using Terraria;
 
 namespace RiskOfSlimeRain.Core.NPCEffects
@@ -41,6 +42,28 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 			return false;
 		}
 
+		//TODO add docs
+
+		public virtual void OnRemove(NPC npc)
+		{
+
+		}
+
+		public virtual void Init(NPC npc)
+		{
+
+		}
+
+		public virtual void NetSend(BinaryWriter writer)
+		{
+
+		}
+
+		public virtual void NetReceive(BinaryReader reader)
+		{
+
+		}
+
 		/// <summary>
 		/// Sets the duration of the buff to this amount if it's below
 		/// </summary>
@@ -52,10 +75,11 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 		/// <summary>
 		/// Creates an NPCEffect with set duration
 		/// </summary>
-		public static NPCEffect CreateInstance(Type type, int duration)
+		public static NPCEffect CreateInstance(NPC npc, Type type, int duration)
 		{
 			NPCEffect effect = (NPCEffect)Activator.CreateInstance(type);
 			effect.SetTime(duration);
+			effect.Init(npc);
 			return effect;
 		}
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.IO;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -9,25 +10,42 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 	{
 		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
-			//if (Main.rand.Next(4) < 3)
-			//{
-			//	//int dust = Dust.NewDust(npc.position - new Vector2(2f, 2f), npc.width + 4, npc.height + 4, ModContent.DustType<EtherealFlame>(), npc.velocity.X * 0.4f, npc.velocity.Y * 0.4f, 100, default(Color), 3.5f);
-			//	//Main.dust[dust].noGravity = true;
-			//	//Main.dust[dust].velocity *= 1.8f;
-			//	//Main.dust[dust].velocity.Y -= 0.5f;
-			//	//if (Main.rand.Next(4) == 0)
-			//	//{
-			//	//	Main.dust[dust].noGravity = false;
-			//	//	Main.dust[dust].scale *= 0.5f;
-			//	//}
-			//}
 			Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
+		}
+
+		public Vector2 oldVelocity = default;
+		public BitsByte oldDirections = 0;
+
+		public override void Init(NPC npc)
+		{
+			oldVelocity = npc.velocity;
+			oldDirections[0] = npc.direction > 0;
+			oldDirections[1] = npc.spriteDirection > 0;
+		}
+
+		public override void NetSend(BinaryWriter writer)
+		{
+			writer.WritePackedVector2(oldVelocity);
+			writer.Write(oldDirections);
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			oldVelocity = reader.ReadPackedVector2();
+			oldDirections = reader.ReadByte();
 		}
 
 		public override void AI(NPC npc)
 		{
 			npc.velocity = Vector2.Zero;
 			npc.position = npc.oldPosition;
+			npc.direction = oldDirections[0].ToDirectionInt();
+			npc.spriteDirection = oldDirections[1].ToDirectionInt();
+		}
+
+		public override void OnRemove(NPC npc)
+		{
+			npc.velocity = oldVelocity;
 		}
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
@@ -36,7 +54,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 			Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Tasered");
 			Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
 			destination.Inflate(10, 0);
-			spriteBatch.Draw(texture, destination, drawColor);
+			spriteBatch.Draw(texture, destination, Color.White);
 		}
 	}
 }

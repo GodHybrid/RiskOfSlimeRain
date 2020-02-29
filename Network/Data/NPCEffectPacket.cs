@@ -1,6 +1,7 @@
 ﻿using RiskOfSlimeRain.Core.NPCEffects;
 using System.IO;
 using Terraria;
+using Terraria.ModLoader;
 using WebmilioCommons.Networking;
 using WebmilioCommons.Networking.Packets;
 
@@ -20,27 +21,46 @@ namespace RiskOfSlimeRain.Network.Data
 
 		public sbyte EffectType { get; set; }
 
+		private NPCEffect Effect { get; set; }
+
 		public NPCEffectPacket() { }
 
-		public NPCEffectPacket(int nWhoAmI, int nType, int eTime, sbyte eType)
+		public NPCEffectPacket(NPC npc, NPCEffect effect)
 		{
-			NPCWhoAmI = nWhoAmI;
-			NPCType = nType;
-			EffectTime = eTime;
-			EffectType = eType;
+			Effect = effect;
+			NPCWhoAmI = npc.whoAmI;
+			NPCType = npc.type;
+			EffectTime = effect.Time;
+			EffectType = effect.Type;
 		}
 
-		public NPCEffectPacket(NPC npc, NPCEffect effect) : this(npc.whoAmI, npc.type, effect.Time, effect.Type) { }
-
-		protected override bool PostReceive(BinaryReader reader, int fromWho)
+		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
 		{
-			//Do something with the received data, which is now in the variables we wrapped previously
-			if (NPCWhoAmI < 0 || NPCWhoAmI >= Main.maxNPCs) return base.PostReceive(reader, fromWho);
+			Effect.NetSend(modPacket);
+			return base.PreSend(modPacket, fromWho, toWho);
+		}
+
+		protected override bool MidReceive(BinaryReader reader, int fromWho)
+		{
+			if (NPCWhoAmI < 0 || NPCWhoAmI >= Main.maxNPCs) return base.MidReceive(reader, fromWho);
 			NPC npc = Main.npc[NPCWhoAmI];
 			if (npc.type != NPCType) return base.PostReceive(reader, fromWho);
 
-			NPCEffectManager.ApplyNPCEffect(EffectType, npc, EffectTime);
-			return base.PostReceive(reader, fromWho);
+			Effect = NPCEffectManager.ApplyNPCEffect(EffectType, npc, EffectTime);
+			try
+			{
+				if (Effect == null)
+				{
+					//Read underflow protection
+					Effect = NPCEffect.CreateInstance(npc, NPCEffectManager.GetNPCEffectType(EffectType), EffectTime);
+				}
+				Effect?.NetReceive(reader);
+			}
+			catch
+			{
+
+			}
+			return base.MidReceive(reader, fromWho);
 		}
 	}
 }
