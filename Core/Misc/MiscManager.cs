@@ -40,6 +40,7 @@ namespace RiskOfSlimeRain.Core.Misc
 				case NPCID.EaterofWorldsBody:
 				case NPCID.EaterofWorldsTail:
 				case NPCID.Golem:
+				case NPCID.GolemHead:
 				case NPCID.GolemFistLeft:
 				case NPCID.GolemFistRight:
 				case NPCID.MartianSaucerCannon:

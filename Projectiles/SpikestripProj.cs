@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.NPCEffects.Common;
 using Terraria;
@@ -53,7 +54,11 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			projectile.velocity.Y = 10f;
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n => NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60));
+			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
+			{
+				if (MiscManager.IsBossPiece(n)) return;
+				NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60);
+			});
 		}
 	}
 }
