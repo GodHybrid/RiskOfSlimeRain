@@ -60,6 +60,8 @@ namespace RiskOfSlimeRain.Core.Misc
 				case NPCID.TheHungry:
 				case NPCID.TheHungryII:
 				case NPCID.Probe:
+				case NPCID.Bee:
+				case NPCID.BeeSmall:
 					return true;
 				default:
 					return false;
