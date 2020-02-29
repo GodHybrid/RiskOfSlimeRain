@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.NPCEffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -34,6 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (target.boss && !Main.rand.NextBool(10)) return;
 			if (MiscManager.IsWormBodyOrTail(target)) return;
+			if (target.type == NPCID.WallofFlesh || target.type == NPCID.WallofFleshEye) return;
 			if (MiscManager.IsBossPiece(target)) return;
 
 			NPCEffectManager.ApplyNPCEffect<TaserNPCEffect>(target, (initial + increase * Stack) * 6, true, true);

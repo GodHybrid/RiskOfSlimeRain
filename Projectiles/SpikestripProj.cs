@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.NPCEffects.Common;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
 
@@ -57,6 +58,7 @@ namespace RiskOfSlimeRain.Projectiles
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
 			{
 				if (MiscManager.IsBossPiece(n)) return;
+				if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) return;
 				NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60);
 			});
 		}
