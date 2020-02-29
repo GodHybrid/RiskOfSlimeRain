@@ -78,7 +78,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string ToString()
 		{
-			return base.ToString() + " bonus: " + BonusLife;
+			return base.ToString() + ", " + UIInfo;
 		}
 	}
 }
