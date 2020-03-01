@@ -162,5 +162,13 @@ namespace RiskOfSlimeRain.Core.Misc
 			isBuffImmune = buffList.ToArray();
 			Array.Sort(isBuffImmune);
 		}
+
+		/// <summary>
+		/// Checks if an npc is hostile
+		/// </summary>
+		public static bool IsHostile(NPC npc)
+		{
+			return !npc.friendly && !npc.immortal && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.chaseable;
+		}
 	}
 }

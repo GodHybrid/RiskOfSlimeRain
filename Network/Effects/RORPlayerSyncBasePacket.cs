@@ -7,9 +7,12 @@ using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
+	/// <summary>
+	/// Sends the Effects list, and other various variables
+	/// </summary>
 	public abstract class RORPlayerSyncBasePacket : NetworkPacket
 	{
-		//to do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
+		//To do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
 
 		public int WhoAmI { get; set; }
 
@@ -36,19 +39,25 @@ namespace RiskOfSlimeRain.Network.Effects
 				ROREffect effect = ModPlayer.Effects[i];
 				effect.SendOnEnter(modPacket);
 			}
+			modPacket.Write(ModPlayer.nullifierEnabled);
+
 			return base.PreSend(modPacket, fromWho, toWho);
 		}
 
 		protected override bool MidReceive(BinaryReader reader, int fromWho)
 		{
+			ModPlayer.Effects.Clear();
 			for (int i = 0; i < Count; i++)
 			{
 				ROREffect effect = ROREffect.CreateInstanceFromNet(Player, reader);
 				if (effect == null) return base.MidReceive(reader, fromWho);
 				ModPlayer.Effects.Add(effect);
 			}
+			ModPlayer.nullifierEnabled = reader.ReadBoolean();
+
 			//GeneralHelper.Print(GetType().Name + " " + (DateTime.Now.Ticks % 1000) + " receiving " + Player.name + " " + Count + " effects");
 			ROREffectManager.Populate(ModPlayer);
+
 			return base.MidReceive(reader, fromWho);
 		}
 	}

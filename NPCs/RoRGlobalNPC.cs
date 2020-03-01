@@ -2,6 +2,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Items.Consumable;
+using RiskOfSlimeRain.Items.Placeable.Paintings;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -36,6 +39,15 @@ namespace RiskOfSlimeRain.NPCs
 			foreach (var effect in NPCEffects) effect.PostDraw(npc, spriteBatch, drawColor);
 		}
 
+		public override void SetupShop(int type, Chest shop, ref int nextSlot)
+		{
+			if (type == NPCID.Painter)
+			{
+				shop.item[nextSlot].SetDefaults(ModContent.ItemType<ColossusPaintingItem>());
+				nextSlot++;
+			}
+		}
+
 		public override void NPCLoot(NPC npc)
 		{
 			//Makeshift for now
@@ -65,6 +77,15 @@ namespace RiskOfSlimeRain.NPCs
 					//Item.NewItem(npc.getRect(), itemType, 1);
 					RORWorld.downedBossCount++;
 				}
+			}
+
+			if (npc.type == NPCID.WallofFlesh)
+			{
+				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<Nullifier>(), condition: delegate (NPC n, Player p)
+				{
+					RORPlayer mPlayer = p.GetRORPlayer();
+					return !mPlayer.nullifierEnabled && mPlayer.Effects.Count > 0;
+				});
 			}
 		}
 

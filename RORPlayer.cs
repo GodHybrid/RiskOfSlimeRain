@@ -1,5 +1,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
@@ -82,6 +83,150 @@ namespace RiskOfSlimeRain
 		}
 		#endregion
 
+		#region Nullifier
+		public bool nullifierEnabled = false;
+
+		public bool nullifierActive = false;
+
+		public long nullifierMoney = 0;
+
+		public long savings = -1;
+
+		private const int nullifierApplyTimerMax = 15;
+
+		private int nullifierApplyTimer = 0;
+
+		public bool NullifierTimerRunning => nullifierApplyTimer > 0;
+
+		/// <summary>
+		/// Sets up the nullifier process
+		/// </summary>
+		public void ActivateNullifier()
+		{
+			if (Main.myPlayer != player.whoAmI) return;
+
+			nullifierActive = true;
+		}
+
+		/// <summary>
+		/// Actually turns effects into items. Returns true if successful
+		/// </summary>
+		public bool ApplyNullifier()
+		{
+			//Clientside only
+			if (Main.myPlayer != player.whoAmI) return true;
+			if (savings < nullifierMoney)
+			{
+				CombatText.NewText(player.getRect(), CombatText.DamagedHostile, "Not enough money!");
+				return false;
+			}
+			if (nullifierMoney <= 0)
+			{
+				CombatText.NewText(player.getRect(), CombatText.DamagedHostile, "No removed items specified!");
+				return false;
+			}
+
+			//Reassign Effects list to new effects
+			List<ROREffect> newEffects = new List<ROREffect>();
+			Dictionary<int, int> newItemsToStack = new Dictionary<int, int>();
+			foreach (ROREffect effect in Effects)
+			{
+				if (effect.CanBeNullified)
+				{
+					bool removed = effect.UpdateStackAfterNullifier();
+					if (!removed)
+					{
+						newEffects.Add(effect);
+					}
+					newItemsToStack.Add(effect.ItemType, effect.NullifierStack);
+				}
+				else
+				{
+					newEffects.Add(effect);
+				}
+			}
+			Effects = newEffects;
+			ROREffectManager.Populate(this);
+			new RORPlayerSyncToAllPacket(this).Send();
+
+			//Spawn items
+			int count = 0;
+			foreach (KeyValuePair<int, int> item in newItemsToStack)
+			{
+				if (item.Key > 0)
+				{
+					player.QuickSpawnItem(item.Key, item.Value);
+					count += item.Value;
+				}
+			}
+			player.BuyItem((int)nullifierMoney);
+			Main.PlaySound(SoundID.Coins, volumeScale: 0.8f);
+			CombatText.NewText(player.getRect(), CombatText.HealLife, $"Restored {count} items for {nullifierMoney.MoneyToString()}!");
+			return true;
+		}
+
+		/// <summary>
+		/// Resets nullifier variables, doesn't do anything
+		/// </summary>
+		public void DeactivateNullifier()
+		{
+			foreach (ROREffect effect in Effects)
+			{
+				effect.NullifierStack = 0;
+			}
+			nullifierActive = false;
+			nullifierApplyTimer = 0;
+			nullifierMoney = 0;
+			savings = -1;
+		}
+
+		public void UpdateNullifier()
+		{
+			foreach (ROREffect effect in Effects)
+			{
+				if (effect.CanBeNullified)
+				{
+					nullifierMoney += effect.NullifierCost;
+				}
+			}
+			if (nullifierApplyTimer > 0)
+			{
+				nullifierApplyTimer--;
+			}
+		}
+
+		public void UpdateNullifierAfterUI()
+		{
+			nullifierMoney = 0;
+			savings = -1;
+		}
+
+		public void SetNullifierTimer()
+		{
+			nullifierApplyTimer = nullifierApplyTimerMax;
+		}
+
+		public bool DoubleClick()
+		{
+			if (mouseLeft && nullifierApplyTimer == 0)
+			{
+				Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				SetNullifierTimer();
+			}
+			else if (mouseLeft && nullifierApplyTimer < nullifierApplyTimerMax - 3) //3 tick margin in case of some weird frameskip stuff or whatnot
+			{
+				Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				//After a doubleclick 
+				return true;
+			}
+			return false;
+		}
+		#endregion
+
+		public bool mouseLeft = false;
+
+		public bool mouseRight = false;
+
 		public override void ResetEffects()
 		{
 			if (Main.gameMenu)
@@ -141,13 +286,16 @@ namespace RiskOfSlimeRain
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
 			ROREffectManager.Perform<IProcessTriggers>(this, e => e.ProcessTriggers(player, triggersSet));
+
+			mouseLeft = Main.mouseLeft && Main.mouseLeftRelease;
+			mouseRight = Main.mouseRight && Main.mouseRightRelease;
 		}
 
 		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			NoOnHitTimer = 0;
 
-			if (!IsHostile(target)) return;
+			if (!MiscManager.IsHostile(target)) return;
 
 			if (target.life <= 0)
 			{
@@ -159,7 +307,7 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (!IsHostile(target)) return;
+			if (!MiscManager.IsHostile(target)) return;
 
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
@@ -169,7 +317,7 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer = 0;
 
 			//This stuff should be at the bottom of everything
-			if (!IsHostile(target)) return;
+			if (!MiscManager.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -188,7 +336,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//This stuff should be at the bottom of everything
-			if (!IsHostile(target)) return;
+			if (!MiscManager.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -271,6 +419,7 @@ namespace RiskOfSlimeRain
 			{
 				{ "version", LATEST_VERSION },
 				{ "effects", effectCompounds },
+				{ "nullifierEnabled", nullifierEnabled },
 			};
 			return tag;
 		}
@@ -290,6 +439,8 @@ namespace RiskOfSlimeRain
 				//Sort by creation time
 				Effects.Sort();
 			}
+
+			nullifierEnabled = tag.GetBool("nullifierEnabled");
 		}
 
 		public override void Initialize()
@@ -297,6 +448,8 @@ namespace RiskOfSlimeRain
 			Effects = new List<ROREffect>();
 			EffectByType = new Dictionary<Type, List<ROREffect>>();
 			ROREffectManager.Init(this);
+
+			nullifierEnabled = false;
 		}
 
 		public override void PreUpdate()
@@ -307,12 +460,8 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdate()
 		{
+			UpdateNullifier();
 			UpdateTimers();
-		}
-
-		private bool IsHostile(NPC npc)
-		{
-			return !npc.friendly && !npc.immortal && npc.lifeMax > 5 && !npc.dontTakeDamage && npc.chaseable;
 		}
 	}
 }

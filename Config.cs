@@ -15,7 +15,7 @@ namespace RiskOfSlimeRain
 		[Header("Item UI")]
 
 		[Label("Custom stacking")]
-		[Tooltip("Manually select how many stacks an item has via scrollwheel (up to the unlocked amount)")]
+		[Tooltip("Manually select how many stacks an item has (up to the unlocked amount)")]
 		[DefaultValue(false)]
 		public bool CustomStacking;
 

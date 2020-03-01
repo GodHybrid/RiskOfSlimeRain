@@ -17,7 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	//IComparable because we use it in a list to sort
 	//INetworkSerializable because we manually have to sync an entire effect sometimes (from webmiliocommons)
 	//Effects are created via the ROREffect.CreateInstance method
-	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable
+	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable, ICloneable
 	{
 		//Something you can save in a TagCompound, hence why string, not Type
 		/// <summary>
@@ -57,7 +57,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public virtual RORRarity Rarity => RORRarity.Common;
 
 		//Cause it returns the already pulsating mouse color if rarity is white
-		public Color RarityColor => Rarity == RORRarity.Common ? Color.White : ItemRarity.GetColor((int)Rarity);
+		public Color RarityColor => ROREffectManager.GetRarityColor(Rarity);
+
+		public int RarityValue => ROREffectManager.GetRarityValue(Rarity);
 
 		//Dynamic
 		/// <summary>
@@ -114,6 +116,20 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		}
 
 		public bool FullStack => _Stack == _UnlockedStack;
+
+		private int _NullifierStack = 0;
+
+		public int NullifierStack
+		{
+			get => _NullifierStack;
+			set => _NullifierStack = Utils.Clamp(value, 0, _UnlockedStack);
+		}
+
+		public int NullifierCost => NullifierStack * RarityValue; //TODO ror-mode check for reduced price?
+
+		public bool CanBeNullified => NullifierStack > 0;
+
+		public int ItemType => ROREffectManager.GetItemTypeOfEffect(this);
 
 		/// <summary>
 		/// Only returns true for things that reached their cap, that don't already do their desired effect
@@ -180,6 +196,16 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			UnlockedStack++;
 			Stack++;
+		}
+
+		/// <summary>
+		/// Updates the stack counts after using the nullifier, returns true if the unlocked stack reaches 0
+		/// </summary>
+		public bool UpdateStackAfterNullifier()
+		{
+			UnlockedStack -= NullifierStack;
+			Stack -= NullifierStack;
+			return UnlockedStack <= 0;
 		}
 
 		/// <summary>
@@ -290,6 +316,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		/// <summary>
+		/// Override this if the effect holds variables
+		/// </summary>
+		protected virtual void CloneValues(ROREffect newEffect)
+		{
+
+		}
+
 		#region saving/loading
 		public TagCompound Save()
 		{
@@ -369,7 +403,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		}
 
 		/// <summary>
-		/// Same as Send, but also sends the TypeName, to reconstruct in CreateInstanceFromNet
+		/// Same as Send, but also sends the id, to reconstruct in CreateInstanceFromNet
 		/// </summary>
 		public void SendOnEnter(BinaryWriter writer)
 		{
@@ -389,11 +423,17 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			NetReceive(reader);
 		}
 
+		/// <summary>
+		/// Override this if the effect holds variables
+		/// </summary>
 		protected virtual void NetSend(BinaryWriter writer)
 		{
 
 		}
 
+		/// <summary>
+		/// Override this if the effect holds variables
+		/// </summary>
 		protected virtual void NetReceive(BinaryReader reader)
 		{
 
@@ -442,6 +482,16 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public void Receive(NetworkPacket networkPacket, BinaryReader reader)
 		{
 			Receive(reader);
+		}
+
+		public object Clone()
+		{
+			ROREffect effect = CreateInstance(Player, TypeName);
+			effect._CreationTime = _CreationTime;
+			effect.UnlockedStack = UnlockedStack;
+			effect.Stack = Stack;
+			CloneValues(effect);
+			return effect;
 		}
 		#endregion
 	}

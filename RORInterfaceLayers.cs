@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Network.Effects;
 using System.Collections.Generic;
 using Terraria;
@@ -27,6 +28,8 @@ namespace RiskOfSlimeRain
 
 		public static int hoverIndex = -1;
 
+		public static bool EffectsVisible { private set; get; }
+
 		//Multiplayer syncing thing used when changing stack manually from the UI. Keeps track of any changed stacks and a timer
 		//When timer runs out, sync
 		/// <summary>
@@ -50,6 +53,7 @@ namespace RiskOfSlimeRain
 		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			if (Main.gameMenu) return;
+			//int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 			int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 			if (mouseIndex != -1)
 			{
@@ -63,12 +67,13 @@ namespace RiskOfSlimeRain
 
 		private static readonly GameInterfaceDrawMethod Effects = delegate
 		{
+			Player player = Main.LocalPlayer;
+			RORPlayer mPlayer = player.GetRORPlayer();
 			if (!Main.playerInventory && Config.Instance.OnlyShowWhenOpenInventory)
 			{
-				return true;
+				if (!mPlayer.nullifierActive) return true;
 			}
-			Player player = Main.LocalPlayer;
-			List<ROREffect> effects = player.GetRORPlayer().Effects;
+			List<ROREffect> effects = mPlayer.Effects;
 			if (effects.Count == 0) return true;
 
 			int xPosition = 0;
@@ -89,9 +94,9 @@ namespace RiskOfSlimeRain
 			Texture2D texture;
 
 			//Draw the info icon on the very left
-			xPosition = 2 * inventorySize + (-1 - 0) * iconPadding;
-			yPosition = yStart + 0;
-			bool drawingMisc = true;
+			//xPosition = 2 * inventorySize + (-1 - 0) * iconPadding;
+			//yPosition = yStart + 0;
+			bool drawingInfo = true;
 
 
 			for (int i = 0; i < effects.Count; i++)
@@ -105,10 +110,10 @@ namespace RiskOfSlimeRain
 
 				yPosition = yStart + lineOffset * verticalLineHeight;
 
-				if (drawingMisc)
+				if (drawingInfo)
 				{
-					texture = Main.npcHeadTexture[0];
-					xPosition -= iconPadding;
+					texture = mPlayer.nullifierActive ? Main.itemTexture[ModContent.ItemType<Nullifier>()] : Main.npcHeadTexture[0];
+					xPosition -= iconPadding; //Go left one icon distance
 				}
 
 				sourceRect = texture.Bounds;
@@ -137,7 +142,7 @@ namespace RiskOfSlimeRain
 
 				Color color = Color.White * 0.8f;
 
-				if (drawingMisc)
+				if (drawingInfo)
 				{
 					color = Color.White;
 				}
@@ -148,7 +153,7 @@ namespace RiskOfSlimeRain
 					hoverIndex = i;
 					destRect.Inflate(2, 2);
 					color = Color.White;
-					if (drawingMisc)
+					if (drawingInfo)
 					{
 						hoverIndex = -2;
 					}
@@ -156,12 +161,25 @@ namespace RiskOfSlimeRain
 
 				Main.spriteBatch.Draw(texture, destRect, sourceRect, color);
 
-				Vector2 bottomCenter = new Vector2(xPosition - width / 2, yPosition + 14);
+				Vector2 leftCenter = new Vector2(xPosition - (width >> 1), yPosition + (iconSize >> 1) - 2);
 				//Vector2 bottomCenter = destRect.BottomLeft();
 
-				if (drawingMisc)
+				if (drawingInfo)
 				{
-					drawingMisc = false;
+					if (mPlayer.nullifierActive && mPlayer.savings > -1)
+					{
+						Vector2 pos = new Vector2(xPosition, yPosition);
+						pos.X -= width >> 1;
+						pos.Y -= 10 + 2 * iconSize;
+						string text = "Savings: " + mPlayer.savings.MoneyToString();
+						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, pos, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+
+						pos.Y += iconSize;
+						text = "Total price: " + mPlayer.nullifierMoney.MoneyToString();
+						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, pos, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+					}
+
+					drawingInfo = false;
 					i--;
 				}
 				else
@@ -170,19 +188,30 @@ namespace RiskOfSlimeRain
 					if (!effect.FullStack) text += "/" + effect.UnlockedStack;
 					Vector2 length = Main.fontItemStack.MeasureString(text);
 
-					bottomCenter.Y -= length.Y / 2;
+					leftCenter.Y -= length.Y / 2;
 					color = Color.White;
 					if (effect.Capped)
 					{
 						color = Color.LawnGreen;
 					}
-					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, bottomCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+
+					if (mPlayer.nullifierActive)
+					{
+						leftCenter.Y -= length.Y;
+						text = "x" + effect.NullifierStack.ToString();
+						length = Main.fontItemStack.MeasureString(text);
+
+						color = Color.OrangeRed;
+						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+					}
 				}
 			}
 
 			if (hoverIndex > -1)
 			{
 				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
+				player.mouseInterface = true;
 				player.showItemIcon = false;
 
 				effect = effects[hoverIndex];
@@ -197,7 +226,7 @@ namespace RiskOfSlimeRain
 					text += "\n" + effect.CappedMessage;
 				}
 
-				Vector2 textPos = SetTextPos(text);
+				Vector2 textPos = GetTextPosFromMouse(text);
 
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, name, textPos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
@@ -205,25 +234,47 @@ namespace RiskOfSlimeRain
 			else if (hoverIndex == -2) //Misc
 			{
 				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
+				player.mouseInterface = true;
 				player.showItemIcon = false;
 
 				string text = $"This UI shows all your currently used items from '{RiskOfSlimeRainMod.Instance.DisplayName}'";
-				text += "\nCheck the config of this mod to customize the UI";
-				text += "\nMisc Info:";
-				text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
-				text += "\nItem drop chance from bosses: " + RORWorld.DropChance.ToPercent(2);
 
-				Vector2 textPos = SetTextPos(text);
+				if (mPlayer.nullifierActive)
+				{
+					text += "\nNullifier view currently active";
+					text += "\nLeft/right click or use the mousewheel on an icon to increase/decrease removed stack count";
+					text += "\nDouble left click on this icon twice to pay the price, remove the effects and return the items";
+					text += "\nRight click to switch to normal UI";
+				}
+				else
+				{
+					text += "\nCheck the config of this mod to customize the UI";
+					if (Config.Instance.CustomStacking)
+					{
+						text += "\nLeft/right click or use the mousewheel on an icon to increase/decrease stack";
+					}
+					if (mPlayer.nullifierEnabled)
+					{
+						text += "\nRight click to switch to nullifier UI";
+					}
+					text += "\nMisc Info:";
+					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
+					text += "\nItem drop chance from bosses: " + RORWorld.DropChance.ToPercent(2);
+				}
+
+				Vector2 textPos = GetTextPosFromMouse(text);
 
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 			}
+
+			EffectsVisible = true;
 
 			return true;
 		};
 
 		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
 		{
-			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer.GetRORPlayer());
+			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer);
 			if (effect == null || effect?.Active == false || Config.HiddenVisuals(drawPlayer))
 			{
 				orig(self, drawPlayer, projectileDrawPosition, cHead);
@@ -252,7 +303,7 @@ namespace RiskOfSlimeRain
 		/// <summary>
 		/// Returns mouse position based on text and screen edges
 		/// </summary>
-		private static Vector2 SetTextPos(string text)
+		private static Vector2 GetTextPosFromMouse(string text)
 		{
 			Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
 			mousePos += new Vector2(Main.ThickMouse ? 22 : 16);
@@ -272,41 +323,105 @@ namespace RiskOfSlimeRain
 
 		public static void Update(Player player)
 		{
+			RORPlayer mPlayer = player.GetRORPlayer();
+
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1)
 			{
-				if (!Config.Instance.CustomStacking || hoverIndex == -2)
+				if (hoverIndex == -2)
 				{
-					hoverIndex = -1;
-					return;
+					//On the "?" or the nullifier
+					if (mPlayer.nullifierActive)
+					{
+						//On the nullifier
+						if (mPlayer.mouseRight)
+						{
+							mPlayer.DeactivateNullifier();
+						}
+						else if (mPlayer.DoubleClick())
+						{
+							bool success = mPlayer.ApplyNullifier();
+							if (success)
+							{
+								mPlayer.DeactivateNullifier();
+							}
+						}
+					}
+					else
+					{
+						//On the "?"
+						if (mPlayer.mouseRight && mPlayer.nullifierEnabled)
+						{
+							mPlayer.ActivateNullifier();
+						}
+					}
 				}
-				RORPlayer mPlayer = player.GetRORPlayer();
-				List<ROREffect> effects = mPlayer.Effects;
-				//This stuff is here cause only here resetting scrollwheel status works properly
-				ROREffect effect = effects[hoverIndex];
-				int oldStack = effect.Stack;
-				if (PlayerInput.ScrollWheelDelta > 0)
+				else
 				{
-					effect.Stack++;
-					PlayerInput.ScrollWheelDelta = 0;
-					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
-				}
-				else if (PlayerInput.ScrollWheelDelta < 0)
-				{
-					effect.Stack--;
-					PlayerInput.ScrollWheelDelta = 0;
-					Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
-				}
-				if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effect.Stack)
-				{
-					SetChangedEffect(hoverIndex);
+					//On the icons
+					List<ROREffect> effects = mPlayer.Effects;
+					ROREffect effect = effects[hoverIndex];
+					if (mPlayer.nullifierActive)
+					{
+						//On the icons when nullifier is enabled
+						if (mPlayer.mouseLeft || PlayerInput.ScrollWheelDelta > 0)
+						{
+							effect.NullifierStack++;
+							PlayerInput.ScrollWheelDelta = 0;
+							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+						}
+						else if (mPlayer.mouseRight || PlayerInput.ScrollWheelDelta < 0)
+						{
+							effect.NullifierStack--;
+							PlayerInput.ScrollWheelDelta = 0;
+							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+						}
+					}
+					else if (Config.Instance.CustomStacking)
+					{
+						//On the icons when custom stacking is enabled (and nullifier disabled)
+
+						//This stuff is here cause only here resetting scrollwheel status works properly
+						int oldStack = effect.Stack;
+						if (mPlayer.mouseLeft || PlayerInput.ScrollWheelDelta > 0)
+						{
+							effect.Stack++;
+							PlayerInput.ScrollWheelDelta = 0;
+							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+						}
+						else if (mPlayer.mouseRight || PlayerInput.ScrollWheelDelta < 0)
+						{
+							effect.Stack--;
+							PlayerInput.ScrollWheelDelta = 0;
+							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+						}
+
+						if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effect.Stack)
+						{
+							SetChangedEffect(hoverIndex);
+						}
+					}
 				}
 
 				hoverIndex = -1;
 			}
 
-			if (Main.myPlayer == player.whoAmI && Main.netMode != NetmodeID.SinglePlayer)
+			if (Main.myPlayer == player.whoAmI)
 			{
-				SyncChangedEffects(player);
+				if (EffectsVisible && mPlayer.nullifierActive)
+				{
+					mPlayer.UpdateNullifierAfterUI();
+					mPlayer.savings = player.GetSavings();
+				}
+				else
+				{
+					mPlayer.UpdateNullifierAfterUI();
+				}
+
+				EffectsVisible = false;
+				if (Main.netMode != NetmodeID.SinglePlayer)
+				{
+					SyncChangedEffects(player);
+				}
 			}
 		}
 

@@ -30,6 +30,14 @@ namespace RiskOfSlimeRain.Helpers
 		/// </summary>
 		public static string MoneyToString(this int amount)
 		{
+			return ((long)amount).MoneyToString();
+		}
+
+		/// <summary>
+		/// Converts a long into a string representing its monetary value
+		/// </summary>
+		public static string MoneyToString(this long amount)
+		{
 			string text = "";
 			string[] currencies = new string[] { Language.GetTextValue("Currency.Platinum"), Language.GetTextValue("Currency.Gold"), Language.GetTextValue("Currency.Silver"), Language.GetTextValue("Currency.Copper") };
 
@@ -40,7 +48,7 @@ namespace RiskOfSlimeRain.Helpers
 			}
 
 			int cutoff = 1000000;
-			int money;
+			long money;
 			for (int i = 0; i < currencies.Length; i++)
 			{
 				//From platinum to copper

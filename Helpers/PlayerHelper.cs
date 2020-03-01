@@ -56,6 +56,32 @@ namespace RiskOfSlimeRain.Helpers
 			//NetMessage.SendData(MessageID.SpiritHeal, -1, -1, null, player.whoAmI, clampHeal);
 		}
 
+		/// <summary>
+		/// Counts current savings of the player (in copper coins)
+		/// </summary>
+		public static long GetSavings(this Player player)
+		{
+			long inv = Utils.CoinsCount(out _, player.inventory, new int[]
+			{
+				58, //Mouse item
+				57, //Ammo slots
+				56,
+				55,
+				54
+			});
+			int[] empty = new int[0]; 
+			long piggy = Utils.CoinsCount(out _, player.bank.item, empty);
+			long safe = Utils.CoinsCount(out _, player.bank2.item, empty);
+			long forge = Utils.CoinsCount(out _, player.bank3.item, empty);
+			return Utils.CoinsCombineStacks(out _, new long[]
+			{
+				inv,
+				piggy,
+				safe,
+				forge
+			});
+		}
+
 		public static void Unload()
 		{
 			localRORPlayer = null;

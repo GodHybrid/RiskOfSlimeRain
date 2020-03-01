@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
+using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects
@@ -127,6 +128,28 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static RORRarity GetRarity<T>() where T : ROREffect
 		{
 			return rarity[typeof(T)];
+		}
+
+		public static int GetRarityValue(RORRarity rarity)
+		{
+			switch (rarity)
+			{
+				case RORRarity.Common:
+					return 5 * 100 * 100;
+				case RORRarity.Uncommon:
+					return 10 * 100 * 100;
+				case RORRarity.Boss:
+					return 15 * 100 * 100;
+				case RORRarity.Artifact:
+					return 20 * 100 * 100;
+				default:
+					return 0;
+			}
+		}
+
+		public static Color GetRarityColor(RORRarity rarity)
+		{
+			return rarity == RORRarity.Common ? Color.White : ItemRarity.GetColor((int)rarity);
 		}
 
 		public static string GetTexture(Type type)

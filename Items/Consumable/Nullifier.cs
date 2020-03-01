@@ -1,6 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Core.ROREffects;
-using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
@@ -12,40 +10,29 @@ namespace RiskOfSlimeRain.Items.Consumable
 {
 	public class Nullifier : ModItem
 	{
-		public sealed override void SetStaticDefaults()
+		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Resets all the upgrades you ever got");
+			Tooltip.SetDefault("Use to enable the ability to restore your used " + RiskOfSlimeRainMod.Instance.DisplayName + " items, for a price");
 		}
 
-		public sealed override bool CanUseItem(Player player)
+		public override bool CanUseItem(Player player)
 		{
-			return player.GetRORPlayer().Effects.Count > 0 || WarbannerManager.warbanners.Count > 0;
+			return !player.GetRORPlayer().nullifierEnabled;
 		}
 
-		public sealed override bool UseItem(Player player)
+		public override bool UseItem(Player player)
 		{
 			RORPlayer mPlayer = player.GetRORPlayer();
-			//List<ROREffect> effects = new List<ROREffect>(mPlayer.Effects);
-			mPlayer.Effects.Clear();
-			ROREffectManager.Clear(mPlayer);
-			WarbannerManager.Clear();
-			//if (mPlayer.Effects.Count <= 0 && Main.netMode != NetmodeID.Server)
-			//{
-			//	foreach (ROREffect effect in effects)
-			//	{
-			//		int type = ROREffectManager.GetItemTypeOfEffect(effect);
-			//		if (type >= 0)
-			//		{
-			//			player.QuickSpawnItem(type, effect.UnlockedStack);
-			//		}
-			//	}
-			//}
-			RORWorld.downedBossCount = 0;
+			mPlayer.nullifierEnabled = true;
 			return true;
 		}
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
+			if (Main.LocalPlayer.GetRORPlayer().nullifierEnabled)
+			{
+				tooltips.Add(new TooltipLine(mod, Name, "Nullifier is already enabled! Click the \"?\" in the UI"));
+			}
 			tooltips.Add(new TooltipLine(mod, Name, "Gone with the wind...")
 			{
 				overrideColor = Color.Red * (Main.mouseTextColor / 255f)

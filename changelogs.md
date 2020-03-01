@@ -1,5 +1,20 @@
 # Changelogs
 
+## 0.3.1
+
+* Fixes
+    * Various unintended interactions with enemies are fixed/toned down
+        * Monster Tooth, Spikestrip, Taser
+
+* Additions
+    * Painting (Colossus), sold by Painter NPC
+    * Nullifier
+        * Drops when you kill the Wall of Flesh and have atleast one item from this mod activated
+        * Allows you to get back your items for a price
+    * Warbanner Remover
+        * Drops when you kill Skeletron and have atleast one item from this mod activated
+        * Allows you to remove the nearest warbanner you stand in range of
+
 ## 0.3.0.4
 
 * Added a "?" icon on the left of the UI, giving you additional information on proc chance and boss drops
