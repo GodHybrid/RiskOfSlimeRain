@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -32,7 +33,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override void PopulateFromTag(TagCompound tag)
 		{
 			total = tag.GetInt("total");
-			totalText = MoneyToString(total);
+			totalText = total.MoneyToString();
 		}
 
 		public override string Description => $"Generate {amount} copper every {interval / 60} seconds. Withdraw by opening the inventory";
@@ -49,19 +50,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				timer = interval / Stack + 1;
 				savings++;
-				nextMoneyWithdrawn = MoneyToString(amount * savings);
+				nextMoneyWithdrawn = (amount * savings).MoneyToString();
 			}
 
 			if (justOpenedInventory && savings > 0)
 			{
 				Main.PlaySound(SoundID.CoinPickup);
-				lastWithdrawn = MoneyToString(amount * savings);
+				lastWithdrawn = (amount * savings).MoneyToString();
 				//*5 cause sell/buy value stuff
 				player.SellItem(amount * 5, savings);
 				total += amount * savings;
-				totalText = MoneyToString(total);
+				totalText = total.MoneyToString();
 				savings = 0;
-				nextMoneyWithdrawn = MoneyToString(0);
+				nextMoneyWithdrawn = 0.MoneyToString();
 			}
 		}
 
@@ -82,51 +83,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				text += $"Next withdrawal: {nextMoneyWithdrawn}";
 			}
 			return text + $"\nTotal money generated: {totalText}";
-		}
-
-		private string MoneyToString(int amount)
-		{
-			string text = "";
-			string[] currencies = new string[] { Language.GetTextValue("Currency.Platinum"), Language.GetTextValue("Currency.Gold"), Language.GetTextValue("Currency.Silver"), Language.GetTextValue("Currency.Copper") };
-
-			if (amount < 1)
-			{
-				amount = 0;
-				//num = 1;
-			}
-
-			int cutoff = 1000000;
-			int money;
-			for (int i = 0; i < 4; i++)
-			{
-				//from platinum to copper
-				money = 0;
-				if (i == 3)
-				{
-					//copper special cause 0 and stuff
-					if (amount >= 0)
-					{
-						money = amount;
-					}
-				}
-				else
-				{
-					if (amount >= cutoff)
-					{
-						money = amount / cutoff;
-						amount -= money * cutoff;
-					}
-
-					cutoff /= 100;
-				}
-
-				if (money > 0)
-				{
-					text += money + " " + currencies[i] + " ";
-				}
-			}
-			if (text == string.Empty) return "0 " + currencies[3];
-			return text;
 		}
 	}
 }
