@@ -108,7 +108,7 @@ namespace RiskOfSlimeRain.NPCs
 					onDropped: delegate (Player player, Item item)
 					{
 						player.GetRORPlayer().warbannerRemoverDropped = true;
-						new WarbannerRemoverDroppedPacket().Send(toWho: player.whoAmI);
+						new WarbannerRemoverDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
 					}
 				);
 			}

@@ -39,7 +39,10 @@ namespace RiskOfSlimeRain.Network.Effects
 				ROREffect effect = ModPlayer.Effects[i];
 				effect.SendOnEnter(modPacket);
 			}
-			modPacket.Write(ModPlayer.nullifierEnabled);
+			BitsByte flags = new BitsByte();
+			flags[0] = ModPlayer.nullifierEnabled;
+			flags[1] = ModPlayer.warbannerRemoverDropped;
+			modPacket.Write((byte)flags);
 
 			return base.PreSend(modPacket, fromWho, toWho);
 		}
@@ -53,7 +56,9 @@ namespace RiskOfSlimeRain.Network.Effects
 				if (effect == null) return base.MidReceive(reader, fromWho);
 				ModPlayer.Effects.Add(effect);
 			}
-			ModPlayer.nullifierEnabled = reader.ReadBoolean();
+			BitsByte flags = reader.ReadByte();
+			ModPlayer.nullifierEnabled = flags[0];
+			ModPlayer.warbannerRemoverDropped = flags[1];
 
 			//GeneralHelper.Print(GetType().Name + " " + (DateTime.Now.Ticks % 1000) + " receiving " + Player.name + " " + Count + " effects");
 			ROREffectManager.Populate(ModPlayer);
