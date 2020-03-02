@@ -98,6 +98,7 @@ namespace RiskOfSlimeRain
 			//yPosition = yStart + 0;
 			bool drawingInfo = true;
 
+			Vector2 priceDrawPos = Vector2.Zero;
 
 			for (int i = 0; i < effects.Count; i++)
 			{
@@ -168,15 +169,9 @@ namespace RiskOfSlimeRain
 				{
 					if (mPlayer.nullifierActive && mPlayer.savings > -1)
 					{
-						Vector2 pos = new Vector2(xPosition, yPosition);
-						pos.X -= width >> 1;
-						pos.Y -= 10 + 2 * iconSize;
-						string text = "Savings: " + mPlayer.savings.MoneyToString();
-						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, pos, color, 0, Vector2.Zero, Vector2.One * 0.78f);
-
-						pos.Y += iconSize;
-						text = "Total price: " + mPlayer.nullifierMoney.MoneyToString();
-						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, pos, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+						priceDrawPos = new Vector2(xPosition, yPosition);
+						priceDrawPos.X -= width >> 1;
+						priceDrawPos.Y -= 10 + 2 * iconSize;
 					}
 
 					drawingInfo = false;
@@ -265,6 +260,17 @@ namespace RiskOfSlimeRain
 				Vector2 textPos = GetTextPosFromMouse(text);
 
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+			}
+
+			if (hoverIndex != -2 && mPlayer.nullifierActive && mPlayer.savings > -1)
+			{
+				//Don't draw it if you mouseover the info icon because of readability issues
+				string text = "Savings: " + mPlayer.savings.MoneyToString();
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
+
+				priceDrawPos.Y += iconSize;
+				text = "Total price: " + mPlayer.nullifierMoney.MoneyToString();
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
 
 			EffectsVisible = true;
