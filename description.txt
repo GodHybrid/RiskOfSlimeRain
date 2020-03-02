@@ -13,9 +13,9 @@ The mod also features a config setting where you can selectively pick the amount
 [c/888888:Changelog:]
 v0.3.1:
     + Fixes, Warbanner rework
-	+ A new painting, sold by the Painter
-	+ Nullifier, to strip your items for a price
-	+ Warbanner Remover, to delete warbanners if they are misplaced
+    + A new painting, sold by the Painter
+    + Nullifier, to strip your items for a price
+    + Warbanner Remover, to delete warbanners if they are misplaced
 v0.3.0.4: 
-	+ Added visuals and radii options to the configs
-	+ Added informational UI icon to the item tray
+    + Added visuals and radii options to the configs
+    + Added informational UI icon to the item tray
