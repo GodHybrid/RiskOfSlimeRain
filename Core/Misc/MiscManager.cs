@@ -37,6 +37,8 @@ namespace RiskOfSlimeRain.Core.Misc
 			switch (npc.type)
 			{
 				case NPCID.Creeper:
+				case NPCID.Bee:
+				case NPCID.BeeSmall:
 				case NPCID.EaterofWorldsBody:
 				case NPCID.EaterofWorldsTail:
 				case NPCID.Golem:
@@ -55,14 +57,13 @@ namespace RiskOfSlimeRain.Core.Misc
 				case NPCID.PrimeLaser:
 				case NPCID.PrimeSaw:
 				case NPCID.PrimeVice:
+				case NPCID.Probe:
+				case NPCID.ServantofCthulhu:
 				case NPCID.SkeletronHead:
 				case NPCID.TheDestroyerBody:
 				case NPCID.TheDestroyerTail:
 				case NPCID.TheHungry:
 				case NPCID.TheHungryII:
-				case NPCID.Probe:
-				case NPCID.Bee:
-				case NPCID.BeeSmall:
 					return true;
 				default:
 					return false;
