@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			if (failedAttempts > 0) return new PlayerLayerParams("Textures/SnakeEyes", new Vector2(0, -50), frame: failedAttempts - 1, frameCount: 6);
+			if (failedAttempts > 0) return new PlayerLayerParams("Textures/SnakeEyes", new Vector2(0, -66), frame: failedAttempts - 1, frameCount: 6);
 			else return null;
 		}
 
