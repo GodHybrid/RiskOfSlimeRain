@@ -1,3 +1,4 @@
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -26,6 +27,7 @@ namespace RiskOfSlimeRain.Items.Placeable.Paintings
 
 		public sealed override void SetDefaults()
 		{
+			item.value = Item.buyPrice(gold: 1);
 			item.width = 32;
 			item.height = 32;
 			item.maxStack = 999;
