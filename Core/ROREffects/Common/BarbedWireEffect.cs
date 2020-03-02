@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
 
@@ -32,7 +33,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public void PostUpdateEquips(Player player)
 		{
 			if (Main.hasFocus) alphaCounter++;
-			if (Main.myPlayer != player.whoAmI) return;
+			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
 			{

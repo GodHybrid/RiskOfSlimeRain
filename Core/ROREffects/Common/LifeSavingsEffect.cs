@@ -43,7 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostUpdateEquips(Player player)
 		{
-			if (Main.myPlayer != player.whoAmI) return;
+			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
 			timer--;
 			if (timer < 0)
 			{
