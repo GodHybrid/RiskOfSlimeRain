@@ -43,12 +43,19 @@ namespace RiskOfSlimeRain.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			if (!Main.LocalPlayer.GetRORPlayer().InWarbannerRange)
+			if (Main.LocalPlayer.HasItem(item.type))
 			{
-				tooltips.Add(new TooltipLine(mod, Name, "You aren't standing inside the range of any warbanners!")
+				if (!Main.LocalPlayer.GetRORPlayer().InWarbannerRange)
 				{
-					overrideColor = Color.OrangeRed
-				});
+					tooltips.Add(new TooltipLine(mod, Name, "You aren't standing inside the range of any warbanners!")
+					{
+						overrideColor = Color.OrangeRed
+					});
+				}
+			}
+			else
+			{
+				tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
 			}
 		}
 

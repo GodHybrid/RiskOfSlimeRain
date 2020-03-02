@@ -29,9 +29,16 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			if (Main.LocalPlayer.GetRORPlayer().nullifierEnabled)
+			if (Main.LocalPlayer.HasItem(item.type))
 			{
-				tooltips.Add(new TooltipLine(mod, Name, "Nullifier is already enabled! Click the \"?\" in the UI"));
+				if (Main.LocalPlayer.GetRORPlayer().nullifierEnabled)
+				{
+					tooltips.Add(new TooltipLine(mod, Name, "Nullifier is already enabled! Click the \"?\" in the UI"));
+				}
+			}
+			else
+			{
+				tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
 			}
 			tooltips.Add(new TooltipLine(mod, Name, "Gone with the wind...")
 			{
