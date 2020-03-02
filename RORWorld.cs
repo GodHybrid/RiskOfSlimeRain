@@ -1,5 +1,6 @@
 using RiskOfSlimeRain.Core.Warbanners;
 using System;
+using System.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
@@ -15,6 +16,16 @@ namespace RiskOfSlimeRain
 		{
 			downedBossCount = 0;
 			WarbannerManager.Init();
+		}
+
+		public override void NetSend(BinaryWriter writer)
+		{
+			writer.Write(downedBossCount);
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			downedBossCount = reader.ReadInt32();
 		}
 
 		public override void Load(TagCompound tag)
