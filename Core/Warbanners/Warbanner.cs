@@ -34,6 +34,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public bool fresh;
 
+		public int associatedProjIdentity = -1;
+
 		public Warbanner() { }
 
 		public Warbanner(int radius, Vector2 position, bool fresh = true)
@@ -45,7 +47,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 
 		public Warbanner(int radius, float x, float y, bool fresh = true) : this(radius, new Vector2(x, y), fresh) { }
 
-		public override string ToString() => "Radius (tiles): " + (radius >> 4) + "; Position: " + position;
+		public override string ToString() => "Radius (tiles): " + (radius >> 4) + "; Position: " + position + "; Fresh:" + fresh;
 
 		//From TagSerializable, required explicitely
 		public static Warbanner Load(TagCompound tag)

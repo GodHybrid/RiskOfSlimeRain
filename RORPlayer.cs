@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
@@ -32,21 +33,41 @@ namespace RiskOfSlimeRain
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
 		#region Warbanner
-		private const int WarbannerTimeMax = 120;
+		public const int WarbannerTimerMax = 60;
 
-		private int WarbannerTime { get; set; }
+		public int WarbannerTimer { get; set; } = 0;
+
+		private const int WarbannerBuffTimeMax = 120;
+
+		private int WarbannerBuffTime { get; set; } = 0;
+
+		/// <summary>
+		/// The projectile identity that last called ActivateWarbanner ("nearest")
+		/// </summary>
+		public int LastWarbannerIdentity { get; private set; } = -1;
 
 		//Because the actual warbanner effect is only for "spawning" the warbanner and not being in range of one
-		public bool InWarbannerRange => WarbannerTime > 0;
+		public bool InWarbannerRange => WarbannerBuffTime > 0;
 
 		/// <summary>
 		/// For major changes in loading/saving tags and migration. Make sure to increase it by 1 and add backwards compatibility in ROREffect.Load
 		/// </summary>
 		private const byte LATEST_VERSION = 1;
 
-		public void ActivateWarbanner()
+		public void ActivateWarbanner(int identity)
 		{
-			WarbannerTime = WarbannerTimeMax;
+			LastWarbannerIdentity = identity;
+			WarbannerBuffTime = WarbannerBuffTimeMax;
+		}
+
+		public bool CanReceiveWarbannerBuff => WarbannerTimer == WarbannerTimerMax;
+
+		private void UpdateWarbanner()
+		{
+			if (InWarbannerRange) WarbannerBuffTime--;
+			if (!InWarbannerRange) LastWarbannerIdentity = -1;
+			WarbannerTimer--;
+			if (WarbannerTimer < 0) WarbannerTimer = WarbannerTimerMax;
 		}
 		#endregion
 
@@ -103,7 +124,7 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		public void ActivateNullifier()
 		{
-			if (Main.myPlayer != player.whoAmI) return;
+			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
 
 			nullifierActive = true;
 		}
@@ -114,7 +135,7 @@ namespace RiskOfSlimeRain
 		public bool ApplyNullifier()
 		{
 			//Clientside only
-			if (Main.myPlayer != player.whoAmI) return true;
+			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return true;
 			if (savings < nullifierMoney)
 			{
 				CombatText.NewText(player.getRect(), CombatText.DamagedHostile, "Not enough money!");
@@ -266,7 +287,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdateEquips()
 		{
-			if (InWarbannerRange) WarbannerTime--;
+			UpdateWarbanner();
 			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
 		}
 
@@ -389,6 +410,8 @@ namespace RiskOfSlimeRain
 			{
 				ShaderManager.ApplyToScreenOnce(Main.spriteBatch, shader);
 			}
+
+			WarbannerManager.HighlightNearestWarbanner(Main.spriteBatch, player);
 		}
 
 		public override void OnEnterWorld(Player player)

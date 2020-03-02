@@ -80,7 +80,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			ProjectileID.Sets.NeedsUUID[projectile.type] = true;
+
 		}
 
 		public override void SetDefaults()

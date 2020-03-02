@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 	{
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Use to enable the ability to restore your used " + RiskOfSlimeRainMod.Instance.DisplayName + " items, for a price");
+			Tooltip.SetDefault("Use to enable the ability to restore your used '" + RiskOfSlimeRainMod.Instance.DisplayName + "' items, for a price");
 		}
 
 		public override bool CanUseItem(Player player)

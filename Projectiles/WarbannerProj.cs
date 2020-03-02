@@ -39,17 +39,6 @@ namespace RiskOfSlimeRain.Projectiles
 			Utils.PoofOfSmoke(projectile.Center);
 		}
 
-		//public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
-		//{
-		//	Effect circle = ShaderManager.SetupCircleEffect(projectile.Center, Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
-		//	if (circle != null)
-		//	{
-		//		ShaderManager.ApplyToScreenOnce(spriteBatch, circle);
-		//	}
-
-		//	return true;
-		//}
-
 		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
 		{
 			if (Config.Instance.HideWarbannerRadius) return;
@@ -91,12 +80,10 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.ai[0] = value;
 		}
 
-		public bool SpawnedByEffect => projectile.ai[1] == 1;
-
-		public bool StoppedAnimating
+		public bool SpawnedByEffect
 		{
-			get => projectile.localAI[0] == 1;
-			set => projectile.localAI[0] = value ? 1f : 0f;
+			get => projectile.ai[1] == 1;
+			set => projectile.ai[1] = value ? 1f : 0f;
 		}
 
 		public int SoundTimer
@@ -104,10 +91,6 @@ namespace RiskOfSlimeRain.Projectiles
 			get => (int)projectile.localAI[1];
 			set => projectile.localAI[1] = value;
 		}
-
-		public const int TimerMax = 60;
-
-		public int Timer { get; set; } = 0;
 
 		public override void AI()
 		{
@@ -118,21 +101,16 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void GiveBuff()
 		{
-			//Timer isn't synced but here it just loops all the time so it shouldn't matter
-			Timer++;
-			if (Timer > TimerMax)
+			Main.player.WhereActive(p => p.GetRORPlayer().CanReceiveWarbannerBuff && p.DistanceSQ(projectile.Center) < Radius * Radius).Do(delegate (Player p)
 			{
-				Timer = 0;
-				Main.player.WhereActive(p => p.DistanceSQ(projectile.Center) < Radius * Radius).Do(delegate (Player p)
+				if (Main.netMode != NetmodeID.Server && p.whoAmI == Main.myPlayer)
 				{
-					if (Main.netMode != NetmodeID.Server && p.whoAmI == Main.myPlayer)
-					{
-						int heal = Math.Max(p.statLifeMax2 / 100, 1);
-						p.HealMe(heal);
-					}
-					p.GetRORPlayer().ActivateWarbanner();
-				});
-			}
+					int heal = Math.Max(p.statLifeMax2 / 100, 1);
+					p.HealMe(heal);
+				}
+				RORPlayer mPlayer = p.GetRORPlayer();
+				mPlayer.ActivateWarbanner(projectile.identity);
+			});
 		}
 
 		private void Animate()
@@ -143,7 +121,6 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				int start = 20;
 				int end = start + 136;
-				if (SoundTimer > end) return;
 
 				if (SoundTimer == start) PlaySound(SoundID.Item71, 0.7f, 0f);
 				//if (SoundTimer == start + 5) PlaySound(SoundID.Tink, 0.7f, 0f);
@@ -163,7 +140,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 				if (SoundTimer == start + 131) PlaySound(SoundID.Item71, 0.7f, 0f);
 				//if (SoundTimer == start + 136) PlaySound(SoundID.Tink, 0.7f, 0f);
-				if (SoundTimer == end) PlaySound(SoundID.Item52, 0.5f, 0f);
+				if (SoundTimer >= end)
+				{
+					SpawnedByEffect = false;
+					PlaySound(SoundID.Item52, 0.5f, 0f);
+				}
 
 				SoundTimer++;
 			}

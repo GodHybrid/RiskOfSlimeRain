@@ -1,4 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Items;
 using RiskOfSlimeRain.Network.Data;
 using RiskOfSlimeRain.Projectiles;
 using System;
@@ -46,7 +49,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (Main.rand.NextFloat() < WarbannerChance)
+			if (Main.rand.NextFloat() < 1f/*WarbannerChance*/)
 			{
 				//Find nearest solid tile below:
 				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
@@ -64,7 +67,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		}
 
 		/// <summary>
-		/// To add a new banner to the list, using the static Radius, X and Y variables
+		/// To add a new banner to the list
 		/// </summary>
 		public static void AddWarbanner(int radius, float x, float y)
 		{
@@ -97,8 +100,12 @@ namespace RiskOfSlimeRain.Core.Warbanners
 					float playerDistance = p.DistanceSQ(banner.position);
 					if (playerDistance < distance * distance)
 					{
-						Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
-						spawned.Add(banner);
+						int whoami = Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
+						if (whoami < Main.maxProjectiles)
+						{
+							banner.associatedProjIdentity = Main.projectile[whoami].identity;
+							spawned.Add(banner);
+						}
 					}
 				}
 
@@ -107,6 +114,44 @@ namespace RiskOfSlimeRain.Core.Warbanners
 					unspawnedWarbanners.Remove(banner);
 				}
 			});
+		}
+
+		public static void HighlightNearestWarbanner(SpriteBatch spriteBatch, Player player)
+		{
+			if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer && player.HeldItem.modItem is WarbannerRemover)
+			{
+				Projectile proj = FindNearestWarbanner(player);
+				if (proj != null)
+				{
+					spriteBatch.Draw(Main.magicPixel, new Rectangle((int)(proj.position.X - Main.screenPosition.X), (int)(proj.position.Y - Main.screenPosition.Y), proj.width, proj.height), Color.OrangeRed * 0.5f);
+				}
+			}
+		}
+
+		public static void DeleteNearestWarbanner(Player player)
+		{
+			RORPlayer mPlayer = player.GetRORPlayer();
+			if (mPlayer.InWarbannerRange)
+			{
+				if (mPlayer.LastWarbannerIdentity > -1) //Maybe redundant check idk
+				{
+					Projectile proj = FindNearestWarbanner(player);
+					if (proj != null)
+					{
+						Warbanner banner = warbanners.Find(w => w.associatedProjIdentity == proj.identity);
+						if (banner != null)
+						{
+							warbanners.Remove(banner);
+							proj.Kill();
+						}
+					}
+				}
+			}
+		}
+
+		private static Projectile FindNearestWarbanner(Player player)
+		{
+			return Main.projectile.FirstActiveOrDefault(p => p.modProjectile is WarbannerProj && p.identity == player.GetRORPlayer().LastWarbannerIdentity);
 		}
 
 		/// <summary>

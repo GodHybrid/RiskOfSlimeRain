@@ -317,7 +317,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		}
 
 		/// <summary>
-		/// Override this if the effect holds variables
+		/// Override this if the effect holds variables. Currently unused
 		/// </summary>
 		protected virtual void CloneValues(ROREffect newEffect)
 		{
