@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
@@ -13,7 +15,9 @@ namespace RiskOfSlimeRain.Items
 		public override void SetStaticDefaults()
 		{
 			Tooltip.SetDefault("Use to remove the nearest warbanner from '" + RiskOfSlimeRainMod.Instance.DisplayName + "'"
-				+ "\nStand inside the range of a warbanner, hold the item and it will highlight the warbanner that's about to be removed");
+				+ "\nStand inside the range of a warbanner, and it will:"
+				+ "\n- Highlight the warbanner that's about to be removed"
+				+ "\n- Reset the killcount when used");
 		}
 
 		public override bool CanUseItem(Player player)
@@ -24,6 +28,16 @@ namespace RiskOfSlimeRain.Items
 		public override bool UseItem(Player player)
 		{
 			WarbannerManager.DeleteNearestWarbanner(player);
+
+			//Local player resets their killcount if they have one
+			if (Main.netMode != NetmodeID.Server)
+			{
+				WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(Main.LocalPlayer);
+				if (effect != null)
+				{
+					effect.ResetKillCount();
+				}
+			}
 			return true;
 		}
 
@@ -46,7 +60,7 @@ namespace RiskOfSlimeRain.Items
 			item.useStyle = 4;
 			item.useTime = 30;
 			item.useAnimation = 30;
-			item.value = Item.sellPrice(0, 2, 0, 0);
+			item.value = Item.buyPrice(gold: 15);
 			item.rare = ItemRarityID.Orange;
 			item.UseSound = SoundID.Item1;
 		}

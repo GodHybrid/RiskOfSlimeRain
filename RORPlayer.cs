@@ -33,6 +33,8 @@ namespace RiskOfSlimeRain
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
 		#region Warbanner
+		public bool warbannerRemoverDropped = false;
+
 		public const int WarbannerTimerMax = 60;
 
 		public int WarbannerTimer { get; set; } = 0;
@@ -117,8 +119,6 @@ namespace RiskOfSlimeRain
 
 		private int nullifierApplyTimer = 0;
 
-		public bool NullifierTimerRunning => nullifierApplyTimer > 0;
-
 		/// <summary>
 		/// Sets up the nullifier process
 		/// </summary>
@@ -182,7 +182,8 @@ namespace RiskOfSlimeRain
 			}
 			player.BuyItem((int)nullifierMoney);
 			Main.PlaySound(SoundID.Coins, volumeScale: 0.8f);
-			CombatText.NewText(player.getRect(), CombatText.HealLife, $"Restored {count} items for {nullifierMoney.MoneyToString()}!");
+			string itemtext = "item" + (count == 1 ? "" : "s");
+			CombatText.NewText(player.getRect(), CombatText.HealLife, $"Restored {count} {itemtext} for {nullifierMoney.MoneyToString()}!");
 			return true;
 		}
 
@@ -396,7 +397,7 @@ namespace RiskOfSlimeRain
 			if (Config.HiddenVisuals(player)) return;
 
 			ROREffectManager.DrawPlayerLayers(layers);
-			if (InWarbannerRange) layers.Insert(0, WarbannerEffect.WarbannerLayer);
+			if (InWarbannerRange) layers.Insert(layers.Count > 1 ? 1 : 0, WarbannerEffect.WarbannerLayer);
 		}
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
@@ -443,6 +444,7 @@ namespace RiskOfSlimeRain
 				{ "version", LATEST_VERSION },
 				{ "effects", effectCompounds },
 				{ "nullifierEnabled", nullifierEnabled },
+				{ "warbannerRemoverDropped", warbannerRemoverDropped },
 			};
 			return tag;
 		}
@@ -464,6 +466,7 @@ namespace RiskOfSlimeRain
 			}
 
 			nullifierEnabled = tag.GetBool("nullifierEnabled");
+			warbannerRemoverDropped = tag.GetBool("warbannerRemoverDropped");
 		}
 
 		public override void Initialize()

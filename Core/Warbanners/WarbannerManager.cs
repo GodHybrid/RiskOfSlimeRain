@@ -32,42 +32,35 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public static List<Warbanner> unspawnedWarbanners;
 
-		public static float WarbannerChance => MathHelper.Max((float)(0.04 * Math.Pow(Math.E, -0.2 * warbanners.Count)), 0.0002f);
-
-		public static int Radius = -1;
-		public static float X = 0f;
-		public static float Y = 0f;
+		public static int KillCountForNextWarbanner => 30 + (int)(0.7f * Math.Pow(Math.Min(50, warbanners.Count), 2));
 
 		public static float GetWarbannerCircleAlpha()
 		{
-			//0.3333f to 1f
-			return (float)(Math.Sin((Main.GameUpdateCount / 8d) / (Math.PI * 2))) / 3f + 2 / 3f;
+			//0.666f to 1f
+			return (float)Math.Sin((Main.GameUpdateCount / 8d) / (Math.PI * 2)) / 3f + 2 / 3f;
 		}
 
 		/// <summary>
-		/// Checks for banner roll, and then adds a warbanner. Also syncs
+		/// Adjusts banner position and then adds a warbanner. Also syncs
 		/// </summary>
 		public static void TryAddWarbanner(int radius, Vector2 position)
 		{
-			if (Main.rand.NextFloat() < 1f/*WarbannerChance*/)
-			{
-				//Find nearest solid tile below:
-				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
-					{
-						new Conditions.IsSolid()
-					}), out _))
+			//Find nearest solid tile below:
+			while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
 				{
-					position.Y++;
-				}
-				position.Y -= 25; //half the projectiles height
-
-				new WarbannerPacket(radius, position).Send();
-				AddWarbanner(radius, position.X, position.Y);
+					new Conditions.IsSolid()
+				}), out _))
+			{
+				position.Y++;
 			}
+			position.Y -= 25; //half the projectiles height
+
+			new WarbannerPacket(radius, position).Send();
+			AddWarbanner(radius, position.X, position.Y);
 		}
 
 		/// <summary>
-		/// To add a new banner to the list
+		/// Add a new banner to the list
 		/// </summary>
 		public static void AddWarbanner(int radius, float x, float y)
 		{
@@ -75,7 +68,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			if (radius == -1) return;
 			if (warbanners.Count >= LIMIT)
 			{
-				warbanners.RemoveAt(0);
+				DeleteWarbanner(warbanners[0]);
 			}
 			Warbanner banner = new Warbanner(radius, x, y);
 			warbanners.Add(banner);
@@ -120,47 +113,58 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		{
 			if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer && player.HeldItem.modItem is WarbannerRemover)
 			{
-				Projectile proj = FindNearestWarbanner(player);
+				Projectile proj = FindWarbannerProj(player.GetRORPlayer().LastWarbannerIdentity);
 				if (proj != null)
 				{
-					spriteBatch.Draw(Main.magicPixel, new Rectangle((int)(proj.position.X - Main.screenPosition.X), (int)(proj.position.Y - Main.screenPosition.Y), proj.width, proj.height), Color.OrangeRed * 0.5f);
+					spriteBatch.Draw(Main.magicPixel, new Rectangle((int)(proj.position.X - Main.screenPosition.X + 2), (int)(proj.position.Y - Main.screenPosition.Y + 2), proj.width, proj.height), Color.OrangeRed * 0.5f);
 				}
 			}
 		}
 
+		/// <summary>
+		/// Deletes the nearest warbanner to the player
+		/// </summary>
 		public static void DeleteNearestWarbanner(Player player)
 		{
 			RORPlayer mPlayer = player.GetRORPlayer();
 			if (mPlayer.InWarbannerRange)
 			{
-				if (mPlayer.LastWarbannerIdentity > -1) //Maybe redundant check idk
+				int identity = mPlayer.LastWarbannerIdentity;
+				if (identity > -1) //Maybe redundant check idk
 				{
-					Projectile proj = FindNearestWarbanner(player);
-					if (proj != null)
-					{
-						Warbanner banner = warbanners.Find(w => w.associatedProjIdentity == proj.identity);
-						if (banner != null)
-						{
-							warbanners.Remove(banner);
-							proj.Kill();
-						}
-					}
+					DeleteWarbanner(identity);
 				}
 			}
 		}
 
-		private static Projectile FindNearestWarbanner(Player player)
+		/// <summary>
+		/// Deletes the warbanner matching this identity from 'warbanners' and kills the projectile if it exists
+		/// </summary>
+		public static void DeleteWarbanner(int identity)
 		{
-			return Main.projectile.FirstActiveOrDefault(p => p.modProjectile is WarbannerProj && p.identity == player.GetRORPlayer().LastWarbannerIdentity);
+			Warbanner banner = warbanners.Find(w => w.associatedProjIdentity == identity);
+			if (banner != null)
+			{
+				DeleteWarbanner(banner);
+			}
 		}
 
 		/// <summary>
-		/// Clears the warbanner list and also despawns all placed warbanners
+		/// Deletes a given warbanner from the list and kills the projectile if it exists
 		/// </summary>
-		public static void Clear()
+		public static void DeleteWarbanner(Warbanner banner)
 		{
-			warbanners.Clear();
-			Main.projectile.WhereActive(p => p.modProjectile is WarbannerProj).Do(p => p.Kill());
+			warbanners.Remove(banner);
+			Projectile proj = FindWarbannerProj(banner.associatedProjIdentity);
+			proj?.Kill();
+		}
+
+		/// <summary>
+		/// Returns the warbanner projectile matching this identity, <see langword="null"/> if not found
+		/// </summary>
+		private static Projectile FindWarbannerProj(int identity)
+		{
+			return Main.projectile.FirstActiveOrDefault(p => p.modProjectile is WarbannerProj && p.identity == identity);
 		}
 
 		public static void Init()
