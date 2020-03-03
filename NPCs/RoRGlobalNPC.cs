@@ -21,6 +21,8 @@ namespace RiskOfSlimeRain.NPCs
 	{
 		public override bool InstancePerEntity => true;
 
+		public bool spawnedFromStatue = false;
+
 		public List<NPCEffect> NPCEffects { get; set; } = new List<NPCEffect>();
 
 		public override void ResetEffects(NPC npc)
