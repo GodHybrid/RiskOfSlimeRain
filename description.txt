@@ -11,11 +11,13 @@ The mod also features a config setting where you can selectively pick the amount
 [c/d18660:Multiplayer compatible, no pvp support.]
 
 [c/888888:Changelog:]
+v0.3.1.1:
+    + Multiple warbanners will not give multiple heals now
+    + If a warbanner is about to spawn, it will only do so if you aren't already inside the range of one
+    + Warbanner killcount won't decrease if an invasion/event is in progress
+    + Warbanner killcount won't decrease and Monster Tooth won't spawn healing orbs when a statue-spawned NPC is killed
 v0.3.1:
     + Fixes to Monster Tooth, Spikestrip, Taser; Warbanner rework
     + Added a new painting, sold by the Painter
     + Added Nullifier, to strip your items for a price
     + Added Warbanner Remover, to delete warbanners if they are misplaced
-v0.3.0.4: 
-    + Added visuals and radii options to the configs
-    + Added informational UI icon to the item tray
