@@ -103,11 +103,6 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			Main.player.WhereActive(p => p.GetRORPlayer().CanReceiveWarbannerBuff && p.DistanceSQ(projectile.Center) < Radius * Radius).Do(delegate (Player p)
 			{
-				if (Main.netMode != NetmodeID.Server && p.whoAmI == Main.myPlayer)
-				{
-					int heal = Math.Max(p.statLifeMax2 / 100, 1);
-					p.HealMe(heal);
-				}
 				RORPlayer mPlayer = p.GetRORPlayer();
 				mPlayer.ActivateWarbanner(projectile.identity);
 			});

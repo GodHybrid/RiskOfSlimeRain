@@ -66,10 +66,18 @@ namespace RiskOfSlimeRain
 
 		private void UpdateWarbanner()
 		{
+			WarbannerTimer--;
+			if (WarbannerTimer < 0)
+			{
+				WarbannerTimer = WarbannerTimerMax;
+				if (InWarbannerRange && Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer)
+				{
+					int heal = Math.Max(player.statLifeMax2 / 100, 1);
+					player.HealMe(heal);
+				}
+			}
 			if (InWarbannerRange) WarbannerBuffTime--;
 			if (!InWarbannerRange) LastWarbannerIdentity = -1;
-			WarbannerTimer--;
-			if (WarbannerTimer < 0) WarbannerTimer = WarbannerTimerMax;
 		}
 		#endregion
 
