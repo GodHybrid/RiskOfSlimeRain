@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Network.Effects;
+using RiskOfSlimeRain.NPCs;
 using RiskOfSlimeRain.Projectiles;
 using System.IO;
 using Terraria;
@@ -64,6 +65,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		{
 			if (MiscManager.IsWormBodyOrTail(target)) return;
 			if (MiscManager.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
+			if (MiscManager.IsSpawnedFromStatue(target)) return;
+			if (NPC.BusyWithAnyInvasionOfSorts()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			//The projectile reads from the effect of the owner how much health it gives him

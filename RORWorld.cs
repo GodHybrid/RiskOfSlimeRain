@@ -1,4 +1,5 @@
 using RiskOfSlimeRain.Core.Warbanners;
+using RiskOfSlimeRain.Network.NPCs;
 using System;
 using System.IO;
 using Terraria.ModLoader;
@@ -47,6 +48,7 @@ namespace RiskOfSlimeRain
 		public override void PostUpdate()
 		{
 			WarbannerManager.TrySpawnWarbanners();
+			SpawnedFromStatuePacket.SendSpawnedFromStatues();
 		}
 	}
 }

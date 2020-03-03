@@ -1,5 +1,5 @@
-﻿using RiskOfSlimeRain.Helpers;
-using RiskOfSlimeRain.NPCs;
+﻿using RiskOfSlimeRain.NPCs;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -15,12 +15,16 @@ namespace RiskOfSlimeRain.Network.NPCs
 
 		public SpawnedFromStatuePacket(NPC npc) : base(npc) { }
 
+		/// <summary>
+		/// Because SpawnedFromStatue is set AFTER SyncNPC, we want to sync our stuff 1 tick later
+		/// </summary>
+		private static List<NPC> toSendNextTick = null;
+
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
-				GeneralHelper.Print("received statue " + Npc);
-				Npc.GetGlobalNPC<RORGlobalNPC>().spawnedFromStatue = true;
+				Npc.SpawnedFromStatue = true;
 			}
 			return base.PostReceive(reader, fromWho);
 		}
@@ -40,11 +44,10 @@ namespace RiskOfSlimeRain.Network.NPCs
 						if (npc.SpawnedFromStatue)
 						{
 							RORGlobalNPC gNPC = npc.GetGlobalNPC<RORGlobalNPC>();
-							if (!gNPC.spawnedFromStatue)
+							if (!gNPC.sentSpawnedFromStatue)
 							{
-								GeneralHelper.Print("spawned from statue got synced " + Main.npc[number]);
-								gNPC.spawnedFromStatue = true;
-								new SpawnedFromStatuePacket(npc).Send();
+								gNPC.sentSpawnedFromStatue = true;
+								toSendNextTick.Add(npc);
 							}
 						}
 					}
@@ -54,6 +57,26 @@ namespace RiskOfSlimeRain.Network.NPCs
 					}
 				}
 			}
+		}
+
+		public static void Load()
+		{
+			toSendNextTick = new List<NPC>();
+		}
+
+		public static void Unload()
+		{
+			toSendNextTick = null;
+		}
+
+		public static void SendSpawnedFromStatues()
+		{
+			if (Main.netMode != NetmodeID.Server) return;
+			foreach (var npc in toSendNextTick)
+			{
+				new SpawnedFromStatuePacket(npc).Send();
+			}
+			toSendNextTick.Clear();
 		}
 	}
 }

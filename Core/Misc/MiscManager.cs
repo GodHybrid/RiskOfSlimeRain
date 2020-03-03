@@ -1,4 +1,6 @@
-﻿using System;
+﻿using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.NPCs;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -59,7 +61,7 @@ namespace RiskOfSlimeRain.Core.Misc
 				case NPCID.PrimeVice:
 				case NPCID.Probe:
 				case NPCID.ServantofCthulhu:
-				case NPCID.SkeletronHead:
+				case NPCID.SkeletronHand:
 				case NPCID.TheDestroyerBody:
 				case NPCID.TheDestroyerTail:
 				case NPCID.TheHungry:
@@ -78,6 +80,11 @@ namespace RiskOfSlimeRain.Core.Misc
 			bool child = npc.realLife != npc.whoAmI && npc.realLife >= 0 && npc.realLife <= Main.maxNPCs;
 			parent = child ? Main.npc[npc.realLife] : null;
 			return child;
+		}
+
+		public static bool IsSpawnedFromStatue(NPC npc)
+		{
+			return npc.SpawnedFromStatue;
 		}
 
 		public static void Load()

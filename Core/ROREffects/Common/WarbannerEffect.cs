@@ -26,7 +26,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
 
-		public override string UIInfo => $"Kills required for next banner: {WarbannerManager.KillCountForNextWarbanner - KillCount}. Active banners: {WarbannerManager.warbanners.Count}";
+		public override string UIInfo => $"Kills required for next banner: {WarbannerManager.KillCountForNextWarbanner - KillCount}. Active banners: {WarbannerManager.warbanners.Count}"
+											+ (NPC.BusyWithAnyInvasionOfSorts() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -43,6 +44,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (MiscManager.IsWormBodyOrTail(target)) return;
 			if (MiscManager.IsBossPiece(target)) return;
 			if (MiscManager.IsChild(target, out _)) return;
+			if (MiscManager.IsSpawnedFromStatue(target)) return;
+			if (NPC.BusyWithAnyInvasionOfSorts()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			KillCount++;

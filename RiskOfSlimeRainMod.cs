@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Network.NPCs;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -30,6 +31,11 @@ namespace RiskOfSlimeRain
 			NPCEffectManager.Load();
 			ShaderManager.Load();
 			RORInterfaceLayers.Load();
+			SpawnedFromStatuePacket.Load();
+		}
+
+		public override void PostSetupContent()
+		{
 			MiscManager.Load();
 		}
 
@@ -42,6 +48,7 @@ namespace RiskOfSlimeRain
 			WarbannerManager.Unload();
 			MiscManager.Unload();
 			PlayerHelper.Unload();
+			SpawnedFromStatuePacket.Unload();
 		}
 
 		public override void AddRecipeGroups()
@@ -162,6 +169,12 @@ namespace RiskOfSlimeRain
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
 			NetworkPacketLoader.Instance.HandlePacket(reader, whoAmI);
+		}
+
+		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)
+		{
+			SpawnedFromStatuePacket.HijackSendData(msgType, number);
+			return base.HijackSendData(whoAmI, msgType, remoteClient, ignoreClient, text, number, number2, number3, number4, number5, number6, number7);
 		}
 	}
 }

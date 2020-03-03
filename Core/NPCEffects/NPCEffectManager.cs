@@ -1,5 +1,5 @@
 ﻿using RiskOfSlimeRain.Core.Misc;
-using RiskOfSlimeRain.Network.Data;
+using RiskOfSlimeRain.Network.NPCs;
 using RiskOfSlimeRain.NPCs;
 using System;
 using System.Collections.Generic;

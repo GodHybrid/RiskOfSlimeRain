@@ -21,7 +21,10 @@ namespace RiskOfSlimeRain.NPCs
 	{
 		public override bool InstancePerEntity => true;
 
-		public bool spawnedFromStatue = false;
+		/// <summary>
+		/// Serverside flag that indicates that this NPC was set to sync its SpawnedFromStatue bool
+		/// </summary>
+		public bool sentSpawnedFromStatue = false;
 
 		public List<NPCEffect> NPCEffects { get; set; } = new List<NPCEffect>();
 

@@ -4,7 +4,7 @@ using Terraria;
 using Terraria.ModLoader;
 using WebmilioCommons.Networking;
 
-namespace RiskOfSlimeRain.Network.Data
+namespace RiskOfSlimeRain.Network.NPCs
 {
 	public class NPCEffectPacket : NPCPacketBase
 	{
