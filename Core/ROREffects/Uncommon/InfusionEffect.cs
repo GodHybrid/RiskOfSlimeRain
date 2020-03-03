@@ -18,6 +18,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float BonusLife { get; private set; }
 
+		//TODO lower increase, cap with stack (50hp start)
+
 		public float CurrentIncrease => initial + Stack * increase;
 
 		public override string Description => $"Killing an enemy increases your health permanently by {initial + increase}";

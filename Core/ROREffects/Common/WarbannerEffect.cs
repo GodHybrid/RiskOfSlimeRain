@@ -3,6 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Core.Warbanners;
+using RiskOfSlimeRain.Helpers;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
@@ -20,26 +22,34 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		const int initial = 4;
 		const int increase = 1;
 
+		public int Radius => (initial + increase * Stack) * 16;
+
 		public int KillCount { get; private set; }
+
+		/// <summary>
+		/// Flags the player having this effect to spawn a warbanner when possible
+		/// </summary>
+		public bool WarbannerReadyToDrop { get; set; } = false;
 
 		public override string Description => "Drop an empowering banner after killing enough enemies";
 
 		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
 
-		public override string UIInfo => $"Kills required for next banner: {WarbannerManager.KillCountForNextWarbanner - KillCount}. Active banners: {WarbannerManager.warbanners.Count}"
+		public override string UIInfo => $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
+											+ (WarbannerReadyToDrop ? "\nWarbanner is ready to drop, move out of range of any warbanners!" : "")
 											+ (NPC.BusyWithAnyInvasionOfSorts() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			IncreaseKillCountAndSpawnWarbanner(target, player);
+			IncreaseKillCountAndPrepareWarbannerSpawn(target);
 		}
 
 		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			IncreaseKillCountAndSpawnWarbanner(target, player);
+			IncreaseKillCountAndPrepareWarbannerSpawn(target);
 		}
 
-		void IncreaseKillCountAndSpawnWarbanner(NPC target, Player player)
+		void IncreaseKillCountAndPrepareWarbannerSpawn(NPC target)
 		{
 			if (MiscManager.IsWormBodyOrTail(target)) return;
 			if (MiscManager.IsBossPiece(target)) return;
@@ -51,8 +61,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			KillCount++;
 			if (KillCount >= WarbannerManager.KillCountForNextWarbanner)
 			{
-				ResetKillCount();
-				WarbannerManager.TryAddWarbanner((initial + increase * Stack) * 16, new Vector2(player.Center.X, player.Top.Y));
+				WarbannerReadyToDrop = true;
 			}
 		}
 
@@ -108,7 +117,26 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			}
 
 			drawY -= player.gravDir * (40 + (player.height >> 1));
-			Color color = Color.White * ((255 - player.immuneAlpha) / 255f);
+			Color color = Color.White;
+
+			if (player.whoAmI == Main.myPlayer)
+			{
+				RORPlayer mPlayer = player.GetRORPlayer();
+				WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(mPlayer);
+				if (effect?.Active ?? false)
+				{
+					if (effect.WarbannerReadyToDrop)
+					{
+						if (mPlayer.WarbannerTimer < 30)
+						{
+							color = Color.Transparent;
+						}
+					}
+				}
+			}
+
+			color *= (255 - player.immuneAlpha) / 255f;
+
 			DrawData data = new DrawData(tex, new Vector2(drawX, drawY), null, color, 0, tex.Size() / 2, 1f, spriteEffects, 0)
 			{
 				ignorePlayerRotation = true

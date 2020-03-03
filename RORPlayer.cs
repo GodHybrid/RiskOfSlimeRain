@@ -78,6 +78,17 @@ namespace RiskOfSlimeRain
 			}
 			if (InWarbannerRange) WarbannerBuffTime--;
 			if (!InWarbannerRange) LastWarbannerIdentity = -1;
+
+			WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(this);
+			if ((effect?.Active ?? false) && Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer)
+			{
+				if (effect.WarbannerReadyToDrop && !InWarbannerRange)
+				{
+					effect.ResetKillCount();
+					WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(player.Center.X, player.Top.Y));
+					effect.WarbannerReadyToDrop = false;
+				}
+			}
 		}
 		#endregion
 

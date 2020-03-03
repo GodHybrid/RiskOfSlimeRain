@@ -1,5 +1,12 @@
 # Changelogs
 
+## 0.3.1.1
+
+* Multiple warbanners will not give multiple heals now
+* If a warbanner is about to spawn, it will only do so if you aren't already inside the range of one
+* Warbanner killcount won't decrease if an invasion/event is in progress
+* Warbanner killcount won't decrease and Monster Tooth won't spawn healing orbs when a statue-spawned NPC is killed
+
 ## 0.3.1
 
 * Fixes

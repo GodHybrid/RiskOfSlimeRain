@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
@@ -36,16 +37,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player);
+			SpawnProjectile(target, player);
 		}
 
 		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player);
+			SpawnProjectile(target, player);
 		}
 
-		void SpawnProjectile(Player player)
+		void SpawnProjectile(NPC target, Player player)
 		{
+			if (MiscManager.IsSpawnedFromStatue(target)) return; //No statue abuse for more fireworks
+
 			int damage = (int)(damageIncrease * player.GetDamage());
 			SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
 			for (int i = 0; i < fireworkCount; i++)
