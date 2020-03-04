@@ -55,7 +55,7 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			projectile.velocity.Y = 10f;
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
+			Main.npc.WhereActive(n => n.CanBeChasedBy() && !n.boss && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
 			{
 				if (MiscManager.IsBossPiece(n)) return;
 				if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) return;

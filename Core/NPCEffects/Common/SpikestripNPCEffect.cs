@@ -8,31 +8,9 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 {
 	public class SpikestripNPCEffect : NPCEffect
 	{
-		public Vector2 oldVelocity = default;
-
-		public override void Init(NPC npc)
-		{
-			oldVelocity = npc.velocity;
-		}
-
-		public override void NetSend(BinaryWriter writer)
-		{
-			writer.WritePackedVector2(oldVelocity);
-		}
-
-		public override void NetReceive(BinaryReader reader)
-		{
-			oldVelocity = reader.ReadPackedVector2();
-		}
-
 		public override void AI(NPC npc)
 		{
-			npc.velocity.X *= 0.9f;
-		}
-
-		public override void OnRemove(NPC npc)
-		{
-			npc.velocity = oldVelocity;
+			if (npc.velocity.X > 1f) npc.velocity.X *= 0.9f;
 		}
 
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)

@@ -42,23 +42,33 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 			return false;
 		}
 
-		//TODO add docs
-
+		/// <summary>
+		/// Called when the effect wears off
+		/// </summary>
 		public virtual void OnRemove(NPC npc)
 		{
 
 		}
 
+		/// <summary>
+		/// Initialize variables for this effect when it first gets applied
+		/// </summary>
 		public virtual void Init(NPC npc)
 		{
 
 		}
 
+		/// <summary>
+		/// Override this if the effect holds variables
+		/// </summary>
 		public virtual void NetSend(BinaryWriter writer)
 		{
 
 		}
 
+		/// <summary>
+		/// Override this if the effect holds variables
+		/// </summary>
 		public virtual void NetReceive(BinaryReader reader)
 		{
 
