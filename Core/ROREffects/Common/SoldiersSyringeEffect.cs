@@ -11,7 +11,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class SoldiersSyringeEffect : RORCommonEffect, IUseTimeMultiplier, IPostUpdateEquips
 	{
 		const float increase = 0.1f;
-		public const int shakeTimerMax = 6; //to and back
+		public const int shakeTimerMax = 6; //To and back
 
 		public Vector2 shakePosOffset = default(Vector2);
 
@@ -22,7 +22,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public bool increment = true;
 
 		public override string Name => "Soldier's Syringe";
+
 		public override int MaxRecommendedStack => 13;
+
+		public override bool EnforceMaxStack => true;
 
 		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}";
 

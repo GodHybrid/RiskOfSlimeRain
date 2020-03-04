@@ -15,6 +15,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override int MaxRecommendedStack => 7;
 
+		public override bool EnforceMaxStack => true;
+
 		public override string Name => "Hermit's Scarf";
 
 		public override string Description => $"Allows you to evade attacks with {(initial + increase).ToPercent()} chance";

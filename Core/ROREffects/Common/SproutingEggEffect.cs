@@ -19,6 +19,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void UpdateLifeRegen(Player player)
 		{
+			if (Config.HiddenVisuals(player)) return;
 			if (player.GetRORPlayer().NoCombatTimer < timerMax) return;
 
 			//the number will be halved in redcode, hence the 2
