@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int timer = 0;
 
-		const int timerMax = 6;
+		const int timerMax = 5;
 
 		public void PostUpdateRunSpeeds(Player player)
 		{
@@ -43,7 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				if (player.velocity.Y == 0f && !player.mount.Active && player.dashDelay >= 0)
 				{
-					if ((player.controlLeft || player.controlRight) && Math.Abs(player.velocity.X) > horizontal && timer++ > timerMax)
+					if ((player.controlLeft || player.controlRight) && Math.Abs(player.velocity.X) > horizontal - 0.5f && timer++ > timerMax)
 					{
 						timer = 0;
 						Vector2 position = new Vector2(player.position.X + (player.direction > 0 ? 0 : player.width), player.position.Y + player.gfxOffY + Main.rand.Next(player.height));

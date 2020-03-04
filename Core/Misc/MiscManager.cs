@@ -67,6 +67,9 @@ namespace RiskOfSlimeRain.Core.Misc
 				case NPCID.TheHungry:
 				case NPCID.TheHungryII:
 					return true;
+				case NPCID.BlueSlime:
+				case NPCID.SlimeSpiked:
+					return NPC.AnyNPCs(NPCID.KingSlime);
 				default:
 					return false;
 			}
