@@ -32,6 +32,11 @@ namespace RiskOfSlimeRain
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
+		/// <summary>
+		/// Because we want DrawEffects to only be called once (without being affected by after images)
+		/// </summary>
+		public bool drawEffectsCalledOnce = false;
+
 		#region Warbanner
 		public bool warbannerRemoverDropped = false;
 
@@ -421,6 +426,14 @@ namespace RiskOfSlimeRain
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
+			if (!drawEffectsCalledOnce)
+			{
+				drawEffectsCalledOnce = true;
+			}
+			else
+			{
+				return;
+			}
 			if (Main.gameMenu) return;
 			if (Config.HiddenVisuals(player)) return;
 			if (!ROREffectManager.ParentLayer.visible) return;
@@ -499,6 +512,10 @@ namespace RiskOfSlimeRain
 
 		public override void PreUpdate()
 		{
+			if (drawEffectsCalledOnce)
+			{
+				drawEffectsCalledOnce = false;
+			}
 			//This is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
 		}
