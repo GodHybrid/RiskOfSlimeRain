@@ -45,6 +45,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			{
 				effect = ROREffect.CreateInstance(player, typeof(T));
 			}
+			if (effect.EnforceMaxStack && effect.UnlockedStack >= effect.MaxRecommendedStack) return false;
 			return effect.CanUse(player);
 		}
 

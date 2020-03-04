@@ -109,10 +109,15 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		private int _Stack = 1;
 
+		/// <summary>
+		/// Set this to true if the recommended stack should be enforced instead (blocks item use beyond that)
+		/// </summary>
+		public virtual bool EnforceMaxStack => false;
+
 		public int Stack
 		{
 			get => _Stack;
-			set => _Stack = Utils.Clamp(value, 0, _UnlockedStack);
+			set => _Stack = Utils.Clamp(value, 0, EnforceMaxStack ? Math.Min(_UnlockedStack, MaxRecommendedStack) : _UnlockedStack);
 		}
 
 		public bool FullStack => _Stack == _UnlockedStack;
