@@ -1,5 +1,13 @@
 # Changelogs
 
+## 0.3.1.2
+
+* Add visuals for Paul's Goat Hoof and Bitter Root
+* Nerf Paul's Goat Hoof stack increase
+* Spikestrip slow won't apply on bosses now
+* Blue slimes won't count towards warbanner kill count while King Slime is alive
+* Sone items that have a max stack amount will not be able to be used once the limit is reached
+
 ## 0.3.1.1
 
 * Multiple warbanners will not give multiple heals now

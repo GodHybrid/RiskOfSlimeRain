@@ -11,13 +11,14 @@ The mod also features a config setting where you can selectively pick the amount
 [c/d18660:Multiplayer compatible, no pvp support.]
 
 [c/888888:Changelog:]
+v0.3.1.2:
+    + Add visuals for Paul's Goat Hoof and Bitter Root
+    + Nerf Paul's Goat Hoof stack increase
+    + Spikestrip slow won't apply on bosses now
+    + Blue slimes won't count towards warbanner kill count while King Slime is alive
+    + Sone items that have a max stack amount will not be able to be used once the limit is reached
 v0.3.1.1:
     + Multiple warbanners will not give multiple heals now
     + If a warbanner is about to spawn, it will only do so if you aren't already inside the range of one
     + Warbanner killcount won't decrease if an invasion/event is in progress
     + Warbanner killcount won't decrease and Monster Tooth won't spawn healing orbs when a statue-spawned NPC is killed
-v0.3.1:
-    + Fixes to Monster Tooth, Spikestrip, Taser; Warbanner rework
-    + Added a new painting, sold by the Painter
-    + Added Nullifier, to strip your items for a price
-    + Added Warbanner Remover, to delete warbanners if they are misplaced
