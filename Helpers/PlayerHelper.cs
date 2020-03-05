@@ -47,6 +47,14 @@ namespace RiskOfSlimeRain.Helpers
 		public static void HealMe(this Player player, int heal, bool noBroadcast = false)
 		{
 			int clampHeal = Math.Min(heal, player.statLifeMax2 - player.statLife);
+			if (clampHeal < 0) //Something wrong
+			{
+				clampHeal = Math.Min(heal, player.statLifeMax - player.statLife);
+				if (clampHeal < 0) //Something wrong again
+				{
+					clampHeal = 0;
+				}
+			}
 			player.HealEffect(heal, false);
 			player.statLife += clampHeal;
 			if (!noBroadcast && Main.netMode != NetmodeID.SinglePlayer)

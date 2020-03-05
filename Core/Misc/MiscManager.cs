@@ -163,7 +163,7 @@ namespace RiskOfSlimeRain.Core.Misc
 				}
 				catch
 				{
-
+					RiskOfSlimeRainMod.Instance.Logger.Info("Exception during caching NPC: " + Lang.GetNPCName(i).Key);
 				}
 			}
 
