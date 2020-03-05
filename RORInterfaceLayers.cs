@@ -86,7 +86,13 @@ namespace RiskOfSlimeRain
 			int initialVerticalOffset = (int)(Main.screenHeight * (1 - Config.Instance.ItemUIVerticalOffset));
 
 			int numHorizontal = (Main.screenWidth - 3 * inventorySize) / iconPadding;
-			if (numHorizontal == 0) numHorizontal = 1;
+			if (numHorizontal <= 0) numHorizontal = 1;
+
+			if (Main.playerInventory)
+			{
+				numHorizontal -= 3 * inventorySize / iconPadding; //Padding for accessory menu on the right (overlap with "Settings")
+			}
+
 			int lineOffset = 0;
 			int numLines = effects.Count / (numHorizontal + 1);
 			int yStart = initialVerticalOffset - numLines * verticalLineHeight;
