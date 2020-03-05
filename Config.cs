@@ -32,12 +32,12 @@ namespace RiskOfSlimeRain
 
 		[Header("Visuals")]
 		[Label("Hide own player visuals")]
-		[Tooltip("Toggle visuals created by effects (not including particles)")]
+		[Tooltip("Toggle visuals created by effects (with exceptions)")]
 		[DefaultValue(false)]
 		public bool HideOwnVisuals;
 
 		[Label("Hide other player visuals")]
-		[Tooltip("Toggle visuals created by effects (not including particles)")]
+		[Tooltip("Toggle visuals created by effects (with exceptions)")]
 		[DefaultValue(false)]
 		public bool HideOtherVisuals;
 
