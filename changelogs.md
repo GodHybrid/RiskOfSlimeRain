@@ -1,12 +1,18 @@
 # Changelogs
 
+## 0.3.1.3
+
+* Fixed some effects giving negative heal when Leveled Mod is present
+* Simultaneous Gasoline's fires caused by killed NPCs are limited to 5 at max
+* Minor UI adjustments
+
 ## 0.3.1.2
 
 * Add visuals for Paul's Goat Hoof and Bitter Root
 * Nerf Paul's Goat Hoof stack increase
 * Spikestrip slow won't apply on bosses now
 * Blue slimes won't count towards warbanner kill count while King Slime is alive
-* Sone items that have a max stack amount will not be able to be used once the limit is reached
+* Some items that have a max stack amount will not be able to be used once the limit is reached
 
 ## 0.3.1.1
 
