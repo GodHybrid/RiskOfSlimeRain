@@ -143,7 +143,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			get
 			{
-				if (!AlwaysProc)
+				if (EnforceMaxStack)
+				{
+					return Stack >= MaxRecommendedStack;
+				}
+				else if (!AlwaysProc)
 				{
 					if (Main.LocalPlayer.HeldItem.damage < 1)
 					{
@@ -165,7 +169,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			get
 			{
-				if (Main.LocalPlayer.HeldItem.damage < 1)
+				if (Main.LocalPlayer.HeldItem.damage < 1 || EnforceMaxStack)
 				{
 					return "You reached the recommended stack amount!";
 				}

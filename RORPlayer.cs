@@ -151,6 +151,7 @@ namespace RiskOfSlimeRain
 			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
 
 			nullifierActive = true;
+			Main.PlaySound(SoundID.MenuOpen, volumeScale: 0.8f);
 		}
 
 		/// <summary>
@@ -224,6 +225,7 @@ namespace RiskOfSlimeRain
 			nullifierApplyTimer = 0;
 			nullifierMoney = 0;
 			savings = -1;
+			Main.PlaySound(SoundID.MenuClose, volumeScale: 0.8f);
 		}
 
 		public void UpdateNullifier()
