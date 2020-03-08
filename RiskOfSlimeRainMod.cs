@@ -39,6 +39,11 @@ namespace RiskOfSlimeRain
 			MiscManager.Load();
 		}
 
+		public override void AddRecipes()
+		{
+			MiscManager.LogBadModNPCs();
+		}
+
 		public override void Unload()
 		{
 			ROREffectManager.Unload();

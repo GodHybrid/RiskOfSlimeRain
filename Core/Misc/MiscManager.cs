@@ -1,5 +1,4 @@
-﻿using RiskOfSlimeRain.Helpers;
-using RiskOfSlimeRain.NPCs;
+﻿using log4net;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -22,6 +21,11 @@ namespace RiskOfSlimeRain.Core.Misc
 		/// Types of NPCs which are immune to all buffs
 		/// </summary>
 		private static int[] isBuffImmune;
+
+		/// <summary>
+		/// Modded NPC types that have thrown exceptions during the caching process
+		/// </summary>
+		private static int[] badModNPCs;
 
 		/// <summary>
 		/// Checks if an NPC is a vanilla boss piece/minion
@@ -95,6 +99,30 @@ namespace RiskOfSlimeRain.Core.Misc
 			LoadNPCCache();
 		}
 
+		public static void LogBadModNPCs()
+		{
+			int length = badModNPCs.Length;
+			if (length == 0)
+			{
+				return;
+			}
+
+			string line = string.Empty;
+			ILog logger = RiskOfSlimeRainMod.Instance.Logger;
+			logger.Info("Exception during caching NPC: ");
+			for (int i = 0; i < length; i++)
+			{
+				line += Lang.GetNPCName(badModNPCs[i]).Value + ", ";
+				if (line.Length > 100)
+				{
+					logger.Info(line);
+					line = string.Empty;
+				}
+			}
+			badModNPCs = null;
+			logger.Info("########");
+		}
+
 		public static void Unload()
 		{
 			isModdedWormBodyOrTail = null;
@@ -125,6 +153,7 @@ namespace RiskOfSlimeRain.Core.Misc
 		{
 			List<int> wormList = new List<int>();
 			List<int> buffList = new List<int>();
+			List<int> badModNPCsList = new List<int>();
 
 			for (int i = 0; i < NPCLoader.NPCCount; i++)
 			{
@@ -132,7 +161,19 @@ namespace RiskOfSlimeRain.Core.Misc
 				{
 					bool buffImmune = true;
 					NPC npc = new NPC();
+
+					// tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
+					bool prev = Main.NPCLoaded[i];
+					if (prev && i >= Main.maxNPCTypes)
+					{
+						Main.NPCLoaded[i] = false;
+					}
 					npc.SetDefaults(i);
+					if (prev && i >= Main.maxNPCTypes)
+					{
+						Main.NPCLoaded[i] = true;
+					}
+
 					for (int j = 0; j < npc.buffImmune.Length; j++)
 					{
 						if (!npc.buffImmune[j])
@@ -163,7 +204,7 @@ namespace RiskOfSlimeRain.Core.Misc
 				}
 				catch
 				{
-					RiskOfSlimeRainMod.Instance.Logger.Info("Exception during caching NPC: " + Lang.GetNPCName(i).Key);
+					badModNPCsList.Add(i);
 				}
 			}
 
@@ -172,6 +213,8 @@ namespace RiskOfSlimeRain.Core.Misc
 
 			isBuffImmune = buffList.ToArray();
 			Array.Sort(isBuffImmune);
+
+			badModNPCs = badModNPCsList.ToArray();
 		}
 
 		/// <summary>
