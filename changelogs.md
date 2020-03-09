@@ -1,5 +1,11 @@
 # Changelogs
 
+## 0.3.1.4
+
+* Fixed warbanner counting a finished slime rain event as an invasion
+* Fixed Recipe Browser mod showing this mods' items in its bestiary irregularly
+* Fixed some tooltips
+
 ## 0.3.1.3
 
 * Fixed some effects giving negative heal when Leveled Mod is present
