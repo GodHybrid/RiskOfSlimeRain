@@ -75,8 +75,40 @@ namespace RiskOfSlimeRain.NPCs
 		{
 			//Makeshift for now
 
+			DropRORItems(npc);
+
+			if (npc.type == NPCID.SkeletronHead && !Main.gameMenu && WarbannerManager.warbanners.Count > 0)
+			{
+				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<WarbannerRemover>(),
+					npCondition: delegate (NPC n, Player player)
+					{
+						return !player.GetRORPlayer().warbannerRemoverDropped;
+					},
+					onDropped: delegate (Player player, Item item)
+					{
+						player.GetRORPlayer().warbannerRemoverDropped = true;
+						new WarbannerRemoverDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
+					}
+				);
+			}
+			else if (npc.type == NPCID.WallofFlesh)
+			{
+				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<Nullifier>(),
+					npCondition: delegate (NPC n, Player player)
+					{
+						RORPlayer mPlayer = player.GetRORPlayer();
+						return !mPlayer.nullifierEnabled && mPlayer.Effects.Count > 0;
+					}
+				);
+			}
+		}
+
+		public static void DropRORItems(NPC npc)
+		{
 			if (npc.boss)
 			{
+				if (Main.gameMenu) return; //RecipeBrowser protection
+
 				RORRarity rarity = RORRarity.Common;
 				//float rarityRand = Main.rand.NextFloat();
 				//if (rarityRand < 0.05f)
@@ -101,31 +133,6 @@ namespace RiskOfSlimeRain.NPCs
 					RORWorld.downedBossCount++;
 					new DownedBossCountPacket().Send();
 				}
-			}
-
-			if (npc.type == NPCID.SkeletronHead && WarbannerManager.warbanners.Count > 0)
-			{
-				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<WarbannerRemover>(),
-					npCondition: delegate (NPC n, Player player)
-					{
-						return !player.GetRORPlayer().warbannerRemoverDropped;
-					},
-					onDropped: delegate (Player player, Item item)
-					{
-						player.GetRORPlayer().warbannerRemoverDropped = true;
-						new WarbannerRemoverDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
-					}
-				);
-			}
-			else if (npc.type == NPCID.WallofFlesh)
-			{
-				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<Nullifier>(),
-					npCondition: delegate (NPC n, Player player)
-					{
-						RORPlayer mPlayer = player.GetRORPlayer();
-						return !mPlayer.nullifierEnabled && mPlayer.Effects.Count > 0;
-					}
-				);
 			}
 		}
 

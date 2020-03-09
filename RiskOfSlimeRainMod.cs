@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain
 
 		public RiskOfSlimeRainMod()
 		{
-			//git is gay
+
 		}
 
 		public override void Load()
