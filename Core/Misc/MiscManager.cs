@@ -105,6 +105,7 @@ namespace RiskOfSlimeRain.Core.Misc
 			int length = badModNPCs.Length;
 			if (length == 0)
 			{
+				badModNPCs = null;
 				return;
 			}
 

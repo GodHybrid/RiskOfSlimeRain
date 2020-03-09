@@ -38,7 +38,15 @@ namespace RiskOfSlimeRain.Items.Consumable
 			}
 			else
 			{
-				tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
+				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				if (index > -1)
+				{
+					tooltips.Insert(++index, new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
+				}
+				else
+				{
+					tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
+				}
 			}
 			tooltips.Add(new TooltipLine(mod, Name, "Gone with the wind...")
 			{

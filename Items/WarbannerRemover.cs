@@ -55,7 +55,15 @@ namespace RiskOfSlimeRain.Items
 			}
 			else
 			{
-				tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
+				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				if (index > -1)
+				{
+					tooltips.Insert(++index, new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
+				}
+				else
+				{
+					tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
+				}
 			}
 		}
 
