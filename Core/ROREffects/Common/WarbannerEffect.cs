@@ -37,7 +37,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo => $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
 											+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect" : "")
-											+ (NPC.BusyWithAnyInvasionOfSorts() ? "\nKill countdown is disabled while an invasion is in progress" : "");
+											+ (MiscManager.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -55,7 +55,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (MiscManager.IsBossPiece(target)) return;
 			if (MiscManager.IsChild(target, out _)) return;
 			if (MiscManager.IsSpawnedFromStatue(target)) return;
-			if (NPC.BusyWithAnyInvasionOfSorts()) return;
+			if (MiscManager.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			KillCount++;

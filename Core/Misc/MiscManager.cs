@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.GameContent.Events;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -109,7 +110,7 @@ namespace RiskOfSlimeRain.Core.Misc
 
 			string line = string.Empty;
 			ILog logger = RiskOfSlimeRainMod.Instance.Logger;
-			logger.Info("Exception during caching NPC: ");
+			logger.Info("NPCs that were skipped for caching: ");
 			for (int i = 0; i < length; i++)
 			{
 				line += Lang.GetNPCName(badModNPCs[i]).Value + ", ";
@@ -146,6 +147,11 @@ namespace RiskOfSlimeRain.Core.Misc
 			return Array.BinarySearch(isBuffImmune, npc.type) >= 0;
 		}
 
+		public static bool AnyInvasion()
+		{
+			return Main.slimeRain || Main.bloodMoon || Main.eclipse || Main.snowMoon || Main.pumpkinMoon || Main.invasionType != 0 || DD2Event.Ongoing;
+		}
+
 		/// <summary>
 		/// Loads various data related to NPCs
 		/// </summary>
@@ -162,7 +168,7 @@ namespace RiskOfSlimeRain.Core.Misc
 					bool buffImmune = true;
 					NPC npc = new NPC();
 
-					// tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
+					// (maybe) tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
 					bool prev = Main.NPCLoaded[i];
 					if (prev && i >= Main.maxNPCTypes)
 					{
