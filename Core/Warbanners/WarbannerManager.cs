@@ -178,6 +178,29 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			return proj;
 		}
 
+		/// <summary>
+		/// Returns nearest non-spawned warbanner
+		/// </summary>
+		public static Warbanner FindNearestInactiveWarbanner(Vector2 center)
+		{
+			float distanceSQ = float.MaxValue;
+			Warbanner banner = default(Warbanner);
+			foreach (Warbanner b in warbanners)
+			{
+				if (b.associatedProjIdentity == -1)
+				{
+					float between = Vector2.DistanceSquared(center, b.position);
+					if (distanceSQ > between)
+					{
+						distanceSQ = between;
+						banner = b;
+					}
+				}
+			}
+			return banner;
+		}
+
+
 		public static void Init()
 		{
 			warbanners = new List<Warbanner>();

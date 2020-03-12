@@ -300,10 +300,9 @@ namespace RiskOfSlimeRain
 			if (WarbannerManager.warbanners.Count <= 0) return true;
 			if (!(player.HeldItem.modItem is WarbannerRemover)) return true;
 
-			Projectile proj = WarbannerManager.FindNearestWarbannerProj(player.Center);
-			if (proj == null) return true;
-
 			Color color = Color.White;
+			Vector2 target = default(Vector2);
+			Projectile proj = default(Projectile);
 
 			int identity = mPlayer.LastWarbannerIdentity;
 			if (identity > -1)
@@ -311,12 +310,28 @@ namespace RiskOfSlimeRain
 				proj = WarbannerManager.FindWarbannerProj(identity);
 				color = Color.Red;
 			}
-			if (proj == null) return true;
+			else
+			{
+				proj = WarbannerManager.FindNearestWarbannerProj(player.Center);
+			}
+
+			if (proj != null)
+			{
+				target = proj.Center;
+			}
+
+			if (target == default)
+			{
+				Warbanner banner = WarbannerManager.FindNearestInactiveWarbanner(player.Center);
+				if (banner == null) return true;
+
+				target = banner.position;
+			}
 
 			float fade = 0;
 
 			Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
-			Vector2 between = proj.Center - playerCenter;
+			Vector2 between = target - playerCenter;
 			float length = between.Length();
 			if (length > 40)
 			{
