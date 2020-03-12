@@ -1,5 +1,11 @@
 # Changelogs
 
+## 0.3.1.5
+
+* Fixed crash related to shaders when loading the mod on some systems
+* Fixed crash related to Soldier's Syringe with some unfortunate mod combinations
+* Reworked Warbanner Remover hightlighting: Points to nearest warbanner in the world
+
 ## 0.3.1.4
 
 * Fixed warbanner counting a finished slime rain event as an invasion
