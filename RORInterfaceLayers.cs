@@ -2,9 +2,12 @@
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
+using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Items;
 using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Network.Effects;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -61,6 +64,11 @@ namespace RiskOfSlimeRain
 					$"{Name}: {nameof(Effects)}",
 					Effects,
 					InterfaceScaleType.UI
+				));
+				layers.Insert(mouseIndex + 1, new LegacyGameInterfaceLayer(
+					$"{Name}: {nameof(WarbannerArrow)}",
+					WarbannerArrow,
+					InterfaceScaleType.Game
 				));
 			}
 		}
@@ -284,6 +292,47 @@ namespace RiskOfSlimeRain
 			return true;
 		};
 
+		private static readonly GameInterfaceDrawMethod WarbannerArrow = delegate
+		{
+			//Credit to jopojelly (adjusted from Census)
+			Player player = Main.LocalPlayer;
+			RORPlayer mPlayer = player.GetRORPlayer();
+			if (WarbannerManager.warbanners.Count <= 0) return true;
+			if (!(player.HeldItem.modItem is WarbannerRemover)) return true;
+
+			Projectile proj = WarbannerManager.FindNearestWarbannerProj(player.Center);
+			if (proj == null) return true;
+
+			Color color = Color.White;
+
+			int identity = mPlayer.LastWarbannerIdentity;
+			if (identity > -1)
+			{
+				proj = WarbannerManager.FindWarbannerProj(identity);
+				color = Color.Red;
+			}
+			if (proj == null) return true;
+
+			float fade = 0;
+
+			Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
+			Vector2 between = proj.Center - playerCenter;
+			float length = between.Length();
+			if (length > 40)
+			{
+				Vector2 offset = Vector2.Normalize(between) * Math.Min(70, length - 20);
+				float rotation = between.ToRotation();
+				Vector2 drawPosition = playerCenter - Main.screenPosition + offset;
+				fade = Math.Min(1f, (length - 20) / 70) * (1 - fade);
+
+				Texture2D arrow = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrow");
+				Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrowWhite");
+				Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.White * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
+				Main.spriteBatch.Draw(arrow, drawPosition, null, color * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
+			}
+			return true;
+		};
+
 		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
 		{
 			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer);
@@ -299,7 +348,8 @@ namespace RiskOfSlimeRain
 			for (int i = 0; i < drawDatas.Count; i++)
 			{
 				DrawData data = drawDatas[i];
-				if (data.texture.Name.StartsWith("RiskOfSlimeRain")) continue;
+				if (data.texture?.Name.StartsWith("RiskOfSlimeRain") ?? false) continue;
+
 				data.position += effect.shakePosOffset * effect.shakeTimer;
 				data.scale += effect.shakeScaleOffset * effect.shakeTimer;
 				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);

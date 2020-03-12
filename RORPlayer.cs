@@ -445,8 +445,6 @@ namespace RiskOfSlimeRain
 			{
 				ShaderManager.ApplyToScreenOnce(Main.spriteBatch, shader);
 			}
-
-			WarbannerManager.HighlightNearestWarbanner(Main.spriteBatch, player);
 		}
 
 		public override void OnEnterWorld(Player player)

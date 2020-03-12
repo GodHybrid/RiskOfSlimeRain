@@ -109,18 +109,6 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			});
 		}
 
-		public static void HighlightNearestWarbanner(SpriteBatch spriteBatch, Player player)
-		{
-			if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer && player.HeldItem.modItem is WarbannerRemover)
-			{
-				Projectile proj = FindWarbannerProj(player.GetRORPlayer().LastWarbannerIdentity);
-				if (proj != null)
-				{
-					spriteBatch.Draw(Main.magicPixel, new Rectangle((int)(proj.position.X - Main.screenPosition.X + 2), (int)(proj.position.Y - Main.screenPosition.Y + 2), proj.width, proj.height), Color.OrangeRed * 0.5f);
-				}
-			}
-		}
-
 		/// <summary>
 		/// Deletes the nearest warbanner to the player
 		/// </summary>
@@ -162,9 +150,32 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// <summary>
 		/// Returns the warbanner projectile matching this identity, <see langword="null"/> if not found
 		/// </summary>
-		private static Projectile FindWarbannerProj(int identity)
+		public static Projectile FindWarbannerProj(int identity)
 		{
 			return Main.projectile.FirstActiveOrDefault(p => p.modProjectile is WarbannerProj && p.identity == identity);
+		}
+
+		/// <summary>
+		/// Returns nearest warbanner projectile
+		/// </summary>
+		public static Projectile FindNearestWarbannerProj(Vector2 center)
+		{
+			float distanceSQ = float.MaxValue;
+			Projectile proj = default(Projectile);
+			for (int i = 0; i < Main.maxProjectiles; i++)
+			{
+				Projectile p = Main.projectile[i];
+				if (p.active && p.modProjectile is WarbannerProj)
+				{
+					float between = Vector2.DistanceSquared(center, p.Center);
+					if (distanceSQ > between)
+					{
+						distanceSQ = between;
+						proj = p;
+					}
+				}
+			}
+			return proj;
 		}
 
 		public static void Init()
