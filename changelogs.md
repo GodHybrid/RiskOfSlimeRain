@@ -1,5 +1,9 @@
 # Changelogs
 
+## 0.3.1.6
+
+* Follow up fix to Soldier's Syringe
+
 ## 0.3.1.5
 
 * Fixed crash related to shaders when loading the mod on some systems

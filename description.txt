@@ -11,7 +11,7 @@ The mod also features a config setting where you can selectively pick the amount
 [c/d18660:Multiplayer compatible, no pvp support.]
 
 [c/888888:Changelog:]
-v0.3.1.5
+v0.3.1.5 + v0.3.1.6
     + Fixed crash related to shaders when loading the mod on some systems
     + Fixed crash related to Soldier's Syringe with some unfortunate mod combinations
     + Reworked Warbanner Remover hightlighting: Points to nearest warbanner in the world
