@@ -35,176 +35,110 @@ namespace RiskOfSlimeRain
 			RORInterfaceLayers.Load();
 		}
 
-		internal const BindingFlags BF_STATIC = BindingFlags.Static | BindingFlags.NonPublic;
-		internal const BindingFlags BF_INSTANCE = BindingFlags.Instance | BindingFlags.NonPublic;
-
-		//static List<BossInfo>
-
-		public static IList bossList;
-
-		public static List<Func<bool>> downedPreHMBossList;
-
-		public static List<Func<bool>> downedHMBossList;
-
-		public static void BossesDefeated(out int preHM, out int HM)
-		{
-			preHM = 0;
-			HM = 0;
-			foreach (var downed in downedPreHMBossList)
-			{
-				if (downed()) preHM++;
-			}
-			if (NPC.downedBoss2) preHM--;
-
-			foreach (var downed in downedHMBossList)
-			{
-				if (downed()) HM++;
-			}
-		}
-
 		public override void PostSetupContent()
 		{
 			RORNetworkTypeSerializers.Load();
-
-			Type BossChecklistModType = ModLoader.GetMod("BossChecklist").GetType();
-
-			FieldInfo bossTrackerField = BossChecklistModType.GetField("bossTracker", BF_STATIC);
-			Type bossTrackerType = bossTrackerField.FieldType;
-			FieldInfo SortedBossesField = bossTrackerType.GetField("SortedBosses", BF_INSTANCE);
-
-			Type BossInfoType = ModLoader.GetMod("BossChecklist").Code.GetType("BossChecklist.BossInfo");
-
-			//Type t;
-			//Type listType = typeof(List<>);
-			//Type constructedListType = listType.MakeGenericType(bossTrackerType);
-
-
-			//var instancedList = (IList)typeof(List<>)//Create a Generic List that can hold our type
-			// .MakeGenericType(SortedBossesType)
-			// .GetConstructor(Type.EmptyTypes)
-			// .Invoke(null);
-
-			object bossTracker = bossTrackerField.GetValue(null);
-
-			IList bossInfoList = (IList)SortedBossesField.GetValue(bossTracker);
-			bossList = (IList)typeof(List<>)//Create a Generic List that can hold our type
-				.MakeGenericType(BossInfoType)
-				.GetConstructor(Type.EmptyTypes)
-				.Invoke(null);
-
-			downedPreHMBossList = new List<Func<bool>>();
-
-			downedHMBossList = new List<Func<bool>>();
-
-			foreach (object bossInfo in bossInfoList)
-			{
-				FieldInfo typeField = BossInfoType.GetField("type", BF_INSTANCE);
-				Type EntryTypeType = typeField.FieldType;
-				object type = typeField.GetValue(bossInfo);
-
-				object boss = Enum.Parse(EntryTypeType, "Boss");
-
-				if (type.Equals(boss))
-				{
-					bossList.Add(bossInfo);
-
-					FieldInfo progressionField = BossInfoType.GetField("progression", BF_INSTANCE);
-					float progression = (float)progressionField.GetValue(bossInfo);
-
-					FieldInfo downedField = BossInfoType.GetField("downed", BF_INSTANCE);
-					Func<bool> downed = (Func<bool>)downedField.GetValue(bossInfo);
-
-					if (progression <= 6f)
-					{
-						downedPreHMBossList.Add(downed);
-					}
-					else
-					{
-						downedHMBossList.Add(downed);
-					}
-				}
-			}
 		}
 
-		internal class BossInfo
+		public class BossChecklistBossInfo
 		{
-			internal string key = "";
-			internal float progression = 0f;
+			internal string key = ""; // equal to "modSource internalName"
+			internal string modSource = "";
+			internal string internalName = "";
 			internal string displayName = "";
-			internal List<int> npcIDs = new List<int>();
+			internal float progression = 0f; // See https://github.com/JavidPack/BossChecklist/blob/master/BossTracker.cs#L13 for vanilla boss values
 			internal Func<bool> downed = () => false;
-
 			internal bool isBoss = false;
 			internal bool isMiniboss = false;
 			internal bool isEvent = false;
-
+			internal List<int> npcIDs = new List<int>(); // Does not include minions, only npcids that count towards the NPC still being alive.
 			internal List<int> spawnItem = new List<int>();
 			internal List<int> loot = new List<int>();
 			internal List<int> collection = new List<int>();
 
-			internal BossInfo()
+			public override string ToString()
 			{
-
+				return progression + key;
 			}
 		}
 
-		List<BossInfo> bossInfos = new List<BossInfo>();
+		public static bool DoBossChecklistIntegration()
+		{
+			// Make sure to call this method in PostAddRecipes or later for best results
+			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
+			if (BossChecklist != null && BossChecklist.Version >= BossChecklistAPIVersion)
+			{
+				object currentBossInfoResponse = BossChecklist.Call("GetBossInfoDictionary", BossChecklistAPIVersion.ToString());
+				if (currentBossInfoResponse is Dictionary<string, Dictionary<string, object>> bossInfoList)
+				{
+					bossInfos = bossInfoList.ToDictionary(boss => boss.Key, boss => new BossChecklistBossInfo()
+					{
+						key = boss.Value.ContainsKey("key") ? boss.Value["key"] as string : "",
+						modSource = boss.Value.ContainsKey("modSource") ? boss.Value["modSource"] as string : "",
+						internalName = boss.Value.ContainsKey("internalName") ? boss.Value["internalName"] as string : "",
+						displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as string : "",
+						progression = boss.Value.ContainsKey("progression") ? Convert.ToSingle(boss.Value["progression"]) : 0f,
+						downed = boss.Value.ContainsKey("downed") ? boss.Value["downed"] as Func<bool> : () => false,
+						isBoss = boss.Value.ContainsKey("isBoss") ? Convert.ToBoolean(boss.Value["isBoss"]) : false,
+						isMiniboss = boss.Value.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss.Value["isMiniboss"]) : false,
+						isEvent = boss.Value.ContainsKey("isEvent") ? Convert.ToBoolean(boss.Value["isEvent"]) : false,
+						npcIDs = boss.Value.ContainsKey("npcIDs") ? boss.Value["npcIDs"] as List<int> : new List<int>(),
+						spawnItem = boss.Value.ContainsKey("spawnItem") ? boss.Value["spawnItem"] as List<int> : new List<int>(),
+						loot = boss.Value.ContainsKey("loot") ? boss.Value["loot"] as List<int> : new List<int>(),
+						collection = boss.Value.ContainsKey("collection") ? boss.Value["collection"] as List<int> : new List<int>(),
+					});
+					return true;
+				}
+			}
+			return false;
+		}
+
+		private static readonly Version BossChecklistAPIVersion = new Version(1, 1);
+		public static Dictionary<string, BossChecklistBossInfo> bossInfos;
+		public static Dictionary<string, BossChecklistBossInfo> relevantBossInfoDict;
+		public static bool bcIntegration = false;
 
 		public override void PostAddRecipes()
 		{
-			Mod bc = ModLoader.GetMod("BossChecklist");
-			if (bc != null)
+			if (DoBossChecklistIntegration())
 			{
-				object data = bc.Call("GetCurrentBossInfo");
+				bcIntegration = true;
 
-				if (data is List<Dictionary<string, object>> list)
+				var bossesEnumerable = bossInfos.Where(boss => boss.Value.isBoss);
+				relevantBossInfoDict = bossesEnumerable.ToDictionary(boss => boss.Key, boss => boss.Value);
+
+				List<int> unwantedBosses = new List<int>() { WorldGen.crimson ? NPCID.EaterofWorldsHead : NPCID.BrainofCthulhu, NPCID.DD2Betsy };
+
+				var otherBossesEnumerable = relevantBossInfoDict.Where(boss => boss.Value.isBoss && boss.Value.npcIDs.Any(id => unwantedBosses.Contains(id)));
+				var otherBossesDict = otherBossesEnumerable.ToDictionary(boss => boss.Key, boss => boss.Value);
+
+				foreach (var boss in otherBossesDict)
 				{
-					foreach (var boss in list)
-					{
-						var tinyBossInfo = new BossInfo()
-						{
-							key = boss.ContainsKey("key") ? boss["key"] as string : "",
-							progression = boss.ContainsKey("progression") ? Convert.ToSingle(boss["progression"]) : 0f,
-							displayName = boss.ContainsKey("displayName") ? boss["displayName"] as string : "",
-							npcIDs = boss.ContainsKey("npcIDs") ? boss["npcIDs"] as List<int> : new List<int>(),
-							downed = boss.ContainsKey("downed") ? boss["downed"] as Func<bool> : () => false,
-
-							isBoss = boss.ContainsKey("isBoss") ? Convert.ToBoolean(boss["isBoss"]) : false,
-							isMiniboss = boss.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss["isMiniboss"]) : false,
-							isEvent = boss.ContainsKey("isEvent") ? Convert.ToBoolean(boss["isEvent"]) : false,
-
-							spawnItem = boss.ContainsKey("spawnItem") ? boss["spawnItem"] as List<int> : new List<int>(),
-							loot = boss.ContainsKey("loot") ? boss["loot"] as List<int> : new List<int>(),
-							collection = boss.ContainsKey("collection") ? boss["collection"] as List<int> : new List<int>(),
-						};
-						bossInfos.Add(tinyBossInfo);
-					}
+					relevantBossInfoDict.Remove(boss.Key);
 				}
+			}
+			else
+			{
+				bossInfos = new Dictionary<string, BossChecklistBossInfo>();
 			}
 		}
 
-		//internal Dictionary<string, object> ConvertToDictionary()
-		//{
-		//	var dict = new Dictionary<string, object> {
-		//		{ "key", Key },
-		//		{ "progression", progression },
-		//		{ "displayName", name },
-		//		{ "npcIDs", new List<int>(npcIDs) },
-		//		{ "downed", new Func<bool>(downed) },
-
-		//		{ "isBoss", type.Equals(EntryType.Boss) },
-		//		{ "isMiniboss", type.Equals(EntryType.MiniBoss) },
-		//		{ "isEvent", type.Equals(EntryType.Event) },
-
-		//		{ "spawnItem", new List<int>(spawnItem) },
-		//		{ "loot", new List<int>(loot) },
-		//		{ "collection", new List<int>(collection) }
-		//	};
-
-		//	return dict;
-		//}
+		public static void BossesDefeated(out int preHM, out int HM)
+		{
+			var enumerator = relevantBossInfoDict.Where(boss => boss.Value.downed());
+			var downed = enumerator.ToDictionary(boss => boss.Key, boss => boss.Value);
+			preHM = downed.Count(boss => boss.Value.progression < 6f);
+			HM = downed.Count(boss => boss.Value.progression >= 6f);
+		}
 
 		public override void Unload()
+		{
+			bossInfos = null;
+
+			OtherUnload();
+		}
+
+		public static void OtherUnload()
 		{
 			ROREffectManager.Unload();
 			NPCEffectManager.Unload();

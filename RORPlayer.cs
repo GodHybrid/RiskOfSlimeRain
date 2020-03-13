@@ -292,8 +292,8 @@ namespace RiskOfSlimeRain
 			RORInterfaceLayers.Update(player);
 
 			RiskOfSlimeRainMod.BossesDefeated(out int preHM, out int HM);
-			Main.NewText("prehm: " + preHM + "/" + RiskOfSlimeRainMod.downedPreHMBossList.Count.ToString());
-			Main.NewText("hm: " + HM + "/" + RiskOfSlimeRainMod.downedHMBossList.Count.ToString());
+			Main.NewText("prehm: " + preHM);
+			Main.NewText("hm: " + HM);
 		}
 
 		public override void PostUpdate()
