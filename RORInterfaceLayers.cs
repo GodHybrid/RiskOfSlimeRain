@@ -358,18 +358,19 @@ namespace RiskOfSlimeRain
 			}
 
 			//Modify Main.playerDrawData first
-			List<DrawData> drawDatas = new List<DrawData>(Main.playerDrawData);
+			List<DrawData> drawDataCopy = new List<DrawData>(Main.playerDrawData);
+			List<DrawData> drawDatas = new List<DrawData>();
 
-			for (int i = 0; i < drawDatas.Count; i++)
+			for (int i = 0; i < drawDataCopy.Count; i++)
 			{
-				DrawData data = drawDatas[i];
-				if (data.texture?.Name.StartsWith("RiskOfSlimeRain") ?? false) continue;
+				DrawData data = drawDataCopy[i];
+				if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
 
 				data.position += effect.shakePosOffset * effect.shakeTimer;
 				data.scale += effect.shakeScaleOffset * effect.shakeTimer;
 				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
 				data.color *= 0.05f * effect.shakeTimer;
-				drawDatas[i] = data;
+				drawDatas.Add(data);
 			}
 
 			Main.playerDrawData.AddRange(drawDatas);
