@@ -363,14 +363,21 @@ namespace RiskOfSlimeRain
 
 			for (int i = 0; i < drawDataCopy.Count; i++)
 			{
-				DrawData data = drawDataCopy[i];
-				if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
+				try
+				{
+					DrawData data = drawDataCopy[i];
+					if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
 
-				data.position += effect.shakePosOffset * effect.shakeTimer;
-				data.scale += effect.shakeScaleOffset * effect.shakeTimer;
-				data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
-				data.color *= 0.05f * effect.shakeTimer;
-				drawDatas.Add(data);
+					data.position += effect.shakePosOffset * effect.shakeTimer;
+					data.scale += effect.shakeScaleOffset * effect.shakeTimer;
+					data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
+					data.color *= 0.05f * effect.shakeTimer;
+					drawDatas.Add(data);
+				}
+				catch
+				{
+
+				}
 			}
 
 			Main.playerDrawData.AddRange(drawDatas);
