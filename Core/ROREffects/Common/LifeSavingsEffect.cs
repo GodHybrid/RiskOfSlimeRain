@@ -39,7 +39,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "hi im billy and heer is money for mom thanks";
 
-		public override string UIInfo => GetUIInfo();
+		public override string UIInfo()
+		{
+			string text = string.Empty;
+			if (Main.playerInventory)
+			{
+				text += $"Last withdrawn: {lastWithdrawn}";
+			}
+			else
+			{
+				text += $"Next withdrawal: {nextMoneyWithdrawn}";
+			}
+			return text + $"\nTotal money generated: {totalText}";
+		}
 
 		public void PostUpdateEquips(Player player)
 		{
@@ -68,20 +80,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public void ProcessTriggers(Player player, TriggersSet triggersSet)
 		{
 			justOpenedInventory = PlayerInput.Triggers.JustPressed.Inventory && !Main.playerInventory;
-		}
-
-		private string GetUIInfo()
-		{
-			string text = string.Empty;
-			if (Main.playerInventory)
-			{
-				text += $"Last withdrawn: {lastWithdrawn}";
-			}
-			else
-			{
-				text += $"Next withdrawal: {nextMoneyWithdrawn}";
-			}
-			return text + $"\nTotal money generated: {totalText}";
 		}
 	}
 }

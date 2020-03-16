@@ -226,9 +226,9 @@ namespace RiskOfSlimeRain
 				effect = effects[hoverIndex];
 				string name = effect.Name;
 				string text = "\n" + effect.Description;
-				if (effect.UIInfo != string.Empty)
+				if (effect.UIInfo() != string.Empty)
 				{
-					text += "\n" + effect.UIInfo;
+					text += "\n" + effect.UIInfo();
 				}
 				if (effect.Capped)
 				{

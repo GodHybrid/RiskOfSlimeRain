@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-		public override string UIInfo => $"Bonus life: {BonusLife}";
+		public override string UIInfo() => $"Bonus life: {BonusLife}";
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -82,7 +82,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string ToString()
 		{
-			return base.ToString() + ", " + UIInfo;
+			return base.ToString() + ", " + UIInfo();
 		}
 	}
 }

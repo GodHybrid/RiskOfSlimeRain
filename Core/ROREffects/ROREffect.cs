@@ -60,12 +60,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public int RarityValue => ROREffectManager.GetRarityValue(Rarity);
 
-		//Dynamic
-		/// <summary>
-		/// Use to display additional info when mouseovered in the UI
-		/// </summary>
-		public virtual string UIInfo => string.Empty;
-
 		//Cached, so not dynamic
 		public virtual string Texture => ROREffectManager.GetTexture(GetType());
 
@@ -199,6 +193,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				throw new Exception("wtf");
 			}
 		}
+
+		/// <summary>
+		/// Use to display additional info when mouseovered in the UI
+		/// </summary>
+		public virtual string UIInfo() => string.Empty;
 
 		public void IncreaseStack()
 		{
