@@ -1,7 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Helpers;
-using RiskOfSlimeRain.Items;
 using RiskOfSlimeRain.Network.Data;
 using RiskOfSlimeRain.Projectiles;
 using System;

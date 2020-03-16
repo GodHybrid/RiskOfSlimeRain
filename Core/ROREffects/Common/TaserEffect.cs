@@ -1,5 +1,4 @@
-﻿using RiskOfSlimeRain.Core.Misc;
-using RiskOfSlimeRain.Core.NPCEffects;
+﻿using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.NPCEffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
@@ -34,9 +33,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		void AddBuff(NPC target)
 		{
 			if (target.boss && !Main.rand.NextBool(10)) return;
-			if (MiscManager.IsWormBodyOrTail(target)) return;
+			if (NPCHelper.IsWormBodyOrTail(target)) return;
 			if (target.type == NPCID.WallofFlesh || target.type == NPCID.WallofFleshEye) return;
-			if (MiscManager.IsBossPiece(target)) return;
+			if (NPCHelper.IsBossPiece(target)) return;
 
 			NPCEffectManager.ApplyNPCEffect<TaserNPCEffect>(target, (initial + increase * Stack) * 6, true, true);
 		}

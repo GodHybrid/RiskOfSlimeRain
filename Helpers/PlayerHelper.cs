@@ -77,7 +77,7 @@ namespace RiskOfSlimeRain.Helpers
 				55,
 				54
 			});
-			int[] empty = new int[0]; 
+			int[] empty = new int[0];
 			long piggy = Utils.CoinsCount(out _, player.bank.item, empty);
 			long safe = Utils.CoinsCount(out _, player.bank2.item, empty);
 			long forge = Utils.CoinsCount(out _, player.bank3.item, empty);

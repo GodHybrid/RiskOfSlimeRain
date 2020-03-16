@@ -1,6 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
@@ -28,9 +28,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(NPC target)
 		{
-			if (MiscManager.IsWormBodyOrTail(target)) return;
-			if (MiscManager.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
-			if (MiscManager.IsSpawnedFromStatue(target)) return;
+			if (NPCHelper.IsWormBodyOrTail(target)) return;
+			if (NPCHelper.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
+			if (NPCHelper.IsSpawnedFromStatue(target)) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)

@@ -1,6 +1,5 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
@@ -343,7 +342,7 @@ namespace RiskOfSlimeRain
 		{
 			NoOnHitTimer = 0;
 
-			if (!MiscManager.IsHostile(target)) return;
+			if (!NPCHelper.IsHostile(target)) return;
 
 			if (target.life <= 0)
 			{
@@ -355,7 +354,7 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (!MiscManager.IsHostile(target)) return;
+			if (!NPCHelper.IsHostile(target)) return;
 
 			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 		}
@@ -365,7 +364,7 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer = 0;
 
 			//This stuff should be at the bottom of everything
-			if (!MiscManager.IsHostile(target)) return;
+			if (!NPCHelper.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
@@ -384,7 +383,7 @@ namespace RiskOfSlimeRain
 		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
 			//This stuff should be at the bottom of everything
-			if (!MiscManager.IsHostile(target)) return;
+			if (!NPCHelper.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;

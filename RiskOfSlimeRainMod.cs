@@ -1,4 +1,3 @@
-using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
@@ -36,12 +35,12 @@ namespace RiskOfSlimeRain
 
 		public override void PostSetupContent()
 		{
-			MiscManager.Load();
+			NPCHelper.Load();
 		}
 
 		public override void AddRecipes()
 		{
-			MiscManager.LogBadModNPCs();
+			NPCHelper.LogBadModNPCs();
 		}
 
 		public override void Unload()
@@ -51,7 +50,7 @@ namespace RiskOfSlimeRain
 			ShaderManager.Unload();
 			RORInterfaceLayers.Unload();
 			WarbannerManager.Unload();
-			MiscManager.Unload();
+			NPCHelper.Unload();
 			PlayerHelper.Unload();
 			SpawnedFromStatuePacket.Unload();
 		}

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
@@ -37,7 +36,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo => $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
 											+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect" : "")
-											+ (MiscManager.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
+											+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
@@ -51,11 +50,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void IncreaseKillCountAndPrepareWarbannerSpawn(NPC target)
 		{
-			if (MiscManager.IsWormBodyOrTail(target)) return;
-			if (MiscManager.IsBossPiece(target)) return;
-			if (MiscManager.IsChild(target, out _)) return;
-			if (MiscManager.IsSpawnedFromStatue(target)) return;
-			if (MiscManager.AnyInvasion()) return;
+			if (NPCHelper.IsWormBodyOrTail(target)) return;
+			if (NPCHelper.IsBossPiece(target)) return;
+			if (NPCHelper.IsChild(target, out _)) return;
+			if (NPCHelper.IsSpawnedFromStatue(target)) return;
+			if (NPCHelper.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			KillCount++;

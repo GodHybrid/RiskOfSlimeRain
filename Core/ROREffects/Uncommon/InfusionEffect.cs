@@ -1,8 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Core.Misc;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
-using RiskOfSlimeRain.NPCs;
 using RiskOfSlimeRain.Projectiles;
 using System.IO;
 using Terraria;
@@ -65,10 +64,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private void SpawnProjectile(Player player, NPC target)
 		{
-			if (MiscManager.IsWormBodyOrTail(target)) return;
-			if (MiscManager.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
-			if (MiscManager.IsSpawnedFromStatue(target)) return;
-			if (MiscManager.AnyInvasion()) return;
+			if (NPCHelper.IsWormBodyOrTail(target)) return;
+			if (NPCHelper.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
+			if (NPCHelper.IsSpawnedFromStatue(target)) return;
+			if (NPCHelper.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
 			//The projectile reads from the effect of the owner how much health it gives him

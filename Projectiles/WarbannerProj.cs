@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
-using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;

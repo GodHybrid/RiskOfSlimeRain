@@ -1,6 +1,3 @@
-using RiskOfSlimeRain.Tiles;
-using Terraria.ModLoader;
-
 namespace RiskOfSlimeRain.Items.Placeable
 {
 	/*

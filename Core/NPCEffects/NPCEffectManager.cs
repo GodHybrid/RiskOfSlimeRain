@@ -1,4 +1,4 @@
-﻿using RiskOfSlimeRain.Core.Misc;
+﻿using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.NPCs;
 using RiskOfSlimeRain.NPCs;
 using System;
@@ -123,7 +123,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 		/// </summary>
 		public static NPCEffect ApplyNPCEffect(Type type, NPC npc, int duration, bool broadcast = false, bool forceBroadcast = false)
 		{
-			if (MiscManager.IsBuffImmune(npc)) return null;
+			if (NPCHelper.IsBuffImmune(npc)) return null;
 
 			RORGlobalNPC globalNPC = npc.GetGlobalNPC<RORGlobalNPC>();
 			int index = GetEffectIndexOfType(globalNPC, type);

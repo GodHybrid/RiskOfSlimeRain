@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
-using Terraria.GameContent.UI;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 using WebmilioCommons.Networking.Packets;
