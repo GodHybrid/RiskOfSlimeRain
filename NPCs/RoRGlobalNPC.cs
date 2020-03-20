@@ -64,7 +64,7 @@ namespace RiskOfSlimeRain.NPCs
 				shop[nextSlot] = ModContent.ItemType<WarbannerRemover>();
 				nextSlot++;
 			}
-			else if (Main.hardMode && Main.rand.NextBool(4)) //Wof
+			if (Main.hardMode && Main.rand.NextBool(4)) //Wof
 			{
 				shop[nextSlot] = ModContent.ItemType<Nullifier>();
 				nextSlot++;
