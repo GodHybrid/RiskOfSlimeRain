@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -15,12 +16,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 	// AI
 	// Telegraphing (Visuals and Sound)
 	// Summon item, boss item
-	public abstract class MagmaWormBase : ModNPC
+	public abstract class MagmaWorm : ModNPC
 	{
 		public int head = -1;
 		public int body = -1;
 		public int tail = -1;
 		public const int defaultSize = 32;
+		public const int positionOffset = 42;
 
 		public virtual bool IsHead => false;
 
@@ -47,7 +49,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.noGravity = true;
 			npc.knockBackResist = 0f;
 			npc.value = 10000f;
-			npc.scale = 1.5f;
+			npc.scale = 1f;
 			npc.buffImmune[BuffID.Poisoned] = true;
 			npc.buffImmune[BuffID.OnFire] = true;
 			npc.buffImmune[BuffID.CursedInferno] = true;
@@ -126,7 +128,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					AttachedHealthWhoAmI = npc.whoAmI;
 					npc.realLife = npc.whoAmI;
 					int parentWhoAmI = npc.whoAmI;
-					int maxSegments = 24;
+					int maxSegments = 10;
 					float nextScaleStep = (npc.scale / maxSegments) * 0.60f; // Last segment will have 40% the starting scale
 					float nextScale = npc.scale - nextScaleStep;
 					for (int k = 0; k < maxSegments; k++)
@@ -141,13 +143,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 						NPC childNPC = Main.npc[childWhoAmI];
 
 						childNPC.realLife = npc.whoAmI;
-						MagmaWormBase childMWB = childNPC.modNPC as MagmaWormBase;
+						MagmaWorm childMWB = childNPC.modNPC as MagmaWorm;
 						childMWB.AttachedHealthWhoAmI = npc.whoAmI;
 						childMWB.ParentWhoAmI = parentWhoAmI;
 						childMWB.Scale = nextScale;
 
 						NPC parentNPC = Main.npc[parentWhoAmI];
-						MagmaWormBase parentMWB = parentNPC.modNPC as MagmaWormBase;
+						MagmaWorm parentMWB = parentNPC.modNPC as MagmaWorm;
 						parentMWB.ChildWhoAmI = childWhoAmI;
 
 						NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, childWhoAmI, 0f, 0f, 0f, 0, 0, 0);
@@ -211,6 +213,286 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.scale = Scale == 0 ? npc.scale : Scale;
 		}
 
+		public enum MWState : byte
+		{
+			Initializing,
+			Diving,
+			Disappearing,
+			Emerging,
+			SlowingDown,
+		}
+
+		/* // () are state transitions
+		 * 
+		 *                         Initializing
+		 *                              |
+		 *                              | (DisappearAfterInitializing)
+		 *							    |
+		 * (DisappearAfterDiving)       v     (EmergeAfterDisappearing)
+		 *       ----------------> Disappearing -----------
+		 *       |                                        |
+		 *       |                                        v
+		 *    Diving                                    Emerging
+		 *       ^                                        |
+		 *       |                                        |
+		 *       ----------------SlowingDown <-------------
+		 *  (DiveAfterSlowdown)                (SlowdownAfterEmerging)      
+		 */
+
+		public enum MWCommand : byte
+		{
+			/// <summary>
+			/// Transitions into Disappearing, resets values
+			/// </summary>
+			Reset,
+			/// <summary>
+			/// Transitions into Diving
+			/// </summary>
+			Dive,
+			/// <summary>
+			/// Transitions into Disappearing
+			/// </summary>
+			Disappear,
+			/// <summary>
+			/// Transitions into Emerging, triggers warning
+			/// </summary>
+			Emerge,
+			/// <summary>
+			/// Transitions into SlowingDown
+			/// </summary>
+			Slowdown,
+		}
+
+		public class MWFSM : NPCFSM<MagmaWorm, MWState, MWCommand>
+		{
+			public MWFSM(MagmaWorm worm) : base(worm)
+			{
+				CurrentState = MWState.Initializing;
+
+				// Define state transitions
+
+				// Example: If current state is "Initializing", the command "Reset" will transition to the next state "Disappearing"
+				var DisappearAfterInitializing = new StateTransition<MWState, MWCommand>(MWState.Initializing, MWCommand.Reset);
+
+				// Regular state loop
+				var DisappearAfterDiving = new StateTransition<MWState, MWCommand>(MWState.Diving, MWCommand.Disappear);
+				var EmergeAfterDisappearing = new StateTransition<MWState, MWCommand>(MWState.Disappearing, MWCommand.Emerge);
+				var SlowdownAfterEmerging = new StateTransition<MWState, MWCommand>(MWState.Emerging, MWCommand.Slowdown);
+				var DiveAfterSlowingdown = new StateTransition<MWState, MWCommand>(MWState.SlowingDown, MWCommand.Dive);
+
+				// Timeout transitions into Disappearing
+				var DisappearAfterEmerging = new StateTransition<MWState, MWCommand>(MWState.Emerging, MWCommand.Reset);
+				var DisappearAfterSlowingDown = new StateTransition<MWState, MWCommand>(MWState.SlowingDown, MWCommand.Reset);
+				var DisappearAfterDiving2 = new StateTransition<MWState, MWCommand>(MWState.Diving, MWCommand.Reset);
+
+				Transitions = new Dictionary<StateTransition<MWState, MWCommand>, MWState>
+				{
+					{ DisappearAfterInitializing, MWState.Disappearing },
+
+					// Regular state loop
+					{ DisappearAfterDiving, MWState.Disappearing },
+					{ EmergeAfterDisappearing, MWState.Emerging },
+					{ SlowdownAfterEmerging, MWState.SlowingDown },
+					{ DiveAfterSlowingdown, MWState.Diving },
+
+					// Timeout transitions into Disappearing
+					{ DisappearAfterEmerging, MWState.Disappearing },
+					{ DisappearAfterSlowingDown, MWState.Disappearing },
+					{ DisappearAfterDiving2, MWState.Disappearing },
+				};
+			}
+
+			private void Warning()
+			{
+				if (mNPC.Location != Vector2.Zero)
+				{
+					Main.PlaySound(SoundID.Roar, mNPC.Location, 0);
+				}
+			}
+
+			//TODO proper watchdog timeout reset (so it runs even when state stays the same at invalid transition)
+			private void Reset()
+			{
+				mNPC.WatchdogTimer = 0;
+				mNPC.AITimer = 0;
+			}
+
+			private void DoDisappearing()
+			{
+				mNPC.AITimer++;
+				mNPC.npc.velocity.X *= 0.95f;
+				mNPC.npc.velocity.Y = Math.Max(mNPC.npc.velocity.Y + 0.15f, 16);
+				//GeneralHoming();
+			}
+
+			private void DoEmerging()
+			{
+				mNPC.AITimer++;
+				Vector2 direction = mNPC.Location - mNPC.npc.Center;
+				int rot = Utils.Clamp(emergingTimerMax - mNPC.AITimer, 0, emergingTimerMax);
+				direction.Normalize();
+				direction = direction.RotatedBy(MathHelper.ToRadians(3 * rot * Math.Sign(-direction.X)));
+				float magnitude = 10f;
+				direction *= 1f - (rot / (float)emergingTimerMax);
+				if (mNPC.AITimer > emergingTimerMax)
+				{
+					magnitude = Math.Max(magnitude + mNPC.AITimer / (float)emergingTimerMax, 16);
+				}
+				//For that nice initial curving
+				float accel = Utils.Clamp(60 - mNPC.AITimer, 20, 60);
+				mNPC.npc.velocity = (mNPC.npc.velocity * (accel - 1) + direction * magnitude) / accel;
+			}
+
+			private void DoSlowingDown()
+			{
+				Vector2 direction = mNPC.Target.Center - mNPC.npc.Center;
+				direction.Normalize();
+				mNPC.npc.velocity.X = (mNPC.npc.velocity.X * (30 - 1) + direction.X * 10) / 30;
+				mNPC.npc.velocity.Y += 0.1f;
+				mNPC.npc.velocity *= 0.9f;
+			}
+
+			private void DoDiving()
+			{
+				mNPC.AITimer++;
+				Vector2 direction = mNPC.Target.Center + mNPC.Target.velocity * 5f - mNPC.npc.Center;
+				direction.Normalize();
+				mNPC.npc.velocity.X = (mNPC.npc.velocity.X * (30 - 1) + direction.X * 10) / 30;
+				mNPC.npc.velocity.Y = Math.Max(mNPC.npc.velocity.Y + 0.15f, 16);
+			}
+
+			private void GeneralHoming()
+			{
+				Vector2 direction = mNPC.Target.Center + mNPC.Target.velocity * 5f - mNPC.npc.Center;
+				if (direction.LengthSquared() > 100 * 100)
+				{
+					direction.Normalize();
+					Homing(direction, 5f, 40f);
+				}
+			}
+
+			private void Homing(Vector2 direction, float magnitude, float accel)
+			{
+				/*
+				 * What happens here is: Initially, the projectile flies in the opposite direction (6 * 30 = 180 degrees)
+				 * And then curves towards the destination for 30 ticks
+				 */
+				//HomingTimer++;
+				//Vector2 direction = target.Center + target.velocity * 5f - projectile.Center;
+				//int rot = Utils.Clamp(30 - HomingTimer, 0, 30);
+				//direction.Normalize();
+				//direction = direction.RotatedBy(MathHelper.ToRadians(6 * rot * Math.Sign(-direction.X)));
+				//direction *= MaxHomingSpeed * (1f - (rot / 30f));
+				////For that nice initial curving
+				//float accel = Utils.Clamp(MaxHomingAccel - HomingTimer, MinHomingAccel, MaxHomingAccel);
+				mNPC.npc.velocity = (mNPC.npc.velocity * (accel - 1) + direction * magnitude) / accel;
+			}
+
+			public override void UpdateState()
+			{
+				if (mNPC.WatchdogTimer > watchdogTimerMax)
+				{
+					Reset();
+					MoveNext(MWCommand.Reset); // Reset has a transition from every state
+				}
+				else
+				{
+					switch (CurrentState)
+					{
+						case MWState.Disappearing:
+							if (mNPC.AITimer > disappearTimerMax || mNPC.npc.position.Y > mNPC.Target.BottomLeft.Y + 600)
+							{
+								// Go 2000 coordinates below the player
+								mNPC.Location = mNPC.Target.Bottom;
+								Warning();
+								Reset();
+								MoveNext(MWCommand.Emerge);
+							}
+							break;
+						case MWState.Emerging:
+							if (mNPC.npc.Bottom.Y < mNPC.Target.Top.Y)
+							{
+								Reset();
+								MoveNext(MWCommand.Slowdown);
+							}
+							break;
+						case MWState.SlowingDown:
+							if (mNPC.npc.oldVelocity.Y <= 0 && mNPC.npc.velocity.Y > mNPC.npc.oldVelocity.Y)
+							{
+								Reset();
+								MoveNext(MWCommand.Dive);
+							}
+							break;
+						case MWState.Diving:
+							if (mNPC.AITimer > divingTimerMax)
+							{
+								Reset();
+								MoveNext(MWCommand.Reset);
+							}
+							else if (mNPC.npc.Top.Y > mNPC.Target.Bottom.Y)
+							{
+								Reset();
+								MoveNext(MWCommand.Disappear);
+							}
+							break;
+						default: //Initializing falls under this
+							Reset();
+							MoveNext(MWCommand.Reset);
+							break;
+					}
+				}
+			}
+
+			public override void ExecuteCurrentState()
+			{
+				switch (CurrentState)
+				{
+					case MWState.Disappearing:
+						DoDisappearing();
+						break;
+					case MWState.Emerging:
+						DoEmerging();
+						break;
+					case MWState.SlowingDown:
+						DoSlowingDown();
+						break;
+					case MWState.Diving:
+						DoDiving();
+						break;
+					default: //Initializing falls under this
+						break;
+				}
+			}
+		}
+
+		public int AITimer { get; private set; }
+
+		public const int disappearTimerMax = 180; // Disappear for 3 seconds after finished diving
+
+		public const int emergingTimerMax = 60; // Curving
+
+		public const int divingTimerMax = 180; // Dive for 3 seconds max (if player for example drops down with slime mount, worm never catches up otherwise)
+
+		public int WatchdogTimer { get; private set; }
+
+		public const int watchdogTimerMax = 300; // Force 5 second time max between stages
+
+		public Vector2 Location = Vector2.Zero;
+
+		private MWFSM _fsm;
+
+		public MWFSM FSM
+		{
+			get
+			{
+				if (_fsm == null)
+				{
+					_fsm = new MWFSM(this);
+				}
+				return _fsm;
+			}
+		}
+
 		private void HeadMovement(Vector2 destination)
 		{
 			if (npc.velocity.X < 0f)
@@ -222,6 +504,43 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				npc.spriteDirection = -1;
 			}
 
+			if (false)
+			{
+				WyvernHeadMovement(destination);
+
+				//Main.NewText("#####");
+				//if (FSM.CurrentState == MWState.Initializing) FSM.MoveNext(MWCommand.Reset);
+				//FSM.MoveNext(MWCommand.Emerge);
+				//FSM.MoveNext(MWCommand.Slowdown);
+				//FSM.MoveNext(MWCommand.Dive);
+			}
+			else
+			{
+				FSM.UpdateState();
+				FSM.ExecuteCurrentState();
+				Main.NewText(FSM.CurrentState);
+				//Vector2 center = npc.Center;
+				//Vector2 targetCenter = Target.Center;
+				////center.X = (int)(center.X / 16f) * 16;
+				////center.Y = (int)(center.Y / 16f) * 16;
+				//destination = targetCenter - center;
+
+				//Check state machine conditions, including state transitions
+				//FSM.UpdateState();
+				//FSM.ExecuteCurrentState();
+			}
+
+			npc.rotation = npc.velocity.ToRotation() + 1.57f;
+
+			if (!Synced)
+			{
+				npc.netUpdate = true;
+				Synced = true;
+			}
+		}
+
+		private void WyvernHeadMovement(Vector2 destination)
+		{
 			float speed = 11f;
 			float accel = 0.25f;
 			float length = destination.Length();
@@ -342,13 +661,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					}
 				}
 			}
-			npc.rotation = npc.velocity.ToRotation() + 1.57f;
-
-			if (!Synced)
-			{
-				npc.netUpdate = true;
-				Synced = true;
-			}
 		}
 
 		private void BodyMovement()
@@ -356,7 +668,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			Vector2 pCenter = Parent.Center;
 			float parentRotation = Parent.rotation;
 			float scaleOffset = MathHelper.Clamp(npc.scale, 0f, 50f);
-			float positionOffset = 42f;
 
 			npc.velocity = Vector2.Zero;
 			Vector2 newVelocity = pCenter - npc.Center;
@@ -368,7 +679,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			npc.rotation = newVelocity.ToRotation() + 1.57f;
 
-			//Rearrange position based on scale
+			// Rearrange position based on scale
 			npc.position = npc.Center;
 			npc.scale = scaleOffset;
 			npc.width = npc.height = (int)(defaultSize * npc.scale);
@@ -390,7 +701,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			Vector2 destination = targetCenter - center;
 			if (!IsHead && ParentWhoAmI >= 0f && ParentWhoAmI <= Main.maxNPCs)
 			{
-				if (Parent.modNPC is MagmaWormBase mwb && mwb != null)
+				if (Parent.modNPC is MagmaWorm mwb && mwb != null)
 				{
 					BodyMovement();
 				}
@@ -440,7 +751,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			float yoff = 56f * npc.scale + 4f;
+			float yoff = 56f * npc.scale + 4f; // No clue why those magic numbers
 			Texture2D texture = Main.npcTexture[npc.type];
 			Vector2 drawOrigin = new Vector2(texture.Width >> 1, (texture.Height >> 1) / Main.npcFrameCount[npc.type]);
 
@@ -451,23 +762,34 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return false;
 		}
 
+		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
+		{
+			if (FSM.CurrentState != MWState.Emerging) return;
+			if (Location == Vector2.Zero) return;
+			Vector2 drawCenter = Location - Main.screenPosition;
+			Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Slowdown");
+			Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
+			destination.Inflate(10, 10);
+			spriteBatch.Draw(texture, destination, Color.White);
+		}
+
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
 			return IsHead;
 		}
 	}
 
-	public class MagmaWormHead : MagmaWormBase
+	public class MagmaWormHead : MagmaWorm
 	{
 		public override bool IsHead => true;
 	}
 
-	public class MagmaWormBody : MagmaWormBase
+	public class MagmaWormBody : MagmaWorm
 	{
 
 	}
 
-	public class MagmaWormTail : MagmaWormBase
+	public class MagmaWormTail : MagmaWorm
 	{
 		public override bool IsTail => true;
 	}
