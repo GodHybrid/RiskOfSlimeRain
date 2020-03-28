@@ -523,6 +523,8 @@ namespace RiskOfSlimeRain
 		{
 			UpdateNullifier();
 			UpdateTimers();
+			//Main.NewText("topleft: " + player.position.ToTileCoordinates());
+			//Main.NewText("bottomr: " + player.BottomRight.ToTileCoordinates());
 		}
 	}
 }

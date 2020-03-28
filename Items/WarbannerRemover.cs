@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
+using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
@@ -22,22 +23,23 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool CanUseItem(Player player)
 		{
-			return player.GetRORPlayer().InWarbannerRange;
+			return true || player.GetRORPlayer().InWarbannerRange;
 		}
 
 		public override bool UseItem(Player player)
 		{
-			WarbannerManager.DeleteNearestWarbanner(player);
+			SLWorld.EnterSubworld("RiskOfSlimeRain_TestSubworld");
+			//WarbannerManager.DeleteNearestWarbanner(player);
 
-			//Local player resets their killcount if they have one
-			if (Main.netMode != NetmodeID.Server)
-			{
-				WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(Main.LocalPlayer);
-				if (effect != null)
-				{
-					effect.ResetKillCount();
-				}
-			}
+			////Local player resets their killcount if they have one
+			//if (Main.netMode != NetmodeID.Server)
+			//{
+			//	WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(Main.LocalPlayer);
+			//	if (effect != null)
+			//	{
+			//		effect.ResetKillCount();
+			//	}
+			//}
 			return true;
 		}
 
