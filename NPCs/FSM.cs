@@ -1,10 +1,6 @@
 ﻿using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.NPCs
@@ -142,11 +138,14 @@ namespace RiskOfSlimeRain.NPCs
 		where TState : Enum
 		where TCommand : Enum
 	{
-		public TNPC mNPC { get; private set; }
+		/// <summary>
+		/// The modded NPC this FSM is tied to
+		/// </summary>
+		public TNPC Me { get; private set; }
 
 		public NPCFSM(TNPC modNPC) : base()
 		{
-			mNPC = modNPC;
+			Me = modNPC;
 		}
 
 		/// <summary>
