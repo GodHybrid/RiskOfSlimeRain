@@ -133,6 +133,22 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					int maxSegments = 16;
 					float nextScaleStep = (npc.scale / maxSegments) * 0.60f; // Last segment will have 40% the starting scale
 					float nextScale = npc.scale - nextScaleStep;
+
+					// Spawn the hitbox extension
+					int childWhoAmI = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, ModContent.NPCType<MagmaWormHeadExtension>(), npc.whoAmI);
+					NPC childNPC = Main.npc[childWhoAmI];
+
+					childNPC.realLife = npc.whoAmI;
+					MagmaWorm childMWB = childNPC.modNPC as MagmaWorm;
+					childMWB.AttachedHealthWhoAmI = npc.whoAmI;
+					childMWB.ParentWhoAmI = parentWhoAmI;
+					childMWB.Scale = nextScale;
+
+					//NPC parentNPC = Main.npc[parentWhoAmI];
+					//MagmaWorm parentMWB = parentNPC.modNPC as MagmaWorm;
+					//parentMWB.ChildWhoAmI = childWhoAmI;
+
+
 					for (int k = 0; k < maxSegments; k++)
 					{
 						int selectedType = body;
@@ -141,11 +157,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 							selectedType = tail;
 						}
 
-						int childWhoAmI = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, selectedType, npc.whoAmI);
-						NPC childNPC = Main.npc[childWhoAmI];
+						childWhoAmI = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, selectedType, npc.whoAmI);
+						childNPC = Main.npc[childWhoAmI];
 
 						childNPC.realLife = npc.whoAmI;
-						MagmaWorm childMWB = childNPC.modNPC as MagmaWorm;
+						childMWB = childNPC.modNPC as MagmaWorm;
 						childMWB.AttachedHealthWhoAmI = npc.whoAmI;
 						childMWB.ParentWhoAmI = parentWhoAmI;
 						childMWB.Scale = nextScale;
@@ -171,7 +187,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					}
 				}
 
-				if (!IsTail)
+				if (!(IsTail || (this is MagmaWormHeadExtension)))
 				{
 					if (!Child.active || !(IsOtherBody(Child.type) || Child.type == tail))
 					{
@@ -400,7 +416,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				// For that nice initial curving
 				float accel = Math.Max(divingTimerCurveMax - Me.AITimer / 2, 14);
-				Main.NewText("acc: " + accel);
 				Me.npc.velocity = (Me.npc.velocity * (accel - 1) + direction * magnitude) / accel;
 			}
 
@@ -741,6 +756,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				newVelocity = newVelocity.RotatedBy(rotatedBy * 0.1f);
 			}
 
+			if (this is MagmaWormHeadExtension)
+			{
+				newVelocity = -Parent.velocity;
+			}
+
 			npc.rotation = newVelocity.ToRotation() + 1.57f;
 
 			// Rearrange position based on scale
@@ -831,8 +851,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			//TODO move this somewhere else because its blocked by tiles
 			if (!IsHead) return;
 
-			Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + npc.velocity * 10f, Color.White, Color.White, 2);
-			Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + EmergeDirection * 10f, Color.Green, Color.Green, 2);
+			//Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + npc.velocity * 10f, Color.White, Color.White, 2);
+			//Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + EmergeDirection * 10f, Color.Green, Color.Green, 2);
 
 			if (FSM.CurrentState != MWState.Emerging) return;
 			if (!EmergeWarning) return;
@@ -863,13 +883,21 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		{
-			return IsHead;
+			return IsHead || this is MagmaWormHeadExtension;
 		}
 	}
 
 	public class MagmaWormHead : MagmaWorm
 	{
 		public override bool IsHead => true;
+	}
+
+	/// <summary>
+	/// Additional NPC that serves as hitbox extension infront of the head
+	/// </summary>
+	public class MagmaWormHeadExtension : MagmaWorm
+	{
+		public override string Texture => "RiskOfSlimeRain/Empty";
 	}
 
 	public class MagmaWormBody : MagmaWorm
