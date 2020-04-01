@@ -1,9 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
@@ -354,7 +356,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				if (Me.AITimer > emergingTimerCurveMax)
 				{
-					magnitude = Math.Min(magnitude + 4 * Me.AITimer / (float)emergingTimerCurveMax, 32);
+					magnitude = Math.Min(magnitude + 4 * Me.AITimer / (float)emergingTimerCurveMax, 32f);
 				}
 
 				Me.EmergeDirection = direction * magnitude;
@@ -374,23 +376,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			private void DoSlowingDown()
 			{
 				Me.AITimer++;
-				//Vector2 direction = Me.Target.Center - Me.npc.Center;
-				//direction.Normalize();
-				//Me.npc.velocity.X = (Me.npc.velocity.X * (30 - 1) + direction.X * 8) / 30;
-				////Me.npc.velocity *= 0.95f;
-				//Me.npc.velocity.Y += 0.3f;
-
 				Me.npc.velocity *= 0.98f;
 			}
 
 			private void DoDiving()
 			{
-				//Me.AITimer++;
-				//Vector2 direction = Me.Target.Center + Me.Target.velocity * 5f - Me.npc.Center;
-				//direction.Normalize();
-				//Me.npc.velocity.X = (Me.npc.velocity.X * (2 - 1) + direction.X * 10) / 2;
-				//Me.npc.velocity.Y = Math.Min(Me.npc.velocity.Y + 0.3f, 16);
-
 				Me.AITimer++;
 				Vector2 direction = Me.Target.Center + Me.Target.velocity * 5f - Me.npc.Center;
 				int timerInvert = divingTimerCurveMax - Me.AITimer;
@@ -405,17 +395,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				float curveAmount = MathHelper.ToRadians((45f / divingTimerCurveMax) * rot * Me.CurveDirection);
 				direction = direction.RotatedBy(curveAmount);
 				float magnitude = 14f;
-				direction *= 1f - (rot / (float)divingTimerCurveMax);
-
-				if (Me.AITimer > divingTimerCurveMax)
-				{
-					//magnitude = Math.Min(magnitude + 3 * Me.AITimer / (float)divingTimerCurveMax, 24);
-				}
 
 				Me.EmergeDirection = direction * magnitude;
 
 				// For that nice initial curving
-				float accel = Math.Max(divingTimerCurveMax - Me.AITimer / 2, 14);
+				float accel = Math.Max(divingTimerCurveMax - Me.AITimer / 2, 14f);
 				Me.npc.velocity = (Me.npc.velocity * (accel - 1) + direction * magnitude) / accel;
 			}
 
@@ -423,35 +407,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			{
 				Me.AITimer++;
 				Me.npc.velocity.X *= 0.97f;
-				Me.npc.velocity.Y = Math.Min(Me.npc.velocity.Y + 0.3f, 16);
-				//GeneralHoming();
-			}
-
-			private void GeneralHoming()
-			{
-				Vector2 direction = Me.Target.Center + Me.Target.velocity * 5f - Me.npc.Center;
-				if (direction.LengthSquared() > 100 * 100)
-				{
-					direction.Normalize();
-					Homing(direction, 5f, 40f);
-				}
-			}
-
-			private void Homing(Vector2 direction, float magnitude, float accel)
-			{
-				/*
-				 * What happens here is: Initially, the projectile flies in the opposite direction (6 * 30 = 180 degrees)
-				 * And then curves towards the destination for 30 ticks
-				 */
-				//HomingTimer++;
-				//Vector2 direction = target.Center + target.velocity * 5f - projectile.Center;
-				//int rot = Utils.Clamp(30 - HomingTimer, 0, 30);
-				//direction.Normalize();
-				//direction = direction.RotatedBy(MathHelper.ToRadians(6 * rot * Math.Sign(-direction.X)));
-				//direction *= MaxHomingSpeed * (1f - (rot / 30f));
-				////For that nice initial curving
-				//float accel = Utils.Clamp(MaxHomingAccel - HomingTimer, MinHomingAccel, MaxHomingAccel);
-				Me.npc.velocity = (Me.npc.velocity * (accel - 1) + direction * magnitude) / accel;
+				Me.npc.velocity.Y = Math.Min(Me.npc.velocity.Y + 0.3f, 18f);
 			}
 
 			public override void UpdateState()
@@ -461,14 +417,20 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					Reset();
 					MoveNext(MWCommand.Reset); // Reset has a transition from every state
 				}
+				else if (Me.Target.dead && CurrentState != MWState.Disappearing)
+				{
+					Reset();
+					MoveNext(MWCommand.Disappear); // Continue disappearing until timeLeft runs out
+				}
 				else
 				{
 					switch (CurrentState)
 					{
+						//TODO fix looping all states when about to emerge but still far below player
 						case MWState.Disappearing:
-							if (Me.AITimer > disappearTimerMax || Me.npc.position.Y > Me.Target.BottomLeft.Y + 800)
+							if (!Me.Target.dead && (Me.AITimer > disappearTimerMax || Me.npc.position.Y > Me.Target.BottomLeft.Y + 800))
 							{
-								// Go 2000 coordinates below the player
+								// Go 800 coordinates below the player
 								Reset();
 								MoveNext(MWCommand.Emerge);
 							}
@@ -484,7 +446,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 						case MWState.SlowingDown:
 							//if (Me.npc.velocity.LengthSquared() < 4f)
 							// TODO other condition here, make it similar to emerge but other way around
-							//if (Me.npc.velocity.Y > 0)
+							//if (Me.npc.velocity.Y > 0)d
 							if (Me.AITimer > 24 || Me.npc.velocity.LengthSquared() <= 14f * 14f)
 							{
 								Reset();
@@ -571,7 +533,9 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 		}
 
-		private void HeadMovement(Vector2 destination)
+		public List<int> SpawnedFires { get; private set; } = new List<int>();
+
+		private void HeadAI()
 		{
 			//npc.oldVelocity = npc.velocity; // Because noTileCollide doesn't do it by itself
 			if (npc.velocity.X < 0f)
@@ -583,31 +547,15 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				npc.spriteDirection = -1;
 			}
 
-			if (false)
+			FSM.UpdateState();
+			FSM.ExecuteCurrentState();
+			Main.NewText(FSM.CurrentState);
+			Main.NewText(npc.velocity.Length());
+			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				WyvernHeadMovement(destination);
-
-				//Main.NewText("#####");
-				//if (FSM.CurrentState == MWState.Initializing) FSM.MoveNext(MWCommand.Reset);
-				//FSM.MoveNext(MWCommand.Emerge);
-				//FSM.MoveNext(MWCommand.Slowdown);
-				//FSM.MoveNext(MWCommand.Dive);
+				SpawnGroundFire();
 			}
-			else
-			{
-				FSM.UpdateState();
-				FSM.ExecuteCurrentState();
-				Main.NewText(FSM.CurrentState);
-				//Vector2 center = npc.Center;
-				//Vector2 targetCenter = Target.Center;
-				////center.X = (int)(center.X / 16f) * 16;
-				////center.Y = (int)(center.Y / 16f) * 16;
-				//destination = targetCenter - center;
 
-				//Check state machine conditions, including state transitions
-				//FSM.UpdateState();
-				//FSM.ExecuteCurrentState();
-			}
 
 			npc.rotation = npc.velocity.ToRotation() + 1.57f;
 
@@ -616,6 +564,70 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				npc.netUpdate = true;
 				Synced = true;
 			}
+		}
+
+		private bool TileAirOrNonSolid(Tile tile)
+		{
+			// If air, or if non-actuated and not a solid
+			return !tile.nactive() || (tile.active() && !Main.tileSolid[tile.type]);
+		}
+
+		private bool TileSolid(Tile tile)
+		{
+			// If non-actuated and a solid or solid top
+			return tile.nactive() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]);
+		}
+
+		private bool SpawnSuitableGroundFire(Point16 point, int type)
+		{
+			Tile tile = Framing.GetTileSafely(point.X, point.Y);
+			Tile tileBelow = Framing.GetTileSafely(point.X, point.Y + 1);
+			if (TileAirOrNonSolid(tile) && TileSolid(tileBelow))
+			{
+				Vector2 position = new Vector2(point.X * 16 + 8, point.Y * 16 + 8);
+				Projectile.NewProjectile(position.X, position.Y, 0, 1, type, npc.damage / 8, 0, Main.myPlayer);
+				return true;
+			}
+			return false;
+		}
+
+		private void SpawnFires(Point16 start, int type)
+		{
+			Point16 point;
+			// Left, center, and right of it
+			for (int x = start.X - 1; x <= start.X + 1; x++)
+			{
+				point = new Point16(x, start.Y);
+				if (!SpawnedFires.Contains(x))
+				{
+					bool spawned = SpawnSuitableGroundFire(point, type);
+					if (spawned)
+					{
+						SpawnedFires.Add(point.X);
+					}
+				}
+			}
+		}
+
+		private void SpawnGroundFire()
+		{
+			float velocitySQ = npc.velocity.LengthSquared();
+
+			if (velocitySQ < 5f * 5f) return; // Prevent fire spawn if moving slowly (only happens when manually spawned via cheatsheet)
+
+			int type = ModContent.ProjectileType<FireProjHostile>();
+
+			Point16 bottomCenter = npc.Bottom.ToTileCoordinates16();
+
+			SpawnFires(bottomCenter, type);
+			if (SpawnedFires.Count <= 0 && velocitySQ > 16 * 16)
+			{
+				// If the NPC moves so fast that it starts skipping tiles, try spawning fires again at a different place
+				// This pretty much guarantees fires
+				Point16 center = npc.Center.ToTileCoordinates16();
+				SpawnFires(center, type);
+			}
+			SpawnedFires.Clear();
 		}
 
 		private void WyvernHeadMovement(Vector2 destination)
@@ -742,11 +754,10 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 		}
 
-		private void BodyMovement()
+		private void BodyAI()
 		{
 			Vector2 pCenter = Parent.Center;
 			float parentRotation = Parent.rotation;
-			float scaleOffset = MathHelper.Clamp(npc.scale, 0f, 50f);
 
 			npc.velocity = Vector2.Zero;
 			Vector2 newVelocity = pCenter - npc.Center;
@@ -758,36 +769,33 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			if (this is MagmaWormHeadExtension)
 			{
-				newVelocity = -Parent.velocity;
+				newVelocity = -Parent.velocity; // The extension points the other way
 			}
 
 			npc.rotation = newVelocity.ToRotation() + 1.57f;
 
 			// Rearrange position based on scale
 			npc.position = npc.Center;
-			npc.scale = scaleOffset;
 			npc.width = npc.height = (int)(defaultSize * npc.scale);
 			npc.Center = npc.position;
 
 			if (newVelocity != Vector2.Zero)
 			{
-				npc.Center = pCenter - Vector2.Normalize(newVelocity) * positionOffset * scaleOffset;
+				npc.Center = pCenter - Vector2.Normalize(newVelocity) * positionOffset * npc.scale;
 			}
 			npc.spriteDirection = (newVelocity.X > 0f) ? -1 : 1;
 		}
 
-		private void Movement()
+		/// <summary>
+		/// Decides if the body or head AI should run
+		/// </summary>
+		private void AllAI()
 		{
-			Vector2 center = npc.Center;
-			Vector2 targetCenter = Target.Center;
-			center.X = (int)(center.X / 16f) * 16;
-			center.Y = (int)(center.Y / 16f) * 16;
-			Vector2 destination = targetCenter - center;
 			if (!IsHead && ParentWhoAmI >= 0f && ParentWhoAmI <= Main.maxNPCs)
 			{
 				if (Parent.modNPC is MagmaWorm mwb && mwb != null)
 				{
-					BodyMovement();
+					BodyAI();
 				}
 				else
 				{
@@ -796,7 +804,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 			else if (IsHead)
 			{
-				HeadMovement(destination);
+				HeadAI();
 			}
 		}
 
@@ -806,7 +814,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			HandleSegments();
 
-			Movement();
+			AllAI();
 		}
 
 		public override void HitEffect(int hitDirection, double damage)
@@ -870,7 +878,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			Vector2 newPos = position;
 
-			NPC tailNPC = Main.npc.FirstActiveOrDefault(n => n.type == tail && n.realLife == npc.realLife);
+			NPC tailNPC = Main.npc.FirstActiveOrDefault(n => n.type == tail && n.realLife == npc.whoAmI);
 			if (tailNPC != null)
 			{
 				newPos += tailNPC.position;
@@ -881,10 +889,10 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return true;
 		}
 
-		public override bool CanHitPlayer(Player target, ref int cooldownSlot)
-		{
-			return IsHead || this is MagmaWormHeadExtension;
-		}
+		//public override bool CanHitPlayer(Player target, ref int cooldownSlot)
+		//{
+		//	return IsHead || this is MagmaWormHeadExtension;
+		//}
 	}
 
 	public class MagmaWormHead : MagmaWorm
