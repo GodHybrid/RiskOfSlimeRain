@@ -551,10 +551,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			FSM.ExecuteCurrentState();
 			Main.NewText(FSM.CurrentState);
 			Main.NewText(npc.velocity.Length());
-			if (Main.netMode != NetmodeID.MultiplayerClient)
-			{
-				SpawnGroundFire();
-			}
+			SpawnGroundFire();
 
 
 			npc.rotation = npc.velocity.ToRotation() + 1.57f;
@@ -584,8 +581,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			Tile tileBelow = Framing.GetTileSafely(point.X, point.Y + 1);
 			if (TileAirOrNonSolid(tile) && TileSolid(tileBelow))
 			{
-				Vector2 position = new Vector2(point.X * 16 + 8, point.Y * 16 + 8);
-				Projectile.NewProjectile(position.X, position.Y, 0, 1, type, npc.damage / 8, 0, Main.myPlayer);
+				if (Main.netMode != NetmodeID.MultiplayerClient)
+				{
+					Vector2 position = new Vector2(point.X * 16 + 8, point.Y * 16 + 8);
+					Projectile.NewProjectile(position.X, position.Y, 0, 1, type, npc.damage / 8, 0, Main.myPlayer);
+				}
 				return true;
 			}
 			return false;
@@ -626,6 +626,10 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				// This pretty much guarantees fires
 				Point16 center = npc.Center.ToTileCoordinates16();
 				SpawnFires(center, type);
+			}
+			if (SpawnedFires.Count > 0 && Main.netMode != NetmodeID.Server)
+			{
+				DoScreenShake(npc.Center);
 			}
 			SpawnedFires.Clear();
 		}
@@ -893,6 +897,35 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		//{
 		//	return IsHead || this is MagmaWormHeadExtension;
 		//}
+
+		public static int shakeTimer = 0;
+
+		public const int shakeTimerMax = 15;
+
+		/// <summary>
+		/// Calculates the shakeTimer intensity based on distance to local player, and plays a sound
+		/// </summary>
+		public static void DoScreenShake(Vector2 position)
+		{
+			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode.SoundId, (int)position.X, (int)position.Y, SoundID.DD2_ExplosiveTrapExplode.Style, 0.5f, Main.rand.NextFloat(-0.6f, -0.4f));
+			float lengthSQ = Vector2.DistanceSquared(Main.LocalPlayer.Center, position);
+			float ratio = lengthSQ / (1080 * 1080);
+			ratio = Utils.Clamp(ratio, 0f, 1f);
+			shakeTimer = (int)((1f - ratio) * shakeTimerMax);
+		}
+
+		/// <summary>
+		/// Decrements shakeTimer and does screen shake
+		/// </summary>
+		public static void UpdateScreenShake()
+		{
+			if (shakeTimer > 0)
+			{
+				shakeTimer--;
+				Vector2 shake = new Vector2(Main.rand.NextFloat(shakeTimer), Main.rand.NextFloat(shakeTimer)) * 1.2f;
+				Main.screenPosition += shake;
+			}
+		}
 	}
 
 	public class MagmaWormHead : MagmaWorm
