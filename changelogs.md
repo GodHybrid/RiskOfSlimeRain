@@ -1,5 +1,9 @@
 # Changelogs
 
+## 0.3.1.8
+
+* Fixed items not spawning in multiplayer
+
 ## 0.3.1.7
 
 * Fixed Warbanner Remover and Nullifier never appearing together in the Traveling Merchants shop

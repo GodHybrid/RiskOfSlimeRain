@@ -107,7 +107,7 @@ namespace RiskOfSlimeRain.NPCs
 		{
 			if (npc.boss)
 			{
-				if (Main.gameMenu) return; //RecipeBrowser protection
+				if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection
 
 				RORRarity rarity = RORRarity.Common;
 				//float rarityRand = Main.rand.NextFloat();
