@@ -1,5 +1,10 @@
 # Changelogs
 
+## 0.3.1.7
+
+* Fixed Warbanner Remover and Nullifier never appearing together in the Traveling Merchants shop
+* (Updated to latest library version)
+
 ## 0.3.1.6
 
 * Follow up fix to Soldier's Syringe
