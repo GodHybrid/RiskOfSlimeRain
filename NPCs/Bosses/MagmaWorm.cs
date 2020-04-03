@@ -36,6 +36,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Magma Worm");
+			Main.npcFrameCount[npc.type] = 3;
 		}
 
 		public sealed override void SetDefaults()
@@ -535,9 +536,16 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public List<int> SpawnedFires { get; private set; } = new List<int>();
 
+		public int frameOffset = -1;
+
+		public int frame = 0;
+
+		public static int shakeTimer = 0;
+
+		public const int shakeTimerMax = 15;
+
 		private void HeadAI()
 		{
-			//npc.oldVelocity = npc.velocity; // Because noTileCollide doesn't do it by itself
 			if (npc.velocity.X < 0f)
 			{
 				npc.spriteDirection = 1;
@@ -549,10 +557,9 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			FSM.UpdateState();
 			FSM.ExecuteCurrentState();
-			Main.NewText(FSM.CurrentState);
-			Main.NewText(npc.velocity.Length());
-			SpawnGroundFire();
-
+			//Main.NewText(FSM.CurrentState);
+			//Main.NewText(npc.velocity.Length());
+			SpawnGroundFireAndDoScreenShake();
 
 			npc.rotation = npc.velocity.ToRotation() + 1.57f;
 
@@ -575,16 +582,28 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return tile.nactive() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]);
 		}
 
+		/// <summary>
+		/// Checks the given tile position if it is suitable for a fire, then if it is, it spawns one and returns true
+		/// </summary>
 		private bool SpawnSuitableGroundFire(Point16 point, int type)
 		{
+			if (!WorldGen.InWorld(point.X, point.Y)) return false;
 			Tile tile = Framing.GetTileSafely(point.X, point.Y);
+
+			if (!WorldGen.InWorld(point.X, point.Y + 1)) return false;
 			Tile tileBelow = Framing.GetTileSafely(point.X, point.Y + 1);
+
 			if (TileAirOrNonSolid(tile) && TileSolid(tileBelow))
 			{
 				if (Main.netMode != NetmodeID.MultiplayerClient)
 				{
+					// NPC-owned projectiles spawn serverside
 					Vector2 position = new Vector2(point.X * 16 + 8, point.Y * 16 + 8);
-					Projectile.NewProjectile(position.X, position.Y, 0, 1, type, npc.damage / 8, 0, Main.myPlayer);
+
+					// damageMultiplier is 2 if it's expert, 2 because hostile, another 2 because it shouldn't deal that much damage
+					int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 2));
+
+					Projectile.NewProjectile(position.X, position.Y, 0, 1, type, damage, 0, Main.myPlayer);
 				}
 				return true;
 			}
@@ -609,7 +628,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 		}
 
-		private void SpawnGroundFire()
+		private void SpawnGroundFireAndDoScreenShake()
 		{
 			float velocitySQ = npc.velocity.LengthSquared();
 
@@ -627,10 +646,12 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				Point16 center = npc.Center.ToTileCoordinates16();
 				SpawnFires(center, type);
 			}
+
 			if (SpawnedFires.Count > 0 && Main.netMode != NetmodeID.Server)
 			{
 				DoScreenShake(npc.Center);
 			}
+
 			SpawnedFires.Clear();
 		}
 
@@ -773,7 +794,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			if (this is MagmaWormHeadExtension)
 			{
-				newVelocity = -Parent.velocity; // The extension points the other way
+				// The extension points the other way
+				newVelocity = -Parent.velocity;
 			}
 
 			npc.rotation = newVelocity.ToRotation() + 1.57f;
@@ -791,7 +813,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		}
 
 		/// <summary>
-		/// Decides if the body or head AI should run
+		/// Runs the body or head AI
 		/// </summary>
 		private void AllAI()
 		{
@@ -845,15 +867,49 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 		}
 
+		public override void FindFrame(int frameHeight)
+		{
+			/* How it animates
+			 * Loops from frame 0 to 2
+			 * With frameOffset between 0 and 2
+			 * 
+			 * Hence frame can be between 0 and 2, 1 and 3, or 2 and 4
+			 * Finally, it's modulo'd out to just between 0 and 2 for npc.frame.Y
+			 */
+
+			int count = Main.npcFrameCount[npc.type];
+
+			if (frameOffset == -1)
+			{
+				int offset = npc.whoAmI % count;
+				frameOffset = offset;
+				frame = offset;
+			}
+
+			npc.frameCounter++;
+			if (npc.frameCounter > 8)
+			{
+				npc.frameCounter = 0;
+				frame++;
+				if (frame >= count + frameOffset)
+				{
+					frame = frameOffset;
+				}
+			}
+
+			npc.frame.Y = (frame % count) * frameHeight;
+		}
+
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			float yoff = 56f * npc.scale + 4f; // No clue why those magic numbers
+			float yoff = 56f * npc.scale + 4f; // No clue why those magic numbers, 56 seems to be the distance between top pixel and first "body" pixel
 			Texture2D texture = Main.npcTexture[npc.type];
-			Vector2 drawOrigin = new Vector2(texture.Width >> 1, (texture.Height >> 1) / Main.npcFrameCount[npc.type]);
+			Rectangle frame = npc.frame;
+			Vector2 drawOrigin = frame.Size() / 2;
 
-			Vector2 drawPos = new Vector2(npc.Center.X - Main.screenPosition.X - texture.Width * npc.scale / 2f + drawOrigin.X * npc.scale, npc.position.Y - Main.screenPosition.Y + npc.height - texture.Height * npc.scale / Main.npcFrameCount[npc.type] + drawOrigin.Y * npc.scale + yoff);
+			Vector2 drawPos = new Vector2(npc.Center.X - Main.screenPosition.X - frame.Width * npc.scale / 2f + drawOrigin.X * npc.scale, npc.position.Y - Main.screenPosition.Y + npc.height - frame.Height * npc.scale + drawOrigin.Y * npc.scale + yoff);
 			SpriteEffects spriteEffects = npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			spriteBatch.Draw(texture, drawPos, npc.frame, Color.White, npc.rotation, drawOrigin, npc.scale, spriteEffects, 0f);
+			spriteBatch.Draw(texture, drawPos, frame, Color.White, npc.rotation, drawOrigin, npc.scale, spriteEffects, 0f);
 
 			return false;
 		}
@@ -898,10 +954,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		//	return IsHead || this is MagmaWormHeadExtension;
 		//}
 
-		public static int shakeTimer = 0;
-
-		public const int shakeTimerMax = 15;
-
 		/// <summary>
 		/// Calculates the shakeTimer intensity based on distance to local player, and plays a sound
 		/// </summary>
@@ -938,7 +990,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 	/// </summary>
 	public class MagmaWormHeadExtension : MagmaWorm
 	{
-		public override string Texture => "RiskOfSlimeRain/Empty";
+
 	}
 
 	public class MagmaWormBody : MagmaWorm
