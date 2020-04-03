@@ -40,7 +40,6 @@ namespace RiskOfSlimeRain.Core
 		/// <summary>
 		/// Returns the sourceRectangle of the texture. Only vertical spritesheets supported
 		/// </summary>
-		/// <returns></returns>
 		public Rectangle GetFrame()
 		{
 			Rectangle frame = Texture.Bounds;
