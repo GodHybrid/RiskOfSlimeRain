@@ -7,6 +7,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items;
 using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Network.Effects;
+using RiskOfSlimeRain.NPCs.Bosses;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -16,6 +17,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
+using WebmilioCommons.Tinq;
+using static RiskOfSlimeRain.NPCs.Bosses.MagmaWorm;
 
 namespace RiskOfSlimeRain
 {
@@ -33,10 +36,10 @@ namespace RiskOfSlimeRain
 
 		public static bool EffectsVisible { private set; get; }
 
-		//Multiplayer syncing thing used when changing stack manually from the UI. Keeps track of any changed stacks and a timer
+		//Value is Ref(int) because it's counted down from within the iteration loop
 		//When timer runs out, sync
 		/// <summary>
-		/// Value is Ref(int) because it's counted down from within the iteration loop
+		/// Multiplayer syncing thing used when changing stack manually from the UI. Keeps track of any changed stacks and a timer
 		/// </summary>
 		public static Dictionary<int, Ref<int>> TimeByIndex { get; set; }
 
@@ -70,9 +73,40 @@ namespace RiskOfSlimeRain
 					WarbannerArrow,
 					InterfaceScaleType.Game
 				));
+				layers.Insert(mouseIndex + 2, new LegacyGameInterfaceLayer(
+						$"{Name}: {nameof(MagmaWormWarning)}",
+						MagmaWormWarning,
+						InterfaceScaleType.Game
+					));
 			}
 		}
 
+		/// <summary>
+		/// Draws the warning arrow for the <see cref="MagmaWorm"/> emerge location
+		/// </summary>
+		private static readonly GameInterfaceDrawMethod MagmaWormWarning = delegate
+		{
+			for (int i = 0; i < Main.maxNPCs; i++)
+			{
+				NPC npc = Main.npc[i];
+
+				if (npc.active && npc.modNPC is MagmaWormHead head && head.EmergeWarning)
+				{
+					Vector2 location = head.Location;
+					if (location == Vector2.Zero) continue;
+					Vector2 drawCenter = location - Main.screenPosition;
+					Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Slowdown");
+					Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
+					destination.Inflate(10, 10);
+					Main.spriteBatch.Draw(texture, destination, Color.White);
+				}
+			}
+			return true;
+		};
+
+		/// <summary>
+		/// Draws the item UI for currently applied item
+		/// </summary>
 		private static readonly GameInterfaceDrawMethod Effects = delegate
 		{
 			Player player = Main.LocalPlayer;
@@ -292,6 +326,9 @@ namespace RiskOfSlimeRain
 			return true;
 		};
 
+		/// <summary>
+		/// Draws a directional indicator towards the nearest warbanner
+		/// </summary>
 		private static readonly GameInterfaceDrawMethod WarbannerArrow = delegate
 		{
 			//Credit to jopojelly (adjusted from Census)

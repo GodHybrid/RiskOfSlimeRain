@@ -13,25 +13,22 @@ using WebmilioCommons.Tinq;
 namespace RiskOfSlimeRain.NPCs.Bosses
 {
 	//TODO MagmaWorm
-	// Animation
 	// Energized version
 	// Death Animation
-	// AI
 	// Telegraphing (Visuals and Sound)
 	// Summon item, boss item
 	public abstract class MagmaWorm : ModNPC
 	{
-		public int head = -1;
-		public int body = -1;
-		public int tail = -1;
 		public const int defaultSize = 44;
 		public const int positionOffset = 42;
 
-		public virtual bool IsHead => false;
+		public bool IsHead => this is MagmaWormHead;
 
-		public virtual bool IsTail => false;
+		public bool IsHeadExtension => this is MagmaWormHeadExtension;
 
-		public bool IsOtherBody(int other) => other == body || other == tail;
+		public bool IsTail => this is MagmaWormTail;
+
+		public bool IsOtherBody(NPC other) => other.modNPC is MagmaWormBody || other.modNPC is MagmaWormTail;
 
 		public override void SetStaticDefaults()
 		{
@@ -59,13 +56,10 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.buffImmune[BuffID.OnFire] = true;
 			npc.buffImmune[BuffID.CursedInferno] = true;
 
-			head = ModContent.NPCType<MagmaWormHead>();
-			body = ModContent.NPCType<MagmaWormBody>();
-			tail = ModContent.NPCType<MagmaWormTail>();
-
 			if (IsHead)
 			{
 				npc.npcSlots = 5f;
+				npc.boss = true;
 			}
 			else
 			{
@@ -147,11 +141,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					childMWB.ParentWhoAmI = parentWhoAmI;
 					childMWB.Scale = nextScale;
 
-					//NPC parentNPC = Main.npc[parentWhoAmI];
-					//MagmaWorm parentMWB = parentNPC.modNPC as MagmaWorm;
-					//parentMWB.ChildWhoAmI = childWhoAmI;
-
-
+					int body = ModContent.NPCType<MagmaWormBody>();
+					int tail = ModContent.NPCType<MagmaWormTail>();
 					for (int k = 0; k < maxSegments; k++)
 					{
 						int selectedType = body;
@@ -173,7 +164,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 						MagmaWorm parentMWB = parentNPC.modNPC as MagmaWorm;
 						parentMWB.ChildWhoAmI = childWhoAmI;
 
-						NetMessage.SendData(MessageID.SyncNPC, -1, -1, null, childWhoAmI, 0f, 0f, 0f, 0, 0, 0);
+						NetMessage.SendData(MessageID.SyncNPC, number: childWhoAmI);
 						parentWhoAmI = childWhoAmI;
 						nextScale -= nextScaleStep;
 					}
@@ -181,29 +172,29 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				if (!IsHead)
 				{
-					if (!Parent.active || !(IsOtherBody(Parent.type) || Parent.type == head))
+					if (!Parent.active || !(IsOtherBody(Parent) || Parent.modNPC is MagmaWormHead))
 					{
 						npc.life = 0;
 						npc.HitEffect(0, 10.0);
 						npc.active = false;
-						NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
+						NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
 					}
 				}
 
-				if (!(IsTail || (this is MagmaWormHeadExtension)))
+				if (!(IsTail || IsHeadExtension))
 				{
-					if (!Child.active || !(IsOtherBody(Child.type) || Child.type == tail))
+					if (!Child.active || !(IsOtherBody(Child) || Child.modNPC is MagmaWormTail))
 					{
 						npc.life = 0;
 						npc.HitEffect(0, 10.0);
 						npc.active = false;
-						NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
+						NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
 					}
 				}
 
 				if (!npc.active && Main.netMode == NetmodeID.Server)
 				{
-					NetMessage.SendData(MessageID.StrikeNPC, -1, -1, null, npc.whoAmI, -1f, 0f, 0f, 0, 0, 0);
+					NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
 				}
 			}
 		}
@@ -325,6 +316,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			private void Warning()
 			{
+				Me.EmergeWarning = true;
 				Me.Location = Me.Target.Bottom;
 				Main.PlaySound(SoundID.Roar, (int)Me.Location.X, (int)Me.Location.Y, 0, 0.8f);
 			}
@@ -369,7 +361,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				// Warning
 				if (!Me.EmergeWarning && Me.npc.oldVelocity.Y >= 0 && Me.npc.velocity.Y < Me.npc.oldVelocity.Y)
 				{
-					Me.EmergeWarning = true;
 					Warning();
 				}
 			}
@@ -792,7 +783,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				newVelocity = newVelocity.RotatedBy(rotatedBy * 0.1f);
 			}
 
-			if (this is MagmaWormHeadExtension)
+			if (IsHeadExtension)
 			{
 				// The extension points the other way
 				newVelocity = -Parent.velocity;
@@ -914,44 +905,35 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return false;
 		}
 
-		public override void PostDraw(SpriteBatch spriteBatch, Color drawColor)
-		{
-			//TODO move this somewhere else because its blocked by tiles
-			if (!IsHead) return;
-
-			//Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + npc.velocity * 10f, Color.White, Color.White, 2);
-			//Utils.DrawLine(Main.spriteBatch, Target.Center, Target.Center + EmergeDirection * 10f, Color.Green, Color.Green, 2);
-
-			if (FSM.CurrentState != MWState.Emerging) return;
-			if (!EmergeWarning) return;
-			if (Location == Vector2.Zero) return;
-			Vector2 drawCenter = Location - Main.screenPosition;
-			Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Slowdown");
-			Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
-			destination.Inflate(10, 10);
-			spriteBatch.Draw(texture, destination, Color.White);
-		}
-
 		public override bool? DrawHealthBar(byte hbPosition, ref float scale, ref Vector2 position)
 		{
 			if (!IsHead) return false;
+			// Only draws one healthbar per entire worm, hence only head
 
 			Vector2 newPos = position;
 
-			NPC tailNPC = Main.npc.FirstActiveOrDefault(n => n.type == tail && n.realLife == npc.whoAmI);
+			NPC tailNPC = Main.npc.FirstActiveOrDefault(n => n.modNPC is MagmaWormTail && n.realLife == npc.whoAmI);
 			if (tailNPC != null)
 			{
+				// Calculate position between head and tail
 				newPos += tailNPC.position;
 				newPos /= 2f;
+
 				position = newPos;
 				scale = npc.scale;
 			}
 			return true;
 		}
 
+		public override void NPCLoot()
+		{
+			// NPCLoot is only called on the head anyway, possibly cause of dontCountMe
+			Item.NewItem(npc.getRect(), ItemID.DirtBlock);
+		}
+
 		//public override bool CanHitPlayer(Player target, ref int cooldownSlot)
 		//{
-		//	return IsHead || this is MagmaWormHeadExtension;
+		//	return IsHead || IsHeadExtension;
 		//}
 
 		/// <summary>
@@ -982,7 +964,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 	public class MagmaWormHead : MagmaWorm
 	{
-		public override bool IsHead => true;
+
 	}
 
 	/// <summary>
@@ -1000,6 +982,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 	public class MagmaWormTail : MagmaWorm
 	{
-		public override bool IsTail => true;
+
 	}
 }
