@@ -25,6 +25,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
 
+		public override string UIInfo()
+		{
+			return $"Crit chance increase: {Formula()}";
+		}
+
 		public override bool AlwaysProc => true;
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

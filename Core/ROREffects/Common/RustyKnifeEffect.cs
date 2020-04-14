@@ -20,6 +20,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Murder weapon, case name ELIAS. Probably a lover's spat?\nThere is still dried blood on the knife, so mark it as biological.";
 
+		public override string UIInfo()
+		{
+			return $"Chance: {Chance}";
+		}
+
 		public override bool AlwaysProc => false;
 
 		public override float Chance => Formula();

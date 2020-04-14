@@ -22,6 +22,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart";
 
+		public override string UIInfo()
+		{
+			return $"Chance: {Chance}";
+		}
+
 		//Original, todo
 		//const int Initial = 6;
 		//const int Increase = 2;

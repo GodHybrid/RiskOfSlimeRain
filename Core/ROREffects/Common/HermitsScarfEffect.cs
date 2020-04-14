@@ -27,6 +27,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "This thing survived that horrible day\nIt must be able to survive whatever I have to endure, right?";
 
+		public override string UIInfo()
+		{
+			return $"Chance: {Chance}";
+		}
+
 		public override bool AlwaysProc => false;
 
 		public override float Chance => Formula();
