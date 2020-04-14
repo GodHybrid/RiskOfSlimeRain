@@ -9,9 +9,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class MortarTubeEffect : RORCommonEffect, IOnHit
 	{
-		const float increase = 1.7f;
+		//const float Increase = 1.7f;
+		
+		public override float Initial => 1.7f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to fire a mortar for {increase.ToPercent()} damage";
+		public override float Increase => 1.7f;
+
+		public override string Description => $"{Chance.ToPercent()} chance to fire a mortar for {Increase.ToPercent()} damage";
 
 		public override string FlavorText => "You stick explosives down the end, then you fire the explosive\nI suppose you can beat them with the tube afterwards";
 
@@ -31,7 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(Player player)
 		{
-			Projectile.NewProjectile(player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, (int)(player.GetDamage() * increase * Stack));
+			Projectile.NewProjectile(player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, (int)(Formula() * player.GetDamage()));
 		}
 	}
 }

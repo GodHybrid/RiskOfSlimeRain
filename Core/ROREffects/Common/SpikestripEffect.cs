@@ -9,10 +9,15 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class SpikestripEffect : RORCommonEffect, IPostHurt
 	{
-		const int initial = 60;
-		const int increase = 60;
-		//effect takes place in the RORGlobalNPC with different values
+		//const int Initial = 60;
+		//const int Increase = 60;
+		//Effect takes place in the RORGlobalNPC with different values
 		const float slow = 0.2f;
+		const int count = 3;
+
+		public override float Initial => 120f;
+
+		public override float Increase => 60f;
 
 		public override string Description => $"Drop spikestrips on hit, slowing enemies by {slow.ToPercent()}";
 
@@ -20,9 +25,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			Projectile.NewProjectile(player.position, new Vector2(0, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
-			Projectile.NewProjectile(player.position, new Vector2(2, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
-			Projectile.NewProjectile(player.position, new Vector2(-2, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, initial + Stack * increase);
+			for (int i = -1; i < count - 1; i++)
+			{
+				Projectile.NewProjectile(player.Center, new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula());
+			}
 		}
 	}
 }

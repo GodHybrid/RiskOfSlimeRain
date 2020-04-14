@@ -11,10 +11,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class HeadstompersEffect : RORCommonEffect, IPostUpdateEquips, IPreHurt
 	{
 		public const float velocityDecrease = 0.9f;
-		const float initial = 5.07f;
-		const float increase = 0.3f;
+		//const float Initial = 5.07f;
+		//const float Increase = 0.3f;
 
-		public override string Description => $"Hurt enemies by falling for up to {initial.ToPercent()} damage";
+		public override float Initial => 5.07f;
+
+		public override float Increase => 0.3f;
+
+		public override string Description => $"Hurt enemies by falling for up to {Initial.ToPercent()} damage";
 
 		public override string FlavorText => "Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. \nLiterally. Vertically.";
 
@@ -28,7 +32,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && damageSource.SourceNPCIndex > -1)
 			{
 				NPC npc = Main.npc[damageSource.SourceNPCIndex];
-				int dmg = (int)(player.GetDamage() * ((initial + (increase * (Stack - 1))) * player.velocity.Y / 16));
+				int dmg = (int)(player.GetDamage() * (Formula() * player.velocity.Y / 16));
 				player.ApplyDamageToNPC(npc, dmg, 2f, 0, false);
 				ItemLoader.OnHitNPC(player.HeldItem, player, npc, dmg, 0f, false);
 				NPCLoader.OnHitByItem(npc, player, player.HeldItem, dmg, 0f, false);

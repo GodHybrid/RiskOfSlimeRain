@@ -14,21 +14,31 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class BarbedWireEffect : RORCommonEffect, IPostUpdateEquips, IPlayerLayer, IScreenShader
 	{
 		const int wireTimerMax = 60;
-		const int wireRadius = 2;
-		const float initial = 0.33f;
-		const float increase = 0.17f;
+		const int wireRadiusTiles = 2;
+		//const float Initial = 0.33f;
+		//const float Increase = 0.17f;
 		const int radIncrease = 16;
 
 		int alphaCounter = 0;
 
+		public override float Initial => 0.5f;
+
+		public override float Increase => 0.17f;
+
 		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 5f + 3 / 5f;
 
 		int wireTimer = 0;
-		int Radius => (wireRadius + Stack) * radIncrease;
 
-		public override string Description => $"Touching enemies deals {(initial + increase).ToPercent()} of your current damage every second";
+		int Radius => (wireRadiusTiles + Stack) * radIncrease;
+
+		public override string Description => $"Touching enemies deals {Initial.ToPercent()} of your current damage every second";
 
 		public override string FlavorText => "Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...";
+
+		public override string UIInfo()
+		{
+			return $"Current damage: {(int)Formula()}";
+		}
 
 		public void PostUpdateEquips(Player player)
 		{
@@ -40,7 +50,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				NPC npc = Main.npc.FirstActiveOrDefault(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16));
 				if (npc != null)
 				{
-					int damage = (int)((initial + increase * Stack) * player.GetDamage());
+					int damage = (int)(Formula() * player.GetDamage());
 					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
 					ItemLoader.OnHitNPC(player.HeldItem, player, npc, damage, 0f, false);
 					NPCLoader.OnHitByItem(npc, player, player.HeldItem, damage, 0f, false);

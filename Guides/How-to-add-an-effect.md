@@ -108,7 +108,7 @@ public class InfusionEffect : RORUncommonEffect, IOnHit
 ```
 
 Now comes the advanced part specific to this effect, saving the gathered life and applying it. For the applying, simply use IResetEffects.
-For the saving, we need a float (not int) variable that stores the life (float because the stack effect only increases +0.5).
+For the saving, we need a float (not int) variable that stores the life (float because the stack effect only increases + 0.5).
 Adding those two things, the class is now pretty big (only changes shown):
 
 ```csharp

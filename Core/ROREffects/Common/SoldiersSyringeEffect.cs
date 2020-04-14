@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	/// </summary>
 	public class SoldiersSyringeEffect : RORCommonEffect, IUseTimeMultiplier, IPostUpdateEquips
 	{
-		const float increase = 0.1f;
+		//const float Increase = 0.1f;
 		public const int shakeTimerMax = 6; //To and back
 
 		public Vector2 shakePosOffset = default(Vector2);
@@ -21,19 +21,23 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public bool increment = true;
 
+		public override float Initial => 0.1f;
+
+		public override float Increase => 0.1f;
+
 		public override string Name => "Soldier's Syringe";
 
 		public override int MaxRecommendedStack => 13;
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Increase attack speed by {(increase + 0.05f).ToPercent()}";
+		public override string Description => $"Increase attack speed by {(Initial + 0.05f).ToPercent()}";
 
 		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
 
 		public void UseTimeMultiplier(Player player, Item item, ref float multiplier)
 		{
-			if (item.damage > 0 || item.axe > 0 || item.hammer > 0 || item.pick > 0) multiplier += Stack * increase; //15% is made into 10%, but it still works as 15%
+			if (item.damage > 0 || item.axe > 0 || item.hammer > 0 || item.pick > 0) multiplier += Stack * Increase; //15% is made into 10%, but it still works as 15%
 		}
 
 		public void PostUpdateEquips(Player player)

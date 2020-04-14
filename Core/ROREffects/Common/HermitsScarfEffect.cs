@@ -10,8 +10,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class HermitsScarfEffect : RORCommonEffect, IPreHurt
 	{
-		const float initial = 0.05f;
-		const float increase = 0.05f;
+		//const float Initial = 0.05f;
+		//const float Increase = 0.05f;
+		
+		public override float Initial => 0.1f;
+
+		public override float Increase => 0.05f;
 
 		public override int MaxRecommendedStack => 7;
 
@@ -19,13 +23,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string Name => "Hermit's Scarf";
 
-		public override string Description => $"Allows you to evade attacks with {(initial + increase).ToPercent()} chance";
+		public override string Description => $"Allows you to evade attacks with {Initial.ToPercent()} chance";
 
 		public override string FlavorText => "This thing survived that horrible day\nIt must be able to survive whatever I have to endure, right?";
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => initial + increase * Stack;
+		public override float Chance => Formula();
 
 		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{

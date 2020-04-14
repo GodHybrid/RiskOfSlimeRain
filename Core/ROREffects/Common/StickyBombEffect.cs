@@ -8,10 +8,15 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class StickyBombEffect : RORCommonEffect, IOnHit
 	{
-		const float initial = 1.0f;
-		const float increase = 0.4f;
+		//const float Initial = 1.0f;
+		//const float Increase = 0.4f;
+		const int bound = 4;
 
-		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {(initial + increase).ToPercent()} damage";
+		public override float Initial => 1.4f;
+
+		public override float Increase => 0.4f;
+
+		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {Initial.ToPercent()} damage";
 
 		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF";
 
@@ -31,8 +36,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
-			int damage = (int)((initial + increase * Stack) * player.GetDamage());
-			Vector2 offset = new Vector2(Main.rand.Next(target.width), Main.rand.Next(4, target.height - 4));
+			int damage = (int)(Formula() * player.GetDamage());
+			int width = Main.rand.Next(target.width);
+			int height = bound;
+			if ((target.height >> 1) > bound)
+			{
+				height = Main.rand.Next(bound, target.height - bound);
+			}
+			Vector2 offset = new Vector2(width, height);
 			StickyProj.NewProjectile<StickyBombProj>(target, offset, damage);
 		}
 	}

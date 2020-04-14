@@ -13,14 +13,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//TODO In multiplayer, another player succeeding at a shrine will remove your Snake Eyes counter. Them failing will also up your Snake Eyes count. 
 		//TODO this currently doesnt work like in ror, because no shrines yet
-		const int initial = 3;
-		const int increase = 3;
+		//const int Initial = 3;
+		//const int Increase = 3;
 
 		const int maxIncrease = 6;
 		byte failedAttempts = 0;
 		bool ready = false;
 
-		int CritIncrease => failedAttempts * (initial + Stack * increase);
+		public override float Initial => 6f;
+
+		public override float Increase => 3f;
+
+		int CritIncrease => (int)(failedAttempts * Formula());
 
 		public override string Description => $"Increases crit chance by 6% for each time you're in peril, up to {maxIncrease} times. Resets upon dying or drinking a potion";
 
@@ -41,7 +45,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public void PostUpdateEquips(Player player)
 		{
 			if (player.HasBuff(BuffID.PotionSickness)) failedAttempts = 0;
-			if (!ready && player.statLifeMax2 == player.statLife) ready = true;
+			if (!ready && player.statLifeMax2 >= player.statLife) ready = true;
 		}
 
 		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

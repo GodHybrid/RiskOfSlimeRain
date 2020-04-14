@@ -9,10 +9,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class MonsterToothEffect : RORCommonEffect, IOnKill
 	{
-		const int initial = 5;
-		const int increase = 5;
+		//const int Initial = 5;
+		//const int Increase = 5;
 
-		public override string Description => $"Killing an enemy will heal you for {initial + increase} health";
+		public override float Initial => 10f;
+
+		public override float Increase => 5f;
+
+		public override string Description => $"Killing an enemy will heal you for {Increase} health";
 
 		public override string FlavorText => "Sometimes I felt like it helped me on hunts, ya know?\nLike... instincts";
 
@@ -35,7 +39,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 			PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
 			{
-				proj.HealAmount = Stack * increase + initial;
+				proj.HealAmount = (int)Formula();
 			});
 		}
 	}

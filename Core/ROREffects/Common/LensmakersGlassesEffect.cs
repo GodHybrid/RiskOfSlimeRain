@@ -11,13 +11,17 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	//additional crit chance won't be shown on the tooltip
 	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit, IPlayerLayer
 	{
-		const float increase = 0.07f;
+		//const float Increase = 0.07f;
+		
+		public override float Initial => 0.07f;
+
+		public override float Increase => 0.07f;
 
 		public override int MaxRecommendedStack => 14;
 
 		public override string Name => "Lens-Maker's Glasses";
 
-		public override string Description => $"Increases crit chance by {increase.ToPercent()}";
+		public override string Description => $"Increases crit chance by {Increase.ToPercent()}";
 
 		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
 
@@ -30,13 +34,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			if (!Proc(increase * Stack)) return;
+			if (!Proc(Formula())) return;
 			crit = true;
 		}
 
 		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			if (!Proc(increase * Stack)) return;
+			if (!Proc(Formula())) return;
 			crit = true;
 		}
 

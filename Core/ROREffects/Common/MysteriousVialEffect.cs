@@ -9,9 +9,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class MysteriousVialEffect : RORCommonEffect, IUpdateLifeRegen
 	{
-		const float increase = 1.2f;
+		//const float Increase = 1.2f;
 
-		public override string Description => $"Permanently increases health regeneration by {increase} health per second";
+		public override float Initial => 1.2f;
+
+		public override float Increase => 1.2f;
+
+		public override string Description => $"Permanently increases health regeneration by {Increase} health per second";
 
 		public override string FlavorText => "Side effects may include itching, rashes, bleeding, sensitivity of skin,\ndry patches, permanent scarring, misaligned bone regrowth, rotting of the...";
 
@@ -19,7 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (Config.HiddenVisuals(player)) return;
 			//the number will be halved in redcode, hence the 2
-			player.lifeRegen += (int)Math.Round(Stack * 2 * increase);
+			player.lifeRegen += (int)Math.Round(2 * Formula());
 
 			if (Main.rand.NextBool(30))
 			{

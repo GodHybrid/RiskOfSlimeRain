@@ -18,10 +18,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	/// </summary>
 	public class WarbannerEffect : RORCommonEffect, IOnKill
 	{
-		const int initial = 4;
-		const int increase = 1;
+		//const int Initial = 4;
+		//const int Increase = 1;
+		
+		public override float Initial => 5f;
 
-		public int Radius => (initial + increase * Stack) * 16;
+		public override float Increase => 1f;
+
+		public int Radius => (int)Formula() * 16;
 
 		public int KillCount { get; private set; }
 

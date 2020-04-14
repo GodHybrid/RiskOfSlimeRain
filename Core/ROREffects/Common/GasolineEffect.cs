@@ -8,12 +8,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class GasolineEffect : RORCommonEffect, IOnKill
 	{
-		const float initial = 0.2f;
-		const float increase = 0.4f;
+		//const float Initial = 0.2f;
+		//const float Increase = 0.4f;
 
 		const int npcKilledLimitBeforeSpawning = 5;
 
-		public override string Description => $"Killing enemies burns the ground to deal {(initial + increase).ToPercent()} damage and set enemies on fire";
+		public override float Initial => 0.6f;
+
+		public override float Increase => 0.4f;
+
+		public override string Description => $"Killing enemies burns the ground to deal {Initial.ToPercent()} damage and set enemies on fire";
 
 		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars";
 
@@ -35,7 +39,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 			if (player.ownedProjectileCounts[type] >= npcKilledLimitBeforeSpawning * (1 + 2 * extraPerSide)) return;
 
-			int damage = (int)((initial + (Stack * increase)) * player.GetDamage());
+			int damage = (int)(Formula() * player.GetDamage());
 
 			int count = 0;
 			for (int x = -extraPerSide; x < 1 + extraPerSide; x++)

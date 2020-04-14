@@ -10,12 +10,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class PaulsGoatHoofEffect : RORCommonEffect, IPostUpdateRunSpeeds
 	{
-		const float initial = 0.10f;
-		const float increase = 0.05f;
+		//const float Initial = 0.10f;
+		//const float Increase = 0.05f;
+
+		public override float Initial => 0.15f;
+
+		public override float Increase => 0.05f;
 
 		public override string Name => "Paul's Goat Hoof";
 
-		public override string Description => $"Run {(initial + increase).ToPercent()} faster";
+		public override string Description => $"Run {Initial.ToPercent()} faster";
 
 		public override string FlavorText => "A hoof from one of my many goats\nThinking it was cancerous, I went to the doctors and low-and-behold; it was";
 
@@ -25,8 +29,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostUpdateRunSpeeds(Player player)
 		{
-			player.maxRunSpeed += player.maxRunSpeed * (initial + increase) * Stack;
-			player.moveSpeed += player.moveSpeed * (initial + increase) * Stack;
+			player.maxRunSpeed += player.maxRunSpeed * Formula();
+			player.moveSpeed += player.moveSpeed * Formula();
 			if (((player.controlRight && player.velocity.X < -9f) || (player.controlLeft && player.velocity.X > 9f)) && Stack > 5) player.velocity.X /= 1.3f;
 
 			/*

@@ -7,7 +7,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class BitterRootEffect : RORCommonEffect, IResetEffects, IPostUpdateEquips
 	{
-		const float increase = 0.07895f;
+		//const float Increase = 0.07895f;
 
 		public const int initialSpawnTimerMin = 40;
 
@@ -18,6 +18,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public const int fastSpawnTimerMax = 10;
 
 		public const int fastSpawnRate = 3;
+		
+		public override float Initial => 0.07895f;
+
+		public override float Increase => 0.07895f;
 
 		public int initialSpawnTimer = 0;
 
@@ -33,11 +37,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Permanently increases maximum life by roughly {increase.ToPercent(0)}";
+		public override string Description => $"Permanently increases maximum life by roughly {Increase.ToPercent(0)}";
 
 		public override string FlavorText => "Biggest. Ginseng. Root. Ever.";
 
-		public override string UIInfo() => $"Life increase: {GetIncreaseAmount(Player)}";
+		public override string UIInfo() => $"Life Increase: {GetIncreaseAmount(Player)}";
 
 		public void ResetEffects(Player player)
 		{
@@ -46,7 +50,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public int GetIncreaseAmount(Player player)
 		{
-			return (int)(player.statLifeMax * Stack * increase);
+			return (int)(player.statLifeMax * Stack * Increase);
 		}
 
 		public void PostUpdateEquips(Player player)
@@ -68,8 +72,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				fastSpawnTimer++;
 				if (fastSpawnTimer % fastSpawnRate == 0)
 				{
-					Dust dust = BitterRootDust.NewDust(player);
+					BitterRootDust.NewDust(player);
 				}
+
 				if (fastSpawnTimer >= fastSpawnTimerNext)
 				{
 					fastSpawnTimer = 0;

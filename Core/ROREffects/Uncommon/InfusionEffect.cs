@@ -12,16 +12,20 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public class InfusionEffect : RORUncommonEffect, IOnKill, IResetEffects
 	{
-		public const float initial = 0.5f;
-		public const float increase = 0.5f;
+		//public const float Initial = 0.5f;
+		//public const float Increase = 0.5f;
+
+		public override float Initial => 1f;
+
+		public override float Increase => 0.5f;
 
 		public float BonusLife { get; private set; }
 
-		//TODO lower increase, cap with stack (50hp start)
+		//TODO lower Increase, cap with stack (50hp start)
 
-		public float CurrentIncrease => initial + Stack * increase;
+		public float CurrentIncrease => Formula();
 
-		public override string Description => $"Killing an enemy increases your health permanently by {initial + increase}";
+		public override string Description => $"Killing an enemy increases your health permanently by {Initial}";
 
 		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 

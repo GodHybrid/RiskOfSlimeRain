@@ -11,9 +11,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class BustlingFungusEffect : RORCommonEffect, IPostUpdateEquips
 	{
 		const int noMoveTimerMax = 120;
-		const float increase = 0.045f;
+		//const float Increase = 0.045f;
 
-		public override string Description => $"After {noMoveTimerMax / 60} seconds, heal for {increase.ToPercent()} of your max HP every second";
+		public override float Initial => 0.045f;
+
+		public override float Increase => 0.045f;
+
+		public override string Description => $"After {noMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max HP every second";
 
 		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
 
@@ -31,7 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					position.Y++;
 				}
 				position.Y -= 12; //half the projectiles height
-				int heal = (int)(player.statLifeMax2 * increase * Stack);
+				int heal = (int)(player.statLifeMax2 * Increase * Stack);
 				Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 			}
 		}
