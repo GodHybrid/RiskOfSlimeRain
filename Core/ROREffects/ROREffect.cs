@@ -73,6 +73,25 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public virtual int MaxRecommendedStack => int.MaxValue;
 
 		/// <summary>
+		/// Variable denoting the initial "value" of the effect when it has 1 stack
+		/// </summary>
+		public virtual float Initial => 0f;
+
+		/// <summary>
+		/// Increase of "value" based on stack. Added to Initial, starting at 2 stacks
+		/// </summary>
+		public virtual float Increase => 0f;
+
+		/// <summary>
+		/// Initial + increase * (stack - 1). Example with 2 stacks (aka one increase): 0.6f = 0.4f + 0.2f * (2 - 1)
+		/// </summary>
+		public virtual float Formula()
+		{
+			//0 stack is treated as 1
+			return Initial + Increase * Math.Max(0, Stack - 1);
+		}
+
+		/// <summary>
 		/// If your effect is based on chance to take effect, also override AlwaysProc and return false
 		/// </summary>
 		public virtual float Chance => 1f;
@@ -85,7 +104,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public bool Active => Stack > 0;
 
 		/// <summary>
-		/// To sort the effect when loading them
+		/// To sort the effects when loading them
 		/// </summary>
 		private TimeSpan _CreationTime = TimeSpan.Zero;
 
@@ -220,8 +239,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public virtual bool CanUse(Player player)
 		{
-			//if (!AlwaysProc) return true;
-			//else return UnlockedStack < MaxRecommendedStack;
 			return true;
 		}
 
