@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Damage: {Formula()}";
+			return $"Damage: {Formula().ToPercent()}";
 		}
 
 		public override bool AlwaysProc => false;

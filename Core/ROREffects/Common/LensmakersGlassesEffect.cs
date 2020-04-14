@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -27,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Crit chance increase: {Formula()}";
+			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
 		}
 
 		public override bool AlwaysProc => true;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using System;
 using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -12,6 +13,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Increase = 0.1f;
 		public const int shakeTimerMax = 6; //To and back
+		const float virtualMargin = 0.05f;
 
 		public Vector2 shakePosOffset = default(Vector2);
 
@@ -31,13 +33,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Increase attack speed by {(Initial + 0.05f).ToPercent()}";
+		public override string Description => $"Increase attack speed by {(Initial + virtualMargin).ToPercent()}";
 
 		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
 
 		public override string UIInfo()
 		{
-			return $"Attack speed increase: {(Formula() + 0.05f).ToPercent()}";
+			return $"Attack speed increase: {(Initial + virtualMargin + (Increase + virtualMargin) * Math.Max(0, Stack - 1)).ToPercent()}";
 		}
 
 		public void UseTimeMultiplier(Player player, Item item, ref float multiplier)

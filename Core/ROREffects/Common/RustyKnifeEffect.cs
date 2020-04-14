@@ -1,6 +1,7 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -22,7 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Chance}";
+			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}";
 		}
 
 		public override bool AlwaysProc => false;

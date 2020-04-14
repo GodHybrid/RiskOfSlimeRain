@@ -23,7 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		
 		public override string UIInfo()
 		{
-			return $"Regeneration: {Formula()}";
+			return $"Regeneration: {Formula() / 2}/s";
 		}
 
 		public void UpdateLifeRegen(Player player)
