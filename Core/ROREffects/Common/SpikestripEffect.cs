@@ -15,19 +15,24 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		const float slow = 0.2f;
 		const int count = 3;
 
-		public override float Initial => 120f;
+		public override float Initial => 2f;
 
-		public override float Increase => 60f;
+		public override float Increase => 1f;
 
 		public override string Description => $"Drop spikestrips on hit, slowing enemies by {slow.ToPercent()}";
 
 		public override string FlavorText => "The doctors say I don't have much time left\nSince you're in the force now and all, I felt obligated to return it to you";
 
+		public override string UIInfo()
+		{
+			return $"Spikestrip lifetime: {Formula()}s";
+		}
+
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
 			for (int i = -1; i < count - 1; i++)
 			{
-				Projectile.NewProjectile(player.Center, new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula());
+				Projectile.NewProjectile(player.Center, new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
 			}
 		}
 	}

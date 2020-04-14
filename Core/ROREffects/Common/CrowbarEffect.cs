@@ -21,6 +21,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives";
 
+		public override string UIInfo()
+		{
+			return $"Damage increase: {Formula().ToPercent()}";
+		}
+
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
 			ModifyDamage(target, ref damage);

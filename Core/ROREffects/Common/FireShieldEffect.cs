@@ -18,6 +18,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "The thing is only half-done, but it will do the job\nPLEASE handle with care!";
 
+		public override string UIInfo()
+		{
+			return $"Damage: {dmg.ToPercent()}, Knockback: {kb.ToPercent()}";
+		}
+
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
 			if (damage >= player.statLifeMax2 * hplimit)

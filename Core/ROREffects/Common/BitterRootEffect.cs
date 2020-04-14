@@ -41,7 +41,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Biggest. Ginseng. Root. Ever.";
 
-		public override string UIInfo() => $"Life Increase: {GetIncreaseAmount(Player)}";
+		public override string UIInfo()
+		{
+			return $"Life increase: {GetIncreaseAmount(Player)}";
+		}
 
 		public void ResetEffects(Player player)
 		{
@@ -50,7 +53,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public int GetIncreaseAmount(Player player)
 		{
-			return (int)(player.statLifeMax * Stack * Increase);
+			return (int)(player.statLifeMax * Formula());
 		}
 
 		public void PostUpdateEquips(Player player)

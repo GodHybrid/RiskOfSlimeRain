@@ -22,6 +22,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. \nLiterally. Vertically.";
 
+		public override string UIInfo()
+		{
+			return $"Damage: {Formula().ToPercent()}";
+		}
+
 		public void PostUpdateEquips(Player player)
 		{
 			player.maxFallSpeed += 6f;

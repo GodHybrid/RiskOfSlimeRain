@@ -21,6 +21,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
 
+		public override string UIInfo()
+		{
+			return $"Heal amount: {GetIncreaseAmount(Player)}";
+		}
+
+		public int GetIncreaseAmount(Player player)
+		{
+			return (int)(player.statLifeMax2 * Formula());
+		}
+
 		public void PostUpdateEquips(Player player)
 		{
 			int type = ModContent.ProjectileType<BustlingFungusProj>();
@@ -35,7 +45,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					position.Y++;
 				}
 				position.Y -= 12; //half the projectiles height
-				int heal = (int)(player.statLifeMax2 * Increase * Stack);
+				int heal = GetIncreaseAmount(player);
 				Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 			}
 		}

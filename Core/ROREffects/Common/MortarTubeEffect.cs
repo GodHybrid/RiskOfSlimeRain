@@ -15,9 +15,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 1.7f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to fire a mortar for {Increase.ToPercent()} damage";
+		public override string Description => $"{Chance.ToPercent()} chance to fire a mortar for {Initial.ToPercent()} damage";
 
 		public override string FlavorText => "You stick explosives down the end, then you fire the explosive\nI suppose you can beat them with the tube afterwards";
+
+		public override string UIInfo()
+		{
+			return $"Damage: {Formula().ToPercent()}";
+		}
 
 		public override bool AlwaysProc => false;
 

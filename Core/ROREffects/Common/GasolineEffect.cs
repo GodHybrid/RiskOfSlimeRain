@@ -21,6 +21,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars";
 
+		public override string UIInfo()
+		{
+			return $"Damage: {Formula().ToPercent()}";
+		}
+
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
 			SpawnProjectile(player, target);

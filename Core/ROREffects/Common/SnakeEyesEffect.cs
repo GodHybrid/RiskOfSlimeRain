@@ -30,6 +30,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "You dirty----------er\nYou KNEW I had to win to pay off my debts";
 
+		public override string UIInfo()
+		{
+			return $"Crit chance increase: {CritIncrease}%";
+		}
+
 		public void Kill(Player player, double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
 		{
 			failedAttempts = 0;

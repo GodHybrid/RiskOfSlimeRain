@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string Name => "Lens-Maker's Glasses";
 
-		public override string Description => $"Increases crit chance by {Increase.ToPercent()}";
+		public override string Description => $"Increases crit chance by {Initial.ToPercent()}";
 
 		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
 

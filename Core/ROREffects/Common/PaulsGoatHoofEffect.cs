@@ -23,6 +23,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "A hoof from one of my many goats\nThinking it was cancerous, I went to the doctors and low-and-behold; it was";
 
+		public override string UIInfo()
+		{
+			return $"Speed increase: {Formula()}";
+		}
+
 		int timer = 0;
 
 		const int timerMax = 5;

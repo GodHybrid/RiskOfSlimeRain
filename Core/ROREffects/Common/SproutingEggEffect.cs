@@ -17,16 +17,21 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 2.4f;
 
-		public override string Description => $"Increases health regeneration by {Increase} health per second when out of combat for {timerMax / 60} seconds";
+		public override string Description => $"Increases health regeneration by {Initial} health per second when out of combat for {timerMax / 60} seconds";
 
 		public override string FlavorText => "This egg seems to be somewhere between hatching and dying\nI can't bring it to myself to cook it alive";
+		
+		public override string UIInfo()
+		{
+			return $"Regeneration: {Formula()}";
+		}
 
 		public void UpdateLifeRegen(Player player)
 		{
 			if (Config.HiddenVisuals(player)) return;
 			if (player.GetRORPlayer().NoCombatTimer < timerMax) return;
 
-			//the number will be halved in redcode, hence the 2
+			//The number will be halved in redcode, hence the 2
 			player.lifeRegen += (int)Math.Round(2 * Formula());
 
 			if (Main.rand.NextBool(30))

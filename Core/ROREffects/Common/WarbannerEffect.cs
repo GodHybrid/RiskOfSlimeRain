@@ -38,9 +38,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
 
-		public override string UIInfo() => $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
-											+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect" : "")
-											+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
+		public override string UIInfo()
+		{
+			return $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
+				+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect" : "")
+				+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
+		}
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

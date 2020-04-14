@@ -35,9 +35,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
 
+		public override string UIInfo()
+		{
+			return $"Attack speed increase: {(Formula() + 0.05f).ToPercent()}";
+		}
+
 		public void UseTimeMultiplier(Player player, Item item, ref float multiplier)
 		{
-			if (item.damage > 0 || item.axe > 0 || item.hammer > 0 || item.pick > 0) multiplier += Stack * Increase; //15% is made into 10%, but it still works as 15%
+			if (item.damage > 0 || item.axe > 0 || item.hammer > 0 || item.pick > 0) multiplier += Formula(); //15% is made into 10%, but it still works as 15%
 		}
 
 		public void PostUpdateEquips(Player player)

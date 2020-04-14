@@ -20,6 +20,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF";
 
+		public override string UIInfo()
+		{
+			return $"Damage: {Formula()}";
+		}
+
 		public override bool AlwaysProc => false;
 
 		public override float Chance => 0.08f;

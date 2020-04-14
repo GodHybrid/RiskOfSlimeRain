@@ -16,9 +16,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 5f;
 
-		public override string Description => $"Killing an enemy will heal you for {Increase} health";
+		public override string Description => $"Killing an enemy will heal you for {Initial} health";
 
 		public override string FlavorText => "Sometimes I felt like it helped me on hunts, ya know?\nLike... instincts";
+		
+		public override string UIInfo()
+		{
+			return $"Heal amount: {Formula()}";
+		}
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

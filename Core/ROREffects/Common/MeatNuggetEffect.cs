@@ -17,9 +17,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 3f;
 
-		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {Increase} health";
+		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {Initial} health";
 
 		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
+		
+		public override string UIInfo()
+		{
+			return $"Heal amount per nugget: {Formula() / nuggetCount}";
+		}
 
 		public override bool AlwaysProc => false;
 
