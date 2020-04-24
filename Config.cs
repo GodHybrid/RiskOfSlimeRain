@@ -6,6 +6,7 @@ using Terraria.ModLoader.Config;
 
 namespace RiskOfSlimeRain
 {
+	[Label("Client Config")]
 	public class Config : ModConfig
 	{
 		public override ConfigScope Mode => ConfigScope.ClientSide;
@@ -31,6 +32,7 @@ namespace RiskOfSlimeRain
 		public float ItemUIVerticalOffset;
 
 		[Header("Visuals")]
+
 		[Label("Hide own player visuals")]
 		[Tooltip("Toggle visuals created by effects (with exceptions)")]
 		[DefaultValue(false)]
