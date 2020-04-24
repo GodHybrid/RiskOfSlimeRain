@@ -112,6 +112,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public static void DeleteNearestWarbanner(Player player)
 		{
+			//If client: since he has no backend data of warbanners, only the projectiles, it'll remove the projectile safely. The server then removes the banner too
+
 			RORPlayer mPlayer = player.GetRORPlayer();
 			if (mPlayer.InWarbannerRange)
 			{

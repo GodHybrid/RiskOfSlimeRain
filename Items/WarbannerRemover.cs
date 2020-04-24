@@ -20,6 +20,19 @@ namespace RiskOfSlimeRain.Items
 				+ "\n- Reset the killcount when used");
 		}
 
+		public override void SetDefaults()
+		{
+			item.maxStack = 99;
+			item.width = 18;
+			item.height = 18;
+			item.useStyle = 4;
+			item.useTime = 30;
+			item.useAnimation = 30;
+			item.value = Item.buyPrice(gold: 15);
+			item.rare = ItemRarityID.Orange;
+			item.UseSound = SoundID.Item1;
+		}
+
 		public override bool CanUseItem(Player player)
 		{
 			return player.GetRORPlayer().InWarbannerRange;
@@ -56,28 +69,16 @@ namespace RiskOfSlimeRain.Items
 			else
 			{
 				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				TooltipLine line = new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated");
 				if (index > -1)
 				{
-					tooltips.Insert(++index, new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
+					tooltips.Insert(++index, line);
 				}
 				else
 				{
-					tooltips.Add(new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated"));
+					tooltips.Add(line);
 				}
 			}
-		}
-
-		public override void SetDefaults()
-		{
-			item.maxStack = 99;
-			item.width = 18;
-			item.height = 18;
-			item.useStyle = 4;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.value = Item.buyPrice(gold: 15);
-			item.rare = ItemRarityID.Orange;
-			item.UseSound = SoundID.Item1;
 		}
 	}
 }

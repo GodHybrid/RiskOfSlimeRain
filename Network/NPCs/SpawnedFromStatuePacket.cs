@@ -7,6 +7,9 @@ using WebmilioCommons.Networking;
 
 namespace RiskOfSlimeRain.Network.NPCs
 {
+	/// <summary>
+	/// Sent after detecting an NPC sync that spawned from a statue to send that bool to all clients
+	/// </summary>
 	public class SpawnedFromStatuePacket : NPCPacketBase
 	{
 		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
@@ -24,7 +27,10 @@ namespace RiskOfSlimeRain.Network.NPCs
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
 			{
-				Npc.SpawnedFromStatue = true;
+				if (Npc != null)
+				{
+					Npc.SpawnedFromStatue = true;
+				}
 			}
 			return base.PostReceive(reader, fromWho);
 		}
