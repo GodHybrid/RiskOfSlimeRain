@@ -64,8 +64,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (NPCHelper.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
-			//KillCount++;
-			KillCount = 10000;
+			KillCount++;
 			if (KillCount >= WarbannerManager.KillCountForNextWarbanner)
 			{
 				WarbannerReadyToDrop = true;
