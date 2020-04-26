@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
 
@@ -23,7 +24,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Heal amount: {GetIncreaseAmount(Player)}";
+			return "Requires solid ground below you to spawn" +
+				$"\nHeal amount: {GetIncreaseAmount(Player)}";
 		}
 
 		public int GetIncreaseAmount(Player player)
@@ -34,19 +36,21 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public void PostUpdateEquips(Player player)
 		{
 			int type = ModContent.ProjectileType<BustlingFungusProj>();
-			if (player.whoAmI == Main.myPlayer && player.ownedProjectileCounts[type] < 1 && player.GetRORPlayer().NoInputTimer > noMoveTimerMax)
+			if (player.whoAmI == Main.myPlayer && Main.netMode != NetmodeID.Server && player.ownedProjectileCounts[type] < 1 && player.GetRORPlayer().NoInputTimer > noMoveTimerMax)
 			{
-				Vector2 position = player.Center;
-				while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
-					{
-						new Conditions.IsSolid()
-					}), out _))
+				Vector2 position = player.Bottom;
+				Point p;
+				const int maxDistanceInTiles = BustlingFungusProj.Height / 16 + 2;
+				if (WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(maxDistanceInTiles), new GenCondition[]
+						{
+							new Conditions.IsSolid()
+						}), out p))
 				{
-					position.Y++;
+					position = p.ToWorldCoordinates(8f, 0f);
+					position.Y -= BustlingFungusProj.Height >> 1; //Half the projectiles height
+					int heal = GetIncreaseAmount(player);
+					Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax >> 1);
 				}
-				position.Y -= 12; //half the projectiles height
-				int heal = GetIncreaseAmount(player);
-				Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 			}
 		}
 	}

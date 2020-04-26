@@ -20,8 +20,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 82;
-			projectile.height = 24;
+			projectile.width = Width;
+			projectile.height = Height;
 			projectile.friendly = false;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
@@ -32,6 +32,10 @@ namespace RiskOfSlimeRain.Projectiles
 		}
 
 		public const int TimerMax = 60;
+
+		public const int Width = 82;
+
+		public const int Height = 24;
 
 		public const int RadiusSQ = 30 * 30;
 
@@ -115,6 +119,7 @@ namespace RiskOfSlimeRain.Projectiles
 		private void AnimateAndSound()
 		{
 			bool animating = projectile.WaterfallAnimation(6);
+
 			if (Main.myPlayer == projectile.owner)
 			{
 				if (animating != lastAnimating)
@@ -123,14 +128,16 @@ namespace RiskOfSlimeRain.Projectiles
 				}
 				lastAnimating = animating;
 			}
+
 			if (projectile.frame == 0 && projectile.frameCounter == 1)
 			{
-				//plant growing
+				//Plant growing
 				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, SoundHelper.FixVolume(1.1f), 0.6f);
 			}
+
 			if ((projectile.frame == 1 || projectile.frame == 4) && projectile.frameCounter == 1)
 			{
-				//generic weapon swing
+				//Generic weapon swing
 				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.63f, -0.35f);
 			}
 		}
@@ -138,15 +145,24 @@ namespace RiskOfSlimeRain.Projectiles
 		private void DoHeal()
 		{
 			Timer++;
-			Player player = projectile.GetOwner();
 			if (Timer > TimerMax && !StartDespawning)
 			{
 				Timer = 0;
-				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(player.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
+				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(projectile.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
 				if (projectile.owner == Main.myPlayer)
 				{
-					if (Main.netMode == NetmodeID.SinglePlayer) player.HealMe(Heal);
-					else Main.player.WhereActive(p => p.DistanceSQ(player.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
+					if (Main.netMode == NetmodeID.SinglePlayer)
+					{
+						Player player = projectile.GetOwner();
+						if (player.DistanceSQ(projectile.Center) < RadiusSQ)
+						{
+							player.HealMe(Heal);
+						}
+					}
+					else
+					{
+						Main.player.WhereActive(p => p.DistanceSQ(projectile.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
+					}
 				}
 			}
 		}
