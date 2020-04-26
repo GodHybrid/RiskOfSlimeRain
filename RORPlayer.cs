@@ -88,9 +88,12 @@ namespace RiskOfSlimeRain
 			{
 				if (effect.WarbannerReadyToDrop && !InWarbannerRange)
 				{
-					effect.ResetKillCount();
-					WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(player.Center.X, player.Top.Y));
-					effect.WarbannerReadyToDrop = false;
+					bool success = WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(player.Center.X, player.Top.Y));
+					if (success)
+					{
+						effect.ResetKillCount();
+						effect.WarbannerReadyToDrop = false;
+					}
 				}
 			}
 		}

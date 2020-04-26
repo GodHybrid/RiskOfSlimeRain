@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override string UIInfo()
 		{
 			return $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
-				+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect" : "")
+				+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect or return to solid ground" : "")
 				+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 		}
 
@@ -64,7 +64,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (NPCHelper.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
-			KillCount++;
+			//KillCount++;
+			KillCount = 10000;
 			if (KillCount >= WarbannerManager.KillCountForNextWarbanner)
 			{
 				WarbannerReadyToDrop = true;

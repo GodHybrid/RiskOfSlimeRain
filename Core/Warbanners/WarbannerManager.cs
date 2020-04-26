@@ -39,22 +39,27 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		}
 
 		/// <summary>
-		/// Adjusts banner position and then adds a warbanner. Also syncs
+		/// Adjusts banner position and then adds a warbanner if it's spawnable. Also syncs if successful. Returns true if adding warbanner was sucessful
 		/// </summary>
-		public static void TryAddWarbanner(int radius, Vector2 position)
+		public static bool TryAddWarbanner(int radius, Vector2 position)
 		{
 			//Find nearest solid tile below:
-			while (!WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(1), new GenCondition[]
+			bool success = false;
+			Point p;
+			const int maxDistanceInTiles = WarbannerProj.Height / 16 + 3;
+			if (WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(maxDistanceInTiles), new GenCondition[]
 				{
 					new Conditions.IsSolid()
-				}), out _))
+				}), out p))
 			{
-				position.Y++;
-			}
-			position.Y -= 25; //half the projectiles height
+				position = p.ToWorldCoordinates(8f, 0f);
+				position.Y -= WarbannerProj.Height >> 1; //Half the projectiles height
 
-			new WarbannerPacket(radius, position).Send();
-			AddWarbanner(radius, position.X, position.Y);
+				new WarbannerPacket(radius, position).Send();
+				AddWarbanner(radius, position.X, position.Y);
+				success = true;
+			}
+			return success;
 		}
 
 		/// <summary>

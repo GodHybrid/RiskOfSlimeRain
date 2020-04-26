@@ -15,6 +15,10 @@ namespace RiskOfSlimeRain.Projectiles
 	//ai1 contains if the banner is spawned the first time to play the sound
 	public class WarbannerProj : ModProjectile
 	{
+		public const int Width = 32;
+
+		public const int Height = 50;
+
 		public override void SetStaticDefaults()
 		{
 			Main.projFrames[projectile.type] = 5;
@@ -22,8 +26,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 32;
-			projectile.height = 50;
+			projectile.width = Width;
+			projectile.height = Height;
 			projectile.friendly = false;
 			projectile.hostile = false;
 			projectile.penetrate = -1;
