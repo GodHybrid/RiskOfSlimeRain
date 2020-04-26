@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Subworlds;
 using SubworldLibrary;
 using System.Collections.Generic;
 using Terraria;
@@ -28,7 +29,12 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool UseItem(Player player)
 		{
-			SLWorld.EnterSubworld("RiskOfSlimeRain_TestSubworld");
+			//SLWorld.EnterSubworld("RiskOfSlimeRain_TestSubworld");
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				bool? result = SubworldManager.Enter(SubworldManager.firstWorld);
+				return result ?? false;
+			}
 			//WarbannerManager.DeleteNearestWarbanner(player);
 
 			////Local player resets their killcount if they have one

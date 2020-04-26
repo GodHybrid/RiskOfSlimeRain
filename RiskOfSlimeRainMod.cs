@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.NPCs;
+using RiskOfSlimeRain.Subworlds;
 using System.Collections.Generic;
 using System.IO;
 using Terraria;
@@ -36,6 +37,7 @@ namespace RiskOfSlimeRain
 		public override void PostSetupContent()
 		{
 			NPCHelper.Load();
+			SubworldManager.Load();
 		}
 
 		public override void AddRecipes()
@@ -53,6 +55,7 @@ namespace RiskOfSlimeRain
 			NPCHelper.Unload();
 			PlayerHelper.Unload();
 			SpawnedFromStatuePacket.Unload();
+			SubworldManager.Unload();
 		}
 
 		public override void AddRecipeGroups()

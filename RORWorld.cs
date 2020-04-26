@@ -45,7 +45,7 @@ namespace RiskOfSlimeRain
 			return tag;
 		}
 
-		public override void PostUpdate()
+		public override void PreUpdate()
 		{
 			WarbannerManager.TrySpawnWarbanners();
 			SpawnedFromStatuePacket.SendSpawnedFromStatues();

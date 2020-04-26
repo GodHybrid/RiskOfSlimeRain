@@ -2,9 +2,11 @@
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Subworlds
 {
+	/*
 	public class TestSubworld : Subworld
 	{
 		//public override int width => 2 * 42 + 2 * 60 - 1;
@@ -53,4 +55,5 @@ namespace RiskOfSlimeRain.Subworlds
 			Main.worldRate = 0;
 		}
 	}
+	*/
 }
