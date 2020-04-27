@@ -9,6 +9,33 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class RustyKnifeProj : StickyProj
 	{
+		private bool timeLeftSet = false;
+
+		public const int timeLeftDefault = 140;
+
+		public int TimeLeft
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
+
+		public const int StrikeTimerMax = 30;
+
+		/// <summary>
+		/// Timer for strikes on only that NPC
+		/// </summary>
+		public int StrikeTimer
+		{
+			get => (int)projectile.localAI[0];
+			set => projectile.localAI[0] = value;
+		}
+
+		public bool SetDirection
+		{
+			get => projectile.localAI[1] == 1f;
+			set => projectile.localAI[1] = value ? 1f : 0f;
+		}
+
 		public override void SetStaticDefaults()
 		{
 			DisplayName.SetDefault("Rusty Knife");
@@ -19,16 +46,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			base.SetDefaults();
 			projectile.Size = new Vector2(26, 34);
-			projectile.timeLeft = 140;
-		}
-
-		private const int StrikeTimerMax = 30;
-
-		//timer for strikes on only that NPC
-		public int StrikeTimer
-		{
-			get => (int)projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			projectile.timeLeft = timeLeftDefault;
 		}
 
 		public override void WhileStuck(NPC npc)
@@ -47,12 +65,24 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void OtherAI()
 		{
-			if (projectile.localAI[1] != 1f)
+			SetTimeLeft();
+
+			if (!SetDirection)
 			{
 				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
-				projectile.localAI[1] = 1f;
+				SetDirection = true;
 			}
+
 			projectile.WaterfallAnimation(5);
+		}
+
+		private void SetTimeLeft()
+		{
+			if (!timeLeftSet)
+			{
+				projectile.timeLeft = TimeLeft <= 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
+				timeLeftSet = true;
+			}
 		}
 
 		public override Color? GetAlpha(Color lightColor)

@@ -10,7 +10,13 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public Rectangle newHitbox = default(Rectangle);
 
-		public int Timer
+		public int Timer { get; set; }
+
+		private bool timeLeftSet = false;
+
+		public const int timeLeftDefault = 300;
+
+		public int TimeLeft
 		{
 			get => (int)projectile.ai[0];
 			set => projectile.ai[0] = value;
@@ -29,12 +35,9 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			projectile.width = 8;
 			projectile.height = 8;
-			//projectile.penetrate = 3;
 			projectile.penetrate = -1;
-			//projectile.aiStyle = 14;
 			projectile.friendly = true;
-			//projectile.timeLeft = 360;
-			projectile.timeLeft = 300;
+			projectile.timeLeft = timeLeftDefault; //Set by TimeLeft through ai[0]
 			projectile.ranged = true;
 			projectile.noEnchantments = true;
 
@@ -67,9 +70,19 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
+			SetTimeLeft();
 			Hitbox();
 			Movement();
 			Visuals();
+		}
+
+		private void SetTimeLeft()
+		{
+			if (!timeLeftSet)
+			{
+				projectile.timeLeft = TimeLeft <= 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
+				timeLeftSet = true;
+			}
 		}
 
 		private void Hitbox()
