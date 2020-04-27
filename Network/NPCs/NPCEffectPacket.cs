@@ -30,7 +30,8 @@ namespace RiskOfSlimeRain.Network.NPCs
 		{
 			if (Effect == null)
 			{
-				RiskOfSlimeRainMod.Instance.Logger.Warn("NPCEffect that is about to be sent is null, expect exceptions that won't impact the game");
+				return false;
+				//RiskOfSlimeRainMod.Instance.Logger.Warn("NPCEffect that is about to be sent is null, expect exceptions that won't impact the game");
 			}
 			Effect?.NetSend(modPacket);
 			return base.PreSend(modPacket, fromWho, toWho);
