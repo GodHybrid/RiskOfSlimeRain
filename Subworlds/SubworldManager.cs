@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
+using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.World.Generation;
@@ -66,7 +64,7 @@ namespace RiskOfSlimeRain.Subworlds
 		 string id,
 		 int width,
 		 int height,
-		 List{object} tasks (string name, float weight, Action{GenerationProgress} method),
+		 List<GenPass> tasks,
 		 Action load = null, Action unload = null, ModWorld modWorld = null, bool saveSubworld = false, bool disablePlayerSaving = false, bool saveModData = false, bool noWorldUpdate = true, UserInterface loadingUI = null, UIState loadingUIState = null, UIState votingUI = null, ushort votingDuration = 1800, Action onVotedFor = null
 		*/
 		public static void Load()
@@ -80,7 +78,7 @@ namespace RiskOfSlimeRain.Subworlds
 					/*string id*/ "cock",
 					/*int width*/ 600,
 					/*int height*/ 400,
-					/*List{object} tasks*/ ConstructSubworldGenPassList(),
+					/*List<GenPass> tasks*/ ConstructSubworldGenPassList(),
 					/*Action load*/ (Action)GenericLoadWorld,
 					/*Action unload*/ null,
 					/*ModWorld modWorld*/ ModContent.GetInstance<RORWorld>()
@@ -99,22 +97,23 @@ namespace RiskOfSlimeRain.Subworlds
 			Main.time = 27000;
 		}
 
-		public static List<object> ConstructSubworldGenPassList()
+		public static List<GenPass> ConstructSubworldGenPassList()
 		{
-			List<object> list = new List<object>
+			List<GenPass> list = new List<GenPass>
 			{
 				// First pass
-				1f,
-				(Action<GenerationProgress>)delegate (GenerationProgress progress)
+				new PassLegacy("cock",
+				delegate (GenerationProgress progress)
 				{
 					progress.Message = "cock"; //Sets the text above the worldgen progress bar
 					Main.worldSurface = Main.maxTilesY; //Hides the underground layer just out of bounds
 					//Main.worldSurface = Main.maxTilesY - 42; //Hides the underground layer just out of bounds
 					Main.rockLayer = Main.maxTilesY; //Hides the cavern layer way out of bounds
 				},
+				1f),
 				// Second pass
-				1f,
-				(Action<GenerationProgress>)delegate (GenerationProgress progress)
+				new PassLegacy("cock2",
+				delegate (GenerationProgress progress)
 				{
 					progress.Message = "cock2";
 
@@ -127,13 +126,15 @@ namespace RiskOfSlimeRain.Subworlds
 					{
 						for (int j = 0; j < 400; j++)
 						{
+							progress.Value = (i * 400f + j) / (600 * 400);
 							if (i < 42 || i >= 600 - 43 || j <= 41 || j >= 400 - 43)
 							{
 								WorldGen.PlaceTile(i, j, TileID.LihzahrdBrick, true, true);
 							}
 						}
 					}
-				}
+				},
+				1f)
 			};
 
 			return list;
