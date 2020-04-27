@@ -17,7 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		const int wireRadiusTiles = 2;
 		//const float Initial = 0.33f;
 		//const float Increase = 0.17f;
-		const int radIncrease = 16;
+		const int radIncrease = 24;
 
 		int alphaCounter = 0;
 

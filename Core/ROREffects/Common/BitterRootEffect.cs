@@ -9,6 +9,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Increase = 0.07895f;
 
+		#region Dust stuff
 		public const int initialSpawnTimerMin = 40;
 
 		public const int initialSpawnTimerMax = 100;
@@ -18,10 +19,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public const int fastSpawnTimerMax = 10;
 
 		public const int fastSpawnRate = 3;
-		
-		public override float Initial => 0.07895f;
-
-		public override float Increase => 0.07895f;
 
 		public int initialSpawnTimer = 0;
 
@@ -32,12 +29,17 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public int fastSpawnTimerNext = fastSpawnTimerMax;
 
 		public bool spawning = false;
+		#endregion
+
+		public override float Initial => 0.07895f;
+
+		public override float Increase => 0.07895f;
 
 		public override int MaxRecommendedStack => 38;
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Permanently increases maximum life by roughly {Increase.ToPercent(0)}";
+		public override string Description => $"Increases maximum life by roughly {Increase.ToPercent(0)}";
 
 		public override string FlavorText => "Biggest. Ginseng. Root. Ever.";
 
