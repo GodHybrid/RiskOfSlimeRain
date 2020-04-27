@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using Newtonsoft.Json;
+using System.ComponentModel;
 using System.Runtime.Serialization;
 using Terraria;
 using Terraria.ModLoader;
@@ -47,6 +48,11 @@ namespace RiskOfSlimeRain
 		[Tooltip("Toggle the warbanner circle")]
 		[DefaultValue(false)]
 		public bool HideWarbannerRadius;
+
+		[Header("Hint: To go to the server config containing game mode settings, press the '>' arrow in the bottom right")]
+		[Label("Hint")]
+		[JsonIgnore]
+		public bool Hint => true;
 
 		/// <summary>
 		/// Check if visuals are hidden for this player (clientside)
