@@ -13,9 +13,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		const int npcKilledLimitBeforeSpawning = 5;
 
+		private int Dutation => ServerConfig.Instance.RorStats ? 240 : 120;
+
 		public override float Initial => 0.6f;
 
-		public override float Increase => 0.4f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.4f : 0.2f;
 
 		public override string Description => $"Killing enemies burns the ground to deal {Initial.ToPercent()} damage and set enemies on fire";
 
@@ -51,7 +53,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				int spawnLight = x == 0 ? 1 : 0;
 
-				Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, 0, spawnLight);
+				Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, Dutation, spawnLight);
 				count++;
 			}
 		}
