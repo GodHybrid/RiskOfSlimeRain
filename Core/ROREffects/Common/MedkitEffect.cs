@@ -9,15 +9,21 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class MedkitEffect : RORCommonEffect, IPostUpdateEquips, IPostHurt, IPlayerLayer
 	{
 		int timer = -1;
+		const int frameCount = 15;
 		//const int amount = 10;
-		const int maxTimer = 96;
-		const int maxTimerHeal = 66;
+
+		/// <summary>
+		/// Moment at which the heal happens. The animation continues for 30 more ticks in MaxTimer
+		/// </summary>
+		private int MaxTimerHeal => ServerConfig.Instance.RorStats ? 66 : 150;
+
+		private int MaxTimer => MaxTimerHeal + 30;
 
 		public override float Initial => 10f;
 
-		public override float Increase => 10f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 10f : 5f;
 
-		public override string Description => $"Heal for {Initial} health {maxTimerHeal / 60d} seconds after receiving damage";
+		public override string Description => $"Heal for {Initial} health {MaxTimerHeal / 60d} seconds after receiving damage";
 
 		public override string FlavorText => "Each Medkit should contain bandages, sterile dressings, soap,\nantiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen";
 
@@ -31,13 +37,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (timer >= 0)
 			{
 				timer++;
-				if (timer == maxTimerHeal && Main.myPlayer == player.whoAmI)
+				if (timer == MaxTimerHeal && Main.myPlayer == player.whoAmI)
 				{
 					SoundHelper.PlaySound(SoundID.Splash, (int)player.Center.X, (int)player.Center.Y, 1, 1f, 0.6f);
 					//Because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe((int)Formula());
 				}
-				if (timer >= maxTimer)
+				if (timer >= MaxTimer)
 				{
 					timer = -1;
 				}
@@ -53,7 +59,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (timer >= 0)
 			{
-				return new PlayerLayerParams("Textures/Medkit", new Vector2(24f, -24f), ignoreAlpha: true, frame: timer / 6, frameCount: 15);
+				return new PlayerLayerParams("Textures/Medkit", new Vector2(24f, -24f), ignoreAlpha: true, frame: timer / (MaxTimer / frameCount), frameCount: frameCount);
 			}
 			else
 			{

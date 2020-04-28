@@ -12,9 +12,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const int Initial = 5;
 		//const int Increase = 5;
 
-		public override float Initial => 10f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 10f : 3f;
 
-		public override float Increase => 5f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 5f : 1f;
 
 		public override string Description => $"Killing an enemy will heal you for {Initial} health";
 

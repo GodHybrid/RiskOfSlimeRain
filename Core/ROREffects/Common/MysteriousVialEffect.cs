@@ -11,24 +11,25 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Increase = 1.2f;
 
-		public override float Initial => 1.2f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 1.2f : 0.5f; //Band of Regeneration is 1f
 
-		public override float Increase => 1.2f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 1.2f : 0.5f;
 
-		public override string Description => $"Permanently increases health regeneration by {Initial} health per second";
+		public override string Description => $"Increases health regeneration by {Initial} health per second";
 
 		public override string FlavorText => "Side effects may include itching, rashes, bleeding, sensitivity of skin,\ndry patches, permanent scarring, misaligned bone regrowth, rotting of the...";
 
 		public override string UIInfo()
 		{
-			return $"Regeneration: {Formula() / 2}/s";
+			return $"Regeneration: {Formula()}/s";
 		}
 
 		public void UpdateLifeRegen(Player player)
 		{
-			if (Config.HiddenVisuals(player)) return;
 			//The number will be halved in redcode, hence the 2
 			player.lifeRegen += (int)Math.Round(2 * Formula());
+
+			if (Config.HiddenVisuals(player)) return;
 
 			if (Main.rand.NextBool(30))
 			{
