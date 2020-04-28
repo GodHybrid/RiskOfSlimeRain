@@ -17,14 +17,16 @@ namespace RiskOfSlimeRain
 
 		[Label("Original Stats")]
 		[Tooltip("If enabled, replicates the item's stats from the original game for the most part. Leave it disabled for the recommended game balance.")]
-		[ReloadRequired]
+		//TODO debugging purposes
+		//[ReloadRequired]
 		[DefaultValue(false)]
 		public bool RorStats;
 
 		//TODO add scaling
 		[Label("Difficulty Scaling")]
 		[Tooltip("If enabled, Scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance.")]
-		[ReloadRequired]
+		//TODO debugging purposes
+		//[ReloadRequired]
 		[DefaultValue(true)]
 		public bool RorScaling;
 
