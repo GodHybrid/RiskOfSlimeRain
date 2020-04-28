@@ -11,14 +11,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class BustlingFungusEffect : RORCommonEffect, IPostUpdateEquips
 	{
-		const int noMoveTimerMax = 120;
+		private int NoMoveTimerMax => ServerConfig.Instance.RorStats ? 120 : 240;
 		//const float Increase = 0.045f;
 
-		public override float Initial => 0.045f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 0.045f : 0.02f;
 
-		public override float Increase => 0.045f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.045f : 0.02f;
 
-		public override string Description => $"After {noMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max HP every second";
+		public override string Description => $"After {NoMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max HP every second";
 
 		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
 
@@ -36,7 +36,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public void PostUpdateEquips(Player player)
 		{
 			int type = ModContent.ProjectileType<BustlingFungusProj>();
-			if (player.whoAmI == Main.myPlayer && Main.netMode != NetmodeID.Server && player.ownedProjectileCounts[type] < 1 && player.GetRORPlayer().NoInputTimer > noMoveTimerMax)
+			if (player.whoAmI == Main.myPlayer && Main.netMode != NetmodeID.Server && player.ownedProjectileCounts[type] < 1 && player.GetRORPlayer().NoInputTimer > NoMoveTimerMax)
 			{
 				Vector2 position = player.Bottom;
 				Point p;

@@ -12,9 +12,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const float Increase = 0.4f;
 		const int bound = 4;
 
-		public override float Initial => 1.4f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 1.4f : 1.2f;
 
-		public override float Increase => 0.4f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.4f : 0.3f;
 
 		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {Initial.ToPercent()} damage";
 

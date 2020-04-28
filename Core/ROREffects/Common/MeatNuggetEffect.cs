@@ -11,19 +11,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class MeatNuggetEffect : RORCommonEffect, IOnHit
 	{
 		//const int Increase = 3;
-		const int nuggetCount = 2;
 
-		public override float Initial => 3f;
+		public override float Initial => 6f;
 
-		public override float Increase => 3f;
+		public override float Increase => 6f;
 
-		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop two meat nuggets\nEach meat nugget recovers {Initial} health";
+		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop a meat nugget that recovers {Initial} health";
 
 		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
 		
 		public override string UIInfo()
 		{
-			return $"Heal amount per nugget: {Formula() / nuggetCount}";
+			return $"Heal amount: {Formula()}";
 		}
 
 		public override bool AlwaysProc => false;
@@ -42,13 +41,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(NPC target)
 		{
-			//prevent abuse on dummies
+			//Prevent abuse on dummies
 			if (target.type == NPCID.TargetDummy) return;
 
-			for (int i = 0; i < nuggetCount; i++)
-			{
-				Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, 0)), ModContent.ProjectileType<MeatNuggetProj>(), 0, 0, Main.myPlayer, Formula());
-			}
+			Projectile.NewProjectile(target.Center, new Vector2(Main.rand.Next(-5, 5), Main.rand.Next(-5, -2)), ModContent.ProjectileType<MeatNuggetProj>(), 0, 0, Main.myPlayer, Formula());
 		}
 	}
 }

@@ -12,16 +12,17 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Initial = 0.005f;
 		//const float Increase = 0.005f;
-		const float damageIncrease = 9f;
 		const int fireworkCount = 5;
+
+		private float DamageIncrease => ServerConfig.Instance.RorStats ? 9f : 7f;
 
 		public override float Initial => 0.01f;
 
 		public override float Increase => 0.005f;
 
-		public override string Description => $" {Initial.ToPercent()} chance to fire {fireworkCount} fireworks that deal {damageIncrease.ToPercent()} damage";
+		public override string Description => $" {Initial.ToPercent()} chance to fire {fireworkCount} fireworks that deal {DamageIncrease.ToPercent()} damage";
 
-		public override string FlavorText => "Disguising homing missiles as fireworks? \nDon't ever quote me on it, but it was pretty smart";
+		public override string FlavorText => "Disguising homing missiles as fireworks?\nDon't ever quote me on it, but it was pretty smart";
 
 		public override string UIInfo()
 		{
@@ -58,7 +59,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (NPCHelper.IsSpawnedFromStatue(target)) return; //No statue abuse for more fireworks
 
-			int damage = (int)(damageIncrease * player.GetDamage());
+			int damage = (int)(DamageIncrease * player.GetDamage());
 			SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
 			for (int i = 0; i < fireworkCount; i++)
 			{

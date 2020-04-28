@@ -31,11 +31,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public bool spawning = false;
 		#endregion
 
-		public override float Initial => 0.07895f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 0.07895f : 0.05f;
 
-		public override float Increase => 0.07895f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.07895f : 0.05f;
 
-		public override int MaxRecommendedStack => 38;
+		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 38 : 20;
 
 		public override bool EnforceMaxStack => true;
 
