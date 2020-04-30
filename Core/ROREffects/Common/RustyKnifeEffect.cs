@@ -11,11 +11,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const float Initial = 0.15f;
 		private float Damage => ServerConfig.Instance.RorStats ? 0.35f : 0.3f;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 0.15f : 0.05f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 0.15f : 0.1f;
 
-		public override float Increase => 0.15f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.15f : 0.05f;
 
-		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 7 : 8;
+		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 7 : 19;
 
 		private const int tickAmount = 4;
 

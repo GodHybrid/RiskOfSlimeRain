@@ -14,11 +14,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const float Initial = 0.05f;
 		//const float Increase = 0.05f;
 		
-		public override float Initial => 0.1f;
+		public override float Initial => ServerConfig.Instance.RorStats ? 0.1f : 0.04f;
 
-		public override float Increase => 0.05f;
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.05f : 0.02f;
 
-		public override int MaxRecommendedStack => 7;
+		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 6 : 9;
 
 		public override bool EnforceMaxStack => true;
 
@@ -39,9 +39,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
-			damage = 0;
 			player.immune = true;
 			player.immuneTime = 60;
+			if (player.longInvince)
+			{
+				player.immuneTime += 30;
+			}
+			for (int i = 0; i < player.hurtCooldowns.Length; i++)
+			{
+				player.hurtCooldowns[i] = player.immuneTime;
+			}
 			Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
 			return false;
 		}
