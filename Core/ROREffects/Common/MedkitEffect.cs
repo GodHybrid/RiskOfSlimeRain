@@ -17,7 +17,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		/// </summary>
 		private int MaxTimerHeal => ServerConfig.Instance.RorStats ? 66 : 150;
 
-		private int MaxTimer => MaxTimerHeal + 30;
+		private int MaxTimer => (int)(MaxTimerHeal * 1.5f);
+
+		private int FrameSpeed => MaxTimer / frameCount;
 
 		public override float Initial => 10f;
 
@@ -59,7 +61,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (timer >= 0)
 			{
-				return new PlayerLayerParams("Textures/Medkit", new Vector2(24f, -24f), ignoreAlpha: true, frame: timer / (MaxTimer / frameCount), frameCount: frameCount);
+				return new PlayerLayerParams("Textures/Medkit", new Vector2(24f, -24f), ignoreAlpha: true, frame: timer / FrameSpeed, frameCount: frameCount);
 			}
 			else
 			{
