@@ -76,7 +76,7 @@ namespace RiskOfSlimeRain
 				WarbannerTimer = WarbannerTimerMax;
 				if (InWarbannerRange && Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer)
 				{
-					int heal = Math.Max(player.statLifeMax2 / 100, 1);
+					int heal = WarbannerEffect.WarbannerHealAmount(player);
 					player.HealMe(heal);
 				}
 			}

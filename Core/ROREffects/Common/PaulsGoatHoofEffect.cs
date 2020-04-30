@@ -13,9 +13,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const float Initial = 0.10f;
 		//const float Increase = 0.05f;
 
-		public override float Initial => 0.15f;
+		int timer = 0;
 
-		public override float Increase => 0.05f;
+		const int timerMax = 5;
+
+		public override float Initial => ServerConfig.Instance.RorStats ? 0.15f : 0.1f;
+
+		public override float Increase => ServerConfig.Instance.RorStats ? 0.05f : 0.02f;
 
 		public override string Name => "Paul's Goat Hoof";
 
@@ -28,15 +32,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Speed increase: {Formula()}";
 		}
 
-		int timer = 0;
-
-		const int timerMax = 5;
-
 		public void PostUpdateRunSpeeds(Player player)
 		{
 			player.maxRunSpeed += player.maxRunSpeed * Formula();
 			player.moveSpeed += player.moveSpeed * Formula();
-			if (((player.controlRight && player.velocity.X < -9f) || (player.controlLeft && player.velocity.X > 9f)) && Stack > 5) player.velocity.X /= 1.3f;
+
+			//TODO revisit this line due to new values
+			//if (((player.controlRight && player.velocity.X < -9f) || (player.controlLeft && player.velocity.X > 9f)) && Stack > 5) player.velocity.X /= 1.3f;
 
 			/*
 			 * 	else if (this.controlLeft && this.velocity.X > -this.accRunSpeed && this.dashDelay >= 0)

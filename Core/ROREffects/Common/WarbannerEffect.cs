@@ -21,11 +21,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const int Initial = 4;
 		//const int Increase = 1;
 		
-		public override float Initial => 5f;
+		public override float Initial => 7f;
 
 		public override float Increase => 1f;
 
 		public int Radius => (int)Formula() * 16;
+
+		public static int WarbannerHealAmount(Player player) => (int)Math.Max(player.statLifeMax2 / 200, 1);
 
 		public int KillCount { get; private set; }
 
