@@ -364,10 +364,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static ROREffect Load(Player player, TagCompound tag, byte version)
 		{
 			//Newer versions here
-			if (version == 2)
-			{
+			//if (version == 2)
+			//{
 
-			}
+			//}
 			if (version == 1)
 			{
 				string typeName = tag.GetString("TypeName");
@@ -376,6 +376,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
 				effect.UnlockedStack = tag.GetInt("UnlockedStack");
 				effect.Stack = tag.GetInt("Stack");
+				if (effect.EnforceMaxStack && effect.Stack > effect.MaxRecommendedStack)
+				{
+					//This is to prevent the player from increasing the stack count in a mode with a higher limit, and then switch it to another mode
+					effect.Stack = effect.MaxRecommendedStack;
+				}
 				effect.PopulateFromTag(tag);
 				return effect;
 			}
@@ -384,7 +389,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				//The one with Effects namespace + full name
 				string typeName = tag.GetString("TypeName");
-				typeName = typeName.Replace("RiskOfSlimeRain.Effects", "RiskOfSlimeRain.Core.ROREffects");
+				typeName = typeName.Replace("RiskOfSlimeRain.Effects.", ROREffectManager.prefix);
 				ROREffect effect = CreateInstanceFullName(player, typeName);
 				if (effect == null) return null;
 				effect._CreationTime = TimeSpan.FromSeconds(tag.GetDouble("CreationTime"));
