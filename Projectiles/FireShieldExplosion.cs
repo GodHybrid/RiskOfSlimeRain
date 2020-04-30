@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 using Terraria;
 using Terraria.ID;
 
@@ -6,11 +7,6 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class FireShieldExplosion : InstantExplosion
 	{
-		public override void SetStaticDefaults()
-		{
-			//Main.projFrames[projectile.type] = 2;
-		}
-
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
@@ -20,9 +16,12 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void Kill(int timeLeft)
 		{
 			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
+			Vector2 randomPos = projectile.Size / 2;
 			for (int i = 0; i < 20; i++) //40
 			{
-				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f);
+				Vector2 randomDirection = randomPos.RotatedByRandom(Math.PI * 2) * Main.rand.NextFloat();
+				Vector2 velocity = Vector2.Normalize(randomDirection);
+				Dust dust = Dust.NewDustPerfect(projectile.Center + randomDirection, DustID.Smoke, velocity, 100, default(Color), 2f);
 				dust.velocity *= 2f; //3f
 				if (Main.rand.NextBool(2))
 				{
@@ -32,39 +31,41 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 			for (int i = 0; i < 35; i++) //70
 			{
-				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f);
+				Vector2 randomDirection = randomPos.RotatedByRandom(Math.PI * 2) * Main.rand.NextFloat();
+				Vector2 velocity = Vector2.Normalize(randomDirection);
+				Dust dust = Dust.NewDustPerfect(projectile.Center + randomDirection, DustID.Fire, velocity, 100, default(Color), 3f);
 				dust.noGravity = true;
 				dust.velocity *= 4f; //5f
 				dust.noLight = true;
-				dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
+				dust = Dust.NewDustPerfect(projectile.Center + randomDirection, DustID.Fire, velocity, 100, default(Color), 2f);
 				dust.velocity *= 2f;
 				dust.noLight = true;
 			}
 			for (int i = 0; i < 2; i++) //3
 			{
-				float scaleFactor10 = 0.33f;
+				float scaleFactor = 0.33f;
 				if (i == 1)
 				{
-					scaleFactor10 = 0.66f;
+					scaleFactor = 0.66f;
 				}
 				if (i == 2)
 				{
-					scaleFactor10 = 1f;
+					scaleFactor = 1f;
 				}
-				Gore gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
-				gore.velocity *= scaleFactor10;
+				Gore gore = Gore.NewGoreDirect(projectile.Center, default(Vector2), Main.rand.Next(61, 64), 1f);
+				gore.velocity *= scaleFactor;
 				gore.velocity.X += 1f;
 				gore.velocity.Y += 1f;
-				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
-				gore.velocity *= scaleFactor10;
+				gore = Gore.NewGoreDirect(projectile.Center, default(Vector2), Main.rand.Next(61, 64), 1f);
+				gore.velocity *= scaleFactor;
 				gore.velocity.X += -1f;
 				gore.velocity.Y += 1f;
-				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
-				gore.velocity *= scaleFactor10;
+				gore = Gore.NewGoreDirect(projectile.Center, default(Vector2), Main.rand.Next(61, 64), 1f);
+				gore.velocity *= scaleFactor;
 				gore.velocity.X += 1f;
 				gore.velocity.Y += -1f;
-				gore = Gore.NewGoreDirect(new Vector2(projectile.Center.X - 24f, projectile.Center.Y - 24f), default(Vector2), Main.rand.Next(61, 64), 1f);
-				gore.velocity *= scaleFactor10;
+				gore = Gore.NewGoreDirect(projectile.Center, default(Vector2), Main.rand.Next(61, 64), 1f);
+				gore.velocity *= scaleFactor;
 				gore.velocity.X += -1f;
 				gore.velocity.Y += -1f;
 			}

@@ -28,14 +28,14 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			//to apply proper knockback based on on what side the bomb is stuck on (left or right)
+			//To apply proper knockback based on on what side the bomb is stuck on (left or right)
 			hitDirection = (target.Center.X > projectile.Center.X).ToDirectionInt();
 		}
 
 		public override void AI()
 		{
-			projectile.Damage(); //to apply damage
-			projectile.Kill(); //do disappear right after it
+			projectile.Damage(); //To apply damage
+			projectile.Kill(); //Do disappear right after it
 		}
 	}
 }
