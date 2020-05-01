@@ -45,16 +45,9 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		{
 			//Find nearest solid tile below:
 			bool success = false;
-			Point p;
 			const int maxDistanceInTiles = WarbannerProj.Height / 16 + 3;
-			if (WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(maxDistanceInTiles), new GenCondition[]
-				{
-					new Conditions.IsSolid()
-				}), out p))
+			if (FindNearestBelow(ref position, maxDistanceInTiles))
 			{
-				position = p.ToWorldCoordinates(8f, 0f);
-				position.Y -= WarbannerProj.Height >> 1; //Half the projectiles height
-
 				new WarbannerPacket(radius, position).Send();
 				AddWarbanner(radius, position.X, position.Y);
 				success = true;
@@ -62,10 +55,26 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			return success;
 		}
 
-		/// <summary>
-		/// Add a new banner to the list
-		/// </summary>
-		public static void AddWarbanner(int radius, float x, float y)
+		private static bool FindNearestBelow(ref Vector2 position, int maxDistance)
+		{
+			bool success = false;
+			Point p;
+			if (WorldUtils.Find(position.ToTileCoordinates(), Searches.Chain(new Searches.Down(maxDistance), new GenCondition[]
+				{
+					new Conditions.IsSolid()
+				}), out p))
+			{
+				position = p.ToWorldCoordinates(8f, 0f);
+				position.Y -= WarbannerProj.Height >> 1; //Half the projectiles height
+				success = true;
+			}
+			return success;
+		}
+
+			/// <summary>
+			/// Add a new banner to the list
+			/// </summary>
+			public static void AddWarbanner(int radius, float x, float y)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (radius == -1) return;
@@ -96,6 +105,14 @@ namespace RiskOfSlimeRain.Core.Warbanners
 					float playerDistance = p.DistanceSQ(banner.position);
 					if (playerDistance < distance * distance)
 					{
+						//Adjust position in case tiles below it are gone if world is loaded again (means it will float if tiles are broken under an already spawned one)
+						if (!banner.fresh)
+						{
+							int maxDistance = Math.Max(1, Main.maxTilesY - 45 - (int)(banner.position.Y / 16));
+							FindNearestBelow(ref banner.position, maxDistance);
+						}
+
+						//Spawn banner projectile
 						int whoami = Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
 						if (whoami < Main.maxProjectiles)
 						{
