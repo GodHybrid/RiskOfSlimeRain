@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			//To apply proper knockback based on on what side the bomb is stuck on (left or right)
+			//To apply proper knockback based on what side the explosion is
 			hitDirection = (target.Center.X > projectile.Center.X).ToDirectionInt();
 		}
 
