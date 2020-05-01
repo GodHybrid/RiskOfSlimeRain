@@ -25,6 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		//And that they end with this
 		public static readonly string suffix = "Effect";
 
+		//Maps a rarity to a list of all associated items of that rarity
 		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
 		//Used to index each effect type for mp, and check for type validity
