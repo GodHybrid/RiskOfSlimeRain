@@ -40,6 +40,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void SpawnProjectile(Player player, NPC target)
 		{
+			if (target.wet) return;
+
 			int extraPerSide = 3;
 
 			int type = ModContent.ProjectileType<FireProj>();

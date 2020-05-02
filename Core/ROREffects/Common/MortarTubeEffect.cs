@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class MortarTubeEffect : RORCommonEffect, IOnHit
 	{
 		//const float Increase = 1.7f;
-		
+
 		public override float Initial => 1.7f;
 
 		public override float Increase => 1.7f;

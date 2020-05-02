@@ -71,10 +71,10 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			return success;
 		}
 
-			/// <summary>
-			/// Add a new banner to the list
-			/// </summary>
-			public static void AddWarbanner(int radius, float x, float y)
+		/// <summary>
+		/// Add a new banner to the list
+		/// </summary>
+		public static void AddWarbanner(int radius, float x, float y)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (radius == -1) return;

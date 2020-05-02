@@ -20,7 +20,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override string Description => $"Increases health regeneration by {Initial} health per second when out of combat for {TimerMax / 60} seconds";
 
 		public override string FlavorText => "This egg seems to be somewhere between hatching and dying\nI can't bring it to myself to cook it alive";
-		
+
 		public override string UIInfo()
 		{
 			return $"Regeneration: {Formula()}/s";

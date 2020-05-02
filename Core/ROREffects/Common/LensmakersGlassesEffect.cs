@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit, IPlayerLayer
 	{
 		//const float Increase = 0.07f;
-		
+
 		public override float Initial => ServerConfig.Instance.RorStats ? 0.07f : 0.04f;
 
 		public override float Increase => ServerConfig.Instance.RorStats ? 0.07f : 0.04f;

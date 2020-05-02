@@ -19,7 +19,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop a meat nugget that recovers {Initial} health";
 
 		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
-		
+
 		public override string UIInfo()
 		{
 			return $"Heal amount: {Formula()}";

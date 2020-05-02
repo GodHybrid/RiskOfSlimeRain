@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Initial = 0.05f;
 		//const float Increase = 0.05f;
-		
+
 		public override float Initial => ServerConfig.Instance.RorStats ? 0.1f : 0.04f;
 
 		public override float Increase => ServerConfig.Instance.RorStats ? 0.05f : 0.02f;

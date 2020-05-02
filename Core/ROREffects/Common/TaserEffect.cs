@@ -11,7 +11,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const int Initial = 10;
 		//const int Increase = 5;
-		
+
 		public override float Initial => 1.5f;
 
 		public override float Increase => 0.5f;

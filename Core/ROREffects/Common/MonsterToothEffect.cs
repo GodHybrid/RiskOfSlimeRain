@@ -19,7 +19,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override string Description => $"Killing an enemy will heal you for {Initial} health";
 
 		public override string FlavorText => "Sometimes I felt like it helped me on hunts, ya know?\nLike... instincts";
-		
+
 		public override string UIInfo()
 		{
 			return $"Heal amount: {Formula()}";
