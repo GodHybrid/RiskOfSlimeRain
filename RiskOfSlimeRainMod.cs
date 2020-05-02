@@ -1,3 +1,4 @@
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
@@ -43,6 +44,11 @@ namespace RiskOfSlimeRain
 			NPCHelper.LogBadModNPCs();
 		}
 
+		public override void PostAddRecipes()
+		{
+			BossChecklistManager.Load();
+		}
+
 		public override void Unload()
 		{
 			ROREffectManager.Unload();
@@ -52,6 +58,8 @@ namespace RiskOfSlimeRain
 			WarbannerManager.Unload();
 			NPCHelper.Unload();
 			PlayerHelper.Unload();
+			BossChecklistManager.Unload();
+			NPCLootManager.Unload();
 			SpawnedFromStatuePacket.Unload();
 		}
 

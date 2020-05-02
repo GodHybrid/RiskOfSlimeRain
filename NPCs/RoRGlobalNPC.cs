@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.NPCEffects;
-using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items;
@@ -73,11 +73,11 @@ namespace RiskOfSlimeRain.NPCs
 
 		public override void NPCLoot(NPC npc)
 		{
-			//Makeshift for now
+			if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection
 
-			DropRORItems(npc);
+			NPCLootManager.DropItem(npc);
 
-			if (npc.type == NPCID.SkeletronHead && !Main.gameMenu && WarbannerManager.warbanners.Count > 0)
+			if (npc.type == NPCID.SkeletronHead && WarbannerManager.warbanners.Count > 0)
 			{
 				DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<WarbannerRemover>(),
 					npCondition: delegate (NPC n, Player player)
@@ -100,39 +100,6 @@ namespace RiskOfSlimeRain.NPCs
 						return !mPlayer.nullifierEnabled && mPlayer.Effects.Count > 0;
 					}
 				);
-			}
-		}
-
-		public static void DropRORItems(NPC npc)
-		{
-			if (npc.boss)
-			{
-				if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection
-
-				RORRarity rarity = RORRarity.Common;
-				//float rarityRand = Main.rand.NextFloat();
-				//if (rarityRand < 0.05f)
-				//{
-				//	rarity = ROREffectRarity.Rare;
-				//}
-				//else if (rarityRand < 0.25f)
-				//{
-				//	rarity = ROREffectRarity.Uncommon;
-				//}
-				//else common
-
-				List<int> items = ROREffectManager.GetItemTypesOfRarity(rarity);
-				if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
-
-				//int itemType = Main.rand.Next(items);
-				if (Main.rand.NextFloat() < RORWorld.DropChance)
-				{
-					int itemTypeFunc() => Main.rand.Next(items);
-					DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), itemTypeFunc);
-					//Item.NewItem(npc.getRect(), itemType, 1);
-					RORWorld.downedBossCount++;
-					new DownedBossCountPacket().Send();
-				}
 			}
 		}
 

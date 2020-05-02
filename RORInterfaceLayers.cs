@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.Warbanners;
@@ -268,7 +269,7 @@ namespace RiskOfSlimeRain
 					}
 					text += "\nMisc Info:";
 					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
-					text += "\nItem drop chance from bosses: " + RORWorld.DropChance.ToPercent(2);
+					text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _);
 				}
 
 				Vector2 textPos = GetTextPosFromMouse(text);
