@@ -9,17 +9,11 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class RustyKnifeProj : StickyProj
 	{
-		private bool timeLeftSet = false;
-
-		public const int timeLeftDefault = 140;
-
-		public int TimeLeft
-		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
-		}
+		public const int tickAmount = 4;
 
 		public const int StrikeTimerMax = 30;
+
+		public int TimeLeftDefault => tickAmount * StrikeTimerMax + StrikeTimerMax >> 1;
 
 		/// <summary>
 		/// Timer for strikes on only that NPC
@@ -46,7 +40,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			base.SetDefaults();
 			projectile.Size = new Vector2(26, 34);
-			projectile.timeLeft = timeLeftDefault;
+			projectile.timeLeft = TimeLeftDefault;
 		}
 
 		public override void WhileStuck(NPC npc)
@@ -65,8 +59,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void OtherAI()
 		{
-			SetTimeLeft();
-
 			if (!SetDirection)
 			{
 				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
@@ -74,15 +66,6 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			projectile.WaterfallAnimation(5);
-		}
-
-		private void SetTimeLeft()
-		{
-			if (!timeLeftSet)
-			{
-				projectile.timeLeft = TimeLeft <= 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
-				timeLeftSet = true;
-			}
 		}
 
 		public override Color? GetAlpha(Color lightColor)

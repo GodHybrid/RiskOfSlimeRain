@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// Sticks to the target specified via the special spawn method. Doesn't deal damage by itself. ai1 reserved.
+	/// Sticks to the target specified via the special spawn method. Doesn't deal damage by itself. ai0, ai1 reserved.
 	/// </summary>
 	public abstract class StickyProj : ModProjectile
 	{

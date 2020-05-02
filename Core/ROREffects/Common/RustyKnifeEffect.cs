@@ -17,9 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 7 : 19;
 
-		private const int tickAmount = 4;
-
-		public override string Description => $"{Initial.ToPercent()} chance to cause bleeding. Bleeding deals {tickAmount}x{Damage.ToPercent()} damage";
+		public override string Description => $"{Initial.ToPercent()} chance to cause bleeding. Bleeding deals {RustyKnifeProj.tickAmount}x{Damage.ToPercent()} damage";
 
 		public override string FlavorText => "Murder weapon, case name ELIAS. Probably a lover's spat?\nThere is still dried blood on the knife, so mark it as biological.";
 
@@ -45,11 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		void SpawnProjectile(Player player, NPC target)
 		{
 			int damage = (int)(Damage * player.GetDamage());
-			StickyProj.NewProjectile(target, damage: damage, onCreate: delegate(RustyKnifeProj proj)
-			{
-				//tickAmount * tick dutation + some buffer (half the damage tick duration)
-				proj.TimeLeft = tickAmount * RustyKnifeProj.StrikeTimerMax + RustyKnifeProj.StrikeTimerMax >> 1;
-			});
+			StickyProj.NewProjectile<RustyKnifeProj>(target, damage: damage);
 		}
 	}
 }
