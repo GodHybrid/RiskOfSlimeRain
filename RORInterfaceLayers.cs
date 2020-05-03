@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
@@ -270,6 +271,15 @@ namespace RiskOfSlimeRain
 					text += "\nMisc Info:";
 					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
 					text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _);
+					int chestCount = ChestManager.totalChests;
+					if (chestCount > 0)
+					{
+						text += "\nThis world originally generated with " + chestCount + " 'Risk of Slime Rain' items in chests";
+					}
+					else
+					{
+						text += "\nThis world has no 'Risk of Slime Rain' items generated in chests. Make a new world!";
+					}
 				}
 
 				Vector2 textPos = GetTextPosFromMouse(text);

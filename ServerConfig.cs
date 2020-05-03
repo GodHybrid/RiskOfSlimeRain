@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain
 
 		//TODO add scaling
 		[Label("Difficulty Scaling")]
-		[Tooltip("If enabled, Scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance.")]
+		[Tooltip("If enabled, scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance.")]
 		//TODO debugging purposes
 		//[ReloadRequired]
 		[DefaultValue(true)]
