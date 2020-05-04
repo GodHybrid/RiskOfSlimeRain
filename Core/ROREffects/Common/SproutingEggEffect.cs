@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
-	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen, IPlayerLayer
+	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen
 	{
 		//const float Increase = 2.4f;
 		private int TimerMax => ServerConfig.Instance.RorStats ? 420 : 600;
@@ -35,24 +35,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 			if (Config.HiddenVisuals(player)) return;
 
-			if (Main.rand.NextBool(30))
+			if (Main.rand.NextBool(28))
 			{
 				Dust dust = Dust.NewDustDirect(player.position, player.width, player.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.Yellow * 0.78f, 1.4f);
 				dust.customData = new InAndOutData(inSpeed: 5, outSpeed: 5, reduceScale: false);
 				dust.velocity.X *= 0f;
 				dust.velocity.Y = Main.rand.NextFloat(-0.7f, -0.2f);
-			}
-		}
-
-		public PlayerLayerParams GetPlayerLayerParams(Player player)
-		{
-			if (player.GetRORPlayer().NoCombatTimer > TimerMax)
-			{
-				return new PlayerLayerParams("Textures/SproutingEgg", new Vector2(-1f, -14f), Color.White * 0.5f);
-			}
-			else
-			{
-				return null;
 			}
 		}
 	}

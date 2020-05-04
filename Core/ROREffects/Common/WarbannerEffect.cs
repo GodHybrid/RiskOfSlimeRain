@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public int Radius => (int)Formula() * 16;
 
-		public static int WarbannerHealAmount(Player player) => (int)Math.Max(player.statLifeMax2 / 200, 1);
+		public static int WarbannerHealAmount(Player player) => Math.Max(player.statLifeMax2 / 200, 1);
 
 		public int KillCount { get; private set; }
 
