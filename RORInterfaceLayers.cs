@@ -236,6 +236,10 @@ namespace RiskOfSlimeRain
 				{
 					text += "\n" + effect.CappedMessage;
 				}
+				if (effect.BlockedByBlacklist)
+				{
+					text += "\n" + effect.BlockedMessage;
+				}
 
 				Vector2 textPos = GetTextPosFromMouse(text);
 

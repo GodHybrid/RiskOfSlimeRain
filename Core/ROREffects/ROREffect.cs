@@ -3,7 +3,9 @@ using System;
 using System.IO;
 using System.Text.RegularExpressions;
 using Terraria;
+using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 using WebmilioCommons.Networking.Packets;
 using WebmilioCommons.Networking.Serializing;
@@ -101,7 +103,27 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public bool Proccing => Active && (AlwaysProc || Proc(Chance));
 
-		public bool Active => Stack > 0;
+		public bool Active
+		{
+			get
+			{
+				if (Stack == 0) return false;
+				return Stack > 0 && !BlockedByBlacklist;
+			}
+		}
+
+		public bool BlockedByBlacklist
+		{
+			get
+			{
+				int item = ItemType;
+				if (item > -1)
+				{
+					return ServerConfig.Instance.Blacklist.Contains(new ItemDefinition(item));
+				}
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// To sort the effects when loading them
@@ -189,6 +211,19 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				{
 					return "With the currently held weapon, you reached the recommended stack amount!";
 				}
+			}
+		}
+
+		public string BlockedMessage
+		{
+			get
+			{
+				string msg = "This item is blocked via the Server Config";
+				if (Main.netMode == NetmodeID.MultiplayerClient)
+				{
+					msg += ". The host is responsible for the item blacklist";
+				}
+				return msg;
 			}
 		}
 

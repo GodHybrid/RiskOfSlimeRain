@@ -3,16 +3,19 @@
 ## 0.3.2
 
 * New sprites!
-* Balance addition!
+* Balance!
     * Added a new config (labeled "Server Config") containing various balance options
         * "Original Stats": If enabled, you keep using the same stats for items as in previous updates. Disabled by default
         * "Difficulty Scaling": If enabled, the game becomes harder the more powerful you are. More infos on the "?" UI
         * You can find all the balance changes [here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/OriginalStatsvsBalancedStats.md#original-stats-vs-balanced-stats)
+        * Please give feedback about the new balance on our homepage!
 * Item aquisition rework!
     * Items generate in chests all over the world
     * You are guaranteed one drop from each vanilla boss (with exceptions)
         * If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
     * You can still craft all items
+* Item blacklist!
+    * Specify items in it (only the consumable ror-items work) that will NOT work on all players. Useful for filtering items you deem problematic
 * Added more mouseover text for most items
 * Fixed Bustling Fungus and Warbanner spawning in multiplayer when not standing on ground
 * Fixed Hermit's Scarf spamming "dodged"

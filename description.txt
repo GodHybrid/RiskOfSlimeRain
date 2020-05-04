@@ -5,7 +5,7 @@ However the recipes for them are quite expensive. Even low-tier items will requi
 The mod also features a config setting where you can selectively pick the amount of stacks each item occupies, in case you need to tweak/disable the effects. If you want the items you used back, defeat the Wall of Flesh for the [c/d18660:Nullifier] item.
 
 [c/64bbde:"Risk of Slime Rain"] is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
-[i:3520] 25 items of [c/e9f2f2:Common] rarity - a nice variety of offensive, utility and defensive items
+[i:3520] 25 items of [c/e9f2f2:Common] rarity - a nice variety of offensive, utility and defensive items.
 
 
 [c/d18660:Multiplayer compatible, no pvp support.]
@@ -13,8 +13,9 @@ The mod also features a config setting where you can selectively pick the amount
 [c/888888:Changelog:]
 v0.3.2
     + New sprites
-    + Balance addition
+    + Balance
     + Item aquisition rework
+    + Item backlist
     + Minor tweaks
 v0.3.1.8 + v0.3.1.7
     + Fixed items not spawning in multiplayer

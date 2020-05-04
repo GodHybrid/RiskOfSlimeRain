@@ -2,7 +2,9 @@
 
 ![icon](https://raw.githubusercontent.com/GodHybrid/RiskOfSlimeRain/master/icon.png)
 
-Homepage: https://forums.terraria.org/index.php?threads/wip-risk-of-slime-rain-risk-of-rain-in-terraria.80382/
+Homepage: [Click here](https://forums.terraria.org/index.php?threads/wip-risk-of-slime-rain-risk-of-rain-in-terraria.80382/)
+
+Changelogs: [Click here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/changelogs.md#changelogs)
 
 **"Risk of Slime Rain"** is a mod that aims to add all the existing items from **Risk of Rain 1** into **Terraria**, with some tweaks to fit Terraria's gameplay and world. 
 
@@ -11,7 +13,7 @@ However the recipes for them are quite expensive. Even low-tier items will requi
 The mod also features a config setting where you can selectively pick the amount of stacks each item occupies, in case you need to tweak/disable the effects. If you want the items you used back, defeat the Wall of Flesh for the **Nullifier** item.
 
 **"Risk of Slime Rain"** is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
-25 items of **Common** rarity - a nice variety of offensive, utility and defensive items
+25 items of **Common** rarity - a nice variety of offensive, utility and defensive items.
 
 
 _Multiplayer compatible, no pvp support._
