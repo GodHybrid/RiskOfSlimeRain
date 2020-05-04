@@ -1,5 +1,25 @@
 # Changelogs
 
+## 0.3.2
+
+* New sprites!
+* Balance addition!
+    * Added a new config (labeled "Server Config") containing various balance options
+        * "Original Stats": If enabled, you keep using the same stats for items as in previous updates. Disabled by default
+        * "Difficulty Scaling": If enabled, the game becomes harder the more powerful you are. More infos on the "?" UI
+        * You can find all the balance changes [here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/OriginalStatsvsBalancedStats.md#original-stats-vs-balanced-stats)
+* Item aquisition rework!
+    * Items generate in chests all over the world
+    * You are guaranteed one drop from each vanilla boss (with exceptions)
+        * If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
+    * You can still craft all items
+* Added more mouseover text for most items
+* Fixed Bustling Fungus and Warbanner spawning in multiplayer when not standing on ground
+* Fixed Hermit's Scarf spamming "dodged"
+* Increased Barbed Wire and Warbanner default radius slightly
+* Warbanners will now drop down on world reload if the tiles below them don't exist
+* Meat Nugget now only drops 1 nugget instead of 2, but heals double the amount
+
 ## 0.3.1.8
 
 * Fixed items not spawning in multiplayer

@@ -14,10 +14,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class BarbedWireEffect : RORCommonEffect, IPostUpdateEquips, IPlayerLayer, IScreenShader
 	{
 		const int wireTimerMax = 60;
-		const int wireRadiusTiles = 2;
+		const int initialWireRadius = 3;
 		//const float Initial = 0.33f;
 		//const float Increase = 0.17f;
-		const int radIncrease = 24;
+		const int radIncrease = 16;
 
 		int alphaCounter = 0;
 
@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int wireTimer = 0;
 
-		int Radius => (wireRadiusTiles + Stack) * radIncrease;
+		int Radius => (initialWireRadius + Stack) * radIncrease;
 
 		public override string Description => $"Touching enemies deals {Initial.ToPercent()} of your current damage every second";
 

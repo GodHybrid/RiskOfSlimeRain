@@ -352,7 +352,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			var bossInfo = BossChecklistManager.moddedBossInfoDict.FirstOrDefault(boss => !moddedDowned.ContainsKey(boss.Key)).Value; //Ordered by progression
 			if (bossInfo != null)
 			{
-				ret = bossInfo.key;
+				ret = bossInfo.displayName;
 				progression = bossInfo.progression;
 			}
 			return ret;
