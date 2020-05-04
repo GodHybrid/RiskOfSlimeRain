@@ -23,7 +23,7 @@ Only differences listed.
 | [Mysterious Vial](#mysteriousvial) | 1.2 HP/s | 0.5 HP/s |
 | [Paul's Goat Hoof](#paulsgoathoof) | 15% faster, +5%/stack | 10% faster, +2%/stack |
 | [Rusty Knife](#rustyknife) | 4x35% damage, 15% chance, +15%/stack | 4x30% damage, 10% chance, +5%/stack |
-| [Snake Eyes](#snakeeyes) | no difference | no difference |
+| [Snake Eyes](#snakeeyes)<a name="snakeeyes"></a> | no difference | no difference |
 | [Soldier's Syringe](#soldierssyringe) | 15% faster use, +15%/stack | 10% faster use, +10%/stack |
 | [Spikestrip](#spikestrip) | no difference | no difference |
 | [Sprouting Egg](#sproutingegg) | Start after 7s, 2.4 HP/s | Start after 10s, 1.5 HP/s |
