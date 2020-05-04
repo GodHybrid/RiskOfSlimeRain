@@ -17,12 +17,12 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public static List<float> vanillaDowned;
 
 		//Contains the "key"  of each downed modded boss
-		public static List<string> moddedDowned;
+		public static Dictionary<string, float> moddedDowned;
 
-		public const int repeatedDropRate = 100;
+		public const int RepeatedDropRate = 100;
 		public const float HMDropRateMultiplierForPreHMBosses = 2;
 
-		//Unique string identifiers for each boss, copy from BossChecklist
+		//Unique float identifiers for each boss, copy from BossChecklist
 		public const float KingSlime = 1f;
 		public const float EyeOfCthulhu = 2f;
 		public const float EvilBoss = 3f;
@@ -39,8 +39,15 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public const float LunaticCultist = 13f;
 		public const float Moonlord = 14f;
 
+		public const int BossCountPreHM = 6;
+		public const int BossCountHM = 8;
+
 		public static void DropItem(NPC npc)
 		{
+			if (!npc.boss) return;
+
+			bool isPreHM = IsPreHardmode(npc);
+			if (!CheckProgression(isPreHM)) return;
 			bool firstKill = false;
 			bool isBoss = npc.modNPC == null ? CheckVanilla(npc, ref firstKill) : CheckModded(npc, ref firstKill);
 
@@ -53,11 +60,12 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			else
 			{
 				//Already defeated
-				int random = repeatedDropRate;
-				if (Main.hardMode && IsPreHardmode(npc))
+				int random = RepeatedDropRate;
+				if (Main.hardMode && isPreHM)
 				{
 					random = (int)(random * HMDropRateMultiplierForPreHMBosses);
 				}
+
 				if (Main.rand.NextBool(random))
 				{
 					DropOneItemPerPlayer(npc);
@@ -84,6 +92,31 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 
 			int itemTypeFunc() => Main.rand.Next(items);
 			RORGlobalNPC.DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), itemTypeFunc);
+		}
+
+		//if (preHM) return f <= WallOfFlesh; else return f > WallOfFlesh;
+		private static bool ProgressIsPostWallOfFlesh(bool preHM, float f) => preHM ^ f > WallOfFlesh;
+
+		public static bool CheckProgression(bool preHM)
+		{
+			if (!BossChecklistManager.Loaded) return true;
+			int vanilla = vanillaDowned.Count(f => ProgressIsPostWallOfFlesh(preHM, f));
+
+			//moddedDowned contains things even if mods are disabled, preserving behavior
+			int modded = moddedDowned.Count;
+
+			int compare = preHM ? BossCountPreHM : BossCountHM;
+			//No point counting bosses if the total modded boss count is less
+			if (modded >= compare)
+			{
+				//Count how many beaten bosses are pre/HM
+				modded = moddedDowned.Count(boss => ProgressIsPostWallOfFlesh(preHM, boss.Value));
+				if (modded + vanilla >= compare * 2)
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -247,13 +280,12 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			bool drop = false;
 			if (!BossChecklistManager.Loaded) return false;
 
-			string key = BossChecklistManager.GetKeyOfNPC(npc);
-			if (key != null)
+			var boss = BossChecklistManager.GetBossInfoOfNPC(npc);
+			if (boss != null)
 			{
-				if (moddedDowned.BinarySearch(key) < 0)
+				if (!moddedDowned.ContainsKey(boss.key))
 				{
-					moddedDowned.Add(key);
-					moddedDowned.Sort();
+					moddedDowned.Add(boss.key, boss.progression);
 					new UpdateDownedPacket(false).Send();
 					firstKill = true;
 				}
@@ -287,7 +319,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			{
 				if (BossChecklistManager.Loaded)
 				{
-					return BossChecklistManager.moddedBossInfoDict.Any(boss => BossChecklistManager.Exists(npc, boss) && boss.Value.progression < 6f);
+					return BossChecklistManager.moddedBossInfoDict.Any(boss => BossChecklistManager.Exists(npc, boss) && boss.Value.progression < WallOfFlesh);
 				}
 			}
 			return false;
@@ -317,10 +349,10 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			{
 				return "There are no modded bosses to beat!";
 			}
-			var bossInfo = BossChecklistManager.moddedBossInfoDict.FirstOrDefault(boss => !moddedDowned.Contains(boss.Key)).Value; //Ordered by progression
+			var bossInfo = BossChecklistManager.moddedBossInfoDict.FirstOrDefault(boss => !moddedDowned.ContainsKey(boss.Key)).Value; //Ordered by progression
 			if (bossInfo != null)
 			{
-				ret = bossInfo.displayName;
+				ret = bossInfo.key;
 				progression = bossInfo.progression;
 			}
 			return ret;
@@ -409,26 +441,56 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			return displayName?.StartsWith("$") == true ? Language.GetTextValue(displayName.Substring(1)) : displayName;
 		}
 
+		public static void Init()
+		{
+			vanillaDowned = new List<float>();
+			moddedDowned = new Dictionary<string, float>();
+		}
+
 		public static void Load(TagCompound tag)
 		{
 			var vlist = tag.GetList<float>("vanillaDowned");
 			vanillaDowned = (List<float>)vlist;
-			//vanillaDowned.Clear();
 			//for (int i = 0; i < Moonlord; i++)
 			//{
 			//	vanillaDowned.Add(i + 1);
 			//}
 			vanillaDowned.Sort();
 
-			var mList = tag.GetList<string>("moddedDowned");
-			moddedDowned = (List<string>)mList;
-			moddedDowned.Sort();
+			var moddedDownedCompounds = tag.GetList<TagCompound>("moddedDownedCompounds");
+			moddedDowned = new Dictionary<string, float>();
+			foreach (var t in moddedDownedCompounds)
+			{
+				string bosskey = t.GetString("bosskey");
+				float progression = t.GetFloat("progression");
+				//Update progression if it changed
+				if (BossChecklistManager.Loaded && BossChecklistManager.moddedBossInfoDict.TryGetValue(bosskey, out BossChecklistBossInfo value))
+				{
+					progression = value.progression;
+				}
+				moddedDowned.Add(bosskey, progression);
+			}
+
+			//var mList = tag.GetList<string>("moddedDowned");
+			//moddedDowned = (List<string>)mList;
+			//moddedDowned.Clear();
+			//moddedDowned.Sort();
 		}
 
 		public static void Save(TagCompound tag)
 		{
 			tag.Add("vanillaDowned", vanillaDowned);
-			tag.Add("moddedDowned", moddedDowned);
+
+			List<TagCompound> moddedDownedCompounds = new List<TagCompound>();
+			foreach (var entry in moddedDowned)
+			{
+				moddedDownedCompounds.Add(new TagCompound()
+				{
+					{"bosskey", entry.Key },
+					{"progression", entry.Value },
+				});
+			}
+			tag.Add("moddedDownedCompounds", moddedDownedCompounds);
 		}
 
 		/// <summary>
@@ -447,9 +509,10 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			else
 			{
 				writer.Write(moddedDowned.Count);
-				for (int i = 0; i < moddedDowned.Count; i++)
+				foreach (var entry in moddedDowned)
 				{
-					writer.Write((string)moddedDowned[i]);
+					writer.Write(entry.Key);
+					writer.Write(entry.Value);
 				}
 			}
 		}
@@ -471,12 +534,13 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			}
 			else
 			{
-				moddedDowned = new List<string>();
+				moddedDowned = new Dictionary<string, float>();
 				int count = reader.ReadInt32();
 				for (int i = 0; i < count; i++)
 				{
-					string value = reader.ReadString();
-					moddedDowned.Add(value);
+					string key = reader.ReadString();
+					float progression = reader.ReadSingle();
+					moddedDowned.Add(key, progression);
 				}
 			}
 		}

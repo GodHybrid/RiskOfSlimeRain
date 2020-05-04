@@ -16,6 +16,8 @@ namespace RiskOfSlimeRain
 		{
 			//rorMode = false;
 			WarbannerManager.Init();
+			ChestManager.Init();
+			NPCLootManager.Init();
 		}
 
 		public override void NetSend(BinaryWriter writer)

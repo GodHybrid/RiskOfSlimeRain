@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 
 		public override string ToString()
 		{
-			return progression + " " + key;
+			return progression + ": " + key;
 		}
 	}
 }

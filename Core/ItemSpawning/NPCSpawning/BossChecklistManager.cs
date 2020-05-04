@@ -54,16 +54,11 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		}
 
 		/// <summary>
-		/// Returns the key of the NPC if it exists in Boss Checklist, null otherwise
+		/// Returns the info of the NPC if it exists in Boss Checklist, null otherwise
 		/// </summary>
-		public static string GetKeyOfNPC(NPC npc)
+		public static BossChecklistBossInfo GetBossInfoOfNPC(NPC npc)
 		{
-			if (npc.boss)
-			{
-				var first = moddedBossInfoDict.FirstOrDefault(boss => Exists(npc, boss));
-				return first.Key;
-			}
-			return null;
+			return moddedBossInfoDict.FirstOrDefault(boss => Exists(npc, boss)).Value;
 		}
 
 		public static void Load()

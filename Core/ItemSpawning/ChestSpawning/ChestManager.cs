@@ -291,6 +291,11 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 			//}
 		}
 
+		public static void Init()
+		{
+			totalChests = 0;
+		}
+
 		public static void Load(TagCompound tag)
 		{
 			totalChests = tag.GetInt("totalChests");
