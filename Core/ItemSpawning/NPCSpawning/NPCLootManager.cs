@@ -47,12 +47,34 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			if (!npc.boss) return;
 
 			bool isPreHM = IsPreHardmode(npc);
-			if (!CheckProgression(isPreHM)) return;
-			bool firstKill = false;
-			bool isBoss = npc.modNPC == null ? CheckVanilla(npc, ref firstKill) : CheckModded(npc, ref firstKill);
+			bool progressionAllowed = CheckProgression(isPreHM);
+			bool drop = false;
+			bool firstDrop = false;
+			if (npc.modNPC == null)
+			{
+				float vanilla = CheckVanilla(npc, ref drop);
+				if (progressionAllowed && vanilla >= KingSlime)
+				{
+					vanillaDowned.Add(vanilla);
+					vanillaDowned.Sort();
+					firstDrop = true;
+					new UpdateDownedPacket(true).Send();
+				}
+			}
+			else
+			{
+				var modded = CheckModded(npc, ref drop);
+				if (progressionAllowed && modded != null)
+				{
+					moddedDowned.Add(modded.key, modded.progression);
+					firstDrop = true;
+					new UpdateDownedPacket(false).Send();
+				}
+			}
 
-			if (!isBoss) return;
-			if (firstKill)
+			if (!drop) return;
+
+			if (firstDrop)
 			{
 				//First time defeated
 				DropOneItemPerPlayer(npc);
@@ -97,6 +119,9 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		//if (preHM) return f <= WallOfFlesh; else return f > WallOfFlesh;
 		private static bool ProgressIsPostWallOfFlesh(bool preHM, float f) => preHM ^ f > WallOfFlesh;
 
+		/// <summary>
+		/// Returns true if, based on the boss belonging to preHM or HM, the amount of bosses defeated in this "category" doesn't exceed a certain threshold already
+		/// </summary>
 		public static bool CheckProgression(bool preHM)
 		{
 			if (!BossChecklistManager.Loaded) return true;
@@ -120,26 +145,24 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		}
 
 		/// <summary>
-		/// Returns true if this NPC is one of the relevant bosses, also sets firstKill to true if never downed before
+		/// Returns the progression value of this NPC if its downed for the first time, also sets drop to true if it matches a valid vanilla boss
 		/// </summary>
-		private static bool CheckVanilla(NPC npc, ref bool firstKill)
+		private static float CheckVanilla(NPC npc, ref bool drop)
 		{
-			bool drop = false;
+			float progression = 0;
 			switch (npc.type)
 			{
 				case NPCID.KingSlime:
 					if (vanillaDowned.BinarySearch(KingSlime) < 0)
 					{
-						vanillaDowned.Add(KingSlime);
-						firstKill = true;
+						progression = KingSlime;
 					}
 					drop = true;
 					break;
 				case NPCID.EyeofCthulhu:
 					if (vanillaDowned.BinarySearch(EyeOfCthulhu) < 0)
 					{
-						vanillaDowned.Add(EyeOfCthulhu);
-						firstKill = true;
+						progression = EyeOfCthulhu;
 					}
 					drop = true;
 					break;
@@ -151,8 +174,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 					{
 						if (vanillaDowned.BinarySearch(EvilBoss) < 0)
 						{
-							vanillaDowned.Add(EvilBoss);
-							firstKill = true;
+							progression = EvilBoss;
 						}
 						drop = true;
 					}
@@ -162,8 +184,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 						{
 							if (vanillaDowned.BinarySearch(EvilBoss) < 0)
 							{
-								vanillaDowned.Add(EvilBoss);
-								firstKill = true;
+								progression = EvilBoss;
 							}
 							drop = true;
 						}
@@ -172,40 +193,35 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 				case NPCID.QueenBee:
 					if (vanillaDowned.BinarySearch(QueenBee) < 0)
 					{
-						vanillaDowned.Add(QueenBee);
-						firstKill = true;
+						progression = QueenBee;
 					}
 					drop = true;
 					break;
 				case NPCID.SkeletronHead:
 					if (vanillaDowned.BinarySearch(Skeletron) < 0)
 					{
-						vanillaDowned.Add(Skeletron);
-						firstKill = true;
+						progression = Skeletron;
 					}
 					drop = true;
 					break;
 				case NPCID.WallofFlesh:
 					if (vanillaDowned.BinarySearch(WallOfFlesh) < 0)
 					{
-						vanillaDowned.Add(WallOfFlesh);
-						firstKill = true;
+						progression = WallOfFlesh;
 					}
 					drop = true;
 					break;
 				case NPCID.TheDestroyer:
 					if (vanillaDowned.BinarySearch(TheDestroyer) < 0)
 					{
-						vanillaDowned.Add(TheDestroyer);
-						firstKill = true;
+						progression = TheDestroyer;
 					}
 					drop = true;
 					break;
 				case NPCID.SkeletronPrime:
 					if (vanillaDowned.BinarySearch(SkeletronPrime) < 0)
 					{
-						vanillaDowned.Add(SkeletronPrime);
-						firstKill = true;
+						progression = SkeletronPrime;
 					}
 					drop = true;
 					break;
@@ -215,8 +231,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 					{
 						if (vanillaDowned.BinarySearch(TheTwins) < 0)
 						{
-							vanillaDowned.Add(TheTwins);
-							firstKill = true;
+							progression = TheTwins;
 						}
 						drop = true;
 					}
@@ -224,74 +239,63 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 				case NPCID.Plantera:
 					if (vanillaDowned.BinarySearch(Plantera) < 0)
 					{
-						vanillaDowned.Add(Plantera);
-						firstKill = true;
+						progression = Plantera;
 					}
 					drop = true;
 					break;
 				case NPCID.Golem:
 					if (vanillaDowned.BinarySearch(Golem) < 0)
 					{
-						vanillaDowned.Add(Golem);
-						firstKill = true;
+						progression = Golem;
 					}
 					drop = true;
 					break;
 				case NPCID.DukeFishron:
 					if (vanillaDowned.BinarySearch(DukeFishron) < 0)
 					{
-						vanillaDowned.Add(DukeFishron);
-						firstKill = true;
+						progression = DukeFishron;
 					}
 					drop = true;
 					break;
 				case NPCID.CultistBoss:
 					if (vanillaDowned.BinarySearch(LunaticCultist) < 0)
 					{
-						vanillaDowned.Add(LunaticCultist);
-						firstKill = true;
+						progression = LunaticCultist;
 					}
 					drop = true;
 					break;
 				case NPCID.MoonLordCore:
 					if (vanillaDowned.BinarySearch(Moonlord) < 0)
 					{
-						vanillaDowned.Add(Moonlord);
-						firstKill = true;
+						progression = Moonlord;
 					}
 					drop = true;
 					break;
 				default:
 					break;
 			}
-			if (firstKill)
-			{
-				vanillaDowned.Sort();
-				new UpdateDownedPacket(true).Send();
-			}
-			return drop;
+			return progression;
 		}
 
 		/// <summary>
-		/// Returns true if this NPC is one of the registered modded bosses, also sets firstKill to true if never downed before
+		/// Returns the boss info of this NPC if its downed for the first time, also sets drop to true if it matches a valid modded boss
 		/// </summary>
-		public static bool CheckModded(NPC npc, ref bool firstKill)
+		public static BossChecklistBossInfo CheckModded(NPC npc, ref bool drop)
 		{
-			bool drop = false;
-			if (!BossChecklistManager.Loaded) return false;
+			BossChecklistBossInfo boss = null;
+			if (!BossChecklistManager.Loaded) return boss;
 
-			var boss = BossChecklistManager.GetBossInfoOfNPC(npc);
+			boss = BossChecklistManager.GetBossInfoOfNPC(npc);
 			if (boss != null)
 			{
-				if (!moddedDowned.ContainsKey(boss.key))
+				if (moddedDowned.ContainsKey(boss.key))
 				{
-					moddedDowned.Add(boss.key, boss.progression);
-					new UpdateDownedPacket(false).Send();
-					firstKill = true;
+					boss = null;
 				}
+				// if it isn't in the dict, boss will not be null, and returned
 				drop = true;
 			}
-			return drop;
+			return boss;
 		}
 
 		/// <summary>
@@ -315,12 +319,9 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 						return true;
 				}
 			}
-			else
+			else if (BossChecklistManager.Loaded)
 			{
-				if (BossChecklistManager.Loaded)
-				{
-					return BossChecklistManager.moddedBossInfoDict.Any(boss => BossChecklistManager.Exists(npc, boss) && boss.Value.progression < WallOfFlesh);
-				}
+				return BossChecklistManager.moddedBossInfoDict.Any(boss => BossChecklistManager.Exists(npc, boss) && boss.Value.progression < WallOfFlesh);
 			}
 			return false;
 		}
@@ -451,10 +452,6 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		{
 			var vlist = tag.GetList<float>("vanillaDowned");
 			vanillaDowned = (List<float>)vlist;
-			//for (int i = 0; i < Moonlord; i++)
-			//{
-			//	vanillaDowned.Add(i + 1);
-			//}
 			vanillaDowned.Sort();
 
 			var moddedDownedCompounds = tag.GetList<TagCompound>("moddedDownedCompounds");
@@ -470,11 +467,6 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 				}
 				moddedDowned.Add(bosskey, progression);
 			}
-
-			//var mList = tag.GetList<string>("moddedDowned");
-			//moddedDowned = (List<string>)mList;
-			//moddedDowned.Clear();
-			//moddedDowned.Sort();
 		}
 
 		public static void Save(TagCompound tag)
@@ -531,6 +523,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 					float value = reader.ReadSingle();
 					vanillaDowned.Add(value);
 				}
+				vanillaDowned.Sort();
 			}
 			else
 			{
