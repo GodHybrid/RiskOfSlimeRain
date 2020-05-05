@@ -37,7 +37,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			Tooltip.SetDefault(effect.Description);
 		}
 
-		public sealed override bool CanUseItem(Player player)
+		private bool CanUse(Player player)
 		{
 			//If player has the effect already, check on that. If not, check on a fresh one
 			ROREffect effect = ROREffectManager.GetEffectOfType<T>(player);
@@ -47,6 +47,11 @@ namespace RiskOfSlimeRain.Items.Consumable
 			}
 			if (effect.EnforceMaxStack && effect.UnlockedStack >= effect.MaxRecommendedStack) return false;
 			return effect.CanUse(player);
+		}
+
+		public sealed override bool CanUseItem(Player player)
+		{
+			return CanUse(player);
 		}
 
 		public sealed override bool UseItem(Player player)
@@ -70,6 +75,13 @@ namespace RiskOfSlimeRain.Items.Consumable
 					string tooltip = "[c/" + color + ":" + lines[i] + "]";
 					tooltips.Add(new TooltipLine(mod, Name + i.ToString(), tooltip));
 				}
+			}
+			if (!CanUse(Main.LocalPlayer))
+			{
+				tooltips.Add(new TooltipLine(mod, "CanUse", "Max stack is enforced, you cannot stack more of this item!")
+				{
+					overrideColor = Color.Orange
+				});
 			}
 
 			//When wanting to add more tooltips without flavorTextColor, call base.ModifyTooltips(tooltips) first

@@ -53,7 +53,6 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 			Vector2 drawCenter = new Vector2(npc.Center.X, npc.Top.Y + npc.gfxOffY - 20) - Main.screenPosition;
 			Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Tasered");
 			Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
-			destination.Inflate(10, 0);
 			spriteBatch.Draw(texture, destination, Color.White);
 		}
 	}

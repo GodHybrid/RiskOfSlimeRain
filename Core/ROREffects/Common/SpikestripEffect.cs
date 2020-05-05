@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			for (int i = -1; i < count - 1; i++)
 			{
-				Projectile.NewProjectile(player.Center, new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
+				Projectile.NewProjectile(player.Bottom + new Vector2(0, -6), new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
 			}
 		}
 	}
