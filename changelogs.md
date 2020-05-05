@@ -13,15 +13,18 @@
     * Items generate in chests all over the world
     * You are guaranteed one drop from each vanilla boss (with exceptions)
         * If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
+            * Limit: 12 bosses in pre-Hardmode, 16 in Hardmode
     * You can still craft all items
 * Item blacklist!
-    * Specify items in it (only the consumable ror-items work) that will NOT work on all players. Useful for filtering items you deem problematic
+    * Filter out undesired items on server side. Selected items will have no effect on players until deselected again. Useful for filtering items you deem problematic
 * Added more mouseover text for most items
 * Fixed Bustling Fungus and Warbanner spawning in multiplayer when not standing on ground
 * Fixed Hermit's Scarf spamming "dodged"
+* Fixed unintended behavior of some weapons bypassing enemies' invincibility frames, thus proccing effects with very low delay.
 * Increased Barbed Wire and Warbanner default radius slightly
 * Warbanners will now drop down on world reload if the tiles below them don't exist
 * Meat Nugget now only drops 1 nugget instead of 2, but heals double the amount
+* Tweaked easy-to-get recipes for some items
 
 ## 0.3.1.8
 

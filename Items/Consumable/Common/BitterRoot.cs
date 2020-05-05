@@ -13,6 +13,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.HealingPotion, 50);
 			recipe.AddIngredient(ItemID.Blinkroot, 200);
 			recipe.AddIngredient(ItemID.HoneyBlock, 100);
+			recipe.AddIngredient(ItemID.OrangeBloodroot, 2);
 			recipe.SetResult(this, 1);
 			recipe.AddRecipe();
 		}

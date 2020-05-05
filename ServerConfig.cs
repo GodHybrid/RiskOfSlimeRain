@@ -19,8 +19,8 @@ namespace RiskOfSlimeRain
 			"You can only change those settings in the 'Mods' menu accessed from the main menu (not ingame)")]
 
 		[Label("Original Stats")]
-		[Tooltip("If enabled, replicates the item's stats from the original game for the most part. Leave it disabled for the recommended game balance.")]
-		//[ReloadRequired]
+		[Tooltip("If enabled, replicates the item's stats from the original game for the most part. Leave it disabled for the recommended game balance")]
+		[ReloadRequired]
 		[DefaultValue(false)]
 		public bool OriginalStats;
 
@@ -29,8 +29,8 @@ namespace RiskOfSlimeRain
 		public const float SpawnRateMultiplier = 0.02f;
 
 		[Label("Difficulty Scaling")]
-		[Tooltip("If enabled, scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance.")]
-		//[ReloadRequired]
+		[Tooltip("If enabled, scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance")]
+		[ReloadRequired]
 		[DefaultValue(true)]
 		public bool DifficultyScaling;
 
@@ -54,8 +54,13 @@ namespace RiskOfSlimeRain
 			}
 
 			for (int i = 0; i < Main.maxPlayers; i++)
-				if (Netplay.Clients[i].State == 10 && i == whoAmI && Netplay.Clients[i].Socket.GetRemoteAddress().IsLocalHost())
+			{
+				RemoteClient client = Netplay.Clients[i];
+				if (client.State == 10 && i == whoAmI && client.Socket.GetRemoteAddress().IsLocalHost())
+				{
 					return true;
+				}
+			}
 			return false;
 		}
 
