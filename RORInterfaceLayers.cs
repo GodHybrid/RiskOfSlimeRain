@@ -252,7 +252,8 @@ namespace RiskOfSlimeRain
 				player.mouseInterface = true;
 				player.showItemIcon = false;
 
-				string text = $"This UI shows all your currently used items from '{RiskOfSlimeRainMod.Instance.DisplayName}'";
+				string modName = RiskOfSlimeRainMod.Instance.DisplayName;
+				string text = $"This UI shows all your currently used items from '{modName}'";
 
 				if (mPlayer.nullifierActive)
 				{
@@ -274,15 +275,15 @@ namespace RiskOfSlimeRain
 					}
 					text += "\nMisc Info:";
 					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
-					text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _);
+					//text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _); //Iffy when progression is blocked
 					int chestCount = ChestManager.totalChests;
 					if (chestCount > 0)
 					{
-						text += "\nThis world originally generated with " + chestCount + " 'Risk of Slime Rain' items in chests";
+						text += $"\nThis world originally generated with {chestCount} '{modName}' items in chests";
 					}
 					else
 					{
-						text += "\nThis world has no 'Risk of Slime Rain' items generated in chests. Make a new world!";
+						text += $"\nThis world has no '{modName}' items generated in chests. Make a new world!";
 					}
 				}
 

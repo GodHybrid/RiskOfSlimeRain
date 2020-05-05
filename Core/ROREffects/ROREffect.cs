@@ -98,11 +98,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public virtual float Chance => 1f;
 
-		/// <summary>
-		/// Check this when a proc-type method will be ran. (Has a chance and CanProc attribute on its method)
-		/// </summary>
-		public bool Proccing => Active && (AlwaysProc || Proc(Chance));
-
 		public bool Active
 		{
 			get
@@ -361,6 +356,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// Takes the proc by use time into account
 		/// </summary>
 		public bool Proc(float chance) => Main.rand.NextFloat() < GetProcByUseTime(Player) * chance;
+
+		/// <summary>
+		/// Takes the proc by use time into account, uses Chance
+		/// </summary>
+		public bool Proc() => Proc(Chance);
 
 		private void SetupPlayer(Player player)
 		{

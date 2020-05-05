@@ -337,7 +337,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			return mPlayer.Effects.FirstOrDefault(e => e is T) as T;
+			return mPlayer.Effects.FirstOrDefault(e => e.GetType().Equals(typeof(T))) as T;
 		}
 
 		/// <summary>
@@ -349,12 +349,22 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		}
 
 		/// <summary>
-		/// Compact way to check if an effect can trigger (but slower, only used in Perform()
+		/// Compact way to check if an effect can trigger (but slower, only used in Perform())
 		/// </summary>
 		public static bool CanDoEffect<T>(ROREffect effect) where T : IROREffectInterface
 		{
-			bool can = interfaceCanProc.Contains(typeof(T));
-			return can ? effect.Proccing : effect.Active;
+			if (!effect.Active) return false;
+			if (!effect.AlwaysProc)
+			{
+				RORPlayer mPlayer = effect.Player.GetRORPlayer();
+				if (mPlayer.CanProc())
+				{
+					mPlayer.SetProcTimer();
+					return effect.Proc();
+				}
+				return false;
+			}
+			return true;
 		}
 
 		#region Hooks
@@ -378,7 +388,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing)
+				if (CanDoEffect<IModifyHit>(effect))
 				{
 					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
 				}
@@ -390,7 +400,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
-				if (effect.Proccing)
+				if (CanDoEffect<IModifyHit>(effect))
 				{
 					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 				}
@@ -422,6 +432,34 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
+		{
+			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player);
+			foreach (var effect in effects)
+			{
+				if (effect.Active)
+				{
+					((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
+				}
+			}
+			return multiplier;
+		}
+
+		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		{
+			bool ret = true;
+			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player);
+			foreach (var effect in effects)
+			{
+				if (CanDoEffect<IPreHurt>(effect))
+				{
+					ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+				}
+			}
+			//if atleast one PreHurt returns false, it will return false
+			return ret;
+		}
+
 		public static List<Effect> GetScreenShaders(Player player)
 		{
 			List<Effect> shaders = new List<Effect>();
@@ -441,12 +479,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", ParentLayer, delegate (PlayerDrawInfo drawInfo)
 		{
-			if (drawInfo.shadow != 0f)
-			{
-				return;
-			}
+			if (drawInfo.shadow != 0f) return;
 
 			Player dPlayer = drawInfo.drawPlayer;
+
+			if (dPlayer.dead) return;
 
 			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
 			List<PlayerLayerParams> allParameters = new List<PlayerLayerParams>();
@@ -498,34 +535,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static void DrawPlayerLayers(List<PlayerLayer> layers)
 		{
 			layers.Insert(0, AllInOne);
-		}
-
-		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
-		{
-			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player);
-			foreach (var effect in effects)
-			{
-				if (effect.Active)
-				{
-					((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
-				}
-			}
-			return multiplier;
-		}
-
-		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
-		{
-			bool ret = true;
-			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player);
-			foreach (var effect in effects)
-			{
-				if (effect.Proccing)
-				{
-					ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
-				}
-			}
-			//if atleast one PreHurt returns false, it will return false
-			return ret;
 		}
 		#endregion
 	}

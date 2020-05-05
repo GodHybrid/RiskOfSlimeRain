@@ -118,6 +118,14 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		public int NoCombatTimer => Math.Min(NoHurtTimer, NoOnHitTimer);
 
+		private int ProcTimer { get; set; } = 0;
+
+		private const int ProcTimerMax = 3;
+
+		public void SetProcTimer() => ProcTimer = ProcTimerMax;
+
+		public bool CanProc() => ProcTimer == 0;
+
 		private void UpdateTimers()
 		{
 			if (player.velocity == Vector2.Zero) NoMoveTimer++;
@@ -129,6 +137,8 @@ namespace RiskOfSlimeRain
 			NoHurtTimer++;
 
 			NoOnHitTimer++;
+
+			if (ProcTimer > 0) ProcTimer--;
 		}
 		#endregion
 
