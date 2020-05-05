@@ -14,8 +14,8 @@ The mod also features a config setting where you can selectively pick the amount
 v0.3.2
     + New sprites
     + Balance
-    + Item aquisition rework
-    + Item backlist
+    + Item acquisition rework
+    + Item blacklist
     + Minor tweaks
 v0.3.1.8 + v0.3.1.7
     + Fixed items not spawning in multiplayer

@@ -9,7 +9,7 @@
         * "Difficulty Scaling": If enabled, the game becomes harder the more powerful you are. More infos on the "?" UI
         * You can find all the balance changes [here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/OriginalStatsvsBalancedStats.md#original-stats-vs-balanced-stats)
         * Please give feedback about the new balance on our homepage!
-* Item aquisition rework!
+* Item acquisition rework!
     * Items generate in chests all over the world
     * You are guaranteed one drop from each vanilla boss (with exceptions)
         * If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
