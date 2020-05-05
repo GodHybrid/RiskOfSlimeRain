@@ -11,9 +11,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Increase = 1.2f;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 1.2f : 0.5f; //Band of Regeneration is 1f
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 1.2f : 0.5f; //Band of Regeneration is 1f
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 1.2f : 0.5f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 1.2f : 0.5f;
 
 		public override string Description => $"Increases health regeneration by {Initial} health per second";
 

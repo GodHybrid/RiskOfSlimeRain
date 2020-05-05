@@ -17,9 +17,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		const int timerMax = 5;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 0.15f : 0.1f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.15f : 0.1f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.05f : 0.02f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.05f : 0.02f;
 
 		public override string Name => "Paul's Goat Hoof";
 

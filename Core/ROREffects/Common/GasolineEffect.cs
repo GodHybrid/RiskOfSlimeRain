@@ -13,11 +13,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		const int npcKilledLimitBeforeSpawning = 5;
 
-		private int Dutation => ServerConfig.Instance.RorStats ? 240 : 120;
+		private int Dutation => ServerConfig.Instance.OriginalStats ? 240 : 120;
 
 		public override float Initial => 0.6f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.4f : 0.2f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.4f : 0.2f;
 
 		public override string Description => $"Killing enemies burns the ground to deal {Initial.ToPercent()} damage and set enemies on fire";
 

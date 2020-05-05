@@ -14,7 +14,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//const float Increase = 0.005f;
 		const int fireworkCount = 5;
 
-		private float DamageIncrease => ServerConfig.Instance.RorStats ? 9f : 7f;
+		private float DamageIncrease => ServerConfig.Instance.OriginalStats ? 9f : 7f;
 
 		public override float Initial => 0.01f;
 

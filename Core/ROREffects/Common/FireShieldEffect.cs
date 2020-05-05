@@ -12,9 +12,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		const float dmg = 2f;
 
-		private float KB => ServerConfig.Instance.RorStats ? 20 : 10;
+		private float KB => ServerConfig.Instance.OriginalStats ? 20 : 10;
 
-		private float HPlimit => ServerConfig.Instance.RorStats ? 0.1f : 0.2f;
+		private float HPlimit => ServerConfig.Instance.OriginalStats ? 0.1f : 0.2f;
 
 		public override string Description => $"After being hit for {HPlimit.ToPercent()} of your max health - explode, dealing {dmg.ToPercent()} damage";
 

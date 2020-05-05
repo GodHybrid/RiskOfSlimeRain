@@ -118,12 +118,21 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		public int NoCombatTimer => Math.Min(NoHurtTimer, NoOnHitTimer);
 
+		/// <summary>
+		/// Used to prevent alot of rapid procs on things that are chance based
+		/// </summary>
 		private int ProcTimer { get; set; } = 0;
 
 		private const int ProcTimerMax = 3;
 
+		/// <summary>
+		/// Sets ProcTimer to ProcTimerMax
+		/// </summary>
 		public void SetProcTimer() => ProcTimer = ProcTimerMax;
 
+		/// <summary>
+		/// Checks if ProcTimer is 0
+		/// </summary>
 		public bool CanProc() => ProcTimer == 0;
 
 		private void UpdateTimers()
@@ -287,6 +296,21 @@ namespace RiskOfSlimeRain
 
 		public bool mouseRight = false;
 
+		public int CountActiveEffects()
+		{
+			return Effects.Sum(e => e.Stack);
+		}
+
+		public float TakenDamageMultiplier()
+		{
+			return 1 + (CountActiveEffects() * ServerConfig.TakenDamageMultiplier);
+		}
+
+		public float SpawnIncreaseMultiplier()
+		{
+			return 1 + (CountActiveEffects() * ServerConfig.SpawnRateMultiplier);
+		}
+
 		public override void ResetEffects()
 		{
 			if (Main.gameMenu)
@@ -409,6 +433,10 @@ namespace RiskOfSlimeRain
 
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
 		{
+			if (ServerConfig.Instance.DifficultyScaling)
+			{
+				damage = (int)(damage * TakenDamageMultiplier());
+			}
 			bool ret = ROREffectManager.PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
 			return ret;
 		}

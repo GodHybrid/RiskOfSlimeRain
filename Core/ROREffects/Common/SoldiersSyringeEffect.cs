@@ -23,13 +23,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public bool increment = true;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 0.1f : 0.05f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.1f : 0.05f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.1f : 0.05f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.1f : 0.05f;
 
 		public override string Name => "Soldier's Syringe";
 
-		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 13 : 20;
+		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 13 : 20;
 
 		public override bool EnforceMaxStack => true;
 

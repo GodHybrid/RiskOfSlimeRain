@@ -71,6 +71,16 @@ namespace RiskOfSlimeRain.NPCs
 			}
 		}
 
+		public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
+		{
+			if (ServerConfig.Instance.DifficultyScaling)
+			{
+				float mult = player.GetRORPlayer().SpawnIncreaseMultiplier();
+				spawnRate = (int)(spawnRate / mult);
+				maxSpawns = (int)(maxSpawns * mult);
+			}
+		}
+
 		public override void NPCLoot(NPC npc)
 		{
 			if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection

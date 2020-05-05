@@ -276,6 +276,11 @@ namespace RiskOfSlimeRain
 					text += "\nMisc Info:";
 					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
 					//text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _); //Iffy when progression is blocked
+					if (ServerConfig.Instance.DifficultyScaling)
+					{
+						text += "\nTaken damage multiplier: " + mPlayer.TakenDamageMultiplier().ToPercent();
+						text += "\nSpawn increase multiplier: " + mPlayer.SpawnIncreaseMultiplier().ToPercent();
+					}
 					int chestCount = ChestManager.totalChests;
 					if (chestCount > 0)
 					{

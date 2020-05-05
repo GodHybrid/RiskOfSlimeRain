@@ -14,11 +14,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Increase = 0.07f;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 0.07f : 0.04f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.07f : 0.04f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.07f : 0.04f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.07f : 0.04f;
 
-		public override int MaxRecommendedStack => ServerConfig.Instance.RorStats ? 14 : 25;
+		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 14 : 25;
 
 		public override string Name => "Lens-Maker's Glasses";
 

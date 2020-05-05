@@ -15,7 +15,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		/// <summary>
 		/// Moment at which the heal happens. The animation continues for 30 more ticks in MaxTimer
 		/// </summary>
-		private int MaxTimerHeal => ServerConfig.Instance.RorStats ? 66 : 150;
+		private int MaxTimerHeal => ServerConfig.Instance.OriginalStats ? 66 : 150;
 
 		private int MaxTimer => (int)(MaxTimerHeal * 1.5f);
 
@@ -23,7 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Initial => 10f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 10f : 5f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 10f : 5f;
 
 		public override string Description => $"Heal for {Initial} health {MaxTimerHeal / 60d} seconds after receiving damage";
 

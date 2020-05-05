@@ -11,11 +11,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Initial = 0.2f;
 		//const float Increase = 0.3f;
-		private float HPlimit => ServerConfig.Instance.RorStats ? 0.8f : 0.85f;
+		private float HPlimit => ServerConfig.Instance.OriginalStats ? 0.8f : 0.85f;
 
 		public override float Initial => 0.5f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.3f : 0.1f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.3f : 0.1f;
 
 		public override string Description => $"Deal {Initial.ToPercent()} more damage to enemies above {HPlimit.ToPercent()} HP";
 

@@ -11,12 +11,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	public class BustlingFungusEffect : RORCommonEffect, IPostUpdateEquips
 	{
-		private int NoMoveTimerMax => ServerConfig.Instance.RorStats ? 120 : 240;
+		private int NoMoveTimerMax => ServerConfig.Instance.OriginalStats ? 120 : 240;
 		//const float Increase = 0.045f;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 0.045f : 0.02f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.045f : 0.02f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 0.045f : 0.02f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.045f : 0.02f;
 
 		public override string Description => $"After {NoMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max HP every second";
 

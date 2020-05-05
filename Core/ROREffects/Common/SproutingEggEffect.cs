@@ -11,11 +11,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	public class SproutingEggEffect : RORCommonEffect, IUpdateLifeRegen
 	{
 		//const float Increase = 2.4f;
-		private int TimerMax => ServerConfig.Instance.RorStats ? 420 : 600;
+		private int TimerMax => ServerConfig.Instance.OriginalStats ? 420 : 600;
 
-		public override float Initial => ServerConfig.Instance.RorStats ? 2.4f : 1.5f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 2.4f : 1.5f;
 
-		public override float Increase => ServerConfig.Instance.RorStats ? 2.4f : 1.5f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 2.4f : 1.5f;
 
 		public override string Description => $"Increases health regeneration by {Initial} health per second when out of combat for {TimerMax / 60} seconds";
 
