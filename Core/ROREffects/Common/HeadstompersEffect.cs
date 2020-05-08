@@ -39,9 +39,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				NPC npc = Main.npc[damageSource.SourceNPCIndex];
 				int dmg = (int)(player.GetDamage() * (Formula() * player.velocity.Y / 16));
 				player.ApplyDamageToNPC(npc, dmg, 2f, 0, false);
-				ItemLoader.OnHitNPC(player.HeldItem, player, npc, dmg, 0f, false);
-				NPCLoader.OnHitByItem(npc, player, player.HeldItem, dmg, 0f, false);
-				PlayerHooks.OnHitNPC(player, player.HeldItem, npc, dmg, 0f, false);
+				Item item = player.HeldItem;
+				if (!item.IsAir)
+				{
+					ItemLoader.OnHitNPC(item, player, npc, dmg, 0f, false);
+					NPCLoader.OnHitByItem(npc, player, item, dmg, 0f, false);
+					PlayerHooks.OnHitNPC(player, item, npc, dmg, 0f, false);
+				}
 				player.immune = true;
 				player.immuneTime = 5;
 				Projectile.NewProjectile(npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, damageSource.SourceNPCIndex);

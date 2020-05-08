@@ -52,9 +52,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				{
 					int damage = (int)(Formula() * player.GetDamage());
 					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
-					ItemLoader.OnHitNPC(player.HeldItem, player, npc, damage, 0f, false);
-					NPCLoader.OnHitByItem(npc, player, player.HeldItem, damage, 0f, false);
-					PlayerHooks.OnHitNPC(player, player.HeldItem, npc, damage, 0f, false);
+					Item item = player.HeldItem;
+					if (!item.IsAir)
+					{
+						ItemLoader.OnHitNPC(item, player, npc, damage, 0f, false);
+						NPCLoader.OnHitByItem(npc, player, item, damage, 0f, false);
+						PlayerHooks.OnHitNPC(player, item, npc, damage, 0f, false);
+					}
 				}
 				wireTimer = 0;
 			}
