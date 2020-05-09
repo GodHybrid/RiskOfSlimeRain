@@ -1,6 +1,7 @@
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
@@ -37,6 +38,7 @@ namespace RiskOfSlimeRain
 		public override void PostSetupContent()
 		{
 			NPCHelper.Load();
+			SubworldManager.Load();
 		}
 
 		public override void AddRecipes()
@@ -57,6 +59,7 @@ namespace RiskOfSlimeRain
 			RORInterfaceLayers.Unload();
 			WarbannerManager.Unload();
 			NPCHelper.Unload();
+			SubworldManager.Unload();
 			PlayerHelper.Unload();
 			BossChecklistManager.Unload();
 			NPCLootManager.Unload();
