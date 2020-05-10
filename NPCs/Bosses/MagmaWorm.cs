@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.behindTiles = true;
 			npc.knockBackResist = 0f;
 			npc.value = 10000f;
-			npc.scale = 1.5f;
+			npc.scale = 1.4f;
 			npc.buffImmune[BuffID.Poisoned] = true;
 			npc.buffImmune[BuffID.OnFire] = true;
 			npc.buffImmune[BuffID.CursedInferno] = true;
@@ -113,6 +113,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public NPC Parent => Main.npc[ParentWhoAmI];
 
+		public NPC Head => Main.npc[npc.realLife];
+
 		public Player Target => Main.player[npc.target];
 
 		/// <summary>
@@ -127,7 +129,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					AttachedHealthWhoAmI = npc.whoAmI;
 					npc.realLife = npc.whoAmI;
 					int parentWhoAmI = npc.whoAmI;
-					int maxSegments = 16;
+					int maxSegments = 20;
 					float nextScaleStep = (npc.scale / maxSegments) * 0.60f; // Last segment will have 40% the starting scale
 					float nextScale = npc.scale - nextScaleStep;
 
@@ -438,7 +440,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 						case MWState.SlowingDown:
 							//if (Me.npc.velocity.LengthSquared() < 4f)
 							// TODO other condition here, make it similar to emerge but other way around
-							//if (Me.npc.velocity.Y > 0)d
+							//if (Me.npc.velocity.Y > 0)
 							if (Me.AITimer > 24 || Me.npc.velocity.LengthSquared() <= 14f * 14f)
 							{
 								Reset();
