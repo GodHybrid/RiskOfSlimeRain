@@ -95,9 +95,12 @@ namespace RiskOfSlimeRain
 					Vector2 location = head.Location;
 					if (location == Vector2.Zero) continue;
 					Vector2 drawCenter = location - Main.screenPosition;
-					Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Slowdown");
+					Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/MagmaWormWarning");
 					Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
-					destination.Inflate(10, 10);
+
+					int offsetY = (int)(Main.GameUpdateCount / 20) % 2;
+					destination.Y += offsetY * 4 - 6;
+
 					Main.spriteBatch.Draw(texture, destination, Color.White);
 				}
 			}
