@@ -100,7 +100,7 @@ namespace RiskOfSlimeRain
 					Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/MagmaWormWarning");
 					Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
 
-					int offsetY = (int)(Main.GameUpdateCount / 20) % 2;
+					int offsetY = (int)(Main.GameUpdateCount / 8) % 2;
 					destination.Y += offsetY * 4 - 6;
 
 					Main.spriteBatch.Draw(texture, destination, Color.White);

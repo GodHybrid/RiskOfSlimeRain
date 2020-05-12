@@ -19,7 +19,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 	public abstract class MagmaWorm : ModNPC
 	{
 		public const int defaultSize = 44;
-		public const int positionOffset = 36;
+		public const int positionOffset = 33;
 
 		public virtual bool IsHead => this is MagmaWormHead;
 
