@@ -59,6 +59,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (NPCHelper.IsBossPiece(n)) return;
 				if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) return;
+				if (NPCHelper.IsWormBodyOrTail(n)) return;
 				NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60);
 			});
 		}

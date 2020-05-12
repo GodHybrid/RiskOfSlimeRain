@@ -1,4 +1,5 @@
 ﻿using log4net;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -219,6 +220,105 @@ namespace RiskOfSlimeRain.Helpers
 			Array.Sort(isBuffImmune);
 
 			badModNPCs = badModNPCsList.ToArray();
+		}
+
+		/// <summary>
+		/// Copied from npc.Transform but with scaleOverride, and optional ai[] copy
+		/// </summary>
+		public static void Transform(NPC npc, int newType, float scaleOverride = -1f, bool maxHealth = false, bool syncAI = false)
+		{
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				if (npc.townNPC)
+				{
+					npc.Transform(newType);
+					return;
+				}
+
+				bool noValue = false;
+				if (npc.value == 0f)
+				{
+					noValue = true;
+				}
+
+				int[] buffTypes = new int[NPC.maxBuffs];
+				int[] buffTimes = new int[NPC.maxBuffs];
+				for (int i = 0; i < NPC.maxBuffs; i++)
+				{
+					buffTypes[i] = npc.buffType[i];
+					buffTimes[i] = npc.buffTime[i];
+				}
+
+				float[] ai = new float[NPC.maxAI];
+				for (int i = 0; i < NPC.maxAI; i++)
+				{
+					ai[i] = npc.ai[i];
+				}
+
+				int oldType = npc.type;
+				int life = npc.life;
+				int lifeMax = npc.lifeMax;
+				Vector2 velocity = npc.velocity;
+				npc.position.Y += npc.height;
+				int spriteDir = npc.spriteDirection;
+				bool spawnedFromStatue = npc.SpawnedFromStatue;
+
+				npc.SetDefaults(newType, scaleOverride);
+
+				npc.SpawnedFromStatue = spawnedFromStatue;
+				npc.spriteDirection = spriteDir;
+				npc.TargetClosest(true);
+				npc.velocity = velocity;
+				npc.position.Y -= npc.height;
+				if (noValue)
+				{
+					npc.value = 0f;
+				}
+				if (npc.lifeMax == lifeMax || maxHealth)
+				{
+					npc.life = npc.lifeMax;
+				}
+				if (newType == 107 || newType == 108)
+				{
+					npc.homeTileX = (int)(npc.position.X + (npc.width / 2)) / 16;
+					npc.homeTileY = (int)(npc.position.Y + npc.height) / 16;
+					npc.homeless = true;
+				}
+
+				for (int i = 0; i < NPC.maxBuffs; i++)
+				{
+					npc.buffType[i] = buffTypes[i];
+					npc.buffTime[i] = buffTimes[i];
+				}
+
+				if (syncAI)
+				{
+					for (int i = 0; i < NPC.maxAI; i++)
+					{
+						npc.ai[i] = ai[i];
+					}
+				}
+
+				if (Main.netMode == NetmodeID.Server)
+				{
+					npc.netUpdate = true;
+					NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
+					NetMessage.SendData(MessageID.SendNPCBuffs, number: npc.whoAmI);
+				}
+				npc.TransformVisuals(oldType, newType);
+
+				//Commented out because this won't be used for town NPCs
+				//if (NPC.TypeToHeadIndex(npc.type) != -1)
+				//{
+				//	Main.npc[npc.whoAmI].GivenName = NPC.getNewNPCName(npc.type);
+				//}
+				//npc.npcNameLookup = 0;
+				//if (npc.townNPC)
+				//{
+				//	npc.homeless = true;
+				//}
+				//npc.altTexture = 0;
+			}
 		}
 
 		/// <summary>

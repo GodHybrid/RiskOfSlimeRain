@@ -7,6 +7,7 @@ using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Effects;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
+using RiskOfSlimeRain.NPCs.Bosses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -548,6 +549,11 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Init(this);
 
 			nullifierEnabled = false;
+		}
+
+		public override void ModifyScreenPosition()
+		{
+			MagmaWorm.UpdateScreenShake();
 		}
 
 		public override void PreUpdate()
