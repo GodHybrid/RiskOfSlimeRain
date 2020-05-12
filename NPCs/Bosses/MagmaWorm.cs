@@ -15,7 +15,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 {
 	//TODO MagmaWorm
 	// Energized version
-	// Summon item, boss item
+	// Summon item (that spawns worm below), boss item
 	public abstract class MagmaWorm : ModNPC
 	{
 		public const int defaultSize = 44;
@@ -37,23 +37,24 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public sealed override void SetDefaults()
 		{
-			npc.noTileCollide = true;
 			npc.Size = new Vector2(defaultSize);
-			npc.aiStyle = -1; //6
+			npc.aiStyle = -1;
 			npc.netAlways = true;
-			npc.damage = 80;
+			npc.damage = 56;
 			npc.defense = 10;
 			npc.lifeMax = 4000;
 			npc.HitSound = SoundID.NPCHit7;
 			npc.DeathSound = SoundID.NPCDeath8;
 			npc.noGravity = true;
+			npc.noTileCollide = true;
 			npc.behindTiles = true;
 			npc.knockBackResist = 0f;
-			npc.value = 10000f;
+			npc.value = Item.sellPrice(gold: 1);
 			npc.scale = 1.4f;
 			npc.buffImmune[BuffID.Poisoned] = true;
 			npc.buffImmune[BuffID.OnFire] = true;
 			npc.buffImmune[BuffID.CursedInferno] = true;
+			npc.buffImmune[BuffID.Frostburn] = true;
 			npc.boss = true;
 
 			if (IsHead)
@@ -655,8 +656,21 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				int amount = Math.Min((int)(2f * npc.lifeMax / npc.life), 10);
+
+				if (Main.expertMode)
+				{
+					amount += 2;
+				}
+
 				float degrees = 5f;
-				Vector2 direction = -Vector2.UnitY.RotatedBy(-MathHelper.ToRadians(- degrees / 2 + degrees * amount / 2));
+				Vector2 direction = -Vector2.UnitY;
+
+				float distanceX = Target.Center.X + Target.velocity.X - npc.Center.X;
+				int sign = (distanceX > 0).ToDirectionInt();
+				float tilt = 20 * Math.Min(1f, Math.Abs(distanceX) / 600);
+
+				direction = direction.RotatedBy(MathHelper.ToRadians(sign * tilt));
+				direction = direction.RotatedBy(-MathHelper.ToRadians(- degrees / 2 + degrees * amount / 2));
 				int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 4));
 				for (int i = 0; i < amount; i++)
 				{
