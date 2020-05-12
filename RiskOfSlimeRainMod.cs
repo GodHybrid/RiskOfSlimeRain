@@ -33,6 +33,7 @@ namespace RiskOfSlimeRain
 			ShaderManager.Load();
 			RORInterfaceLayers.Load();
 			SpawnedFromStatuePacket.Load();
+			SubworldGlobalTile.Load();
 		}
 
 		public override void PostSetupContent()
