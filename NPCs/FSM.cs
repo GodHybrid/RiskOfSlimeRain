@@ -72,11 +72,11 @@ namespace RiskOfSlimeRain.NPCs
 			{
 				nextState = Transitions[transition];
 			}
-			else
-			{
-				//TODO Debug, remove in release
-				GeneralHelper.Print("Invalid transition from " + CurrentState + " via " + transition.Command);
-			}
+			//else
+			//{
+			//	Debug, remove in release
+			//	GeneralHelper.Print("Invalid transition from " + CurrentState + " via " + transition.Command);
+			//}
 			return nextState;
 		}
 

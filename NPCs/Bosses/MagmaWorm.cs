@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using RiskOfSlimeRain.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -30,8 +31,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override void SetStaticDefaults()
 		{
-			//TODO restore before update
-			//DisplayName.SetDefault("Magma Worm");
+			DisplayName.SetDefault("Magma Worm");
 			Main.npcFrameCount[npc.type] = 3;
 		}
 
@@ -436,6 +436,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 								Reset();
 								//Main.NewText(Me.npc.velocity);
 								MoveNext(MWCommand.Slowdown);
+								Me.SpawnFireBalls();
 							}
 							break;
 						case MWState.SlowingDown:
@@ -649,6 +650,22 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			SpawnedFires.Clear();
 		}
 
+		public void SpawnFireBalls()
+		{
+			if (Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				int amount = Math.Min((int)(2f * npc.lifeMax / npc.life), 10);
+				float degrees = 5f;
+				Vector2 direction = -Vector2.UnitY.RotatedBy(-MathHelper.ToRadians(- degrees / 2 + degrees * amount / 2));
+				int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 4));
+				for (int i = 0; i < amount; i++)
+				{
+					Projectile.NewProjectile(npc.Top, direction * 10f, ModContent.ProjectileType<FireballGravityBouncy>(), damage, 0f, Main.myPlayer);
+					direction = direction.RotatedBy(MathHelper.ToRadians(degrees));
+				}
+			}
+		}
+
 		private void BodyAI()
 		{
 			Vector2 pCenter = Parent.Center;
@@ -826,7 +843,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				npc.dontTakeDamage = true;
 				//npc.netUpdate = true;
 				npc.NPCLoot();
-				Main.PlaySound(SoundID.Roar, (int)npc.position.X, (int)npc.position.Y, 0, 1f, -0.2f);
+				Main.PlaySound(SoundID.Roar, (int)npc.position.X, (int)npc.position.Y, 0, 1f, -0.18f);
 				SpawnDead();
 
 				return false;
@@ -847,7 +864,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				int newType = worm.IsHead ? newHead : (worm.IsTail ? newTail : newBody);
 				NPCHelper.Transform(n, newType, worm.Scale, true, true);
 			}
-			List<MagmaWorm> worms = allNPCs.ConvertAll(n => n.modNPC as MagmaWorm);
 		}
 
 		/// <summary>
