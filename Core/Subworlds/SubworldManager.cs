@@ -83,6 +83,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public static void Unload()
 		{
 			subworldLibrary = null;
+			PaintCache = null;
 			FirstLevelBasic.Unload();
 		}
 

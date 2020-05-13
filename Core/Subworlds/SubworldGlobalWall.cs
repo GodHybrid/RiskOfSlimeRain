@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
+﻿using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
@@ -11,17 +8,6 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		{
 			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return false;
 			return base.CanExplode(i, j, type);
-		}
-
-		public override void KillWall(int i, int j, int type, ref bool fail)
-		{
-			if (Main.netMode != NetmodeID.Server && Main.LocalPlayer.controlUseItem)
-			{
-				if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false)
-				{
-					fail = true;
-				}
-			}
 		}
 	}
 }
