@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Network;
 using RiskOfSlimeRain.NPCs;
 using System.Collections.Generic;
@@ -42,9 +43,13 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public const int BossCountPreHM = 6;
 		public const int BossCountHM = 8;
 
+		/// <summary>
+		/// Drops a ror item based on boss progression
+		/// </summary>
 		public static void DropItem(NPC npc)
 		{
 			if (!npc.boss) return;
+			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return;
 
 			bool isPreHM = IsPreHardmode(npc);
 			bool progressionAllowed = CheckProgression(isPreHM);
