@@ -55,9 +55,11 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				new PassLegacy(nameof(PlaceTerrain), PlaceTerrain, 1f),
 				new PassLegacy(nameof(CoverTerrainWithTop), CoverTerrainWithTop, 1f),
 
-				new PassLegacy(nameof(BuildPlatforms), BuildPlatforms, 1f),
+				new PassLegacy(nameof(BuildMetalPlatforms), BuildMetalPlatforms, 1f),
+				new PassLegacy(nameof(BuildWoodenPlatforms), BuildWoodenPlatforms, 1f),
 
 				//Last steps
+				new PassLegacy(nameof(BuildLadders), BuildLadders, 1f),
 				new PassLegacy(nameof(RemoveWalls), RemoveWalls, 1f),
 			};
 			return list;
@@ -175,8 +177,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static int TerrainType => TileID.GrayStucco;
+		public static int TerrainType = TileID.GrayStucco;
 		public static int TerrainPaint = ItemID.BlackPaint;
+
+		public static int TerrainWallType = WallID.Gray;
+		public static int TerrainWallPaint = ItemID.BlackPaint;
+
 		private static int _TopType = -2;
 		public static int TopType
 		{
@@ -190,6 +196,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 		public static int TopPaint = ItemID.YellowPaint;
+		public static int TopWallType = WallID.YellowStucco;
+		public static int TopWallPaint = -1;
+
+		public static int PlatformBeamWallType = WallID.WoodenFence;
 
 		private const int spawnbaseHeight = 14;
 		private const int groundDepth = 56;
@@ -199,6 +209,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public const int centerY = groundLevel - spawnbaseHeight;
 
 		public const int rightPlatformWidth = 54;
+		public const int leftWallWidth = 42 + 20;
 		public const int rightWallWidth = 100;
 		public const int rightPlatformHeight = 140;
 		public const int baseTHeight = 30;
@@ -217,13 +228,20 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public const int sideTWidth = 26;
 		public static int topLeftTBaseX = centerX - baseTWidth / 2;
 		public static int topLeftTSideX = topLeftTBaseX - sideTWidth;
-		public static int topLeftTSideWidth = 2 * sideTWidth + baseTWidth;
+		public static int TSideWidth = 2 * sideTWidth + baseTWidth;
 
 		public static void PlaceTerrain(GenerationProgress progress)
 		{
 			progress.Message = "Place Terrain";
+			progress.Value = 0f;
 			//Floor
 			BuildRectangle(0, groundLevel, width, groundLevel, TerrainType, TerrainPaint);
+
+			//Left wall
+			BuildRectangle(0, topBorder, leftWallWidth, height - topBorder, TerrainType, TerrainPaint);
+
+			//Uneven-ness of left wall
+			BuildRectangle(leftWallWidth - 4, topLeftTBaseY, 4, 16);
 
 			//Right wall
 			BuildRectangle(rightWallX, rightPlatformY, rightWallWidth, rightPlatformHeight, TerrainType, TerrainPaint);
@@ -234,6 +252,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			//Platform extending ouf of the wall
 			BuildRectangle(rightPlatformX, rightPlatformY, rightWallWidth + rightPlatformWidth, 6, TerrainType, TerrainPaint);
 
+			//Rectangle on the right side of the platform
+			BuildRectangle(rightWallX + 2, rightPlatformY - 12, rightWallWidth - 2, 12, TerrainType, TerrainPaint);
+
 			//Uneven-ness of right wall
 			BuildRectangle(rightWallX - 4, rightPlatformY + 6, 4, 6, TerrainType, TerrainPaint);
 			BuildRectangle(rightWallX, rightPlatformY + 30, 2, 28);
@@ -241,10 +262,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 			//T-shape for spawn
 			BuildRectangle(topLeftTBaseX, topLeftTBaseY, baseTWidth, baseTHeight, TerrainType, TerrainPaint);
-			BuildRectangle(topLeftTSideX, topLeftTBaseY, topLeftTSideWidth, topLeftTSideHeight, TerrainType, TerrainPaint);
+			BuildRectangle(topLeftTSideX, topLeftTBaseY, TSideWidth, topLeftTSideHeight, TerrainType, TerrainPaint);
 
 			//Area the spawn is on
-			BuildRectangle(topLeftTSideX + 1, centerY, topLeftTSideWidth - 2, spawnbaseHeight, TerrainType, TerrainPaint);
+			BuildRectangle(topLeftTSideX + 1, centerY, TSideWidth - 2, spawnbaseHeight, TerrainType, TerrainPaint);
 
 			//Clear spawn
 			BuildRectangle(topLeftTBaseX, centerY - 6, baseTWidth, 6);
@@ -372,9 +393,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.spawnTileY = centerY - 2; //Because sand is 2 tiles thick
 		}
 
-		public static void BuildPlatforms(GenerationProgress progress)
+		public static void BuildMetalPlatforms(GenerationProgress progress)
 		{
-			progress.Message = "Build Platforms";
+			progress.Message = "Build Metal Platforms";
+			progress.Value = 0f;
 
 			int x = topLeftTSideX + 20;
 			int y = rightMiddleMetalPlatformY;
@@ -386,6 +408,204 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			y = rightPlatformY - 2;
 			x = PlaceMetalPlatform(x, y, 10, placeRope: true);
 			PlaceMetalPlatform(x, y, 10, placePillar: true, placeWalls: false);
+		}
+
+		public static int PlatformTopType = TileID.WoodBlock;
+		public static int PlatformType = TileID.LivingWood;
+		public static int PlatformPaint = -1/*ItemID.YellowPaint*/;
+
+		public static int LowPlatformY = centerY - 4;
+		public static int MiddlePlatformY = topLeftTBaseY + topLeftTSideHeight + 2;
+		public static int HighPlatformX = leftWallWidth + 12;
+		public static int HighPlatformY = rightMiddleMetalPlatformY;
+
+		public static void BuildWoodenPlatforms(GenerationProgress progress)
+		{
+			progress.Message = "Build Wooden Platforms";
+			progress.Value = 0f;
+
+			int highPlatformLength = 38;
+
+			//Right side
+			//The one in the right hole
+
+			int x = topLeftTSideX + TSideWidth - 2;
+			int y = centerY - 2;
+			int length = width - rightWallWidth - x;
+			x = PlaceWoodenPlatform(x, y, 4);
+			PlaceRope(x, y);
+			PlaceWoodenPlatform(x + 2, y, length - 6);
+
+			////
+			//Left side
+			////
+
+			//Low left platform
+			x = leftWallWidth;
+			y = LowPlatformY;
+			PlaceWoodenPlatform(x, y, 50);
+			//No rope
+
+			//Low right platforms
+			int platformLength = 8;
+			int gap = 4;
+			int safeDistanceFromLeftTSide = gap + 3;
+			x = topLeftTSideX - 2 * platformLength - safeDistanceFromLeftTSide;
+			x = PlaceWoodenPlatform(x, y, platformLength, 0f, 0f);
+			PlaceWoodenPlatform(x + gap, y, platformLength);
+			//No ropes
+
+			//Middle left platform
+			x = leftWallWidth - 4; //because of the dent
+			y = MiddlePlatformY;
+			int leftMiddleRopeX = PlaceWoodenPlatform(x, y, 24);
+
+			//Middle right platforms
+			x = leftMiddleRopeX + highPlatformLength / 2;
+			int middleMiddleRopeX = x - 1;
+			//this one is made up of 3 
+			int middleLength = 24;
+			x = PlaceWoodenPlatform(x, y, middleLength / 3, 0.1f, 1f);
+			x = PlaceWoodenPlatform(x, y, middleLength / 3, 0f, 0f);
+			x = PlaceWoodenPlatform(x, y, middleLength / 3, 0.1f, 1f);
+			//
+			x = PlaceWoodenPlatform(x + gap, y, 8, 0f, 0f);
+			int rightBound = topLeftTSideX - safeDistanceFromLeftTSide;
+			int lastLength = rightBound - x;
+			x += gap;
+			int rightMiddleRopeX = x - 1;
+			PlaceWoodenPlatform(x, y, lastLength);
+
+			//High platform
+			x = HighPlatformX;
+			y = HighPlatformY;
+			platformLength = highPlatformLength;
+			int guaranteedBeamSection = 6;
+			int leftHighRopeX = x - 1;
+			x = PlaceWoodenPlatform(x, y, platformLength / 2, 0.1f, 1f);
+			x = PlaceWoodenPlatform(x, y, guaranteedBeamSection, 0f, 0f);
+			int rightHighRopeX = PlaceWoodenPlatform(x, y, platformLength / 2 - guaranteedBeamSection, 0.1f, 1f);
+
+			//Place ropes where necessary
+			PlaceRope(leftMiddleRopeX, MiddlePlatformY);
+			PlaceRope(middleMiddleRopeX, MiddlePlatformY);
+			PlaceRope(rightMiddleRopeX, MiddlePlatformY);
+			PlaceRope(leftHighRopeX, HighPlatformY);
+			PlaceRope(rightHighRopeX, HighPlatformY);
+
+			//x = PlaceWoodenPlatform(x + 4, y + 10, 7);
+			//PlaceWoodenPlatform(x + 4, y + 20, 16);
+		}
+
+		public static int PlaceWoodenPlatform(in int startX, in int startY, int length, float topCut = -1f, float bottomCut = -1f)
+		{
+			for (int x = 0; x < length; x++)
+			{
+				for (int y = 0; y < 2; y++)
+				{
+					int i = startX + x;
+					int j = startY + y;
+					if (!WorldGen.InWorld(i, j)) continue;
+
+					//0: Wood
+					//1: Living wood
+					if (y == 0)
+					{
+						bool placed = WorldGen.PlaceTile(i, j, PlatformTopType);
+						if (placed && PlatformPaint > -1)
+						{
+							WorldGen.paintTile(i, j, SubworldManager.PaintCache[PlatformPaint]);
+						}
+					}
+					else
+					{
+						bool placed = WorldGen.PlaceTile(i, j, PlatformType);
+						if (placed && PlatformPaint > -1)
+						{
+							WorldGen.paintTile(i, j, SubworldManager.PaintCache[PlatformPaint]);
+						}
+					}
+				}
+			}
+
+			//Beams
+			for (int x = 0; x < length; x++)
+			{
+				int i = startX + x;
+
+				if (i % 5 != 0) continue;
+
+				int j = startY + 1;
+
+				if (!WorldGen.InWorld(i, j)) continue;
+				Tile left = Main.tile[i - 1, j];
+				if (!left.active()) continue;
+				Tile center = Main.tile[i, j];
+				if (!center.active()) continue;
+				Tile right = Main.tile[i + 1, j];
+				if (!right.active()) continue;
+
+				PlaceBeam(i, j, PlatformBeamWallType, -1, topCut, bottomCut);
+			}
+
+			return startX + length;
+		}
+
+		public static void PlaceBeam(in int startX, in int startY, int type, int paint = -1, float topCut = -1f, float bottomCut = -1f)
+		{
+			int beamX = 0;
+			int beamY = 0;
+			int i = startX + beamX;
+			int j = startY + beamY;
+			if (!WorldGen.InWorld(i, j))
+			{
+				throw new ArgumentOutOfRangeException("starting arguments are out of range");
+			}
+			Tile tile = Main.tile[i, j];
+			bool firstWall = true;
+			while (startY + beamY < height && (firstWall || !tile.active()))
+			{
+				firstWall = false;
+				if (!WorldGen.InWorld(i, j)) continue;
+
+				WorldGen.KillWall(i, j);
+				WorldGen.PlaceWall(i, j, type, true);
+				if (paint > -1)
+				{
+					WorldGen.paintWall(i, j, SubworldManager.PaintCache[paint]);
+				}
+
+				beamY++;
+				j = startY + beamY;
+				tile = Main.tile[i, j];
+			}
+
+			if (topCut <= 0f)
+			{
+				topCut = WorldGen.genRand.NextFloat(0f, 0.8f);
+			}
+			if (bottomCut < 0f)
+			{
+				bottomCut = WorldGen.genRand.NextFloat(0.3f, 1f);
+			}
+
+			if (bottomCut <= topCut) return; //No cut
+
+			beamY--;
+			int length = beamY;
+			int topCutY = Math.Max(1, (int)(length * topCut));
+			int bottomCutY = Math.Max(1, (int)(length * bottomCut));
+
+			for (int y = topCutY; y <= bottomCutY; y++)
+			{
+				j = startY + y;
+				if (!WorldGen.InWorld(i, j)) continue;
+				tile = Main.tile[i, j];
+				if (tile.wall == type)
+				{
+					WorldGen.KillWall(i, j);
+				}
+			}
 		}
 
 		public static int PlaceMetalPlatform(in int startX, in int startY, int length, bool actuate = true, bool placeWalls = true, bool placePillar = false, bool placeRope = false)
@@ -480,12 +700,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					pillarStartX -= pillarWidth - 1;
 				}
 
+				int pillarStartXTile = startX + pillarStartX;
+				int pillarStartYTile = startY + pillarY;
 
-				int pillarStartY = startY + pillarY;
+				if (!WorldGen.InWorld(pillarStartXTile, pillarStartYTile)) return startX + total;
 
-				if (!WorldGen.InWorld(pillarStartX, pillarStartY)) return startX + total;
-
-				Tile tile = Main.tile[pillarStartX, pillarStartY];
+				Tile tile = Main.tile[pillarStartXTile, pillarStartYTile];
 				while (startY + pillarY < height && !tile.active())
 				{
 					int start = pillarStartX;
@@ -551,13 +771,13 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				{
 					ropeX += actuated;
 				}
-				PlaceRope(ropeX, startY, TileID.Rope, 4);
+				PlaceRope(ropeX, startY);
 			}
 
 			return startX + total;
 		}
 
-		public static void PlaceRope(in int startX, in int startY, int type, int cutOffBottom = 0)
+		public static void PlaceRope(in int startX, in int startY, int type = TileID.Rope, int cutOffBottom = 4)
 		{
 			int ropeX = 0;
 			int ropeY = 0;
@@ -602,6 +822,94 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				if (tile.type == type)
 				{
 					WorldGen.KillTile(i, j);
+				}
+			}
+		}
+
+		public static void BuildLadders(GenerationProgress progress)
+		{
+			progress.Message = "Build Ladders";
+			progress.Value = 0f;
+
+			int x = topLeftTSideX + TSideWidth - 10;
+			int y = topLeftTBaseY - 2;
+			int height = baseTHeight;
+			PlaceLadder(x, y, height, TileID.SilkRope, ItemID.YellowPaint);
+			x = topLeftTSideX + 10 - 2;
+			PlaceLadder(x, y, height, TileID.SilkRope, ItemID.YellowPaint);
+		}
+
+		public static void PlaceLadder(in int startX, in int startY, in int height, int type, int paint = -1)
+		{
+			//Start at the top, break tiles if there are any in the way. Starting tile doesn't get walls behind it
+
+			for (int x = 0; x < 2; x++)
+			{
+				int dirtX = startX + x;
+				int dirtY = startY - 1;
+				bool placedDirt = false;
+
+				//Place a dirt block above the rope so it has something to attach to
+				if (dirtY >= 0)
+				{
+					placedDirt = WorldGen.PlaceTile(dirtX, dirtY, TileID.Dirt);
+				}
+
+				for (int y = 0; y < height; y++)
+				{
+					int i = startX + x;
+					int j = startY + y;
+
+					if (!WorldGen.InWorld(i, j)) continue;
+
+					Tile tile = Main.tile[i, j];
+
+					//Replace tiles with walls on the way
+					int oldType = -1;
+					if (tile.active())
+					{
+						oldType = tile.type;
+						WorldGen.KillTile(i, j);
+					}
+					if (oldType > -1 && y > 0)
+					{
+						if (WorldGen.InWorld(i, j + 1))
+						{
+							Tile below = Main.tile[i, j + 1];
+							if (below.active())
+							{
+								int wallType;
+								int paintType;
+								if (oldType == TopType)
+								{
+									wallType = TopWallType;
+									paintType = TopWallPaint;
+								}
+								else/* if (oldType == TerrainType)*/
+								{
+									wallType = TerrainWallType;
+									paintType = TerrainWallPaint;
+								}
+								WorldGen.KillWall(i, j);
+								WorldGen.PlaceWall(i, j, wallType, true);
+								if (paintType > -1)
+								{
+									WorldGen.paintWall(i, j, SubworldManager.PaintCache[paintType]);
+								}
+							}
+						}
+					}
+
+					WorldGen.PlaceTile(i, j, type, true);
+					if (paint > -1)
+					{
+						WorldGen.paintTile(i, j, SubworldManager.PaintCache[paint]);
+					}
+				}
+
+				if (placedDirt)
+				{
+					WorldGen.KillTile(dirtX, dirtY);
 				}
 			}
 		}

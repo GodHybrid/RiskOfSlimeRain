@@ -30,6 +30,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		{
 			Tile tile = Framing.GetTileSafely(Player.tileTargetX, Player.tileTargetY);
 			P($"T: {tile.type}, Fx: {tile.frameX}, Fy: {tile.frameY}");
+			P($"W: {tile.wall}, Wc: {tile.wallColor()}");
 			P($"S: {tile.slope()}, LT: {tile.liquidType()}, L%: {tile.liquid}");
 			P($"C: {tile.color()}");
 			P($"A: {tile.active()}, IA: {tile.inActive()}, NA: {tile.nactive()}");
