@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
-using RiskOfSlimeRain.Items;
+using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.NPCs.Bosses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
@@ -90,18 +89,19 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 			{
 				Mod mod = RiskOfSlimeRainMod.Instance;
 				string textureName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist";
+				string headName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist_Head";
 				BossChecklist.Call("AddBoss", //Command
 					NPCLootManager.Skeletron + 0.1f, //Progress
 					ModContent.NPCType<MagmaWormHead>(),
 					mod,
 					"Magma Worm",
 					(Func<bool>)(() => RORWorld.downedMagmaWorm),
-					ModContent.ItemType<WarbannerRemover>(),
+					ModContent.ItemType<MagmaWormSummon>(),
 					new List<int>(),
 					ModContent.ItemType<BurningWitness>(), //Loot
 					"summon with this",
 					null,
-					textureName, null, null);
+					textureName, headName, null);
 
 			}
 		}

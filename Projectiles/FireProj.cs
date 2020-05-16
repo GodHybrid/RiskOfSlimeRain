@@ -24,6 +24,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int SpawnLight => (int)projectile.ai[1];
 
+		public virtual bool IgnoreTimeLeft => false;
+
 		public override string Texture => "RiskOfSlimeRain/Empty";
 
 		public override void SetStaticDefaults()
@@ -78,6 +80,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void SetTimeLeft()
 		{
+			if (IgnoreTimeLeft) return;
 			if (!timeLeftSet)
 			{
 				projectile.timeLeft = TimeLeft < 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified

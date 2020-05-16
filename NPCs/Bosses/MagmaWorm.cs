@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.Network;
-using RiskOfSlimeRain.Projectiles;
 using RiskOfSlimeRain.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
@@ -49,7 +48,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.DeathSound = SoundID.NPCDeath8;
 			npc.noGravity = true;
 			npc.noTileCollide = true;
-			npc.behindTiles = true;
+			//TODO remove when making it first level exclusive
+			//npc.behindTiles = true;
 			npc.knockBackResist = 0f;
 			npc.value = Item.sellPrice(gold: 1);
 			npc.scale = 1.4f;
@@ -138,6 +138,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					childMW.AttachedHealthWhoAmI = npc.whoAmI;
 					childMW.ParentWhoAmI = parentWhoAmI;
 					childMW.Scale = nextScale;
+
+					NetMessage.SendData(MessageID.SyncNPC, number: childWhoAmI);
 
 					Scale = npc.scale;
 
@@ -655,7 +657,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public void SpawnFireBalls()
 		{
-			return;
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				int amount = Math.Min((int)(2f * npc.lifeMax / npc.life), 10);
