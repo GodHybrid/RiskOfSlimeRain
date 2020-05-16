@@ -1,3 +1,4 @@
+using RiskOfSlimeRain.Core.ItemSpawning.ModIntegration;
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.NPCEffects;
 using RiskOfSlimeRain.Core.ROREffects;
@@ -39,6 +40,7 @@ namespace RiskOfSlimeRain
 		{
 			NPCHelper.Load();
 			SubworldManager.Load();
+			BossChecklistManager.RegisterBosses();
 		}
 
 		public override void AddRecipes()
@@ -48,7 +50,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostAddRecipes()
 		{
-			BossChecklistManager.Load();
+			BossChecklistManager.LoadBossInfo();
 		}
 
 		public override void Unload()

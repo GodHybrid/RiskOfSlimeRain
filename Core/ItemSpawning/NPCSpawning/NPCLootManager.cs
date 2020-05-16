@@ -1,4 +1,5 @@
-﻿using RiskOfSlimeRain.Core.ROREffects;
+﻿using RiskOfSlimeRain.Core.ItemSpawning.ModIntegration;
+using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Network;
 using RiskOfSlimeRain.NPCs;

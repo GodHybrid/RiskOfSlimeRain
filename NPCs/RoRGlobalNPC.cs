@@ -136,7 +136,7 @@ namespace RiskOfSlimeRain.NPCs
 			}
 			else if (Main.netMode == NetmodeID.SinglePlayer)
 			{
-				if ((npCondition?.Invoke(npc, Main.LocalPlayer) ?? true) == true)
+				if (npCondition?.Invoke(npc, Main.LocalPlayer) ?? true)
 				{
 					int i = Item.NewItem((int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemTypeFunc(), itemStack);
 					Item item = Main.item[i];
