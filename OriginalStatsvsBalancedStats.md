@@ -5,6 +5,7 @@ Only differences listed.
 
 | Item | Original Stats | Balanced Stats |
 |-|-|-|
+| [Common Items](#commonitems)<a name="commonitems"></a>|-|-|
 | [Barbed Wire](#barbedwire)<a name="barbedwire"></a> | no difference | no difference |
 | [Bitter Root](#bitterroot)<a name="bitterroot"></a> | 8% max health, caps at 300% | 5% max health, caps at 100% |
 | [Bundle of Fireworks](#bundleoffireworks)<a name="bundleoffireworks"></a> | 900% damage | 700% damage|
@@ -30,3 +31,5 @@ Only differences listed.
 | [Sticky Bomb](#stickybomb)<a name="stickybomb"></a> | 140% damage, +40% damage/stack | 120% damage, +30% damage/stack |
 | [Taser](#taser)<a name="taser"></a> | no difference | no difference |
 | [Warbanner](#warbanner)<a name="warbanner"></a> | no difference | no difference |
+| [Boss Items](#bossitems)<a name="bossitems"></a> | - | - |
+| [Burning Witness](#burningwitness)<a name="burningwitness"></a> | Initial duration 6s, speed +5%/stack | Initial duration: 3s, speed +2%/stack |

@@ -17,7 +17,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 {
 	//TODO MagmaWorm
 	// Energized version
-	// Summon item (that spawns worm below), boss item
 	public abstract class MagmaWorm : ModNPC
 	{
 		public const int defaultSize = 44;

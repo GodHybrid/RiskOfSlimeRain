@@ -1,5 +1,12 @@
 # Changelogs
 
+## 0.3.3
+
+* Magma Worm!
+    * Recommended to fight in Pre-Hardmode, drops his unique boss item "Burning Witness" on first kill
+    * Summoned via "Spicy Honey Donut"
+* Fixed Barbed Wire and Headstompers softlocking the player when no item was selected
+
 ## 0.3.2
 
 * New sprites!

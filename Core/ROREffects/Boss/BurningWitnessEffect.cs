@@ -12,19 +12,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 {
 	public class BurningWitnessEffect : RORBossEffect, IPostUpdateEquips, IModifyHit, IOnHit, IPostUpdateRunSpeeds
 	{
-		const int initialDuration = 6;
 		const int durationIncrease = 3;
+		int InitialDuration => ServerConfig.Instance.OriginalStats ? 6 : 3;
 
 		int timer = -1;
 
 		//Initial/Increase are for the movement speed boost
-		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.05f : 0.04f;
+		public override float Initial => 0.05f;
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.05f : 0.02f;
 
-		int Duration => initialDuration + durationIncrease * Math.Max(0, Stack - 1);
+		int Duration => InitialDuration + durationIncrease * Math.Max(0, Stack - 1);
 
-		public override string Description => $"Grant +{Initial.ToPercent()} movement speed, +1 damage, and a firetrail on kill for {initialDuration} seconds";
+		public override string Description => $"Grant +{Initial.ToPercent()} movement speed, +1 damage, and a firetrail on kill for {InitialDuration} seconds";
 
 		public override string FlavorText => "The Worm's eye seems to still see... watching... rewarding...";
 
