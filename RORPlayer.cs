@@ -37,6 +37,8 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		public bool drawEffectsCalledOnce = false;
 
+		public bool burningWitnessDropped = false;
+
 		#region Warbanner
 		public bool warbannerRemoverDropped = false;
 
@@ -518,6 +520,7 @@ namespace RiskOfSlimeRain
 				{ "effects", effectCompounds },
 				{ "nullifierEnabled", nullifierEnabled },
 				{ "warbannerRemoverDropped", warbannerRemoverDropped },
+				{ "burningWitnessDropped", burningWitnessDropped },
 			};
 			return tag;
 		}
@@ -540,6 +543,7 @@ namespace RiskOfSlimeRain
 
 			nullifierEnabled = tag.GetBool("nullifierEnabled");
 			warbannerRemoverDropped = tag.GetBool("warbannerRemoverDropped");
+			burningWitnessDropped = tag.GetBool("burningWitnessDropped");
 		}
 
 		public override void Initialize()

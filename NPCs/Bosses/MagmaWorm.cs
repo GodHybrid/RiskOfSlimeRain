@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Items.Consumable.Boss;
+using RiskOfSlimeRain.Network;
 using RiskOfSlimeRain.Projectiles;
 using RiskOfSlimeRain.Projectiles.Hostile;
 using System;
@@ -35,7 +37,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			Main.npcFrameCount[npc.type] = 3;
 		}
 
-		public sealed override void SetDefaults()
+		public override void SetDefaults()
 		{
 			npc.Size = new Vector2(defaultSize);
 			npc.aiStyle = -1;
@@ -653,6 +655,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public void SpawnFireBalls()
 		{
+			return;
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
 				int amount = Math.Min((int)(2f * npc.lifeMax / npc.life), 10);
@@ -803,14 +806,22 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
 		{
-			float yoff = 56f * npc.scale + 4f; // No clue why those magic numbers, 56 seems to be the distance between top pixel and first "body" pixel
-			Texture2D texture = Main.npcTexture[npc.type];
-			Rectangle frame = npc.frame;
-			Vector2 drawOrigin = frame.Size() / 2;
+			if (!IsHead) return false;
 
-			Vector2 drawPos = new Vector2(npc.Center.X - Main.screenPosition.X - frame.Width * npc.scale / 2f + drawOrigin.X * npc.scale, npc.position.Y - Main.screenPosition.Y + npc.height - frame.Height * npc.scale + drawOrigin.Y * npc.scale + yoff);
-			SpriteEffects spriteEffects = npc.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-			spriteBatch.Draw(texture, drawPos, frame, npc.GetAlpha(drawColor), npc.rotation, drawOrigin, npc.scale, spriteEffects, 0f);
+			List<NPC> allNPCs = Main.npc.WhereActive(n => n.realLife == npc.whoAmI && !(n.modNPC is MagmaWormHeadExtension));
+			//allNPCs.Reverse();
+
+			foreach (NPC n in allNPCs)
+			{
+				float yoff = 56f * n.scale + 4f; // No clue why those magic numbers, 56 seems to be the distance between top pixel and first "body" pixel
+				Texture2D texture = Main.npcTexture[n.type];
+				Rectangle frame = n.frame;
+				Vector2 drawOrigin = frame.Size() / 2;
+
+				Vector2 drawPos = new Vector2(n.Center.X - Main.screenPosition.X - frame.Width * n.scale / 2f + drawOrigin.X * n.scale, n.position.Y - Main.screenPosition.Y + n.height - frame.Height * n.scale + drawOrigin.Y * n.scale + yoff);
+				SpriteEffects spriteEffects = n.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+				spriteBatch.Draw(texture, drawPos, frame, n.GetAlpha(drawColor), n.rotation, drawOrigin, n.scale, spriteEffects, 0f);
+			}
 
 			return false;
 		}
@@ -842,9 +853,35 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override void NPCLoot()
 		{
-			//NPCLoot is only called on the head anyway: if (npc.realLife >= 0 && npc.realLife != npc.whoAmI)
-			//TODO change loot before release
-			RORGlobalNPC.DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ItemID.Meowmere);
+			//TODO redo this so it doesnt spawn items in terrain, but like destroyer does
+			if (Main.netMode != NetmodeID.Server && Main.gameMenu && npc.Center == new Vector2(1000))
+			{
+				Item.NewItem(npc.Hitbox, ModContent.ItemType<BurningWitness>());
+			}
+			else
+			{
+				//NPCLoot is only called on the head anyway: if (npc.realLife >= 0 && npc.realLife != npc.whoAmI)
+				RORGlobalNPC.DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<BurningWitness>(),
+					npCondition: delegate (NPC n, Player player)
+					{
+						return !player.GetRORPlayer().burningWitnessDropped;
+					},
+					onDropped: delegate (Player player, Item item)
+					{
+						player.GetRORPlayer().burningWitnessDropped = true;
+						new BurningWitnessDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
+					}
+				);
+
+				if (!RORWorld.downedMagmaWorm)
+				{
+					RORWorld.downedMagmaWorm = true;
+					if (Main.netMode == NetmodeID.Server)
+					{
+						new DownedMagmaWormPacket().Send();
+					}
+				}
+			}
 		}
 
 		public override bool CheckDead()

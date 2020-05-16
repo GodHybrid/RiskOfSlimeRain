@@ -42,6 +42,7 @@ namespace RiskOfSlimeRain.Network.Effects
 			BitsByte flags = new BitsByte();
 			flags[0] = ModPlayer.nullifierEnabled;
 			flags[1] = ModPlayer.warbannerRemoverDropped;
+			flags[2] = ModPlayer.burningWitnessDropped;
 			modPacket.Write((byte)flags);
 
 			return base.PreSend(modPacket, fromWho, toWho);
@@ -59,6 +60,7 @@ namespace RiskOfSlimeRain.Network.Effects
 			BitsByte flags = reader.ReadByte();
 			ModPlayer.nullifierEnabled = flags[0];
 			ModPlayer.warbannerRemoverDropped = flags[1];
+			ModPlayer.burningWitnessDropped = flags[2];
 
 			//GeneralHelper.Print(GetType().Name + " " + (DateTime.Now.Ticks % 1000) + " receiving " + Player.name + " " + Count + " effects");
 			ROREffectManager.Populate(ModPlayer);

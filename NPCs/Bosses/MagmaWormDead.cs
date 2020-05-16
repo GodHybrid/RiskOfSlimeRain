@@ -15,6 +15,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public int DisappearTimer = 0;
 
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
+			npc.value = 0;
+			npc.boss = false;
+		}
+
 		public override void HeadAI()
 		{
 			DisappearTimer++;

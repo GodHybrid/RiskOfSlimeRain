@@ -5,16 +5,19 @@ using RiskOfSlimeRain.Network.NPCs;
 using System.IO;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
+using Terraria;
 
 namespace RiskOfSlimeRain
 {
 	public class RORWorld : ModWorld
 	{
 		//public static bool rorMode;
+		public static bool downedMagmaWorm = false;
 
 		public override void Initialize()
 		{
 			//rorMode = false;
+			downedMagmaWorm = false;
 			WarbannerManager.Init();
 			ChestManager.Init();
 			NPCLootManager.Init();
@@ -22,9 +25,9 @@ namespace RiskOfSlimeRain
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			//BitsByte flags = new BitsByte();
-			//flags[0] = rorMode;
-			//writer.Write((byte)flags);
+			BitsByte flags = new BitsByte();
+			flags[0] = downedMagmaWorm;
+			writer.Write(flags);
 
 			NPCLootManager.NetSend(writer, true);
 			NPCLootManager.NetSend(writer, false);
@@ -34,8 +37,8 @@ namespace RiskOfSlimeRain
 
 		public override void NetReceive(BinaryReader reader)
 		{
-			//BitsByte flags = reader.ReadByte();
-			//rorMode = flags[0];
+			BitsByte flags = reader.ReadByte();
+			downedMagmaWorm = flags[0];
 
 			NPCLootManager.NetReceive(reader, true);
 			NPCLootManager.NetReceive(reader, false);
@@ -43,7 +46,7 @@ namespace RiskOfSlimeRain
 
 		public override void Load(TagCompound tag)
 		{
-			//rorMode = tag.GetBool("rorMode");
+			downedMagmaWorm = tag.GetBool("downedMagmaWorm");
 
 			WarbannerManager.Load(tag);
 			ChestManager.Load(tag);
@@ -54,7 +57,7 @@ namespace RiskOfSlimeRain
 		{
 			TagCompound tag = new TagCompound();
 
-			//tag.Add("rorMode", rorMode);
+			tag.Add("downedMagmaWorm", downedMagmaWorm);
 
 			WarbannerManager.Save(tag);
 			ChestManager.Save(tag);

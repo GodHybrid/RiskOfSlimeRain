@@ -44,7 +44,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 				if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
 				if (Main.netMode == NetmodeID.MultiplayerClient && timer % 2 == 1) return; //Half the projectile spam
-				if (player.velocity.Y != 0 || player.oldVelocity.Y != 0) return;
+				if (player.velocity.Y != 0 || player.oldVelocity.Y != 0 || player.grappling[0] > -1) return;
 
 				if (spawnTimer > 0)
 				{

@@ -80,7 +80,7 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (!timeLeftSet)
 			{
-				projectile.timeLeft = TimeLeft <= 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
+				projectile.timeLeft = TimeLeft < 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
 				timeLeftSet = true;
 			}
 		}
