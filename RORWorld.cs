@@ -1,11 +1,11 @@
-using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Network.NPCs;
 using System.IO;
+using Terraria;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria;
 
 namespace RiskOfSlimeRain
 {

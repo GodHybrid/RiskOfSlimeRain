@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.Network;
@@ -674,7 +675,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				float tilt = 20 * Math.Min(1f, Math.Abs(distanceX) / 600);
 
 				direction = direction.RotatedBy(MathHelper.ToRadians(sign * tilt));
-				direction = direction.RotatedBy(-MathHelper.ToRadians(- degrees / 2 + degrees * amount / 2));
+				direction = direction.RotatedBy(-MathHelper.ToRadians(-degrees / 2 + degrees * amount / 2));
 				int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 4));
 				for (int i = 0; i < amount; i++)
 				{
@@ -852,20 +853,41 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return true;
 		}
 
+		public void GuaranteedNPCLoot()
+		{
+			Item.NewItem(npc.Hitbox, ItemID.Obsidian, Main.rand.Next(20, 26));
+			Item.NewItem(npc.Hitbox, ItemID.Hellstone, Main.rand.Next(10, 14));
+		}
+
 		public override void NPCLoot()
 		{
 			//TODO redo this so it doesnt spawn items in terrain, but like destroyer does
 			if (Main.netMode != NetmodeID.Server && Main.gameMenu && npc.Center == new Vector2(1000))
 			{
+				//Recipe browser
 				Item.NewItem(npc.Hitbox, ModContent.ItemType<BurningWitness>());
+				GuaranteedNPCLoot();
 			}
 			else
 			{
+				GuaranteedNPCLoot();
+
 				//NPCLoot is only called on the head anyway: if (npc.realLife >= 0 && npc.realLife != npc.whoAmI)
 				RORGlobalNPC.DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<BurningWitness>(),
 					npCondition: delegate (NPC n, Player player)
 					{
-						return !player.GetRORPlayer().burningWitnessDropped;
+						bool dropped = player.GetRORPlayer().burningWitnessDropped;
+						if (dropped)
+						{
+							int random = NPCLootManager.RepeatedDropRate;
+							if (Main.hardMode)
+							{
+								random = (int)(random * NPCLootManager.HMDropRateMultiplierForPreHMBosses);
+							}
+
+							return Main.rand.NextBool(random);
+						}
+						else return true;
 					},
 					onDropped: delegate (Player player, Item item)
 					{

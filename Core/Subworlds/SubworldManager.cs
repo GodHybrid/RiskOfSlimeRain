@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		 List<GenPass> tasks,
 		 Action load = null, Action unload = null, ModWorld modWorld = null, bool saveSubworld = false, bool disablePlayerSaving = false, bool saveModData = false, bool noWorldUpdate = true, UserInterface loadingUI = null, UIState loadingUIState = null, UIState votingUI = null, ushort votingDuration = 1800, Action onVotedFor = null
 		*/
-		public static Dictionary<int,byte> PaintCache;
+		public static Dictionary<int, byte> PaintCache;
 
 		public static void Load()
 		{

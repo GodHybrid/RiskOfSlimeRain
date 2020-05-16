@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
-using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Core.Warbanners;
@@ -19,8 +18,6 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
-using WebmilioCommons.Tinq;
-using static RiskOfSlimeRain.NPCs.Bosses.MagmaWorm;
 
 namespace RiskOfSlimeRain
 {

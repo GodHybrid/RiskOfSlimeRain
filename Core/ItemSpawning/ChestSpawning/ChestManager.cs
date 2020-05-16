@@ -1,11 +1,11 @@
-﻿using System;
+﻿using log4net;
+using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Helpers;
+using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
-using log4net;
-using RiskOfSlimeRain.Core.ROREffects;
 using Terraria.ModLoader.IO;
-using RiskOfSlimeRain.Helpers;
 
 namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 {
@@ -147,7 +147,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 			{
 				return chest.y < Main.rockLayer && chest.x < oceanBorder && IsChestOfType(tile, ChestType.Water);
 			});
-			
+
 			PutRORItemInOneRandomChest(delegate (Chest chest, Tile tile)
 			{
 				return chest.y < Main.rockLayer && chest.x > Main.maxTilesX - oceanBorder && IsChestOfType(tile, ChestType.Water);

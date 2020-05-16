@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
+﻿using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.NPCs.Bosses;
@@ -67,27 +65,14 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 			return moddedBossInfoDict.FirstOrDefault(boss => Exists(npc, boss)).Value;
 		}
 
-		//Credit to jopojelly
-		/// <summary>
-		/// Makes alpha on .png textures actually properly rendered
-		/// </summary>
-		public static void PremultiplyTexture(Texture2D texture)
-		{
-			Color[] buffer = new Color[texture.Width * texture.Height];
-			texture.GetData(buffer);
-			for (int i = 0; i < buffer.Length; i++)
-			{
-				buffer[i] = Color.FromNonPremultiplied(buffer[i].R, buffer[i].G, buffer[i].B, buffer[i].A);
-			}
-			texture.SetData(buffer);
-		}
-
 		public static void RegisterBosses()
 		{
 			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
 			if (BossChecklist != null && BossChecklist.Version >= new Version(1, 0))
 			{
 				Mod mod = RiskOfSlimeRainMod.Instance;
+				string tooltip = MagmaWormSummon.tooltip;
+				tooltip += ". Drops 'Burning Witness' on first death, then with 1% chance";
 				string textureName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist";
 				string headName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist_Head";
 				BossChecklist.Call("AddBoss", //Command
@@ -99,9 +84,11 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 					ModContent.ItemType<MagmaWormSummon>(),
 					new List<int>(),
 					ModContent.ItemType<BurningWitness>(), //Loot
-					"summon with this",
+					tooltip,
 					null,
-					textureName, headName, null);
+					textureName,
+					headName,
+					null);
 
 			}
 		}
