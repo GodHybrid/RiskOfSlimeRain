@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Gasoline fire");
+			DisplayName.SetDefault("Fire");
 		}
 
 		public override void SetDefaults()
