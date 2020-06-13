@@ -48,6 +48,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.DeathSound = SoundID.NPCDeath8;
 			npc.noGravity = true;
 			npc.noTileCollide = true;
+			npc.lavaImmune = true;
 			//TODO remove when making it first level exclusive
 			//npc.behindTiles = true;
 			npc.knockBackResist = 0f;
