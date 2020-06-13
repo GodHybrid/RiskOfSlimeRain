@@ -1,5 +1,11 @@
 # Changelogs
 
+## 0.3.3.1
+
+* Fixed Barbed Wire tooltip
+* Fixed Magma Worm not being immune to lava
+* Fixed Warbanner giving free damage for things with no damage 
+
 ## 0.3.3
 
 * Magma Worm!
