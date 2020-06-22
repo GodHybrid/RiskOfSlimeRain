@@ -409,13 +409,15 @@ namespace RiskOfSlimeRain
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
 
-			//If this projectile is a minion, make it only proc 10% of the time
-			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
-
 			if (target.life <= 0)
 			{
 				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithProj(player, proj, target, damage, knockback, crit));
 			}
+
+			//If this projectile is a minion or sentry, make it only proc 10% of the time
+			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type] ||
+				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
+				&& !Main.rand.NextBool(10)) return;
 
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
 		}
@@ -428,8 +430,10 @@ namespace RiskOfSlimeRain
 			//If this projectile shouldn't proc at all
 			if (proj.modProjectile is IExcludeOnHit) return;
 
-			//If this projectile is a minion, make it only proc 10% of the time
-			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type]) && !Main.rand.NextBool(10)) return;
+			//If this projectile is a minion or sentry, make it only proc 10% of the time
+			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type] ||
+				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
+				&& !Main.rand.NextBool(10)) return;
 
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
 		}
