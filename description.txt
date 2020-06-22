@@ -12,12 +12,10 @@ The mod also features a config setting where you can selectively pick the amount
 [c/d18660:Multiplayer compatible, no pvp support.]
 
 [c/888888:Changelog:]
-
+v0.3.3.2
+    + Fixed minions/sentries not always proccing "on kill" effects
 v0.3.3.1
     + Fixed Barbed Wire tooltip
     + Fixed Magma Worm not being immune to lava
-    + Fixed Warbanner giving free damage for things with no damage 
-v0.3.3
-    + Magma Worm
-    + Fixed Barbed Wire and Headstompers softlocking the player when no item was selected
+    + Fixed Warbanner giving free damage for things with no damage
 

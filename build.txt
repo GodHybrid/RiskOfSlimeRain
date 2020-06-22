@@ -1,5 +1,5 @@
 author = Alucard I, direwolf420
-version = 0.3.3.1
+version = 0.3.3.2
 displayName = Risk of Slime Rain
 homepage = https://forums.terraria.org/index.php?threads/wip-risk-of-slime-rain-risk-of-rain-in-terraria.80382/
 includePDB = true

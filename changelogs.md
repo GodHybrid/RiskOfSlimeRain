@@ -1,5 +1,8 @@
 # Changelogs
 
+## 0.3.3.2
+* Fixed minions/sentries not always proccing "on kill" effects
+
 ## 0.3.3.1
 
 * Fixed Barbed Wire tooltip
