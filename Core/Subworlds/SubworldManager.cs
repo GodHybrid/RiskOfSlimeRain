@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.ModLoader;
 
@@ -9,6 +10,8 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public static Mod subworldLibrary = null;
 
 		public static bool Loaded => subworldLibrary != null;
+
+		public static SubworldMonitor Current;
 
 		public static bool? Enter(string id)
 		{
@@ -51,39 +54,28 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		 List<GenPass> tasks,
 		 Action load = null, Action unload = null, ModWorld modWorld = null, bool saveSubworld = false, bool disablePlayerSaving = false, bool saveModData = false, bool noWorldUpdate = true, UserInterface loadingUI = null, UIState loadingUIState = null, UIState votingUI = null, ushort votingDuration = 1800, Action onVotedFor = null
 		*/
-		public static Dictionary<int, byte> PaintCache;
+
+		public static Dictionary<Type, Subworld> subworlds;
 
 		public static void Load()
 		{
 			subworldLibrary = ModLoader.GetMod("SubworldLibrary");
 			if (subworldLibrary != null)
 			{
-				PaintCache = new Dictionary<int, byte>();
-				for (int i = 0; i < ItemLoader.ItemCount; i++)
-				{
-					try
-					{
-						Item item = new Item();
-						item.SetDefaults(i);
-						if (item.paint > 0)
-						{
-							PaintCache.Add(i, item.paint);
-						}
-					}
-					catch
-					{
-
-					}
-				}
+				subworlds = new Dictionary<Type, Subworld>();
 
 				FirstLevelBasic.Add();
 			}
 		}
 
+		public static void Reset()
+		{
+			Current = null;
+		}
+
 		public static void Unload()
 		{
 			subworldLibrary = null;
-			PaintCache = null;
 			FirstLevelBasic.Unload();
 		}
 

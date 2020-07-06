@@ -1,10 +1,12 @@
-﻿using RiskOfSlimeRain.Tiles.SubworldTiles;
+﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Tiles.SubworldTiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Utilities;
 using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Core.Subworlds
@@ -62,6 +64,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				new PassLegacy(nameof(BuildLadders), BuildLadders, 1f),
 				new PassLegacy(nameof(RemoveWalls), RemoveWalls, 1f),
 				new PassLegacy(nameof(SetSpawn), SetSpawn, 1f),
+				new PassLegacy(nameof(SetTeleporter), SetTeleporter, 1f),
 			};
 			return list;
 		}
@@ -112,54 +115,25 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						continue;
 					}
 
-					Tile top = Main.tile[i, j - 1];
-					if (!top.active() || !Main.tileSolid[top.type])
+					bool killedWall = false;
+					for (int a = -1; a < 2; a++)
 					{
-						WorldGen.KillWall(i, j);
-						continue;
+						for (int b = -1; b < 2; b++)
+						{
+							if (a != 0 && b != 0)
+							{
+								Tile t = Main.tile[i + a, j + b];
+								if (!t.active() || !Main.tileSolid[t.type])
+								{
+									WorldGen.KillWall(i, j);
+									killedWall = true;
+								}
+							}
+							if (killedWall) break;
+						}
+						if (killedWall) break;
 					}
-					Tile topLeft = Main.tile[i - 1, j - 1];
-					if (!topLeft.active() || !Main.tileSolid[topLeft.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile left = Main.tile[i - 1, j];
-					if (!left.active() || !Main.tileSolid[left.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile bottomLeft = Main.tile[i - 1, j + 1];
-					if (!bottomLeft.active() || !Main.tileSolid[bottomLeft.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile bottom = Main.tile[i, j + 1];
-					if (!bottom.active() || !Main.tileSolid[bottom.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile bottomRight = Main.tile[i + 1, j + 1];
-					if (!bottomRight.active() || !Main.tileSolid[bottomRight.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile right = Main.tile[i + 1, j];
-					if (!right.active() || !Main.tileSolid[right.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
-					Tile topRight = Main.tile[i + 1, j - 1];
-					if (!topRight.active() || !Main.tileSolid[topRight.type])
-					{
-						WorldGen.KillWall(i, j);
-						continue;
-					}
+					if (killedWall) continue;
 				}
 			}
 		}
@@ -396,26 +370,60 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.spawnTileY = 3;
 		}
 
-		public static void SetSpawn(GenerationProgress progress)
-		{
-			progress.Message = nameof(SetSpawn); //Sets the text above the worldgen progress bar
+		//TODO change
+		public static UnifiedRandom miscRand = new UnifiedRandom(DateTime.Now.Millisecond - 420);
 
+		public static void SetTeleporter(GenerationProgress progress)
+		{
+			progress.Message = nameof(SetTeleporter); //Sets the text above the worldgen progress bar
+
+			int tries = 0;
+			const int maxTries = 1000;
+			Point point = Point.Zero;
+			while (tries < maxTries)
+			{
+				point = GetBottomCenterOfAirPocket(miscRand, 3, 4, 4);
+
+				const int radiusX = 30;
+				const int radiusY = 20;
+				if (point.X > Main.spawnTileX - radiusX && point.X < Main.spawnTileX + radiusX)
+				{
+					continue;
+				}
+				else if (point.Y > Main.spawnTileY - radiusY && point.Y < Main.spawnTileY + radiusY)
+				{
+					continue;
+				}
+				break;
+			}
+
+			if (point == Point.Zero)
+			{
+				point = new Point(Main.spawnTileX, Main.spawnTileY);
+			}
+
+			//x is the middle coordinate, y the bottom
+			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
+		}
+
+		/// <summary>
+		/// Returns the coordinates of a random solid tile that has other solid tiles left & (right + 1) of it, and air above it. Returns Point.Zero if not found
+		/// </summary>
+		private static Point GetBottomCenterOfAirPocket(UnifiedRandom rand, in int left, in int right, in int top, in int maxTries = 1000)
+		{
 			//Randomizer technique:
 			/*
 			 * Pick random x, y
 			 * Check if its air
 			 * Raycast down until hits solid
-			 * Check if atleast 4 tiles of air above it
-			 * Check if left and right of it theres total 8 solid tiles
-			 * If not, retry (but only for those that find air on first random)
+			 * Check if atleast topY tiles of air above it
+			 * Check if left and right of it theres total leftX + rightX solid tiles
+			 * If not, retry
 			 */
 
-			//Fallback spawn
-			Main.spawnTileX = centerX - 1;
-			Main.spawnTileY = centerY - 2; //Because sand is 2 tiles thick
+			Point point = Point.Zero;
 
 			int tries = 0;
-			const int maxTries = 1000;
 
 			bool noAir = true;
 
@@ -435,9 +443,8 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				if (!noAir) break;
 			}
 
-			if (noAir) return; //Continue with fallback spawn
+			if (noAir) return point; //Continue with fallback
 
-			var rand = new Terraria.Utilities.UnifiedRandom(DateTime.Now.Millisecond);
 			while (tries < maxTries)
 			{
 				tries++;
@@ -449,7 +456,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				int validY = y;
 				if (!tile.active())
 				{
-					int yBelow = y - 1;
+					int yBelow = validY - 1;
 					tile = Main.tile[x, yBelow];
 					while (yBelow < maxY && !tile.active())
 					{
@@ -463,21 +470,18 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					validY = yBelow;
 
 					//Check tiles left and right
-					const int leftX = 3;
-					const int rightX = 5;
 					bool notValidSides = false;
-					for (x = validX - leftX; x < validX + rightX; x++)
+					for (x = validX - left; x < validX + 1 + right; x++)
 					{
 						tile = Main.tile[x, validY];
-						if (!tile.active() || !Main.tileSolid[tile.type])
+						if (!tile.active() || tile.slope() != 0 || tile.halfBrick() || !Main.tileSolid[tile.type])
 						{
 							notValidSides = true;
 						}
 						if (notValidSides) break;
 						else
 						{
-							const int topY = 4;
-							for (y = validY - topY; y < validY; y++)
+							for (y = validY - top; y < validY; y++)
 							{
 								tile = Main.tile[x, y];
 								if (tile.active()) notValidSides = true;
@@ -489,11 +493,28 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 					if (notValidSides) continue;
 
-					//Now on each side theres valid tiles
-					Main.spawnTileX = validX;
-					Main.spawnTileY = validY;
-					return;
+					point = new Point(validX, validY);
+					break;
 				}
+			}
+
+			return point;
+		}
+
+		public static void SetSpawn(GenerationProgress progress)
+		{
+			progress.Message = nameof(SetSpawn); //Sets the text above the worldgen progress bar
+
+			//Fallback spawn
+			Main.spawnTileX = centerX - 1;
+			Main.spawnTileY = centerY - 2; //Because sand is 2 tiles thick
+
+			Point point = GetBottomCenterOfAirPocket(miscRand, 2, 3, 4);
+
+			if (point != Point.Zero)
+			{
+				Main.spawnTileX = point.X - 1;
+				Main.spawnTileY = point.Y;
 			}
 		}
 

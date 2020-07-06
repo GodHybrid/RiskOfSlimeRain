@@ -3,7 +3,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
-	public class SubworldModPlayer : ModPlayer
+	public class SubworldPlayer : ModPlayer
 	{
 		public override bool CloneNewInstances => false;
 
@@ -11,6 +11,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		{
 			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false)
 			{
+				if (SubworldManager.Current == null)
+				{
+					SubworldManager.Current = new SubworldMonitor();
+				}
+				SubworldManager.Current.Update();
+
 				player.noBuilding = true;
 				player.AddBuff(BuffID.NoBuilding, 3);
 			}

@@ -116,7 +116,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			float drawX = (int)player.Center.X - Main.screenPosition.X;
 			float drawY = (int)player.Center.Y + player.gfxOffY - Main.screenPosition.Y;
 
-			Vector2 off = new Vector2(0, -(40 + (player.height >> 1)));
+			int yOff = 40 + (player.height >> 1);
+			Vector2 off = new Vector2(0, -yOff);
 			SpriteEffects spriteEffects = SpriteEffects.None;
 			if (player.gravDir < 0f)
 			{
@@ -124,7 +125,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				spriteEffects = SpriteEffects.FlipVertically;
 			}
 
-			drawY -= player.gravDir * (40 + (player.height >> 1));
+			drawY -= player.gravDir * yOff;
 			Color color = Color.White;
 
 			if (player.whoAmI == Main.myPlayer)

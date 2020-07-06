@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Core.Subworlds
 {
 	//TODO add acquisition method
-	/*
+	
 	public class EnteringItem : ModItem
 	{
 		public override string Texture => "Terraria/Item_" + ItemID.Extractinator;
@@ -63,5 +63,5 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 			return true;
 		}
-	}*/
+	}
 }

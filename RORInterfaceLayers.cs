@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
+using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items;
@@ -73,10 +74,15 @@ namespace RiskOfSlimeRain
 					InterfaceScaleType.Game
 				));
 				layers.Insert(mouseIndex + 2, new LegacyGameInterfaceLayer(
-						$"{Name}: {nameof(MagmaWormWarning)}",
-						MagmaWormWarning,
-						InterfaceScaleType.Game
-					));
+					$"{Name}: {nameof(MagmaWormWarning)}",
+					MagmaWormWarning,
+					InterfaceScaleType.Game
+				));
+				layers.Insert(mouseIndex + 3, new LegacyGameInterfaceLayer(
+					$"{Name}: {nameof(SubworldTeleportTimer)}",
+					SubworldTeleportTimer,
+					InterfaceScaleType.Game
+				));
 			}
 		}
 
@@ -85,6 +91,8 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		private static readonly GameInterfaceDrawMethod MagmaWormWarning = delegate
 		{
+			//Vector2 vector2 = new Point(Main.spawnTileX, Main.spawnTileY).ToWorldCoordinates() - Main.screenPosition;
+			//Main.spriteBatch.Draw(Main.magicPixel, Utils.CenteredRectangle(vector2, new Vector2(16)), Color.White);
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC npc = Main.npc[i];
@@ -403,6 +411,29 @@ namespace RiskOfSlimeRain
 				Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.White * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
 				Main.spriteBatch.Draw(arrow, drawPosition, null, color * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
 			}
+			return true;
+		};
+
+		/// <summary>
+		/// Draws the timer above the player
+		/// </summary>
+		private static readonly GameInterfaceDrawMethod SubworldTeleportTimer = delegate
+		{
+			if (!(SubworldManager.IsActive(FirstLevelBasic.id) ?? false))
+			{
+				return true;
+			}
+			Player player = Main.LocalPlayer;
+
+			Vector2 pos = new Vector2((int)player.Center.X, (int)player.Center.Y) - Main.screenPosition + new Vector2(0, player.gfxOffY - player.height * 2);
+			string text = SubworldManager.Current?.GetTeleporterTimerText() ?? null;
+			if (text != null)
+			{
+				Vector2 size = Main.fontMouseText.MeasureString(text);
+
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, pos, Color.White, 0, size / 2, Vector2.One * 0.78f);
+			}
+
 			return true;
 		};
 
