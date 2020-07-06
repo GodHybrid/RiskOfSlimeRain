@@ -61,6 +61,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				//Last steps
 				new PassLegacy(nameof(BuildLadders), BuildLadders, 1f),
 				new PassLegacy(nameof(RemoveWalls), RemoveWalls, 1f),
+				new PassLegacy(nameof(SetSpawn), SetSpawn, 1f),
 			};
 			return list;
 		}
@@ -172,16 +173,16 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				{
 					progress.Value = (i * topBorder + j) / (float)(width * topBorder);
 					WorldGen.PlaceTile(i, j, TileID.DiamondGemspark, true);
-					WorldGen.paintTile(i, j, SubworldManager.PaintCache[ItemID.BlackPaint]);
+					WorldGen.paintTile(i, j, PaintID.Black);
 				}
 			}
 		}
 
 		public static int TerrainType = TileID.GrayStucco;
-		public static int TerrainPaint = ItemID.BlackPaint;
+		public static byte TerrainPaint = PaintID.Black;
 
 		public static int TerrainWallType = WallID.Gray;
-		public static int TerrainWallPaint = ItemID.BlackPaint;
+		public static byte TerrainWallPaint = PaintID.Black;
 
 		private static int _TopType = -2;
 		public static int TopType
@@ -195,18 +196,18 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				return _TopType;
 			}
 		}
-		public static int TopPaint = ItemID.YellowPaint;
+		public static byte TopPaint = PaintID.Yellow;
 		public static int TopWallType = WallID.YellowStucco;
-		public static int TopWallPaint = -1;
+		public static byte TopWallPaint = 0;
 
 		public static int PlatformBeamWallType = WallID.WoodenFence;
 
-		private const int spawnbaseHeight = 14;
+		private const int centerbaseHeight = 14;
 		private const int groundDepth = 56;
 		public const int groundLevel = height - groundDepth;
 
 		public const int centerX = width - 160;
-		public const int centerY = groundLevel - spawnbaseHeight;
+		public const int centerY = groundLevel - centerbaseHeight;
 
 		public const int rightPlatformWidth = 54;
 		public const int leftWallWidth = 42 + 20;
@@ -260,17 +261,17 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			BuildRectangle(rightWallX, rightPlatformY + 30, 2, 28);
 			BuildRectangle(rightWallX, rightPlatformY + 40, 4, 8);
 
-			//T-shape for spawn
+			//T-shape for center
 			BuildRectangle(topLeftTBaseX, topLeftTBaseY, baseTWidth, baseTHeight, TerrainType, TerrainPaint);
 			BuildRectangle(topLeftTSideX, topLeftTBaseY, TSideWidth, topLeftTSideHeight, TerrainType, TerrainPaint);
 
-			//Area the spawn is on
-			BuildRectangle(topLeftTSideX + 1, centerY, TSideWidth - 2, spawnbaseHeight, TerrainType, TerrainPaint);
+			//Area the center is on
+			BuildRectangle(topLeftTSideX + 1, centerY, TSideWidth - 2, centerbaseHeight, TerrainType, TerrainPaint);
 
-			//Clear spawn
+			//Clear center
 			BuildRectangle(topLeftTBaseX, centerY - 6, baseTWidth, 6);
 
-			//Holes left and right of spawn
+			//Holes left and right of center
 			//Staircase on left/right
 			int holeWidth = 10;
 			int holeHeight = 6;
@@ -326,7 +327,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 							WorldGen.PlaceTile(i, j - 1, TopType, true);
 							if (TopPaint > 0)
 							{
-								WorldGen.paintTile(i, j - 1, SubworldManager.PaintCache[TopPaint]);
+								WorldGen.paintTile(i, j - 1, TopPaint);
 							}
 						}
 						Tile top2 = Main.tile[i, j - 2];
@@ -335,7 +336,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 							WorldGen.PlaceTile(i, j - 2, TopType, true);
 							if (TopPaint > 0)
 							{
-								WorldGen.paintTile(i, j - 2, SubworldManager.PaintCache[TopPaint]);
+								WorldGen.paintTile(i, j - 2, TopPaint);
 							}
 						}
 					}
@@ -343,6 +344,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
+		//Unused
 		public static void SpreadGrass(GenerationProgress progress)
 		{
 			progress.Message = "Spread Grass";
@@ -389,8 +391,110 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.worldSurface = Main.maxTilesY - 42; //Hides the underground layer just out of bounds
 			Main.rockLayer = Main.maxTilesY; //Hides the cavern layer way out of bounds
 
+			//Arbitrary spawn location away from the visible borders
+			Main.spawnTileX = 2;
+			Main.spawnTileY = 3;
+		}
+
+		public static void SetSpawn(GenerationProgress progress)
+		{
+			progress.Message = nameof(SetSpawn); //Sets the text above the worldgen progress bar
+
+			//Randomizer technique:
+			/*
+			 * Pick random x, y
+			 * Check if its air
+			 * Raycast down until hits solid
+			 * Check if atleast 4 tiles of air above it
+			 * Check if left and right of it theres total 8 solid tiles
+			 * If not, retry (but only for those that find air on first random)
+			 */
+
+			//Fallback spawn
 			Main.spawnTileX = centerX - 1;
 			Main.spawnTileY = centerY - 2; //Because sand is 2 tiles thick
+
+			int tries = 0;
+			const int maxTries = 1000;
+
+			bool noAir = true;
+
+			const int minX = 42;
+			const int maxX = width - 42;
+			const int minY = 42;
+			const int maxY = height - 42;
+
+			for (int x = minX; x < maxX; x++)
+			{
+				for (int y = minY; y < maxY; y++)
+				{
+					Tile tile = Main.tile[x, y];
+					if (!tile.active()) noAir = false;
+					if (!noAir) break;
+				}
+				if (!noAir) break;
+			}
+
+			if (noAir) return; //Continue with fallback spawn
+
+			var rand = new Terraria.Utilities.UnifiedRandom(DateTime.Now.Millisecond);
+			while (tries < maxTries)
+			{
+				tries++;
+				int x = rand.Next(minX, maxX);
+				int y = rand.Next(minY, maxY);
+
+				Tile tile = Main.tile[x, y];
+				int validX = x;
+				int validY = y;
+				if (!tile.active())
+				{
+					int yBelow = y - 1;
+					tile = Main.tile[x, yBelow];
+					while (yBelow < maxY && !tile.active())
+					{
+						yBelow++;
+						tile = Main.tile[x, yBelow];
+					}
+
+					if (yBelow >= maxY) continue;
+
+					//Now the tile is a solid
+					validY = yBelow;
+
+					//Check tiles left and right
+					const int leftX = 3;
+					const int rightX = 5;
+					bool notValidSides = false;
+					for (x = validX - leftX; x < validX + rightX; x++)
+					{
+						tile = Main.tile[x, validY];
+						if (!tile.active() || !Main.tileSolid[tile.type])
+						{
+							notValidSides = true;
+						}
+						if (notValidSides) break;
+						else
+						{
+							const int topY = 4;
+							for (y = validY - topY; y < validY; y++)
+							{
+								tile = Main.tile[x, y];
+								if (tile.active()) notValidSides = true;
+								if (notValidSides) break;
+								//Check air tiles above the tile
+							}
+						}
+					}
+
+					if (notValidSides) continue;
+
+					//Now on each side theres valid tiles
+					Main.spawnTileX = validX;
+					Main.spawnTileY = validY;
+					return;
+				}
+			}
 		}
 
 		public static void BuildMetalPlatforms(GenerationProgress progress)
@@ -412,7 +516,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public static int PlatformTopType = TileID.WoodBlock;
 		public static int PlatformType = TileID.LivingWood;
-		public static int PlatformPaint = -1/*ItemID.YellowPaint*/;
+		public static byte PlatformPaint = 0/*ItemID.YellowPaint*/;
 
 		public static int LowPlatformY = centerY - 4;
 		public static int MiddlePlatformY = topLeftTBaseY + topLeftTSideHeight + 2;
@@ -512,17 +616,17 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					if (y == 0)
 					{
 						bool placed = WorldGen.PlaceTile(i, j, PlatformTopType);
-						if (placed && PlatformPaint > -1)
+						if (placed && PlatformPaint > 0)
 						{
-							WorldGen.paintTile(i, j, SubworldManager.PaintCache[PlatformPaint]);
+							WorldGen.paintTile(i, j, PlatformPaint);
 						}
 					}
 					else
 					{
 						bool placed = WorldGen.PlaceTile(i, j, PlatformType);
-						if (placed && PlatformPaint > -1)
+						if (placed && PlatformPaint > 0)
 						{
-							WorldGen.paintTile(i, j, SubworldManager.PaintCache[PlatformPaint]);
+							WorldGen.paintTile(i, j, PlatformPaint);
 						}
 					}
 				}
@@ -545,13 +649,13 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				Tile right = Main.tile[i + 1, j];
 				if (!right.active()) continue;
 
-				PlaceBeam(i, j, PlatformBeamWallType, -1, topCut, bottomCut);
+				PlaceBeam(i, j, PlatformBeamWallType, 0, topCut, bottomCut);
 			}
 
 			return startX + length;
 		}
 
-		public static void PlaceBeam(in int startX, in int startY, int type, int paint = -1, float topCut = -1f, float bottomCut = -1f)
+		public static void PlaceBeam(in int startX, in int startY, int type, byte paint = 0, float topCut = -1f, float bottomCut = -1f)
 		{
 			int beamX = 0;
 			int beamY = 0;
@@ -570,9 +674,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 				WorldGen.KillWall(i, j);
 				WorldGen.PlaceWall(i, j, type, true);
-				if (paint > -1)
+				if (paint > 0)
 				{
-					WorldGen.paintWall(i, j, SubworldManager.PaintCache[paint]);
+					WorldGen.paintWall(i, j, paint);
 				}
 
 				beamY++;
@@ -634,7 +738,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					bool placed = WorldGen.PlaceTile(i, j, TileID.Pearlwood);
 					if (placed)
 					{
-						WorldGen.paintTile(i, j, SubworldManager.PaintCache[ItemID.GrayPaint]);
+						WorldGen.paintTile(i, j, PaintID.Gray);
 
 						if (actuate && x < actuated)
 						{
@@ -655,7 +759,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 					WorldGen.KillWall(i, j);
 					WorldGen.PlaceWall(i, j, WallID.Pearlwood, true);
-					WorldGen.paintWall(i, j, SubworldManager.PaintCache[ItemID.BlackPaint]);
+					WorldGen.paintWall(i, j, PaintID.Black);
 				}
 			}
 
@@ -670,12 +774,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				{
 					Main.tile[i, startY].halfBrick(true);
 
-					int paint = ItemID.GrayPaint;
+					byte paint = PaintID.Gray;
 					if (actuate && x < actuated)
 					{
-						paint = ItemID.BlackPaint;
+						paint = PaintID.Black;
 					}
-					WorldGen.paintTile(i, startY, SubworldManager.PaintCache[paint]);
+					WorldGen.paintTile(i, startY, paint);
 				}
 			}
 
@@ -726,23 +830,23 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						int j = startY + pillarY;
 						if (!WorldGen.InWorld(i, j)) continue;
 
-						int paint = ItemID.GrayPaint;
+						byte paint = PaintID.Gray;
 						if (pillarX == end - 1)
 						{
-							paint = ItemID.BlackPaint;
+							paint = PaintID.Black;
 						}
 
 						if (placeTiles)
 						{
 							WorldGen.PlaceTile(i, j, TileID.TinPlating);
-							WorldGen.paintTile(i, j, SubworldManager.PaintCache[paint]);
+							WorldGen.paintTile(i, j, paint);
 							Wiring.ActuateForced(i, j);
 						}
 						else
 						{
 							WorldGen.KillWall(i, j);
 							WorldGen.PlaceWall(i, j, WallID.TinPlating, true);
-							WorldGen.paintWall(i, j, SubworldManager.PaintCache[paint]);
+							WorldGen.paintWall(i, j, paint);
 						}
 					}
 
@@ -834,12 +938,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			int x = topLeftTSideX + TSideWidth - 10;
 			int y = topLeftTBaseY - 2;
 			int height = baseTHeight;
-			PlaceLadder(x, y, height, TileID.SilkRope, ItemID.YellowPaint);
+			PlaceLadder(x, y, height, TileID.SilkRope, PaintID.Yellow);
 			x = topLeftTSideX + 10 - 2;
-			PlaceLadder(x, y, height, TileID.SilkRope, ItemID.YellowPaint);
+			PlaceLadder(x, y, height, TileID.SilkRope, PaintID.Yellow);
 		}
 
-		public static void PlaceLadder(in int startX, in int startY, in int height, int type, int paint = -1)
+		public static void PlaceLadder(in int startX, in int startY, in int height, int type, byte paint = 0)
 		{
 			//Start at the top, break tiles if there are any in the way. Starting tile doesn't get walls behind it
 
@@ -879,7 +983,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 							if (below.active())
 							{
 								int wallType;
-								int paintType;
+								byte paintType;
 								if (oldType == TopType)
 								{
 									wallType = TopWallType;
@@ -892,18 +996,18 @@ namespace RiskOfSlimeRain.Core.Subworlds
 								}
 								WorldGen.KillWall(i, j);
 								WorldGen.PlaceWall(i, j, wallType, true);
-								if (paintType > -1)
+								if (paintType > 0)
 								{
-									WorldGen.paintWall(i, j, SubworldManager.PaintCache[paintType]);
+									WorldGen.paintWall(i, j, paintType);
 								}
 							}
 						}
 					}
 
 					WorldGen.PlaceTile(i, j, type, true);
-					if (paint > -1)
+					if (paint > 0)
 					{
-						WorldGen.paintTile(i, j, SubworldManager.PaintCache[paint]);
+						WorldGen.paintTile(i, j, paint);
 					}
 				}
 
@@ -917,7 +1021,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// <summary>
 		/// Creates a box of the specified tile. Leave it -1 to create a hole instead
 		/// </summary>
-		public static void BuildRectangle(in int startX, in int startY, in int width, in int height, int type = -1, int paint = -1, Action<int, int> onAction = null)
+		public static void BuildRectangle(in int startX, in int startY, in int width, in int height, int type = -1, byte paint = 0, Action<int, int> onAction = null)
 		{
 			for (int x = 0; x < width; x++)
 			{
@@ -934,9 +1038,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					else
 					{
 						WorldGen.PlaceTile(i, j, type, true);
-						if (paint > -1)
+						if (paint > 0)
 						{
-							WorldGen.paintTile(i, j, SubworldManager.PaintCache[paint]);
+							WorldGen.paintTile(i, j, paint);
 						}
 					}
 					onAction?.Invoke(i, j);
