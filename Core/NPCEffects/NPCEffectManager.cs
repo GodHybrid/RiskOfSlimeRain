@@ -83,7 +83,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 
 		public static T GetEffectOfType<T>(RORGlobalNPC globalNPC) where T : NPCEffect
 		{
-			return globalNPC.NPCEffects.FirstOrDefault(e => e is T) as T;
+			return globalNPC.NPCEffects.FirstOrDefault(e => e.GetType().Equals(typeof(T))) as T;
 		}
 
 		public static bool HasEffectOfType<T>(RORGlobalNPC globalNPC) where T : NPCEffect
