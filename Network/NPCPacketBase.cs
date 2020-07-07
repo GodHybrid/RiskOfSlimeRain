@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain.Network
 		protected sealed override bool MidReceive(BinaryReader reader, int fromWho)
 		{
 			if (NotValidNPC) return base.MidReceive(reader, fromWho);
-			if (Npc.type != NPCType) return base.PostReceive(reader, fromWho);
+			if (Npc.type != NPCType) return base.MidReceive(reader, fromWho);
 
 			bool ret = base.MidReceive(reader, fromWho) && NewMidReceive(reader, fromWho);
 
