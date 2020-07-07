@@ -4,6 +4,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
+	/*
 	public class DebugItem : ModItem
 	{
 		public override string Texture => "Terraria/Item_" + ItemID.ReaverShark;
@@ -33,4 +34,5 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			return true;
 		}
 	}
+	*/
 }

@@ -6,7 +6,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	{
 		public override bool CanExplode(int i, int j, int type)
 		{
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return false;
+			if (SubworldManager.AnyActive() ?? false) return false;
 			return base.CanExplode(i, j, type);
 		}
 	}

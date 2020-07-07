@@ -8,7 +8,7 @@ namespace RiskOfSlimeRain.Backgrounds
 	{
 		public override bool ChooseBgStyle()
 		{
-			return !Main.gameMenu && (SubworldManager.IsActive(FirstLevelBasic.id) ?? false);
+			return !Main.gameMenu && (SubworldManager.AnyActive() ?? false);
 		}
 
 		// Use this to keep far Backgrounds like the mountains

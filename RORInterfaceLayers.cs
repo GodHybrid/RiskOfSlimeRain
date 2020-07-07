@@ -79,8 +79,8 @@ namespace RiskOfSlimeRain
 					InterfaceScaleType.Game
 				));
 				layers.Insert(mouseIndex + 3, new LegacyGameInterfaceLayer(
-					$"{Name}: {nameof(SubworldTeleportTimer)}",
-					SubworldTeleportTimer,
+					$"{Name}: {nameof(SubworldTeleport)}",
+					SubworldTeleport,
 					InterfaceScaleType.Game
 				));
 			}
@@ -417,21 +417,62 @@ namespace RiskOfSlimeRain
 		/// <summary>
 		/// Draws the timer above the player
 		/// </summary>
-		private static readonly GameInterfaceDrawMethod SubworldTeleportTimer = delegate
+		private static readonly GameInterfaceDrawMethod SubworldTeleport = delegate
 		{
-			if (!(SubworldManager.IsActive(FirstLevelBasic.id) ?? false))
+			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Current == null)
 			{
 				return true;
 			}
 			Player player = Main.LocalPlayer;
 
 			Vector2 pos = new Vector2((int)player.Center.X, (int)player.Center.Y) - Main.screenPosition + new Vector2(0, player.gfxOffY - player.height * 2);
-			string text = SubworldManager.Current?.GetTeleporterTimerText() ?? null;
+			string text = SubworldManager.Current.GetTeleporterTimerText();
 			if (text != null)
 			{
 				Vector2 size = Main.fontMouseText.MeasureString(text);
 
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, pos, Color.White, 0, size / 2, Vector2.One * 0.78f);
+			}
+
+			if (SubworldManager.Current.NearestEnemy != null)
+			{
+				float fade = 0;
+
+				Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
+				Vector2 between = SubworldManager.Current.NearestEnemy.Center - playerCenter;
+				float length = between.Length();
+				if (length > 40)
+				{
+					Vector2 offset = Vector2.Normalize(between) * Math.Min(60, length - 20);
+					float rotation = between.ToRotation();
+					Vector2 drawPosition = playerCenter - Main.screenPosition + offset;
+					fade = Math.Min(1f, (length - 20) / 60) * (1 - fade);
+
+					Texture2D arrow = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrow");
+					Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrowWhite");
+					Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.White * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
+					Main.spriteBatch.Draw(arrow, drawPosition, null, Color.White * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
+				}
+			}
+			else if (SubworldManager.Current.TeleporterReady)
+			{
+				float fade = 0;
+
+				Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
+				Vector2 between = SubworldManager.Current.GetTeleporterPos().ToWorldCoordinates() - playerCenter;
+				float length = between.Length();
+				if (length > 40)
+				{
+					Vector2 offset = Vector2.Normalize(between) * Math.Min(60, length - 20);
+					float rotation = between.ToRotation();
+					Vector2 drawPosition = playerCenter - Main.screenPosition + offset;
+					fade = Math.Min(1f, (length - 20) / 60) * (1 - fade);
+
+					Texture2D arrow = ModContent.GetTexture("RiskOfSlimeRain/Textures/TeleporterArrow");
+					Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/TeleporterWhite");
+					Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.Yellow * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
+					Main.spriteBatch.Draw(arrow, drawPosition, null, Color.White * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
+				}
 			}
 
 			return true;

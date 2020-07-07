@@ -7,7 +7,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	{
 		public override void EditSpawnRate(Player player, ref int spawnRate, ref int maxSpawns)
 		{
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) maxSpawns = 0;
+			if (SubworldManager.AnyActive() ?? false) maxSpawns = 0;
 		}
 	}
 }

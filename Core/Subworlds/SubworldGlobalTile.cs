@@ -6,13 +6,13 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	{
 		public override bool CanKillTile(int i, int j, int type, ref bool blockDamaged)
 		{
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return false;
+			if (SubworldManager.AnyActive() ?? false) return false;
 			return base.CanKillTile(i, j, type, ref blockDamaged);
 		}
 
 		public override bool CanExplode(int i, int j, int type)
 		{
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return false;
+			if (SubworldManager.AnyActive() ?? false) return false;
 			return base.CanExplode(i, j, type);
 		}
 	}

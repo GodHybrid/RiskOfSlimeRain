@@ -1,21 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using RiskOfSlimeRain.Core.ROREffects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ID;
-using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
 	public class SubworldMonitor
 	{
+		//TODO needs to carry over some things to a new monitor once the subworld changes to another one, and reset others
 		//All in ticks
 		public readonly int teleporterTimeMax;
 
@@ -25,16 +17,24 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public bool TeleporterActivated { get; private set; }
 
+		public bool TeleporterTimerDone { get; private set; }
+
 		public bool TeleporterReady { get; private set; }
 
+		public NPC NearestEnemy { get; private set; }
+
+		public int EnemyCount { get; private set; }
+
 		public bool TeleporterTimerRunning => TeleporterTime < teleporterTimeMax;
+
 		//Top left of teleporter tile
-		public Point TeleporterPos { get; private set; } = Point.Zero;
+		private Point TeleporterPos { get; set; } = Point.Zero;
 
 		public SubworldMonitor()
 		{
 			SubworldManager.Current = this;
-			teleporterTimeMax = 90 * 60; //90 in normal/expert, 120 in master?
+			//90 * 60
+			teleporterTimeMax = 3 * 60; //90 in normal/expert, 120 in master?
 		}
 
 		public Point GetTeleporterPos()
@@ -58,27 +58,47 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			return TeleporterPos;
 		}
 
-		public void ActivateTeleporter()
+		//Call this when someone clicks the teleporter with sendToServer true
+		public void ActivateTeleporter(bool sendToServer = false)
 		{
-			TeleporterActivated = true;
+			if (Main.netMode == NetmodeID.MultiplayerClient && sendToServer)
+			{
+				//TODO Send activate packet to server
+			}
+			else
+			{
+				TeleporterActivated = true;
+			}
+		}
+
+		private bool TeleportEligible()
+		{
+			NearestEnemy = null;
+			EnemyCount = 0;
+			if (TeleporterTimerDone)
+			{
+				var elig = Main.npc.WhereActive(n => n.CanBeChasedBy());
+				NearestEnemy = elig.NearestActive(Main.LocalPlayer.Center, 1);
+				EnemyCount = elig.Count;
+				return EnemyCount == 0;
+			}
+			return false;
 		}
 
 		public string GetTeleporterTimerText()
 		{
-			//int count = Main.npc.WhereActive(n => n.CanBeChasedBy()).Count;
-			//if (count > 0)
-			//	return $"Remaining Enemies: {count}";
-			//else return null;
 			if (TeleporterActivated)
 			{
 				if (TeleporterTimerRunning)
 				{
 					return $"{TeleporterTime / 60 + 1}/{teleporterTimeMax / 60} seconds";
 				}
-				else
+				else if (TeleporterTimerDone && !TeleporterReady)
 				{
-					int count = Main.npc.WhereActive(n => n.CanBeChasedBy()).Count;
-					if (count > 0) return $"Remaining Enemies: {count}";
+					if (EnemyCount > 0)
+					{
+						return $"Remaining Enemies: {EnemyCount}";
+					}
 				}
 			}
 			return null;
@@ -91,15 +111,21 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			if (TeleporterActivated && TeleporterTimerRunning)
 			{
 				TeleporterTime++;
-				if (!TeleporterTimerRunning && Main.netMode != NetmodeID.MultiplayerClient)
+				if (!TeleporterTimerRunning)
 				{
-					//Last tick of timer, set ready
+					//Last tick of timer, set done
+					TeleporterTimerDone = true;
+				}
+			}
+
+			if (TeleporterTimerDone && !TeleporterReady && Main.netMode != NetmodeID.MultiplayerClient)
+			{
+				if (TeleportEligible())
+				{
 					TeleporterReady = true;
-					//TODO Send packet to all clients
+					//TODO sync
 				}
 			}
 		}
-
-
 	}
 }

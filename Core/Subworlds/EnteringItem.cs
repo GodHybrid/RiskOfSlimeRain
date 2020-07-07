@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			//Enter should be called on exactly one side, which here is either the singleplayer player, or the server
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				bool result = SubworldManager.Enter(FirstLevelBasic.id) ?? false;
+				bool result = SubworldManager.Enter<DriedLakeSubworld>() ?? false;
 
 				if (!result)
 				{
@@ -46,7 +46,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					}
 					else
 					{
-						message = $"Unable to enter {FirstLevelBasic.id}!";
+						message = $"Unable to enter Subworld!";
 					}
 
 					if (Main.netMode == NetmodeID.Server)
@@ -58,8 +58,6 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						Main.NewText(message, Color.Orange);
 					}
 				}
-
-				return result;
 			}
 			return true;
 		}

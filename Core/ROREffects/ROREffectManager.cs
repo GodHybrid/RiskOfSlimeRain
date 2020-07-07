@@ -103,6 +103,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void Unload()
 		{
+			//TODO null more
 			validInterfaces = null;
 			flavorText = null;
 			rarity = null;
@@ -359,6 +360,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				RORPlayer mPlayer = effect.Player.GetRORPlayer();
 				if (mPlayer.CanProc())
 				{
+					//TODO change this so it sets proc timer only when proc() returns true. Also 
+					/*
+					 * bool can = interfaceCanProc.Contains(typeof(T));
+					 * return can ? effect.Proccing : effect.Active;
+					 */
 					mPlayer.SetProcTimer();
 					return effect.Proc();
 				}

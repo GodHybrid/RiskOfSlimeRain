@@ -9,7 +9,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public override void PostUpdateBuffs()
 		{
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false)
+			if (SubworldManager.AnyActive() ?? false)
 			{
 				if (SubworldManager.Current == null)
 				{
@@ -19,6 +19,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 				player.noBuilding = true;
 				player.AddBuff(BuffID.NoBuilding, 3);
+			}
+			else
+			{
+				SubworldManager.Reset();
 			}
 		}
 	}

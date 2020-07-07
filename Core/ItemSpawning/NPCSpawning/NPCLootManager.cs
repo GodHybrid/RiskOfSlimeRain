@@ -50,7 +50,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public static void DropItem(NPC npc)
 		{
 			if (!npc.boss) return;
-			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false) return;
+			if (SubworldManager.AnyActive() ?? false) return;
 
 			bool isPreHM = IsPreHardmode(npc);
 			bool progressionAllowed = CheckProgression(isPreHM);
