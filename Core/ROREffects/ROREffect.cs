@@ -72,6 +72,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public virtual bool AlwaysProc => true;
 
+		/// <summary>
+		/// Set this to true if the effect uses AlwaysProc => true, but implements its own custom proc behavior. Only affects the Capped state for the UI
+		/// </summary>
+		public virtual bool CustomProc => false;
+
 		public virtual int MaxRecommendedStack => int.MaxValue;
 
 		/// <summary>
@@ -176,7 +181,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				{
 					return Stack >= MaxRecommendedStack;
 				}
-				else if (!AlwaysProc)
+				else if (!AlwaysProc || CustomProc)
 				{
 					if (Main.LocalPlayer.HeldItem.damage < 1)
 					{

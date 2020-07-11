@@ -31,7 +31,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
 		}
 
+		//We need AlwaysProc + CustomProc on true cause we have custom proccing that should run all the hooks all the time, inside it we proc
 		public override bool AlwaysProc => true;
+
+		public override bool CustomProc => true;
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
