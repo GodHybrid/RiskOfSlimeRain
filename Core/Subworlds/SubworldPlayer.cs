@@ -17,8 +17,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				}
 				SubworldManager.Current.Update();
 
-				player.noBuilding = true;
-				player.AddBuff(BuffID.NoBuilding, 3);
+				//TODO add back in for release
+				//player.noBuilding = true;
+				//player.AddBuff(BuffID.NoBuilding, 3);
 			}
 			else
 			{
