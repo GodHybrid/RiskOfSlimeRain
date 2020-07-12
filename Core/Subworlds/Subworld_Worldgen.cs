@@ -1,11 +1,9 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Tiles.SubworldTiles;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 using Terraria.Utilities;
 
 namespace RiskOfSlimeRain.Core.Subworlds
@@ -13,6 +11,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	//Contains worldgen methods
 	public abstract partial class Subworld
 	{
+		/// <summary>
+		/// Returns startX + length for easier chaining
+		/// </summary>
 		public int PlacePlatform(in int startX, in int startY, int length, int topType, int type, int beamType, byte paint = 0, float topCut = -1f, float bottomCut = -1f)
 		{
 			for (int x = 0; x < length; x++)
@@ -332,6 +333,64 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
+		/// <summary>
+		/// x represents the coordinate of the solid tile that the teleporter is aligned to on the sides. y the highest y, direction the horizontal offset at which it'll be placed
+		/// </summary>
+		public void PlaceGeyser(in int x, in int y, int direction = -3)
+		{
+			//Default direction makes it so theres 1 tile gap between edge and geyser on the left side
+			int newX = x + direction;
+			int maxY = Main.maxTilesY - 42;
+
+			Tile tile = Main.tile[newX, y];
+			int validX = newX;
+			int validY = y;
+			if (!tile.active())
+			{
+				int yBelow = validY - 1;
+				tile = Main.tile[newX, yBelow];
+				while (yBelow < maxY && !tile.active())
+				{
+					yBelow++;
+					tile = Main.tile[newX, yBelow];
+				}
+
+				if (yBelow >= maxY) return;
+
+				//Now the tile is a solid
+				validY = yBelow;
+
+				//Check tiles left and right
+				bool notValidSides = false;
+				for (int i = validX - 1; i < validX + 2; i++)
+				{
+					tile = Main.tile[i, validY];
+					if (!tile.active() || tile.slope() != 0 || tile.halfBrick() || !Main.tileSolid[tile.type])
+					{
+						notValidSides = true;
+					}
+					if (notValidSides) break;
+					//else
+					//{
+					//	for (int j = validY - top; j < validY; j++)
+					//	{
+					//		tile = Main.tile[i, j];
+					//		if (tile.active()) notValidSides = true;
+					//		if (notValidSides) break;
+					//		//Check air tiles above the tile
+					//	}
+					//}
+				}
+
+				if (notValidSides) return;
+
+				//Spawn
+				WorldGen.Place3x1(validX, validY - 1, (ushort)ModContent.TileType<GeyserTile>());
+				WorldGen.Place3x1(validX, validY, (ushort)ModContent.TileType<GeyserTile>());
+				WorldGen.Place3x1(validX, validY + 1, (ushort)ModContent.TileType<GeyserTile>());
+			}
+		}
+
 		public void PlaceLadder(in int startX, in int startY, in int height, int ladderType, byte ladderPaint = 0)
 		{
 			//Start at the top, break tiles if there are any in the way. Starting tile doesn't get walls behind it
@@ -410,7 +469,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// <summary>
 		/// Returns the coordinates of a random solid tile that has other solid tiles left & (right + 1) of it, and air above it. Returns Point.Zero if not found
 		/// </summary>
-		public Point GetBottomCenterOfAirPocket(UnifiedRandom rand, in int left, in int right, in int top, in int maxTries = 1000)
+		public Point GetBottomCenterOfRandomAirPocket(UnifiedRandom rand, in int left, in int right, in int top, in int maxTries = 1000)
 		{
 			//Randomizer technique:
 			/*

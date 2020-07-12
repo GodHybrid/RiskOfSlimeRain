@@ -1,4 +1,5 @@
-﻿using Terraria.ID;
+﻿using Terraria.DataStructures;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.Subworlds
@@ -17,14 +18,25 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				}
 				SubworldManager.Current.Update();
 
-				//TODO add back in for release
-				//player.noBuilding = true;
-				//player.AddBuff(BuffID.NoBuilding, 3);
+				player.noBuilding = true;
+				player.AddBuff(BuffID.NoBuilding, 3);
 			}
 			else
 			{
 				SubworldManager.Reset();
 			}
+		}
+
+		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		{
+			if (SubworldManager.AnyActive() ?? false)
+			{
+				if (damageSource.SourceOtherIndex == 0) //Fall damage
+				{
+					damage /= 2;
+				}
+			}
+			return true;
 		}
 	}
 }

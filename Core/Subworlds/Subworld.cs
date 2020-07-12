@@ -55,6 +55,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public virtual void LoadWorld()
 		{
 			Main.dayTime = true;
+			Main.bloodMoon = false;
 			Main.time = 27000;
 			for (int i = 0; i < Main.maxClouds; i++)
 			{
@@ -130,7 +131,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				new PassLegacy(nameof(BuildLadders), BuildLadders, 1f),
 				new PassLegacy(nameof(RemoveWalls), RemoveWalls, 1f),
 				new PassLegacy(nameof(SetSpawn), SetSpawn, 1f),
-				new PassLegacy(nameof(PlaceTeleporter), PlaceTeleporter, 1f),
+				new PassLegacy(nameof(PlaceObjects), PlaceObjects, 1f),
 			};
 			return list;
 		}
@@ -378,16 +379,16 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.spawnTileY = 3;
 		}
 
-		public void PlaceTeleporter(GenerationProgress progress)
+		public void PlaceObjects(GenerationProgress progress)
 		{
-			progress.Message = "Place Teleporter";
+			progress.Message = "Place Objects";
 
 			int tries = 0;
 			const int maxTries = 1000;
 			Point point = Point.Zero;
 			while (tries < maxTries)
 			{
-				point = GetBottomCenterOfAirPocket(SubworldManager.MiscRand, 3, 4, 4);
+				point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, 3, 4, 4);
 
 				const int radiusX = 30;
 				const int radiusY = 20;
@@ -409,6 +410,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 			//x is the middle coordinate, y the bottom
 			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
+
+			PlaceGeyser(RightWallX + 2, RightPlatformY - 12, -3);
+			if (MiddleTeleporterX != -1) PlaceGeyser(MiddleTeleporterX, MiddleTeleporterY, -2);
 		}
 
 		public void BuildLadders(GenerationProgress progress)
@@ -432,7 +436,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.spawnTileX = CenterX - 1;
 			Main.spawnTileY = CenterY - 2; //Because sand is 2 tiles thick
 
-			Point point = GetBottomCenterOfAirPocket(SubworldManager.MiscRand, 2, 3, 4);
+			Point point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, 2, 3, 4);
 
 			if (point != Point.Zero)
 			{
@@ -508,7 +512,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			x = PlacePlatform(x, y, middleLength / 3, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0f, 0f);
 			x = PlacePlatform(x, y, middleLength / 3, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0.1f, 1f);
 			//
-			x = PlacePlatform(x + gap, y, 8, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0f, 0f);
+			MiddleTeleporterX = x += gap;
+			MiddleTeleporterY = y;
+			x = PlacePlatform(x, y, 8, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0f, 0f);
 			int rightBound = TopLeftTSideX - safeDistanceFromLeftTSide;
 			int lastLength = rightBound - x;
 			x += gap;
@@ -575,6 +581,8 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public int LowPlatformY => CenterY - 4;
 		public int MiddlePlatformY => TopLeftTBaseY + topLeftTSideHeight + 2;
+		public int MiddleTeleporterX = -1;
+		public int MiddleTeleporterY = -1;
 		public int HighPlatformX => leftWallWidth + 12;
 		public int HighPlatformY => RightMiddleMetalPlatformY;
 	}
