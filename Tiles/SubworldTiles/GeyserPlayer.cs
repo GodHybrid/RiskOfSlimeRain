@@ -21,7 +21,6 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 
 				if (!lastInGeyser && inGeyser)
 				{
-					Main.NewText("jump");
 					GeyserTile.Jump(player);
 				}
 			}
