@@ -23,27 +23,6 @@ namespace RiskOfSlimeRain
 			NPCLootManager.Init();
 		}
 
-		public override void NetSend(BinaryWriter writer)
-		{
-			BitsByte flags = new BitsByte();
-			flags[0] = downedMagmaWorm;
-			writer.Write(flags);
-
-			NPCLootManager.NetSend(writer, true);
-			NPCLootManager.NetSend(writer, false);
-
-			//Warbanner backend is all serverside, so clients don't need to know about that
-		}
-
-		public override void NetReceive(BinaryReader reader)
-		{
-			BitsByte flags = reader.ReadByte();
-			downedMagmaWorm = flags[0];
-
-			NPCLootManager.NetReceive(reader, true);
-			NPCLootManager.NetReceive(reader, false);
-		}
-
 		public override void Load(TagCompound tag)
 		{
 			downedMagmaWorm = tag.GetBool("downedMagmaWorm");
@@ -63,6 +42,27 @@ namespace RiskOfSlimeRain
 			ChestManager.Save(tag);
 			NPCLootManager.Save(tag);
 			return tag;
+		}
+
+		public override void NetSend(BinaryWriter writer)
+		{
+			BitsByte flags = new BitsByte();
+			flags[0] = downedMagmaWorm;
+			writer.Write(flags);
+
+			NPCLootManager.NetSend(writer, true);
+			NPCLootManager.NetSend(writer, false);
+
+			//Warbanner backend is all serverside, so clients don't need to know about that
+		}
+
+		public override void NetReceive(BinaryReader reader)
+		{
+			BitsByte flags = reader.ReadByte();
+			downedMagmaWorm = flags[0];
+
+			NPCLootManager.NetReceive(reader, true);
+			NPCLootManager.NetReceive(reader, false);
 		}
 
 		public override void PostWorldGen()
