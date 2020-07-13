@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -42,16 +43,29 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			return subworldLibrary.Call("Exit") as bool?;
 		}
 
-		public static bool? IsActive<T>() where T : Subworld
+		public static bool? IsActive(string id)
 		{
 			if (!Loaded) return null;
-			return subworldLibrary.Call("IsActive", subworldIDs[typeof(T)]) as bool?;
+			return subworldLibrary.Call("IsActive", id) as bool?;
+		}
+
+		public static bool? IsActive<T>() where T : Subworld
+		{
+			return IsActive(subworldIDs[typeof(T)]);
 		}
 
 		public static bool? AnyActive()
 		{
 			if (!Loaded) return null;
 			return subworldLibrary.Call("AnyActive", RiskOfSlimeRainMod.Instance) as bool?;
+		}
+
+		/// <summary>
+		/// Returns <see cref="string.Empty"/> if none active
+		/// </summary>
+		public static string GetActiveSubworldID()
+		{
+			return subworldIDs.Values.FirstOrDefault(s => IsActive(s) ?? false) ?? string.Empty;
 		}
 
 		/*

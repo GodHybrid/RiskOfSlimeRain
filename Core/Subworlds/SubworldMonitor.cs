@@ -8,6 +8,8 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	public class SubworldMonitor
 	{
 		//TODO needs to carry over some things to a new monitor once the subworld changes to another one, and reset others
+		public readonly string id = string.Empty;
+
 		//All in ticks
 		public readonly int teleporterTimeMax;
 
@@ -33,6 +35,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public SubworldMonitor()
 		{
 			SubworldManager.Current = this;
+
+			id = SubworldManager.GetActiveSubworldID();
+
 			//90 * 60
 			teleporterTimeMax = 3 * 60; //90 in normal/expert, 120 in master?
 		}
