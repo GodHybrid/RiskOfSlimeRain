@@ -11,11 +11,12 @@ using Terraria.World.Generation;
 namespace RiskOfSlimeRain.Core.Subworlds
 {
 	/// <summary>
-	/// This class is used to define the terrain of a subworld. Instances of this class don't exist, they just get used for SubworldLibrary to register
+	/// This class is used to define the terrain of a subworld. Instances of this class exist only for lookup purposes, they just get used for SubworldLibrary to register
 	/// </summary>
 	public abstract partial class Subworld
 	{
 		public readonly string displayName;
+		public readonly string subName;
 
 		public readonly int width;
 
@@ -35,9 +36,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// <summary>
 		/// Subworlds have to have a parameterless constructor calling base on this one
 		/// </summary>
-		public Subworld(string displayName, int width, int height, int terrainType, byte terrainPaint, int terrainWallType, byte terrainWallPaint, int topType, byte topPaint, int topWallType, byte topWallPaint)
+		public Subworld(string displayName, string subName, int width, int height, int terrainType, byte terrainPaint, int terrainWallType, byte terrainWallPaint, int topType, byte topPaint, int topWallType, byte topWallPaint)
 		{
 			this.displayName = displayName;
+			this.subName = subName;
 			this.width = width;
 			this.height = height;
 
@@ -106,7 +108,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 	public class DriedLakeSubworld : Subworld
 	{
-		public DriedLakeSubworld() : base("Dried Lake - Ground Zero", 360, 600, TileID.GrayStucco, PaintID.Black, WallID.Gray, PaintID.Black, ModContent.TileType<FirstLevelSand>(), PaintID.Yellow, WallID.YellowStucco, 0)
+		public DriedLakeSubworld() : base("Dried Lake", "Ground Zero", 360, 600, TileID.GrayStucco, PaintID.Black, WallID.Gray, PaintID.Black, ModContent.TileType<FirstLevelSand>(), PaintID.Yellow, WallID.YellowStucco, 0)
 		{
 
 		}
