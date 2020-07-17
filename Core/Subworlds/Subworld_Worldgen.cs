@@ -29,6 +29,45 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		}
 
 		/// <summary>
+		/// Places a teleporter at a random location, MAKE SURE TO DO THIS AFTER DECIDING ON THE SPAWN, AND LET THE SPAWN BE CLEAR OF ANY TILES
+		/// </summary>
+		public void PlaceRandomTeleporter()
+		{
+			int tries = 0;
+			const int maxTries = 1000;
+			Point point = Point.Zero;
+			while (tries < maxTries)
+			{
+				point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, 3, 4, 4);
+
+				const int radiusX = 30;
+				const int radiusY = 20;
+				if (point.X > Main.spawnTileX - radiusX && point.X < Main.spawnTileX + radiusX)
+				{
+					continue;
+				}
+				else if (point.Y > Main.spawnTileY - radiusY && point.Y < Main.spawnTileY + radiusY)
+				{
+					continue;
+				}
+				break;
+			}
+
+			if (point == Point.Zero)
+			{
+				point = new Point(Main.spawnTileX, Main.spawnTileY);
+			}
+
+			//x is the middle coordinate, y the bottom
+			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
+		}
+
+		public void PlaceDropPod()
+		{
+
+		}
+
+		/// <summary>
 		/// Returns startX + length for easier chaining
 		/// </summary>
 		public int PlacePlatform(in int startX, in int startY, int length, int topType, int type, int beamType, byte paint = 0, float topCut = -1f, float bottomCut = -1f)

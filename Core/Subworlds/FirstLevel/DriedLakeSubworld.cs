@@ -16,6 +16,50 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 
 		}
 
+		public const int topBorder = 420;
+
+		private const int CenterbaseHeight = 14;
+		private const int GroundDepth = 56;
+		public int GroundLevel => height - GroundDepth;
+
+		public int CenterX => width - 160;
+		public int CenterY => GroundLevel - CenterbaseHeight;
+
+		public int rightPlatformWidth = 54;
+		public int leftWallWidth = 42 + 20;
+		public int rightWallWidth = 100;
+		public int rightPlatformHeight = 140;
+		public int baseTHeight = 30;
+
+		public int RightWallX => width - rightWallWidth;
+		public int RightPlatformX => RightWallX - rightPlatformWidth;
+		public int RightPlatformY => height - rightPlatformHeight;
+
+		public int TopLeftTBaseY => CenterY - baseTHeight;
+
+		public int RightMiddleMetalPlatformY => (RightPlatformY + TopLeftTBaseY) / 2 - 2;
+
+
+		public int baseTWidth = 8;
+		public int topLeftTSideHeight = 6;
+		public int sideTWidth = 26;
+		public int TopLeftTBaseX => CenterX - baseTWidth / 2;
+		public int TopLeftTSideX => TopLeftTBaseX - sideTWidth;
+		public int TSideWidth => 2 * sideTWidth + baseTWidth;
+
+		public int PlatformTopType = TileID.WoodBlock;
+		public int PlatformType = TileID.LivingWood;
+		public byte PlatformPaint = 0/*ItemID.YellowPaint*/;
+
+		public int PlatformBeamWallType = WallID.WoodenFence;
+
+		public int LowPlatformY => CenterY - 4;
+		public int MiddlePlatformY => TopLeftTBaseY + topLeftTSideHeight + 2;
+		public int MiddleTeleporterX = -1;
+		public int MiddleTeleporterY = -1;
+		public int HighPlatformX => leftWallWidth + 12;
+		public int HighPlatformY => RightMiddleMetalPlatformY;
+
 		public override List<GenPass> Generation()
 		{
 			List<GenPass> list = new List<GenPass>
@@ -288,33 +332,7 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 		{
 			progress.Message = "Place Objects";
 
-			int tries = 0;
-			const int maxTries = 1000;
-			Point point = Point.Zero;
-			while (tries < maxTries)
-			{
-				point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, 3, 4, 4);
-
-				const int radiusX = 30;
-				const int radiusY = 20;
-				if (point.X > Main.spawnTileX - radiusX && point.X < Main.spawnTileX + radiusX)
-				{
-					continue;
-				}
-				else if (point.Y > Main.spawnTileY - radiusY && point.Y < Main.spawnTileY + radiusY)
-				{
-					continue;
-				}
-				break;
-			}
-
-			if (point == Point.Zero)
-			{
-				point = new Point(Main.spawnTileX, Main.spawnTileY);
-			}
-
-			//x is the middle coordinate, y the bottom
-			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
+			PlaceRandomTeleporter();
 
 			PlaceGeyser(RightWallX + 2, RightPlatformY - 12, -3);
 			if (MiddleTeleporterX != -1) PlaceGeyser(MiddleTeleporterX, MiddleTeleporterY, -2);
@@ -436,49 +454,5 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 			//x = PlaceWoodenPlatform(x + 4, y + 10, 7);
 			//PlaceWoodenPlatform(x + 4, y + 20, 16);
 		}
-
-		public const int topBorder = 420;
-
-		private int CenterbaseHeight = 14;
-		private int GroundDepth = 56;
-		public int GroundLevel => height - GroundDepth;
-
-		public int CenterX => width - 160;
-		public int CenterY => GroundLevel - CenterbaseHeight;
-
-		public int rightPlatformWidth = 54;
-		public int leftWallWidth = 42 + 20;
-		public int rightWallWidth = 100;
-		public int rightPlatformHeight = 140;
-		public int baseTHeight = 30;
-
-		public int RightWallX => width - rightWallWidth;
-		public int RightPlatformX => RightWallX - rightPlatformWidth;
-		public int RightPlatformY => height - rightPlatformHeight;
-
-		public int TopLeftTBaseY => CenterY - baseTHeight;
-
-		public int RightMiddleMetalPlatformY => (RightPlatformY + TopLeftTBaseY) / 2 - 2;
-
-
-		public int baseTWidth = 8;
-		public int topLeftTSideHeight = 6;
-		public int sideTWidth = 26;
-		public int TopLeftTBaseX => CenterX - baseTWidth / 2;
-		public int TopLeftTSideX => TopLeftTBaseX - sideTWidth;
-		public int TSideWidth => 2 * sideTWidth + baseTWidth;
-
-		public int PlatformTopType = TileID.WoodBlock;
-		public int PlatformType = TileID.LivingWood;
-		public byte PlatformPaint = 0/*ItemID.YellowPaint*/;
-
-		public int PlatformBeamWallType = WallID.WoodenFence;
-
-		public int LowPlatformY => CenterY - 4;
-		public int MiddlePlatformY => TopLeftTBaseY + topLeftTSideHeight + 2;
-		public int MiddleTeleporterX = -1;
-		public int MiddleTeleporterY = -1;
-		public int HighPlatformX => leftWallWidth + 12;
-		public int HighPlatformY => RightMiddleMetalPlatformY;
 	}
 }
