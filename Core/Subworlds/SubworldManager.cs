@@ -119,7 +119,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				Subworld subworld = (Subworld)Activator.CreateInstance(type);
 				string id = subworld.RegisterSelf();
 				subworldIDs.Add(type, id);
-				subworlds.Add(id, subworld);
+				if (!subworlds.ContainsKey(id))
+				{
+					subworlds.Add(id, subworld);
+				}
 			}
 		}
 
