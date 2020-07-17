@@ -82,6 +82,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// Maps a subworld type to its unique ID given by SubworldLibrary. Only accessed when the mod is also loaded. If mod isn't loaded, this is null
 		/// </summary>
 		public static Dictionary<Type, string> subworldIDs;
+		/// <summary>
+		/// Maps a subworld ID to the subworld. Only accessed when the mod is also loaded. If mod isn't loaded, this is null
+		/// </summary>
+		public static Dictionary<string, Subworld> subworlds;
 
 		public static readonly string prefix = "RiskOfSlimeRain.Core.Subworlds.";
 		public static readonly string suffix = "Subworld";
@@ -115,6 +119,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				Subworld subworld = (Subworld)Activator.CreateInstance(type);
 				string id = subworld.RegisterSelf();
 				subworldIDs.Add(type, id);
+				subworlds.Add(id, subworld);
 			}
 		}
 
@@ -124,6 +129,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			if (subworldLibrary != null)
 			{
 				subworldIDs = new Dictionary<Type, string>();
+				subworlds = new Dictionary<string, Subworld>();
 				RegisterSubworlds();
 			}
 		}
@@ -136,6 +142,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public static void Unload()
 		{
 			subworldIDs = null;
+			subworlds = null;
 			subworldLibrary = null;
 			_miscRand = null;
 		}

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
@@ -63,25 +64,30 @@ namespace RiskOfSlimeRain
 			int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 			if (mouseIndex != -1)
 			{
-				layers.Insert(mouseIndex, new LegacyGameInterfaceLayer(
+				layers.Insert(mouseIndex++, new LegacyGameInterfaceLayer(
 					$"{Name}: {nameof(Effects)}",
 					Effects,
 					InterfaceScaleType.UI
 				));
-				layers.Insert(mouseIndex + 1, new LegacyGameInterfaceLayer(
+				layers.Insert(mouseIndex++, new LegacyGameInterfaceLayer(
 					$"{Name}: {nameof(WarbannerArrow)}",
 					WarbannerArrow,
 					InterfaceScaleType.Game
 				));
-				layers.Insert(mouseIndex + 2, new LegacyGameInterfaceLayer(
+				layers.Insert(mouseIndex++, new LegacyGameInterfaceLayer(
 					$"{Name}: {nameof(MagmaWormWarning)}",
 					MagmaWormWarning,
 					InterfaceScaleType.Game
 				));
-				layers.Insert(mouseIndex + 3, new LegacyGameInterfaceLayer(
+				layers.Insert(mouseIndex++, new LegacyGameInterfaceLayer(
 					$"{Name}: {nameof(SubworldTeleport)}",
 					SubworldTeleport,
 					InterfaceScaleType.Game
+				));
+				layers.Insert(mouseIndex++, new LegacyGameInterfaceLayer(
+					$"{Name}: {nameof(SubworldGreeting)}",
+					SubworldGreeting,
+					InterfaceScaleType.UI
 				));
 			}
 		}
@@ -410,6 +416,47 @@ namespace RiskOfSlimeRain
 				Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrowWhite");
 				Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.White * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
 				Main.spriteBatch.Draw(arrow, drawPosition, null, color * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
+			}
+			return true;
+		};
+		
+		private static void DrawStringAlt(string text, Vector2 pos, Color color, float scale = 1f, bool shadow = true)
+		{
+			Vector2 size = Main.fontItemStack.MeasureString(text) * scale;
+			if (shadow)
+			{
+				for (int i = 0; i < ChatManager.ShadowDirections.Length; i++)
+				{
+					Main.spriteBatch.DrawString(Main.fontItemStack, text, pos - size / 2 + ChatManager.ShadowDirections[i] * 2, Color.Black * (color.A / 255f), 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+				}
+			}
+			Main.spriteBatch.DrawString(Main.fontItemStack, text, pos - size / 2, color, 0f, Vector2.Zero, scale, SpriteEffects.None, 0f);
+		}
+
+		/// <summary>
+		/// Draws the name of the subworld as text when just entered
+		/// </summary>
+		private static readonly GameInterfaceDrawMethod SubworldGreeting = delegate
+		{
+			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Current == null)
+			{
+				return true;
+			}
+			Player player = Main.LocalPlayer;
+
+			if (SubworldManager.Current.GetGreetingText(out string displayName, out string subName, out float alpha))
+			{
+				Vector2 center = new Vector2(Main.screenWidth, Main.screenHeight) / 2;
+				if (displayName != null)
+				{
+					Vector2 pos = center + new Vector2(0, -player.height * 1.5f);
+					DrawStringAlt(displayName, pos, Color.White * alpha, 2f);
+				}
+				if (subName != null)
+				{
+					Vector2 pos = center + new Vector2(0, player.height * 1.5f + 22f);
+					DrawStringAlt(subName, pos, Color.White * alpha, 1.5f);
+				}
 			}
 			return true;
 		};

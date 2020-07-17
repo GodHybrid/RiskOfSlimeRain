@@ -42,6 +42,26 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			teleporterTimeMax = 3 * 60; //90 in normal/expert, 120 in master?
 		}
 
+		public bool GetGreetingText(out string displayName, out string subName, out float alpha)
+		{
+			displayName = subName = null;
+			alpha = 0f;
+
+			if (TicksSpentInSubworld > 360) return false;
+			else if (TicksSpentInSubworld < 180)
+			{
+				alpha = 1f;
+			}
+			else
+			{
+				alpha = 2f - (TicksSpentInSubworld / 180f);
+			}
+			Subworld subworld = SubworldManager.subworlds[id];
+			displayName = subworld.displayName;
+			subName = subworld.subName;
+			return alpha > 0f;
+		}
+
 		public Point GetTeleporterPos()
 		{
 			if (TeleporterPos != Point.Zero) return TeleporterPos;
