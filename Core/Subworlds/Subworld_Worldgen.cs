@@ -62,9 +62,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
 		}
 
+		/// <summary>
+		/// Places a drop pod at spawn. Doesn't place if not enough space
+		/// </summary>
 		public void PlaceDropPod()
 		{
-
+			WorldGen.PlaceTile(Main.spawnTileX + 1, Main.spawnTileY - 1, ModContent.TileType<DropPod>(), mute: true);
 		}
 
 		/// <summary>

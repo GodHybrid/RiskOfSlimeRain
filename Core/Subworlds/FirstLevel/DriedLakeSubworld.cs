@@ -334,6 +334,8 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 
 			PlaceRandomTeleporter();
 
+			PlaceDropPod();
+
 			PlaceGeyser(RightWallX + 2, RightPlatformY - 12, -3);
 			if (MiddleTeleporterX != -1) PlaceGeyser(MiddleTeleporterX, MiddleTeleporterY, -2);
 		}
