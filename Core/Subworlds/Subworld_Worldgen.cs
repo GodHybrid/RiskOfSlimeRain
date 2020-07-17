@@ -12,6 +12,23 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	public abstract partial class Subworld
 	{
 		/// <summary>
+		/// Sets the world spawn to a random suitable tile, required fallback
+		/// </summary>
+		public void SetRandomSpawn(in int fallbackX, in int fallbackY, in int left = 3, in int right = 3, in int top = 4)
+		{
+			Main.spawnTileX = fallbackX;
+			Main.spawnTileY = fallbackY;
+
+			Point point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, left, right, top);
+
+			if (point != Point.Zero)
+			{
+				Main.spawnTileX = point.X - 1;
+				Main.spawnTileY = point.Y;
+			}
+		}
+
+		/// <summary>
 		/// Returns startX + length for easier chaining
 		/// </summary>
 		public int PlacePlatform(in int startX, in int startY, int length, int topType, int type, int beamType, byte paint = 0, float topCut = -1f, float bottomCut = -1f)
