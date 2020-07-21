@@ -12,17 +12,17 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 {
 	public class DropPod : ModTile
 	{
-		const int frameCount = 7;
-		const int spriteHeight = 518;
+		const int frameCount = 2;
+		const int spriteHeight = 220;
 
 		public override void SetDefaults()
 		{
-			//7x4
+			//6x6
 			Main.tileFrameImportant[Type] = true;
-			TileObjectData.newTile.CopyFrom(TileObjectData.Style5x4);
-			TileObjectData.newTile.Width = 7;
-			TileObjectData.newTile.Origin = new Point16(3, 3);
-			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16, 16, 18 };
+			TileObjectData.newTile.CopyFrom(TileObjectData.Style6x3);
+			TileObjectData.newTile.Height = 6;
+			TileObjectData.newTile.Origin = new Point16(3, 5);
+			TileObjectData.newTile.CoordinateHeights = new[] { 16, 16, 16, 16, 16, 18 };
 			TileObjectData.addTile(Type);
 			AddMapEntry(new Color(162, 184, 185));
 			animationFrameHeight = spriteHeight / frameCount;
@@ -32,24 +32,13 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 		public override void AnimateTile(ref int frame, ref int frameCounter)
 		{
 			frameCounter++;
-			if (frame == 0)
+			if (frameCounter >= (frame == 0 ? 300 : 8))
 			{
-				if (frameCounter >= 300)
+				frameCounter = 0;
+				frame++;
+				if (frame >= frameCount)
 				{
-					frameCounter = 0;
-					frame++;
-				}
-			}
-			else
-			{
-				if (frameCounter >= 8)
-				{
-					frameCounter = 0;
-					frame++;
-					if (frame >= frameCount)
-					{
-						frame = 0;
-					}
+					frame = 0;
 				}
 			}
 		}

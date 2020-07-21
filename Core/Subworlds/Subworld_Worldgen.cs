@@ -14,7 +14,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// <summary>
 		/// Sets the world spawn to a random suitable tile, required fallback
 		/// </summary>
-		public void SetRandomSpawn(in int fallbackX, in int fallbackY, in int left = 3, in int right = 3, in int top = 4)
+		public void SetRandomSpawn(in int fallbackX, in int fallbackY, in int left = 3, in int right = 3, in int top = 6)
 		{
 			Main.spawnTileX = fallbackX;
 			Main.spawnTileY = fallbackY;
