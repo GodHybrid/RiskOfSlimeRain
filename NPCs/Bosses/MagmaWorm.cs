@@ -917,7 +917,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				npc.dontTakeDamage = true;
 				//npc.netUpdate = true;
 				npc.NPCLoot();
-				Main.PlaySound(SoundID.Roar, (int)npc.position.X, (int)npc.position.Y, 0, 1f, -0.18f);
+				Main.PlaySound(SoundID.NPCKilled, (int)npc.position.X, (int)npc.position.Y, mod.GetSoundSlot(SoundType.NPCKilled, "Sounds/NPCKilled/MagmaWormDeath"), 1f, -0.18f);
 				SpawnDead();
 
 				return false;
