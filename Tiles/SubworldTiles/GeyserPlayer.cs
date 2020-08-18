@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 
 		public override void PostUpdate()
 		{
-			if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer && !player.controlDown)
+			if (Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer && !player.controlDown && !(player.mount != null && player.mount.CanFly))
 			{
 				lastInGeyser = inGeyser;
 

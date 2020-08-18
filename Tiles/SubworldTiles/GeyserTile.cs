@@ -92,6 +92,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 				default:
 					break;
 			}
+			Main.PlaySound(RiskOfSlimeRainMod.Instance.GetLegacySoundSlot(SoundType.Custom, "Sounds/Custom/GeyserJump")?.WithVolume(.7f), entity.position);
 		}
 
 		public override bool CanPlace(int i, int j)
