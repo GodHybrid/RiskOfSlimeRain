@@ -55,10 +55,8 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.dayTime = true;
 			Main.bloodMoon = false;
 			Main.time = 27000;
-			for (int i = 0; i < Main.maxClouds; i++)
-			{
-				Main.cloud[i] = new Cloud();
-			}
+			Main.numClouds = 0;
+
 		}
 
 		public virtual List<GenPass> Generation()
