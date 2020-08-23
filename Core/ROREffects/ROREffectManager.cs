@@ -359,8 +359,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				RORPlayer mPlayer = effect.Player.GetRORPlayer();
 				if (mPlayer.CanProc())
 				{
-					mPlayer.SetProcTimer();
-					return effect.Proc();
+					//If ProcTimer is 0
+					bool result = effect.Proc();
+					if (result)
+					{
+						//If proced, set timer
+						mPlayer.SetProcTimer();
+					}
+					return result;
 				}
 				return false;
 			}
