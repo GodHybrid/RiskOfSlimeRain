@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
+using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.Network;
@@ -49,8 +50,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			npc.noGravity = true;
 			npc.noTileCollide = true;
 			npc.lavaImmune = true;
-			//TODO remove when making it first level exclusive
-			//npc.behindTiles = true;
 			npc.knockBackResist = 0f;
 			npc.value = Item.sellPrice(gold: 1);
 			npc.scale = 1.4f;
@@ -107,6 +106,8 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			get => npc.localAI[1] == 1f;
 			protected set => npc.localAI[1] = value ? 1f : 0f;
 		}
+
+		bool flaggedBehindTiles = false;
 
 		public NPC Child => Main.npc[ChildWhoAmI];
 
@@ -723,6 +724,12 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		/// </summary>
 		private void AllAI()
 		{
+			if (!flaggedBehindTiles && (SubworldManager.AnyActive() ?? false))
+			{
+				flaggedBehindTiles = true;
+				npc.behindTiles = true;
+			}
+
 			if (!IsHead && ParentWhoAmI >= 0f && ParentWhoAmI < Main.maxNPCs)
 			{
 				if (Parent.modNPC is MagmaWorm mwb && mwb != null)
