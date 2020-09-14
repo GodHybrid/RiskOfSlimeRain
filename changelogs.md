@@ -1,5 +1,8 @@
 # Changelogs
 
+## 0.3.3.3
+* Fixed only one effect triggering, preventing subsequent ones from going off
+
 ## 0.3.3.2
 * Fixed minions/sentries not always proccing "on kill" effects
 
