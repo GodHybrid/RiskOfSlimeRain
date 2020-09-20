@@ -8,6 +8,7 @@ using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
+using WebmilioCommons.Extensions;
 
 namespace RiskOfSlimeRain.Projectiles
 {

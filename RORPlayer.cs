@@ -566,9 +566,12 @@ namespace RiskOfSlimeRain
 
 		public override void PreUpdate()
 		{
-			if (drawEffectsCalledOnce)
+			if (Main.netMode != NetmodeID.Server)
 			{
-				drawEffectsCalledOnce = false;
+				if (drawEffectsCalledOnce)
+				{
+					drawEffectsCalledOnce = false;
+				}
 			}
 			//This is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
