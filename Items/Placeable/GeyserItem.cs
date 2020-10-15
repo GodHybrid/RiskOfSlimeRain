@@ -13,7 +13,7 @@ namespace RiskOfSlimeRain.Items.Placeable
 
 		public override void SetDefaults()
 		{ 
-			item.width = 42;
+			item.width = 34;
 			item.height = 10;
 			item.maxStack = 99;
 			item.value = 0;

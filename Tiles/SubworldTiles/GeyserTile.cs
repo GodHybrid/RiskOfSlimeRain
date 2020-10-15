@@ -44,14 +44,15 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 		public static bool GetGeyserPos(int i, int j, out Point pos)
 		{
 			pos = Point.Zero;
+			ushort type = (ushort)ModContent.TileType<GeyserTile>();
 
 			for (int y = 0; y < height; y++)
 			{
 				Tile tile = Framing.GetTileSafely(i, j + y);
-				if (tile.active() && tile.type == ModContent.TileType<GeyserTile>())
+				if (tile.active() && tile.type == type)
 				{
 					TileObjectData data = TileObjectData.GetTileData(tile.type, 0);
-					pos = new Point(i - tile.frameX / 18 % data.Width, j - tile.frameY / 18 % data.Height);
+					pos = new Point(i - tile.frameX / 20 % data.Width, j - tile.frameY / 18 % data.Height);
 					return true;
 				}
 			}
@@ -103,6 +104,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 
 		public override void DrawEffects(int i, int j, SpriteBatch spriteBatch, ref Color drawColor, ref int nextSpecialDrawIndex)
 		{
+			//TODO change this so it animates faster, maybe postupdatetiles
 			Tile t = Main.tile[i, j];
 			if (t.frameX == 0 && t.frameY == 0) //leftmost tile
 			{
@@ -118,15 +120,17 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 		public override void SpecialDraw(int i, int j, SpriteBatch spriteBatch)
 		{
 			const int frames = 6;
-			const int height = 116;
+			const int height = 120;
 			Vector2 pos = new Vector2(Main.offScreenRange);
 			if (Main.drawToScreen)
 			{
 				pos = Vector2.Zero;
 			}
+			int type = Main.tile[i, j].type;
 			pos.X += i * 16 - (int)Main.screenPosition.X;//i*16 world coords left of block
-			pos.Y += j * 16 + 16 - height + 2 - (int)Main.screenPosition.Y; //j*16 world coords top of block, +16 bottom of block, -height so draw can start at top left, +2 draw offset
-			Texture2D animation = mod.GetTexture("Tiles/SubworldTiles/GeyserAnimation");
+			int yOff = TileObjectData.GetTileData(type, 0)?.DrawYOffset ?? 0;
+			pos.Y += j * 16 + 16 - height + yOff - (int)Main.screenPosition.Y; //j*16 world coords top of block, +16 bottom of block, -height so draw can start at top left, +2 draw offset
+			Texture2D animation = mod.GetTexture("Tiles/SubworldTiles/GeyserAnimation2");
 			int width = animation.Width / frames;
 
 			if (oldUpdateCount != Main.GameUpdateCount)
