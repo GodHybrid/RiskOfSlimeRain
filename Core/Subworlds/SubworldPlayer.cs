@@ -1,6 +1,8 @@
 ﻿using Terraria.DataStructures;
-using Terraria.ID;
+using Terraria;
 using Terraria.ModLoader;
+using Microsoft.Xna.Framework;
+using System.Collections.Generic;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
@@ -18,13 +20,36 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				}
 				SubworldManager.Current.Update();
 
-				player.noBuilding = true;
-				player.AddBuff(BuffID.NoBuilding, 3);
+				//player.noBuilding = true;
+				//player.AddBuff(BuffID.NoBuilding, 3);
 			}
 			else
 			{
 				SubworldManager.Reset();
 			}
+
+			Point x = Main.MouseWorld.ToTileCoordinates();
+			Main.NewText(x);
+		}
+
+		public override void ModifyDrawLayers(List<PlayerLayer> layers)
+		{
+			if (Main.gameMenu) return;
+
+			if (SubworldMonitor.HideLayers())
+			{
+				foreach (var layer in layers)
+				{
+					layer.visible = false;
+				}
+			}
+		}
+
+		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+		{
+			if (Main.gameMenu) return;
+
+			SubworldMonitor.DrawTeleportSequence(Main.spriteBatch, player);
 		}
 
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

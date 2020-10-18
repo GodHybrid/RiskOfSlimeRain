@@ -11,6 +11,7 @@ using RiskOfSlimeRain.Items;
 using RiskOfSlimeRain.Items.Consumable;
 using RiskOfSlimeRain.Network.Effects;
 using RiskOfSlimeRain.NPCs.Bosses;
+using RiskOfSlimeRain.Tiles.SubworldTiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -60,6 +61,16 @@ namespace RiskOfSlimeRain
 		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			if (Main.gameMenu) return;
+
+			if (SubworldMonitor.HideLayers())
+			{
+				foreach (var layer in layers)
+				{
+					layer.Active = false;
+				}
+				return;
+			}
+
 			//int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
 			int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Mouse Text"));
 			if (mouseIndex != -1)
@@ -501,12 +512,15 @@ namespace RiskOfSlimeRain
 					Main.spriteBatch.Draw(arrow, drawPosition, null, Color.White * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
 				}
 			}
-			else if (SubworldManager.Current.TeleporterReady)
+			else if (SubworldManager.Current.TeleporterReady && !SubworldManager.Current.TeleportInitiated)
 			{
 				float fade = 0;
 
 				Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
-				Vector2 between = SubworldManager.Current.GetTeleporterPos().ToWorldCoordinates() - playerCenter;
+				Point porterpos = SubworldManager.Current.GetTeleporterPos();
+				porterpos.X += TeleporterTile.centerX;
+				porterpos.Y += TeleporterTile.centerY;
+				Vector2 between = porterpos.ToWorldCoordinates() - playerCenter;
 				float length = between.Length();
 				if (length > 40)
 				{
@@ -516,7 +530,7 @@ namespace RiskOfSlimeRain
 					fade = Math.Min(1f, (length - 20) / 60) * (1 - fade);
 
 					Texture2D arrow = ModContent.GetTexture("RiskOfSlimeRain/Textures/TeleporterArrow");
-					Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/TeleporterWhite");
+					Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/TeleporterArrowWhite");
 					Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.Yellow * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
 					Main.spriteBatch.Draw(arrow, drawPosition, null, Color.White * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
 				}

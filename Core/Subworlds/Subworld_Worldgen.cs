@@ -38,7 +38,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Point point = Point.Zero;
 			while (tries < maxTries)
 			{
-				point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, 3, 4, 4);
+				int w = TeleporterTile.width;
+				int h = TeleporterTile.height;
+				point = GetBottomCenterOfRandomAirPocket(SubworldManager.MiscRand, w - w / 2, w / 2, h);
 
 				const int radiusX = 30;
 				const int radiusY = 20;
@@ -59,7 +61,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 
 			//x is the middle coordinate, y the bottom
-			WorldGen.Place3x2(point.X, point.Y - 1, TileID.Furnaces);
+			WorldGen.PlaceTile(point.X, point.Y - 1, ModContent.TileType<TeleporterTile>(), mute:true);
 		}
 
 		/// <summary>
@@ -67,7 +69,13 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		/// </summary>
 		public void PlaceDropPod()
 		{
-			WorldGen.PlaceTile(Main.spawnTileX + 1, Main.spawnTileY - 1, ModContent.TileType<DropPod>(), mute: true);
+			Point point = new Point(Main.spawnTileX + 1, Main.spawnTileY - 1);
+			Tile tile = Main.tile[point.X, point.Y];
+			if (tile.active() && tile.type == ModContent.TileType<TeleporterTile>())
+			{
+				return;
+			}
+			WorldGen.PlaceTile(point.X, point.Y, ModContent.TileType<DropPod>(), mute: true);
 		}
 
 		/// <summary>
@@ -583,6 +591,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						tile = Main.tile[x, yBelow];
 					}
 
+					//No air found on that x coordinate, continue
 					if (yBelow >= maxY) continue;
 
 					//Now the tile is a solid
@@ -592,6 +601,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					bool notValidSides = false;
 					for (x = validX - left; x < validX + 1 + right; x++)
 					{
+						//Check the floor tiles left and right if they are solid and not sloped
 						tile = Main.tile[x, validY];
 						if (!tile.active() || tile.slope() != 0 || tile.halfBrick() || !Main.tileSolid[tile.type])
 						{
@@ -600,16 +610,31 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						if (notValidSides) break;
 						else
 						{
+							//Check air above solid floor tiles
 							for (y = validY - top; y < validY; y++)
 							{
 								tile = Main.tile[x, y];
-								if (tile.active()) notValidSides = true;
+								if (tile.active())
+								{
+									//TODO make it so the spawn can't be on objects (like geysers) but on foliage
+
+									//Possible hack to set all to false except subworld foliage
+									//if (TileID.Sets.CanBeClearedDuringGeneration[tile.type])
+									//{
+									//	WorldGen.KillTile(x, y, noItem: true);
+									//}
+									//else
+									//{
+									notValidSides = true;
+									//}
+								}
 								if (notValidSides) break;
 								//Check air tiles above the tile
 							}
 						}
 					}
 
+					//Continue trying
 					if (notValidSides) continue;
 
 					point = new Point(validX, validY);
