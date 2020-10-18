@@ -20,6 +20,9 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 			TileID.Sets.ForAdvancedCollision.ForSandshark[Type] = true; // Allows Sandshark enemies to "swim" in this sand.
 			TileID.Sets.Falling[Type] = true;
 			AddMapEntry(new Color(200, 200, 200));
+
+			dustType = -1;
+			soundType = -1;
 		}
 	}
 }

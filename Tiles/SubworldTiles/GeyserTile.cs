@@ -34,6 +34,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 			ModTranslation name = CreateMapEntryName();
 			soundType = SoundID.Tink;
 			soundStyle = 2;
+			dustType = -1;
 			name.SetDefault("Geyser");
 			AddMapEntry(new Color(162, 184, 185), name);
 		}

@@ -14,7 +14,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public override void SetStaticDefaults()
 		{
-			//TODO
 			DisplayName.SetDefault("Spicy Honey Donut");
 			Tooltip.SetDefault(tooltip);
 		}

@@ -16,7 +16,8 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 
 		}
 
-		public const int topBorder = 420;
+		//This is adjusted so the sun doesn't "peek over" the background
+		public const int topBorder = 430;
 
 		private const int CenterbaseHeight = 14;
 		private const int GroundDepth = 56;
@@ -40,7 +41,7 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 		public int RightMiddleMetalPlatformY => (RightPlatformY + TopLeftTBaseY) / 2 - 2;
 
 
-		public int baseTWidth = 8;
+		public int baseTWidth = 10;
 		public int topLeftTSideHeight = 6;
 		public int sideTWidth = 26;
 		public int TopLeftTBaseX => CenterX - baseTWidth / 2;
@@ -55,8 +56,8 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 
 		public int LowPlatformY => CenterY - 4;
 		public int MiddlePlatformY => TopLeftTBaseY + topLeftTSideHeight + 2;
-		public int MiddleTeleporterX = -1;
-		public int MiddleTeleporterY = -1;
+		public int MiddleGeyserX = -1;
+		public int MiddleGeyserY = -1;
 		public int HighPlatformX => leftWallWidth + 12;
 		public int HighPlatformY => RightMiddleMetalPlatformY;
 
@@ -206,7 +207,7 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 			BuildRectangle(TopLeftTSideX + 1, CenterY, TSideWidth - 2, CenterbaseHeight, terrainType, terrainPaint);
 
 			//Clear center
-			BuildRectangle(TopLeftTBaseX, CenterY - 6, baseTWidth, 6);
+			BuildRectangle(TopLeftTBaseX, CenterY - 8, baseTWidth, 8);
 
 			//Holes left and right of center
 			//Staircase on left/right
@@ -337,7 +338,7 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 			PlaceDropPod();
 
 			PlaceGeyser(RightWallX + 2, RightPlatformY - 12, -3);
-			if (MiddleTeleporterX != -1) PlaceGeyser(MiddleTeleporterX, MiddleTeleporterY, -2);
+			if (MiddleGeyserX != -1) PlaceGeyser(MiddleGeyserX, MiddleGeyserY, -2);
 		}
 
 		public void BuildLadders(GenerationProgress progress)
@@ -357,7 +358,9 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 		{
 			progress.Message = "Set Spawn";
 
-			SetRandomSpawn(CenterX - 1, CenterY - 2); //Because sand is 2 tiles thick
+			int w = TeleporterTile.width;
+			int h = TeleporterTile.height;
+			SetRandomSpawn(CenterX - 1, CenterY - 2, w - w / 2, w / 2, h); // -2 Because sand is 2 tiles thick
 		}
 
 		public void BuildMetalPlatforms(GenerationProgress progress)
@@ -427,8 +430,8 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 			x = PlacePlatform(x, y, middleLength / 3, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0f, 0f);
 			x = PlacePlatform(x, y, middleLength / 3, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0.1f, 1f);
 			//
-			MiddleTeleporterX = x += gap;
-			MiddleTeleporterY = y;
+			MiddleGeyserX = x += gap;
+			MiddleGeyserY = y;
 			x = PlacePlatform(x, y, 8, PlatformTopType, PlatformType, PlatformBeamWallType, PlatformPaint, 0f, 0f);
 			int rightBound = TopLeftTSideX - safeDistanceFromLeftTSide;
 			int lastLength = rightBound - x;
