@@ -131,7 +131,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 			pos.X += i * 16 - (int)Main.screenPosition.X;//i*16 world coords left of block
 			int yOff = TileObjectData.GetTileData(type, 0)?.DrawYOffset ?? 0;
 			pos.Y += j * 16 + 16 - height + yOff - (int)Main.screenPosition.Y; //j*16 world coords top of block, +16 bottom of block, -height so draw can start at top left, +2 draw offset
-			Texture2D animation = mod.GetTexture("Tiles/SubworldTiles/GeyserAnimation2");
+			Texture2D animation = mod.GetTexture("Tiles/SubworldTiles/GeyserAnimation");
 			int width = animation.Width / frames;
 
 			if (oldUpdateCount != Main.GameUpdateCount)
