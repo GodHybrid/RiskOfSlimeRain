@@ -20,6 +20,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				}
 				SubworldManager.Current.Update();
 
+				//TODO remove when release
 				//player.noBuilding = true;
 				//player.AddBuff(BuffID.NoBuilding, 3);
 			}
@@ -27,9 +28,6 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			{
 				SubworldManager.Reset();
 			}
-
-			Point x = Main.MouseWorld.ToTileCoordinates();
-			Main.NewText(x);
 		}
 
 		public override void ModifyDrawLayers(List<PlayerLayer> layers)

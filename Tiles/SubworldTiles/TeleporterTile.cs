@@ -9,6 +9,7 @@ using Terraria.ObjectData;
 using Terraria.ID;
 using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Items;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace RiskOfSlimeRain.Tiles.SubworldTiles
 {
@@ -88,6 +89,71 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 			{
 				SubworldManager.Current.InitiateTeleportSequence(true);
 				return true;
+			}
+
+			return false;
+		}
+
+		public override bool PreDraw(int i, int j, SpriteBatch spriteBatch)
+		{
+			Tile tile = Main.tile[i, j];
+			Texture2D texture;
+			if (Main.canDrawColorTile(i, j))
+			{
+				texture = Main.tileAltTexture[Type, tile.color()];
+			}
+			else
+			{
+				texture = Main.tileTexture[Type];
+			}
+			Vector2 zero = new Vector2(Main.offScreenRange);
+			if (Main.drawToScreen)
+			{
+				zero = Vector2.Zero;
+			}
+			//int height = 16;
+			int height = tile.frameY == texture.Height - 18 ? 18 : 16;
+			Color color = Lighting.GetColor(i, j);
+			Vector2 pos = new Vector2(i * 16 - (int)Main.screenPosition.X, j * 16 - (int)Main.screenPosition.Y) + zero;
+			pos.Y += 2;
+			Rectangle frame = new Rectangle(tile.frameX, tile.frameY, 16, height);
+			spriteBatch.Draw(texture, pos, frame, color, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
+
+			Color outlineColor = Color.Transparent;
+			if (TileID.Sets.HasOutlines[Type])
+			{
+				int average = (color.R + color.G + color.B) / 3;
+				bool selected = false;
+				bool mouseContains = Main.SmartInteractTileCoords.Contains(new Point(i, j));
+				if (mouseContains && Collision.InTileBounds(i, j, Main.TileInteractionLX, Main.TileInteractionLY, Main.TileInteractionHX, Main.TileInteractionHY))
+				{
+					selected = true;
+				}
+
+				texture = Main.highlightMaskTexture[Type];
+				if (selected && average > 10)
+				{
+					outlineColor = new Color(255, 255, 255 / 3);
+				}
+				else
+				{
+					var current = SubworldManager.Current;
+					if (current != null)
+					{
+						bool drawGreen = current.TeleporterActivated && current.TeleportReadyTimerDone;
+						if (drawGreen)
+						{
+							outlineColor = new Color(192, 255, 192);
+						}
+						else //drawRed
+						{
+							outlineColor = new Color(214, 41, 16);
+						}
+					}
+				}
+				outlineColor.MultiplyRGBA(color);
+
+				spriteBatch.Draw(texture, pos, frame, outlineColor, 0f, default(Vector2), 1f, SpriteEffects.None, 0f);
 			}
 
 			return false;
