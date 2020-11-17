@@ -58,13 +58,13 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 			player.showItemIcon = true;
 			player.showItemIcon2 = ModContent.ItemType<NoTextureItem>();
 
-			if (SubworldManager.Current == null) return;
+			if (SubworldManager.Monitor == null) return;
 
-			if (!SubworldManager.Current.TeleporterActivated)
+			if (!SubworldManager.Monitor.TeleporterActivated)
 			{
 				player.showItemIconText = "Right Click to activate teleporter. Are you ready?";
 			}
-			else if (SubworldManager.Current.TeleporterReady)
+			else if (SubworldManager.Monitor.TeleporterReady)
 			{
 				//"Right Click to teleport to the next level"
 				player.showItemIconText = "Right Click to teleport back to the main world";
@@ -77,17 +77,17 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 
 		public override bool NewRightClick(int i, int j)
 		{
-			if (SubworldManager.Current == null) return false;
+			if (SubworldManager.Monitor == null) return false;
 
-			if (!SubworldManager.Current.TeleporterActivated)
+			if (!SubworldManager.Monitor.TeleporterActivated)
 			{
 				Main.PlaySound(SoundID.Mech, i * 16, j * 16, 0);
-				SubworldManager.Current.ActivateTeleporter(true);
+				SubworldManager.Monitor.ActivateTeleporter(true);
 				return true;
 			}
-			else if (SubworldManager.Current.TeleporterReady)
+			else if (SubworldManager.Monitor.TeleporterReady)
 			{
-				SubworldManager.Current.InitiateTeleportSequence(true);
+				SubworldManager.Monitor.InitiateTeleportSequence(true);
 				return true;
 			}
 
@@ -137,7 +137,7 @@ namespace RiskOfSlimeRain.Tiles.SubworldTiles
 				}
 				else
 				{
-					var current = SubworldManager.Current;
+					var current = SubworldManager.Monitor;
 					if (current != null)
 					{
 						bool drawGreen = current.TeleporterActivated && current.TeleportReadyTimerDone;

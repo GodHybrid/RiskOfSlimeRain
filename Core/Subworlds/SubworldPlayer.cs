@@ -14,11 +14,11 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		{
 			if (SubworldManager.AnyActive() ?? false)
 			{
-				if (SubworldManager.Current == null)
+				if (SubworldManager.Monitor == null)
 				{
-					SubworldManager.Current = new SubworldMonitor();
+					SubworldManager.Monitor = new SubworldMonitor();
 				}
-				SubworldManager.Current.Update();
+				SubworldManager.Monitor.Update();
 
 				//TODO remove when release
 				//player.noBuilding = true;

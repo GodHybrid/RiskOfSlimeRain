@@ -61,7 +61,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 
 			//x is the middle coordinate, y the bottom
-			WorldGen.PlaceTile(point.X, point.Y - 1, ModContent.TileType<TeleporterTile>(), mute:true);
+			WorldGen.PlaceTile(point.X, point.Y - 1, SubworldManager.TeleporterTileType, mute:true);
 		}
 
 		/// <summary>
@@ -71,7 +71,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		{
 			Point point = new Point(Main.spawnTileX + 1, Main.spawnTileY - 1);
 			Tile tile = Main.tile[point.X, point.Y];
-			if (tile.active() && tile.type == ModContent.TileType<TeleporterTile>())
+			if (tile.active() && tile.type == SubworldManager.TeleporterTileType)
 			{
 				return;
 			}

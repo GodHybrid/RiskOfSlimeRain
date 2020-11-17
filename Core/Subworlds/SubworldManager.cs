@@ -1,22 +1,28 @@
-﻿using System;
+﻿using RiskOfSlimeRain.Tiles.SubworldTiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
+	/// <summary>
+	/// Class managing subworld loading and access
+	/// </summary>
 	public static class SubworldManager
 	{
 		public static Mod subworldLibrary = null;
 
 		public static bool Loaded => subworldLibrary != null;
 
-		public static SubworldMonitor Current;
+		public static SubworldMonitor Monitor;
 
 		private static UnifiedRandom _miscRand;
 
+		/// <summary>
+		/// Use to randomize something, alternative to the seed-based fixed Worldgen.genRand
+		/// </summary>
 		public static UnifiedRandom MiscRand
 		{
 			get
@@ -29,7 +35,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static int TeleporterTileType => TileID.Furnaces;
+		public static int TeleporterTileType => ModContent.TileType<TeleporterTile>();
 
 		public static bool? Enter<T>() where T : Subworld
 		{
@@ -139,7 +145,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public static void Reset()
 		{
-			Current = null;
+			Monitor = null;
 		}
 
 		public static void Unload()

@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Tiles.SubworldTiles;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 using WebmilioCommons.Tinq;
@@ -13,10 +12,12 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	public class SubworldMonitor
 	{
 		//TODO needs to carry over some things to a new monitor once the subworld changes to another one, and reset others
-		public readonly string id = string.Empty;
+		public readonly string currentID = string.Empty;
 
-		//All in ticks
+		//All times in ticks
 		public readonly int teleporterTimeMax;
+
+		public string PreviousID { get; private set; }
 
 		public int TeleportReadyTimer { get; private set; }
 
@@ -69,23 +70,35 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		//Top left of teleporter tile
 		private Point TeleporterPos { get; set; } = Point.Zero;
 
+		public SubworldMonitor()
+		{
+			SubworldManager.Monitor = this;
+
+			currentID = SubworldManager.GetActiveSubworldID();
+
+			PreviousID = string.Empty;
+
+			//90 * 60
+			teleporterTimeMax = 2 * 60; //90 in normal/expert, 120 in master?
+		}
+
 		public static bool HideLayers()
 		{
-			if (SubworldManager.Current == null) return false;
+			if (SubworldManager.Monitor == null) return false;
 
-			return SubworldManager.Current.TeleportInitiated;
+			return SubworldManager.Monitor.TeleportInitiated;
 		}
 
 		public static void DrawTeleportSequence(SpriteBatch spriteBatch, Player player)
 		{
-			if (SubworldManager.Current == null) return;
+			if (SubworldManager.Monitor == null) return;
 
-			if (!SubworldManager.Current.DrawTeleport) return;
+			if (!SubworldManager.Monitor.DrawTeleport) return;
 
 			Texture2D image = ModContent.GetTexture("RiskOfSlimeRain/Textures/Recall");
 			Rectangle bounds = new Rectangle
 			{
-				X = SubworldManager.Current.TeleportInitiateFrame,
+				X = SubworldManager.Monitor.TeleportInitiateFrame,
 				Y = 0,
 				Width = image.Bounds.Width / teleportInitiateFrameCount,
 				Height = image.Bounds.Height
@@ -93,16 +106,6 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			bounds.X *= bounds.Width;
 
 			spriteBatch.Draw(image, player.Bottom - Main.screenPosition - new Vector2(0, bounds.Height / 2), bounds, Color.White, 0f, bounds.Size() / 2, 1f, SpriteEffects.None, 0f);
-		}
-
-		public SubworldMonitor()
-		{
-			SubworldManager.Current = this;
-
-			id = SubworldManager.GetActiveSubworldID();
-
-			//90 * 60
-			teleporterTimeMax = 2 * 60; //90 in normal/expert, 120 in master?
 		}
 
 		public bool GetGreetingText(out string displayName, out string subName, out float alpha)
@@ -119,7 +122,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			{
 				alpha = 2f - (TicksSpentInSubworld / 180f);
 			}
-			Subworld subworld = SubworldManager.subworlds[id];
+			Subworld subworld = SubworldManager.subworlds[currentID];
 			displayName = subworld.displayName;
 			subName = subworld.subName;
 			return alpha > 0f;
@@ -137,7 +140,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				for (int y = 42; y < Main.maxTilesY - 42; y++)
 				{
 					Tile tile = Framing.GetTileSafely(x, y);
-					if (tile.active() && tile.type == ModContent.TileType<TeleporterTile>())
+					if (tile.active() && tile.type == SubworldManager.TeleporterTileType)
 					{
 						TeleporterPos = new Point(x - tile.frameX / 18 % TeleporterTile.width, y - tile.frameY / 18 % TeleporterTile.height);
 						break;
@@ -260,7 +263,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						SubworldManager.Exit();
 					}
 					//TODO change this so it works in multi
-					SubworldManager.Current = null;
+					SubworldManager.Monitor = null;
 				}
 			}
 		}

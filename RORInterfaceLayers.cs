@@ -449,13 +449,13 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		private static readonly GameInterfaceDrawMethod SubworldGreeting = delegate
 		{
-			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Current == null)
+			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Monitor == null)
 			{
 				return true;
 			}
 			Player player = Main.LocalPlayer;
 
-			if (SubworldManager.Current.GetGreetingText(out string displayName, out string subName, out float alpha))
+			if (SubworldManager.Monitor.GetGreetingText(out string displayName, out string subName, out float alpha))
 			{
 				Vector2 center = new Vector2(Main.screenWidth, Main.screenHeight) / 2;
 				if (displayName != null)
@@ -477,14 +477,14 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		private static readonly GameInterfaceDrawMethod SubworldTeleport = delegate
 		{
-			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Current == null)
+			if (!(SubworldManager.AnyActive() ?? false) || SubworldManager.Monitor == null)
 			{
 				return true;
 			}
 			Player player = Main.LocalPlayer;
 
 			Vector2 pos = new Vector2((int)player.Center.X, (int)player.Center.Y) - Main.screenPosition + new Vector2(0, player.gfxOffY - player.height * 2);
-			string text = SubworldManager.Current.GetTeleporterTimerText();
+			string text = SubworldManager.Monitor.GetTeleporterTimerText();
 			if (text != null)
 			{
 				Vector2 size = Main.fontMouseText.MeasureString(text);
@@ -492,12 +492,12 @@ namespace RiskOfSlimeRain
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, pos, Color.White, 0, size / 2, Vector2.One * 0.78f);
 			}
 
-			if (SubworldManager.Current.NearestEnemy != null)
+			if (SubworldManager.Monitor.NearestEnemy != null)
 			{
 				float fade = 0;
 
 				Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
-				Vector2 between = SubworldManager.Current.NearestEnemy.Center - playerCenter;
+				Vector2 between = SubworldManager.Monitor.NearestEnemy.Center - playerCenter;
 				float length = between.Length();
 				if (length > 40)
 				{
@@ -512,12 +512,12 @@ namespace RiskOfSlimeRain
 					Main.spriteBatch.Draw(arrow, drawPosition, null, Color.White * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
 				}
 			}
-			else if (SubworldManager.Current.TeleporterReady && !SubworldManager.Current.TeleportInitiated)
+			else if (SubworldManager.Monitor.TeleporterReady && !SubworldManager.Monitor.TeleportInitiated)
 			{
 				float fade = 0;
 
 				Vector2 playerCenter = player.Center + new Vector2(0, player.gfxOffY);
-				Point porterpos = SubworldManager.Current.GetTeleporterPos();
+				Point porterpos = SubworldManager.Monitor.GetTeleporterPos();
 				porterpos.X += TeleporterTile.centerX;
 				porterpos.Y += TeleporterTile.centerY;
 				Vector2 between = porterpos.ToWorldCoordinates() - playerCenter;
