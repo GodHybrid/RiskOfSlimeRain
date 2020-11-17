@@ -121,7 +121,7 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Works as intended. *Nullifies X-axis velocity. Might want to increase Y-axis velocity to make flying enemies fall?*\
 		* Graphics work as intended.
 
-#### Uncommon items **-NONE IMPLEMENTED-**
+#### Uncommon items
 ###### Offensive items
 * [ ][ ]Golden Gun - Deals bonus damage per gold coins, up to 40% damage at 70 platinum coins.\
 **Stacking effect:** Halves the gold required for the maximum damage bonus.\
@@ -161,34 +161,34 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* The effects haven't been coded yet. (Player-locked animation.)
 
 ###### Defensive items
-* [ ][ ]Leeching Seed - On hitting an enemy, heals the player for 2 health.\
+* [x][ ]Leeching Seed - On hitting an enemy, heals the player for 2 health.\
 **Stacking effect:** +1 health on hit.\
-		* The item hasn't been coded yet.\
+		* Heals the player as intended.\
 		* The effects haven't been coded yet. (Player-locked dust.)
-* [ ][ ]Infusion - On killing an enemy, permanently increases player's health by 1.\
+* [ ][x]Infusion - On killing an enemy, permanently increases player's health by 1.\
 **Stacking effect:** +0.5 health on kill.\
 		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Projectiles + projectile-locked dust.)
-* [ ][ ]Harvester's Scythe - On getting a critical hit on an enemy, gain additional 5% critical chance. Critical strikes heal for 12 health.\
-**Stacking effect:** +5% critical chance and +2 health on critical strike.\
-		* The item hasn't been coded yet.\
+		* Projectile animates correctly. Visual effects work as intended.
+* [x][x]Harvester's Scythe - On getting a critical hit on an enemy, gain additional 5% critical chance. Critical strikes heal for 12 health.\
+**Stacking effect:** +2 health on critical strike.\
+		* Flat crit chance increase works, heals the player properly.\
 		* The effects haven't been coded yet. (Player-locked texture.)
 * [ ][ ]Guardian's Heart - Gives the player a 60 health shield. Recharges in 7 seconds.\
 **Stacking effect:** +60 Shield.\
 		* The item hasn't been coded yet.\
 		* The effects haven't been coded yet. (Heart texture + player-locked texture.)
-* [ ][ ]Dead Man's Foot -  At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
+* [x][/]Dead Man's Foot -  At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
 **Stacking effect:** +1 poison tick.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Player-locked dust + projectiles.)
-* [ ][ ]Panic Mines - drop a landmine when the player reaches low health that deals 500% damage.\
+		* Works as intended.\
+		* Projectiles animate correctly, dust missing.
+* [x][x]Panic Mines - drop a landmine when the player reaches low health that deals 500% damage.\
 **Stacking effect:** +1 mine dropped.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Projectiles.)
-* [ ][ ]Tough Times - grants the player 14 armor. *Reduces the damage by ~12.3%.*\
+		* Effects work as intended, projectiles work properly.\
+		* Projectiles animate correctly, sounds work as intended
+* [x][x]Tough Times - grants the player 14 armor. *Reduces the damage by ~12.3%.*\
 **Stacking effect:** +14 armor.\
-		* The item hasn't been coded yet.\
-		* Effects aren't required.
+		* Effect works as intended.\
+		* Visual effects aren't required.
 
 ###### Utility items
 * [ ][ ]Hopoo Feather - Gives the player an additional jump.\

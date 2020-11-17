@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Projectiles
 				if (StrikeTimer > StrikeTimerMax)
 				{
 					StrikeTimer = 0;
-					Player player = Main.player[projectile.owner];
+					Player player = projectile.GetOwner();
 					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
 				}
 			}
