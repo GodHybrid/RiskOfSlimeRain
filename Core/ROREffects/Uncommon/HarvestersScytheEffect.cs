@@ -1,24 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.ROREffects.Helpers;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using System;
 using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class HarvestersScytheEffect : RORUncommonEffect, IOnHit, IGetWeaponCrit, IPlayerLayer
+	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
-		public const float initial = 6;
-		public const float increase = 2;
+		//fixed, ror also increases that by 2% per stack
 		public const float critChance = 0.05f;
 
-		public float CurrentHeal => initial + increase * Stack;
+		public override float Initial => 8;
+		public override float Increase => 2;
 
-		//TODO
-		public float StoredHeals = 0;
+		public override float CurrentHeal => Formula();
 
-		public override string Description => $"Gain 5% crit chance. Critical strikes heal for {initial + increase} HP";
+		public override int HitCheckMax => 1; //Minimum, max once per second
+
+		public override string Description => $"Gain {critChance.ToPercent()} crit chance. Critical strikes heal for {Initial} health";
+
 		public override string FlavorText => "It takes a brave man to look death in the eye and claim they don't need help.";
+
 		public override string Name => "Harvester's Scythe";
+
+		public override string UIInfo()
+		{
+			return $"Stored heal: {Math.Round(StoredHeals, 2)}. Heal amount: {Math.Round(CurrentHeal, 2)}";
+		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
@@ -27,12 +37,17 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			if (crit) player.HealMe((int)CurrentHeal);
+			HandleHealing(player);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			if (crit) player.HealMe((int)CurrentHeal);
+			HandleHealing(player);
+		}
+
+		public void PostUpdateEquips(Player player)
+		{
+			UpdateHitCheckCount(player);
 		}
 
 		public void GetWeaponCrit(Player player, Item item, ref int crit)
