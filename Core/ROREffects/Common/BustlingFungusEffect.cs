@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.045f : 0.02f;
 
-		public override string Description => $"After {NoMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max HP every second";
+		public override string Description => $"After {NoMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max health every second";
 
 		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
 

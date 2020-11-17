@@ -11,13 +11,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Initial = 0.2f;
 		//const float Increase = 0.3f;
-		private float HPlimit => ServerConfig.Instance.OriginalStats ? 0.8f : 0.85f;
+		private float HealthLimit => ServerConfig.Instance.OriginalStats ? 0.8f : 0.85f;
 
 		public override float Initial => 0.5f;
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.3f : 0.1f;
 
-		public override string Description => $"Deal {Initial.ToPercent()} more damage to enemies above {HPlimit.ToPercent()} HP";
+		public override string Description => $"Deal {Initial.ToPercent()} more damage to enemies above {HealthLimit.ToPercent()} health";
 
 		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives";
 
@@ -38,7 +38,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		void ModifyDamage(NPC target, ref int damage)
 		{
-			if (target.life >= target.lifeMax * HPlimit)
+			if (target.life >= target.lifeMax * HealthLimit)
 			{
 				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<CrowbarProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
 				damage += (int)(damage * Formula());
