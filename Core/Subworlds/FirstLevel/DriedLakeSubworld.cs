@@ -5,6 +5,7 @@ using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.ObjectData;
 using Terraria.World.Generation;
 
 namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
@@ -82,6 +83,7 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 				new PassLegacy(nameof(RemoveWalls), RemoveWalls, 1f),
 				new PassLegacy(nameof(SetSpawn), SetSpawn, 1f),
 				new PassLegacy(nameof(PlaceObjects), PlaceObjects, 1f),
+				new PassLegacy(nameof(PlaceGrass), PlaceGrass, 1f),
 			};
 			return list;
 		}
@@ -361,6 +363,35 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 			int w = TeleporterTile.width;
 			int h = TeleporterTile.height;
 			SetRandomSpawn(CenterX - 1, CenterY - 2, w - w / 2, w / 2, h); // -2 Because sand is 2 tiles thick
+		}
+
+		public void PlaceGrass(GenerationProgress progress)
+		{
+			progress.Message = "Place Grass";
+
+			var types = new int[] { ModContent.TileType<DriedLakeGrass2x1>(), ModContent.TileType<DriedLakeGrass2x2>() };
+			for (int i = 41; i < Main.maxTilesX - 41; i++)
+			{
+				for (int j = 41; j < Main.maxTilesY - 41; j++)
+				{
+					Tile tile = Main.tile[i, j];
+					if (tile.active() && tile.type == topType)
+					{
+						Tile tileAbove = Main.tile[i, j - 1];
+						if (!tileAbove.active())
+						{
+							var type = WorldGen.genRand.Next(types);
+							int style = 0;
+							TileObjectData data = TileObjectData.GetTileData(type, 0);
+							if (data != null)
+							{
+								style = WorldGen.genRand.Next(data.RandomStyleRange);
+							}
+							WorldGen.PlaceTile(i, j - 1, type, mute: true, style: style);
+						}
+					}
+				}
+			}
 		}
 
 		public void BuildMetalPlatforms(GenerationProgress progress)
