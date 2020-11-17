@@ -36,6 +36,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			player.maxRunSpeed += player.maxRunSpeed * Formula();
 			player.moveSpeed += player.moveSpeed * Formula();
+			player.accRunSpeed += 0.5f * Formula();
 
 			//TODO revisit this line due to new values
 			//if (((player.controlRight && player.velocity.X < -9f) || (player.controlLeft && player.velocity.X > 9f)) && Stack > 5) player.velocity.X /= 1.3f;
