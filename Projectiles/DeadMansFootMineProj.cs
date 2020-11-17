@@ -4,13 +4,14 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WebmilioCommons.Extensions;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	//ai0 - player damage
 	//ai1 - ticks
-	public class DeadMansFootProj : ModProjectile, IExcludeOnHit
+	public class DeadMansFootMineProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
 		public byte addRadiusX = 20;
@@ -65,16 +66,20 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			projectile.velocity.Y = 10f;
 			projectile.LoopAnimation(7);
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n =>
+			if (Main.myPlayer == projectile.owner)
 			{
-				Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
-				projectile.Kill();
-			});
+				bool explode = Main.npc.CountActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)) > 0;
+				if (explode)
+				{
+					Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
+					projectile.Kill();
+				}
+			}
 		}
 
 		public override void Kill(int timeLeft)
 		{
-			if (Main.myPlayer == projectile.owner)
+			if (Main.myPlayer == projectile.owner && timeLeft > 0)
 			{
 				Rectangle explosionArea = projectile.Hitbox;
 				explosionArea.Inflate(addRadiusX, addRadiusY);
@@ -84,11 +89,11 @@ namespace RiskOfSlimeRain.Projectiles
 					int damage = (int)(1.5f * Damage);
 					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
 					{
-						t.TimeLeft = (ushort)(30 * (Ticks) + 20);
+						t.TimeLeft = (ushort)(30 * Ticks + 20);
 					});
 				});
 			}
-			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode); // Change soundeffect
+			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode?.WithVolume(0.8f), projectile.Center);
 		}
 
 		public override Color? GetAlpha(Color lightColor)
