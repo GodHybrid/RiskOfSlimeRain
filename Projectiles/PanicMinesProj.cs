@@ -4,16 +4,24 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WebmilioCommons.Extensions;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	//ai0 damage
 	public class PanicMinesProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
 		public byte timer = 25;
 		public byte addRadiusX = 50;
-		public byte addRadiusY = 30;
+		public byte addRadiusY = 30; 
+		
+		public int Damage
+		{
+			get => (int)projectile.ai[0];
+			set => projectile.ai[0] = value;
+		}
 
 		public override void SetStaticDefaults()
 		{
@@ -52,16 +60,20 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			projectile.velocity.Y = 10f;
 			projectile.LoopAnimation(4);
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)).Do(n =>
-			{
-				activate = true;
-			});
 
-			if (timer % 5 == 0 && activate) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
-			if (activate) timer--;
-			if (timer == 0)
+			if (!activate) activate = Main.npc.CountActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)) > 0;
+
+			if (activate)
 			{
-				Projectile.NewProjectile(projectile.position, new Vector2(0, 0), ModContent.ProjectileType<PanicMinesExplosionProj>(), 0, 0, Main.myPlayer);
+				if (timer >= 0 && timer % 5 == 0)
+				{
+					Main.PlaySound(SoundID.Trackable, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
+				}
+				timer--;
+			}
+			if (timer == 0 && Main.myPlayer == projectile.owner)
+			{
+				Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<PanicMinesExplosionProj>(), 0, 0, Main.myPlayer);
 				projectile.Kill();
 			}
 		}
@@ -72,10 +84,11 @@ namespace RiskOfSlimeRain.Projectiles
 			explosionArea.Inflate(addRadiusX / 2, addRadiusY / 2);
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
 			{
-				n.StrikeNPC((int)projectile.ai[0], 0, 0);
+				n.StrikeNPC(Damage, 0, 0);
 			});
-			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode);
+			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode?.WithVolume(0.8f), projectile.Center);
 		}
+
 		public override Color? GetAlpha(Color lightColor)
 		{
 			return Color.White;

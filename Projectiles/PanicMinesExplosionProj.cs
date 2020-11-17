@@ -19,7 +19,7 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			projectile.Size = new Vector2(106, 184);
 			projectile.timeLeft = 26;
-			drawOriginOffsetY = -50;
+			drawOriginOffsetY = -projectile.height / 3;
 		}
 
 		public override void AI()
