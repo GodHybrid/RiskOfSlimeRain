@@ -23,20 +23,26 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void Kill(int timeLeft)
 		{
-			if (timeLeft == 0)
+			Main.PlaySound(SoundID.Item14?.WithVolume(0.6f), projectile.Center);
+			for (int i = 0; i < 10; i++) //40
 			{
-				Main.PlaySound(SoundID.Item14.WithVolume(0.6f), projectile.Center);
-				Vector2 velo;
-				for (int i = 0; i < 4; i++)
+				Dust dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Smoke, 0f, 0f, 100, default(Color), 2f);
+				dust.velocity *= 2f; //3f
+				if (Main.rand.NextBool(2))
 				{
-					velo = Vector2.UnitX.RotatedBy(-45).RotatedByRandom(270) * 4;
-					GravityDustProj.NewProjectile<BundleOfFireworksVisualExplosion>(projectile.Center, velo);
+					dust.scale = 0.5f;
+					dust.fadeIn = 1f + (float)Main.rand.Next(10) * 0.1f;
 				}
 			}
-			else
+			for (int i = 0; i < 20; i++) //70
 			{
-				Main.PlaySound(SoundID.Item14.WithVolume(0.6f), projectile.Center);
-
+				Dust dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 3f);
+				dust.noGravity = true;
+				dust.velocity *= 4f; //5f
+				dust.noLight = true;
+				dust = Dust.NewDustDirect(new Vector2(projectile.position.X, projectile.position.Y), projectile.width, projectile.height, DustID.Fire, 0f, 0f, 100, default(Color), 2f);
+				dust.velocity *= 2f;
+				dust.noLight = true;
 			}
 		}
 	}
