@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Projectiles;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
 using Terraria.ModLoader;
-using System;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {

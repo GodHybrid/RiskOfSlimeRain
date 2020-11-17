@@ -82,9 +82,9 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					n.AddBuff(BuffID.Venom, 30 * Ticks);
 					int damage = (int)(1.5f * Damage);
-					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate(DeadMansFootDoTProj t)
+					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
 					{
-						t.TimeLeft = (ushort)(30 * (Ticks) + 20) ;
+						t.TimeLeft = (ushort)(30 * (Ticks) + 20);
 					});
 				});
 			}

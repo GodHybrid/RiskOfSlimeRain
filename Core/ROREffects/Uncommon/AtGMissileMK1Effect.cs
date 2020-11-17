@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			for (int i = 0; i < Stack; i++) 
+			for (int i = 0; i < Stack; i++)
 			{
 				if (Proc(Chance))
 				{

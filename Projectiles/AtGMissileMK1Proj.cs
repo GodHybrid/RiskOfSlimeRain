@@ -20,16 +20,6 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			projectile.Size = new Vector2(16);
 		}
-		
-		public override void FadeIn()
-		{
-			base.FadeIn();
-		}
-
-		public override void SpawnDust()
-		{
-			base.SpawnDust();
-		}
 
 		public override void Kill(int timeLeft)
 		{
@@ -46,7 +36,7 @@ namespace RiskOfSlimeRain.Projectiles
 			else
 			{
 				Main.PlaySound(SoundID.Item14.WithVolume(0.6f), projectile.Center);
-				
+
 			}
 		}
 	}
