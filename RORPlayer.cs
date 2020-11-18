@@ -348,11 +348,11 @@ namespace RiskOfSlimeRain
 
 		public override void ModifyWeaponDamage(Item item, ref float add, ref float mult, ref float flat)
 		{
-			//ROREffectManager.ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
 			if (item.damage > 0 && InWarbannerRange)
 			{
 				flat += 4;
 			}
+			ROREffectManager.ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
 		}
 
 		public override void PostUpdateRunSpeeds()

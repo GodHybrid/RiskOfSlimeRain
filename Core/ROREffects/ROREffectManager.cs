@@ -426,7 +426,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		//unused
 		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player);
