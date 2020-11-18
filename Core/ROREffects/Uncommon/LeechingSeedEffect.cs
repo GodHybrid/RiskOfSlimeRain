@@ -28,12 +28,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			HandleHealing(player);
+			HandleAndApplyHeal(player);
 		}
 
 		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			HandleHealing(player);
+			HandleAndApplyHeal(player);
 		}
 
 		public void PostUpdateEquips(Player player)

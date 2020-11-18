@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Projectiles
 		public abstract void ApplyBonus(Player target);
 
 		/// <summary>
-		/// Return true if a target is found, and targetIndex is set accordingly. By default, player with lowest health
+		/// Return true if a target is found, and targetIndex is set accordingly
 		/// </summary>
 		public abstract bool FindTarget(out int targetIndex);
 

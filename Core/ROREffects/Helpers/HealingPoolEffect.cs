@@ -5,7 +5,7 @@ using Terraria.ModLoader.IO;
 namespace RiskOfSlimeRain.Core.ROREffects.Helpers
 {
 	/// <summary>
-	/// Helper class to make effects that have healing included easier. Call HandleHealing and UpdateHitCheckCount where required
+	/// Helper class to make effects that have healing included easier. Call <see cref="HandleStoredHeals"/>, <see cref="GetHeal"/> and <see cref="UpdateHitCheckCount"/> where required
 	/// </summary>
 	public abstract class HealingPoolEffect : ROREffect
 	{
@@ -28,20 +28,41 @@ namespace RiskOfSlimeRain.Core.ROREffects.Helpers
 		protected int HitCheckTimerReduce => 60 / HitCheckMax;
 
 		/// <summary>
-		/// Call this when healing has to be done
+		/// Call this when addition to the stored heal should take place
 		/// </summary>
-		protected void HandleHealing(Player player)
+		protected void HandleStoredHeals()
 		{
 			if (hitCheckCount < HitCheckMax)
 			{
 				hitCheckCount++;
 				StoredHeals += CurrentHeal;
-				if (StoredHeals > 1)
-				{
-					int healAmount = (int)StoredHeals;
-					StoredHeals -= healAmount;
-					player.HealMe(healAmount);
-				}
+			}
+		}
+
+		/// <summary>
+		/// Call this to retreive from the heal pool. 0 if not enough 
+		/// </summary>
+		protected int GetHeal()
+		{
+			if (StoredHeals > 1)
+			{
+				int healAmount = (int)StoredHeals;
+				StoredHeals -= healAmount;
+				return healAmount;
+			}
+			return 0;
+		}
+
+		/// <summary>
+		/// Does <see cref="HandleStoredHeals"/> and <see cref="GetHeal"/> combined
+		/// </summary>
+		protected void HandleAndApplyHeal(Player player)
+		{
+			HandleStoredHeals();
+			int heal = GetHeal();
+			if (heal > 0)
+			{
+				player.HealMe(heal);
 			}
 		}
 
