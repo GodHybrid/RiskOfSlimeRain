@@ -60,6 +60,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				if (type.IsInterface)
 				{
+					//TODO change this: if(typeof(IROREffectInterface).IsAssignableFrom(type))
 					Type interf = type.GetInterface(typeof(IROREffectInterface).Name);
 					if (interf != null)
 					{

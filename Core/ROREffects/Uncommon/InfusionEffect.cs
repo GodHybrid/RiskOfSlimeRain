@@ -54,7 +54,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void ResetEffects(Player player)
 		{
-			player.statLifeMax2 += BonusLife;
+			player.statLifeMax2 += Math.Min(Cap, BonusLife);
 		}
 
 		public override void PopulateTag(TagCompound tag)
