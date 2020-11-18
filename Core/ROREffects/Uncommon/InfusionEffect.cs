@@ -14,6 +14,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public class InfusionEffect : HealingPoolEffect, IOnKill, IResetEffects, IPostUpdateEquips
 	{
+		public override RORRarity Rarity => RORRarity.Uncommon;
+
 		public override float Initial => 0.1f;
 
 		/// <summary>
