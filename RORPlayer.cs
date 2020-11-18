@@ -103,12 +103,24 @@ namespace RiskOfSlimeRain
 		#endregion
 
 		#region Timers
+		/// <summary>
+		/// Time the player hasn't been moving
+		/// </summary>
 		public int NoMoveTimer { get; private set; } = 0;
 
+		/// <summary>
+		/// Time the player hasn't been using items
+		/// </summary>
 		public int NoItemUseTimer { get; private set; } = 0;
 
+		/// <summary>
+		/// Time the player hasn't been hit by damage
+		/// </summary>
 		public int NoHurtTimer { get; private set; } = 0;
 
+		/// <summary>
+		/// Time the player hasn't dealt damage
+		/// </summary>
 		public int NoOnHitTimer { get; private set; } = 0;
 
 		/// <summary>
@@ -151,6 +163,11 @@ namespace RiskOfSlimeRain
 			NoOnHitTimer++;
 
 			if (ProcTimer > 0) ProcTimer--;
+		}
+
+		public void ResetNoHurtTimer()
+		{
+			NoHurtTimer = 0;
 		}
 		#endregion
 
@@ -455,7 +472,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			NoHurtTimer = 0;
+			ResetNoHurtTimer();
 			ROREffectManager.Perform<IPostHurt>(this, e => e.PostHurt(player, pvp, quiet, damage, hitDirection, crit));
 		}
 
