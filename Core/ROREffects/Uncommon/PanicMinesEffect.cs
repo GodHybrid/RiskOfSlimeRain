@@ -31,8 +31,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();
 				int spawnDamage = (int)(dmg * player.GetDamage());
-				Projectile.NewProjectile(player.Center, Vector2.Zero, type, 0, 0, Main.myPlayer, spawnDamage);
-				return;
 				for (int i = MinesDropped; i > 0; i--)
 				{
 					if (!WorldUtils.Find(new Point(position.ToTileCoordinates().X + MinesDropped / 2 - (i - 1), position.ToTileCoordinates().Y + 1), Searches.Chain(new Searches.Right(1), new GenCondition[]
