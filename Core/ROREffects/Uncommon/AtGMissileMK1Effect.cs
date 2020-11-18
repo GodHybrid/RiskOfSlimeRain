@@ -27,11 +27,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Spawn chance: {RollChance.ToPercent(2)}";
 		}
 
-		private float RollChance => 1f - (float)Math.Pow(1f - Chance, Math.Max(1, Stack));
+		public override float Formula()
+		{
+			if (Stack > 1)
+			{
+				return Initial + 1f - (float)Math.Pow(1f - Increase, Stack - 1);
+			}
+			else
+			{
+				return Initial;
+			}
+		}
 
-		public override bool AlwaysProc => true;
-
-		public override float Chance => Initial;
+		private float RollChance => Formula();
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

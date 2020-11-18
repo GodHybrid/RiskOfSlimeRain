@@ -27,8 +27,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
 		}
 
-		public override bool AlwaysProc => true;
-
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
 			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50));

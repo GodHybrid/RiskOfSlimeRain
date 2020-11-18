@@ -12,9 +12,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 	//TODO proper visuals with the healthbar
 	public class GuardiansHeartEffect : RORUncommonEffect, IPlayerLayer, IPreHurt, IPostUpdateEquips
 	{
-		public override float Initial => ServerConfig.Instance.OriginalStats ? 60 : 20;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 60 : 30;
 
-		public override float Increase => ServerConfig.Instance.OriginalStats ? 60 : 20;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 60 : 30;
 
 		public const int time = 7;
 
@@ -47,7 +47,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			{
 				player.GetRORPlayer().ResetNoHurtTimer();
 				Shield -= damage;
-				CombatText.NewText(player.Hitbox, new Color(177, 215, 222), damage);
+				CombatText.NewText(player.Hitbox, new Color(177, 215, 222), damage, dramatic: true);
 				Shield = Utils.Clamp(Shield, 0, MaxShield);
 
 				//vanilla immune times divided by 3
