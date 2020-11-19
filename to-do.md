@@ -50,10 +50,9 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* Visual effects work properly.
 
 ###### Defensive items
-* [x][ ]Bitter Root - increases the player's maximum health by 8% and caps at 300% extra base health.\
+* [x][x]Bitter Root - increases the player's maximum health by 8% and caps at 300% extra base health.\
 **Stacking effect:** Further gain 8% max HP, up to 38 stacks (300% extra HP).\
 		* Increases HP properly.\
-		* No leaf visuals yet.
 * [x][x]Bustling Fungus - heals the player for 4.5% of their health after 2 seconds out of combat and being completely immobile.\
 **Stacking effect:** 4.5% more HP/s increase, increased radius of effect.\
 		* Heals the player and friendly NPCs properly.\
@@ -123,18 +122,16 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 
 #### Uncommon items
 ###### Offensive items
-* [ ][ ]Golden Gun - Deals bonus damage per gold coins, up to 40% damage at 70 platinum coins.\
-**Stacking effect:** Halves the gold required for the maximum damage bonus.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Player-locked fill-up bar sprite. *Perhaps lock it somewhere next to the map/inventory?*)
-* [ ][ ]AtG Missile Mk.1 - On hitting an enemy, the player has a 10% chance of firing a missile that causes an explosion for 300% damage. These missiles cannot critically strike.\
+* [x][x]Golden Gun - Deals bonus damage per gold coins, up to 40% damage at 1 platinum coin.\
+**Stacking effect:** Increases damage and cap by 10%.\
+		* Works as intended.\
+* [x][x]AtG Missile Mk.1 - On hitting an enemy, the player has a 10% chance of firing a missile that causes an explosion for 300% damage. These missiles cannot critically strike.\
 **Stacking effect:** +10% chance to fire missile\
-		* The item hasn't been coded yet.\
+		* Works as intended.\
 		* The effects haven't been coded yet. (Player-locked texture + missiles)
-* [ ][ ]Boxing Gloves - On hitting an enemy, the player has a 6% chance to knockback the enemy. The power of the knockback depends on the strength of the attack.\
+* [x][x]Boxing Gloves - On hitting an enemy, the player has a 6% chance to knockback the enemy. The power of the knockback depends on the strength of the attack.\
 **Stacking effect:** 6% multiplicative increase in knockback chance.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (On-hit enemy-locked texture.)
+		* Works as intended.\
 * [ ][ ]Chargefield Generator - On killing an enemy, generates a lightning ring, dealing 100% damage/sec to one enemy for 6 seconds. Killing additional enemies while the ring is active makes the ring larger and resets the 6 seconds.\
 **Stacking effect:** +10% damage/sec.\
 		* The item hasn't been coded yet.\
@@ -161,34 +158,28 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* The effects haven't been coded yet. (Player-locked animation.)
 
 ###### Defensive items
-* [x][ ]Leeching Seed - On hitting an enemy, heals the player for 2 health.\
+* [x][x]Leeching Seed - On hitting an enemy, heals the player for 0.2 health.\
 **Stacking effect:** +1 health on hit.\
-		* Heals the player as intended.\
-		* The effects haven't been coded yet. (Player-locked dust.)
-* [ ][x]Infusion - On killing an enemy, permanently increases player's health by 1.\
-**Stacking effect:** +0.5 health on kill.\
-		* The item hasn't been coded yet.\
-		* Projectile animates correctly. Visual effects work as intended.
-* [x][x]Harvester's Scythe - On getting a critical hit on an enemy, gain additional 5% critical chance. Critical strikes heal for 12 health.\
+		* Works as intended.\
+* [x][x]Infusion - On killing an enemy, permanently increases player's health by 0.2.\
+**Stacking effect:** +0.1 health on kill.\
+		* Works as intended.\
+* [x][x]Harvester's Scythe -Gain additional 5% critical chance. Critical strikes heal for 8 health.\
 **Stacking effect:** +2 health on critical strike.\
-		* Flat crit chance increase works, heals the player properly.\
-		* The effects haven't been coded yet. (Player-locked texture.)
-* [ ][ ]Guardian's Heart - Gives the player a 60 health shield. Recharges in 7 seconds.\
+		* Works as intended.\
+* [x][ ]Guardian's Heart - Gives the player a 60 health shield. Recharges in 7 seconds.\
 **Stacking effect:** +60 Shield.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Heart texture + player-locked texture.)
-* [x][/]Dead Man's Foot -  At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
+		* Works as intended.\
+		* The effects haven't been coded fully yet. (Heart texture)
+* [x][x]Dead Man's Foot - At low health, the player drops a mine at their feet, which detonates once an enemy passes over it, causing poison damage to the affected enemies.\
 **Stacking effect:** +1 poison tick.\
 		* Works as intended.\
-		* Projectiles animate correctly, dust missing.
 * [x][x]Panic Mines - drop a landmine when the player reaches low health that deals 500% damage.\
 **Stacking effect:** +1 mine dropped.\
-		* Effects work as intended, projectiles work properly.\
-		* Projectiles animate correctly, sounds work as intended
-* [x][x]Tough Times - grants the player 14 armor. *Reduces the damage by ~12.3%.*\
+		* Works as intended.\
+* [x][x]Tough Times - grants the player 7% multiplicative damage reduction.\
 **Stacking effect:** +14 armor.\
-		* Effect works as intended.\
-		* Visual effects aren't required.
+		* Works as intended.\
 
 ###### Utility items
 * [ ][ ]Hopoo Feather - Gives the player an additional jump.\
@@ -355,16 +346,15 @@ Risk of Slime Rain is a mod, that aims to bring Risk of Rain, a rogue-lite platf
 		* The item hasn't been coded yet.\
 		* Effects aren't required.
 
-#### Boss items **-NONE IMPLEMENTED-**
+#### Boss items
 ###### Offensive items
 * [ ][ ]Ifrit's Horn - On hitting an enemy, the player has a 8% chance to incinerate enemies for 220% damage.\
 **Stacking effect:** +30% damage.\
 		* The item hasn't been coded yet.\
 		* The effects haven't been coded yet. (*Something?*)
-* [ ][ ]Burning Witness - On killing an enemy, grants a firetrail buff, 5% movement speed, and 1 damage for 6 seconds.\
+* [x][x]Burning Witness - On killing an enemy, grants a firetrail buff, 5% movement speed, and 1 damage for 6 seconds.\
 **Stacking effect:** +5% movement speed, +1 second duration.\
-		* The item hasn't been coded yet.\
-		* The effects haven't been coded yet. (Projectiles.)
+		* Works as intended.\
 * [ ][ ]Legendary Spark - On hitting an enemy, the player has a 8% chance to smite enemies for 200% damage.\
 **Stacking effect:** +1 spark.\
 		* The item hasn't been coded yet.\
