@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			if (damage >= player.statLifeMax2 * HPlimit)
+			if (Main.myPlayer == player.whoAmI && damage >= player.statLifeMax2 * HPlimit)
 			{
 				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (int)Math.Max(20, dmg * Stack * player.GetDamage()), KB + Stack, Main.myPlayer);
 			}

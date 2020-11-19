@@ -30,6 +30,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
+			if (Main.myPlayer != player.whoAmI) return;
 			for (int i = -1; i < count - 1; i++)
 			{
 				Projectile.NewProjectile(player.Bottom + new Vector2(0, -6), new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
