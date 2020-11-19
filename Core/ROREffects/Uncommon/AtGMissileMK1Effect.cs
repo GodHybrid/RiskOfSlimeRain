@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class AtGMissileMK1Effect : RORUncommonEffect, IOnHit
+	public class AtGMissileMK1Effect : RORUncommonEffect, IOnHit, IPlayerLayer
 	{
 		public const float damageIncrease = 3f;
 
@@ -27,6 +27,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		public override string UIInfo()
 		{
 			return $"Spawn chance: {RollChance.ToPercent(2)}";
+		}
+
+		public PlayerLayerParams GetPlayerLayerParams(Player player)
+		{
+			return new PlayerLayerParams("Textures/AtGMissileMK1", Vector2.Zero);
 		}
 
 		public override float Formula()
