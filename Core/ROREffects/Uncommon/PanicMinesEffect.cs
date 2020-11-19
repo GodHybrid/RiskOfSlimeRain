@@ -24,9 +24,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
 
+		public override string UIInfo()
+		{
+			return $"Mine count: {(int)Formula()}";
+		}
+
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			if (damage >= 50 || player.statLife <= (int)(player.statLifeMax2 * damageThreshold))
+			if (Main.myPlayer == player.whoAmI && damage >= 50 || player.statLife <= (int)(player.statLifeMax2 * damageThreshold))
 			{
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();

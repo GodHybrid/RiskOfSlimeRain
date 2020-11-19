@@ -26,7 +26,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			base.SetDefaults();
 			projectile.Size = new Vector2(26, 20);
 			projectile.timeLeft = 3600;
 			projectile.friendly = true;

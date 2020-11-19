@@ -13,12 +13,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float CurrentHeal => Formula();
 
-		public override float Initial => 0.1f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
 
-		public override float Increase => 0.05f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.1f : 0.05f;
 
 		public override string Description => $"Dealing damage heals you for {Initial} health";
-		
+
 		public override string FlavorText => "These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.\nHowever, before they die, they feel increased health and state of mind!";
 
 		public override string UIInfo()

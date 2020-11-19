@@ -1,10 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Network.Effects;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
-using RiskOfSlimeRain.Helpers;
-using System.IO;
-using RiskOfSlimeRain.Network.Effects;
 using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		public override string Description => $"Gain {Initial} shields. Recharges in {time} seconds out of combat";
 
 		public override string FlavorText => "While living, the subject had advanced muscle growth, cell regeneration, higher agility...\nHis heart seems to still beat independent of the rest of the body.";
-		
+
 		public override string Name => "Guardian's Heart";
 
 		public override string UIInfo()
@@ -35,10 +35,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return Shield > 0 ?
-				new PlayerLayerParams("Textures/GuardiansHeart", new Vector2(24, -24),
-				color: Color.Lerp(Color.Red, Color.White, ((float)Shield)/MaxShield)) :
-				null;
+			if (Shield > 0) return new PlayerLayerParams("Textures/GuardiansHeart", new Vector2(24, -24),
+				color: Color.Lerp(Color.Red, Color.White, ((float)Shield) / MaxShield));
+			else return null;
 		}
 
 		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
@@ -76,7 +75,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 					}
 				}
 
-				new ROREffectSyncSinglePacket(this).Send();
+				if (Main.myPlayer == player.whoAmI) new ROREffectSyncSinglePacket(this).Send();
 				return false;
 			}
 			return true;

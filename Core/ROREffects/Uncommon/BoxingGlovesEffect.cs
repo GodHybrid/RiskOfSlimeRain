@@ -36,13 +36,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float RollChance => Formula();
 
-		private void ModifyKnockback(ref float knockback, NPC target)
+		private void ModifyKnockback(Player player, ref float knockback, NPC target)
 		{
+			//Custom rolling
 			if (Proc(RollChance))
 			{
 				//Apply more knockback the less knockBackResist target has
 				float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
 				knockback += 3f + 6f * antiKBResist;
+
+				if (Config.HiddenVisuals(player)) return;
 
 				for (int i = 0; i < 14; i++)
 				{
@@ -58,12 +61,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
 		{
-			ModifyKnockback(ref knockback, target);
+			ModifyKnockback(player, ref knockback, target);
 		}
 
 		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
 		{
-			ModifyKnockback(ref knockback, target);
+			ModifyKnockback(player, ref knockback, target);
 		}
 	}
 }

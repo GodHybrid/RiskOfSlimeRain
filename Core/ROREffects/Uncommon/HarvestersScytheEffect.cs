@@ -9,10 +9,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
-		//fixed, ror also increases that by 2% per stack
 		public const float critChance = 0.05f;
 
+		public float CritChance => critChance + (ServerConfig.Instance.OriginalStats ? 0.02f * Math.Max(0, Stack - 1) : 0f);
+
 		public override float Initial => 8;
+
 		public override float Increase => 2;
 
 		public override float CurrentHeal => Formula();
@@ -27,7 +29,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Stored heal: {Math.Round(StoredHeals, 2)}. Heal amount: {Math.Round(CurrentHeal, 2)}";
+			string info = $"Heal amount: {Math.Round(CurrentHeal, 2)}";
+			if (ServerConfig.Instance.OriginalStats)
+			{
+				info = $"Crit chance increase: {CritChance.ToPercent()}. " + info;
+			}
+			return info;
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
@@ -52,7 +59,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void GetWeaponCrit(Player player, Item item, ref int crit)
 		{
-			crit += (int)(critChance * 100);
+			crit += (int)(CritChance * 100);
 		}
 	}
 }

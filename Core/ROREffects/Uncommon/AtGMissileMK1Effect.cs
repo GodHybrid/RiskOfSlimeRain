@@ -10,7 +10,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public class AtGMissileMK1Effect : RORUncommonEffect, IOnHit
 	{
-		const float damageIncrease = 3f;
+		public const float damageIncrease = 3f;
+
+		private float DamageIncrease => ServerConfig.Instance.OriginalStats ? damageIncrease : damageIncrease - 1f;
 
 		public override float Initial => 0.1f;
 
@@ -71,7 +73,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		void SpawnProjectile(Player player)
 		{
 			//In ror, it actually uses the dealt damage for the missile damage, not the players damage
-			int damage = (int)(damageIncrease * player.GetDamage());
+			int damage = (int)(DamageIncrease * player.GetDamage());
 			if (Main.netMode != NetmodeID.Server) SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
 			Vector2 velo = new Vector2(Main.rand.NextFloat(4f) - 2f, -2f);
 			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(player.Center, velo, damage, 10f);

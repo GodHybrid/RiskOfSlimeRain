@@ -1,9 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
-using Terraria;
 using RiskOfSlimeRain.Helpers;
-using Terraria.ID;
 using System;
+using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -17,7 +16,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private const int frameCount = 9;
 
-		public int MaxMoney => (int)(defMaxMoney * (1 +  0.1f * Math.Max(0, Stack - 1)));
+		public int MaxMoney => (int)(defMaxMoney * (1 + 0.1f * Math.Max(0, Stack - 1)));
 
 		//Calculated once per second
 		public int Money { get; private set; } = -1;
