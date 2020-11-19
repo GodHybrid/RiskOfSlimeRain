@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
@@ -8,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class DeadMansFootEffect : RORUncommonEffect, IPostHurt
+	public class DeadMansFootEffect : RORUncommonEffect, IPostHurt, IPostUpdateEquips
 	{
 		public override float Initial => 4;
 
@@ -36,6 +37,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			if (Main.myPlayer == player.whoAmI && damage >= Math.Max(damageLow, (int)(player.statLifeMax2 * damageHigh)) || player.statLife <= (int)(player.statLifeMax2 * 0.15f))
 			{
 				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, player.GetDamage(), Ticks);
+			}
+		}
+
+		public void PostUpdateEquips(Player player)
+		{
+			if (Config.HiddenVisuals(player)) return;
+
+			if (Main.rand.NextBool(30))
+			{
+				Dust dust = Dust.NewDustDirect(player.Left, player.width, player.height >> 1, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightYellow * 0.78f, 1.25f);
+				dust.customData = new InAndOutData(inSpeed: 30, outSpeed: 10, reduceScale: false);
+				dust.velocity.X *= 0f;
+				dust.velocity.Y = 0.3f;
 			}
 		}
 	}

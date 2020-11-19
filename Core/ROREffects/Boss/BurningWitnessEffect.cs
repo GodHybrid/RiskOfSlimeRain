@@ -10,7 +10,7 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Boss
 {
-	public class BurningWitnessEffect : RORBossEffect, IPostUpdateEquips, IModifyHit, IOnHit, IPostUpdateRunSpeeds
+	public class BurningWitnessEffect : RORBossEffect, IPostUpdateEquips, IModifyHit, IOnHit, IPostUpdateRunSpeeds, IPlayerLayer
 	{
 		const int durationIncrease = 3;
 		int InitialDuration => ServerConfig.Instance.OriginalStats ? 6 : 3;
@@ -31,6 +31,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 		public override string UIInfo()
 		{
 			return $"Current speed increase: {Formula().ToPercent()}. Current duration: {Duration}";
+		}
+
+		public PlayerLayerParams GetPlayerLayerParams(Player player)
+		{
+			return new PlayerLayerParams("Textures/BurningWitness", new Vector2(-12, -36));
 		}
 
 		//To restrict rapidly spawning projectiles optop of eachother, used in inflating the players hitbox alot after spawning one
