@@ -44,16 +44,3 @@ These are the two stat modes you can toggle between in the "Server Config". Relo
 | [Tough Times](#toughtimes)<a name="toughtimes"></a> | no difference | no difference |
 | [Boss Items](#bossitems)<a name="bossitems"></a> | - | - |
 | [Burning Witness](#burningwitness)<a name="burningwitness"></a> | Initial duration 6s, speed +5%/stack | Initial duration: 3s, speed +2%/stack |
-
-/*
-    * AtG Missile Mk. 1
-    * Boxing Gloves
-    * Dead Man's Foot
-    * Golden Gun
-    * Guardian's Heart
-    * Harvester's Scythe
-    * Infusion
-    * Leeching Seed
-    * Panic Mines
-    * Tough Times
-*/
