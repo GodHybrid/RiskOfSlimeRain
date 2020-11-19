@@ -369,16 +369,19 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 		{
 			progress.Message = "Place Grass";
 
-			var types = new int[] { ModContent.TileType<DriedLakeGrass2x1>(), ModContent.TileType<DriedLakeGrass2x2>() };
-			for (int i = 41; i < Main.maxTilesX - 41; i++)
+			var types = new int[] { ModContent.TileType<DriedLakeGrass>() };
+
+			int length = 1;
+			bool gap = false;
+			for (int j = 41; j < Main.maxTilesY - 41; j++)
 			{
-				for (int j = 41; j < Main.maxTilesY - 41; j++)
+				for (int i = 41; i < Main.maxTilesX - 41; i++)
 				{
 					Tile tile = Main.tile[i, j];
 					if (tile.active() && tile.type == topType)
 					{
 						Tile tileAbove = Main.tile[i, j - 1];
-						if (!tileAbove.active())
+						if (!gap && !tileAbove.active())
 						{
 							var type = WorldGen.genRand.Next(types);
 							int style = 0;
@@ -388,6 +391,13 @@ namespace RiskOfSlimeRain.Core.Subworlds.FirstLevel
 								style = WorldGen.genRand.Next(data.RandomStyleRange);
 							}
 							WorldGen.PlaceTile(i, j - 1, type, mute: true, style: style);
+						}
+						length--;
+
+						if (length <= 0)
+						{
+							length = WorldGen.genRand.Next(4, 12);
+							gap = WorldGen.genRand.NextBool();
 						}
 					}
 				}
