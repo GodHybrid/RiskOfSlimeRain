@@ -16,9 +16,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float CurrentHeal => Formula();
 
-		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.4f : 0.2f;
 
-		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.1f : 0.05f;
+		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
 
 		public override string Description => $"Dealing damage heals you for {Initial} health";
 

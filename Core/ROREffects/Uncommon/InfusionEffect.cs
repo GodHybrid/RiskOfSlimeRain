@@ -16,7 +16,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 	{
 		public override RORRarity Rarity => RORRarity.Uncommon;
 
-		public override float Initial => 0.1f;
+		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
+
+		public override float Increase => 0.1f; //Unused, no scaling here
 
 		/// <summary>
 		/// Amount of permanent max health increase
@@ -25,11 +27,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private const int cap = 50;
 
-		private int Cap => cap * Math.Max(1, Stack);
+		private int Cap => cap * Math.Max(1, Stack); //Actual scaling by stack
 
-		public float CurrentIncrease => Formula();
-
-		public override float CurrentHeal => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
+		public override float CurrentHeal => Initial;
 
 		public override int HitCheckMax => 60;
 
@@ -54,7 +54,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void ResetEffects(Player player)
 		{
-			player.statLifeMax2 += Math.Min(Cap, BonusLife);
+			player.statLifeMax2 += Math.Min(BonusLife, Cap);
 		}
 
 		public override void PopulateTag(TagCompound tag)
