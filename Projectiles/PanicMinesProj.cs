@@ -38,7 +38,7 @@ namespace RiskOfSlimeRain.Projectiles
 			projectile.timeLeft = 3600;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			drawOriginOffsetY = 8;
+			drawOriginOffsetY = 2;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -60,7 +60,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
-			projectile.velocity.Y = 10f;
+			projectile.velocity.Y += 0.5f;
 			projectile.LoopAnimation(4);
 
 			if (!activate) activate = Main.npc.CountActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)) > 0;

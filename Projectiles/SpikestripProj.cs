@@ -5,11 +5,14 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using WebmilioCommons.Extensions;
 using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	//ai0 is used to set timeLeft
+	/// <summary>
+	/// ai0 is used to set timeLeft
+	/// </summary>
 	public class SpikestripProj : ModProjectile
 	{
 		public override void SetDefaults()
@@ -54,7 +57,7 @@ namespace RiskOfSlimeRain.Projectiles
 				projectile.timeLeft = Duration;
 			}
 
-			projectile.velocity.Y = 10f;
+			projectile.velocity.Y += 0.5f;
 			Main.npc.WhereActive(n => n.CanBeChasedBy() && !n.boss && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
 			{
 				if (NPCHelper.IsBossPiece(n)) return;

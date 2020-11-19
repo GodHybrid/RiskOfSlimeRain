@@ -26,11 +26,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(26, 20);
+			projectile.Size = new Vector2(28, 28);
 			projectile.timeLeft = 3600;
 			projectile.friendly = true;
 			projectile.penetrate = -1;
-			drawOriginOffsetY = 4;
+			drawOriginOffsetY = 2;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
@@ -64,7 +64,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void AI()
 		{
-			projectile.velocity.Y = 10f;
+			projectile.velocity.Y += 0.5f;
 			projectile.LoopAnimation(7);
 			if (Main.myPlayer == projectile.owner)
 			{
