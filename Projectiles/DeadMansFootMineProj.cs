@@ -9,8 +9,9 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	//ai0 - player damage
-	//ai1 - ticks
+	/// <summary>
+	/// ai0 - player damage, ai1 - ticks
+	/// </summary>
 	public class DeadMansFootMineProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;

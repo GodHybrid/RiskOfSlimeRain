@@ -9,14 +9,16 @@ using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
-	//ai0 damage
+	/// <summary>
+	/// ai0 damage
+	/// </summary>
 	public class PanicMinesProj : ModProjectile, IExcludeOnHit
 	{
 		public bool activate = false;
 		public byte timer = 25;
 		public byte addRadiusX = 50;
-		public byte addRadiusY = 30; 
-		
+		public byte addRadiusY = 30;
+
 		public int Damage
 		{
 			get => (int)projectile.ai[0];
