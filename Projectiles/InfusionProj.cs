@@ -9,6 +9,9 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
+	/// <summary>
+	/// Uses ai1 for heal amount, ai0 and localAI0
+	/// </summary>
 	public class InfusionProj : PlayerBonusCircleProj
 	{
 		public override void SetStaticDefaults()
@@ -24,13 +27,19 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override Color Color => Color.DarkRed;
 
+		public int HealAmount
+		{
+			get => (int)projectile.ai[1];
+			set => projectile.ai[1] = value;
+		}
+
 		public override void ApplyBonus(Player target)
 		{
 			InfusionEffect effect = ROREffectManager.GetEffectOfType<InfusionEffect>(target);
 			if (effect != null)
 			{
-				effect.IncreaseBonusLife();
-				CombatTextPacket.NewText(target.getRect(), CombatText.DamagedHostileCrit, (int)effect.CurrentIncrease, false, false);
+				effect.IncreaseBonusLife(HealAmount);
+				CombatTextPacket.NewText(target.getRect(), CombatText.DamagedHostileCrit, HealAmount, false, false);
 			}
 		}
 

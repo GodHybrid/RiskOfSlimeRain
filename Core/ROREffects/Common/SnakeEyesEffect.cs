@@ -49,7 +49,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostUpdateEquips(Player player)
 		{
-			if (player.HasBuff(BuffID.PotionSickness)) failedAttempts = 0;
+			if (failedAttempts > 0 && player.HasBuff(BuffID.PotionSickness)) failedAttempts = 0;
+
 			if (!ready && player.statLifeMax2 >= player.statLife) ready = true;
 		}
 

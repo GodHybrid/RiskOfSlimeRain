@@ -8,12 +8,12 @@ using Terraria.ModLoader;
 namespace RiskOfSlimeRain.Projectiles
 {
 	/// <summary>
-	/// Sticks to the target specified via the special spawn method. Doesn't deal damage by itself. ai0, ai1 reserved.
+	/// Sticks to the target specified via the special spawn method. Doesn't deal damage by itself. ai0 and ai1 reserved.
 	/// </summary>
 	public abstract class StickyProj : ModProjectile
 	{
 		/// <summary>
-		/// Custom NewProjectile to properly spawn a StickyProj. offset is from the position of the target (defaults to center). damage is clientside. onCreate to set additional variables (clientside)
+		/// Custom NewProjectile to properly spawn a StickyProj. offset is from the position of the target (defaults to center). damage is clientside. onCreate to set additional variables (clientside). Projectile will be synced after onCreate
 		/// </summary>
 		public static void NewProjectile<T>(NPC target, Vector2 offset = default(Vector2), int damage = 0, Action<T> onCreate = null) where T : StickyProj
 		{
@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Projectiles
 				for (int i = 0; i < Main.maxProjectiles; i++)
 				{
 					Projectile p = Main.projectile[i];
-					if (p.active && p.modProjectile is T && p.ai[1] == target.whoAmI)
+					if (p.active && p.modProjectile is T t && t.TargetWhoAmI == target.whoAmI)
 					{
 						return;
 					}
@@ -48,7 +48,11 @@ namespace RiskOfSlimeRain.Projectiles
 				T t = p.modProjectile as T;
 
 				t.damage = damage;
-				onCreate?.Invoke(t);
+				if (onCreate != null)
+				{
+					onCreate.Invoke(t);
+					p.netUpdate = true;
+				}
 			}
 		}
 

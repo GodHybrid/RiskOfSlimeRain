@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		//Contains the "progression" values of each relevant downed vanilla boss
 		public static List<float> vanillaDowned;
 
-		//Contains the "key"  of each downed modded boss
+		//Contains the "key" of each downed modded boss
 		public static Dictionary<string, float> moddedDowned;
 
 		public const int RepeatedDropRate = 100;
@@ -114,6 +114,13 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			//	rarity = ROREffectRarity.Uncommon;
 			//}
 			//else common
+
+			//temporary
+			float rarityRand = Main.rand.NextFloat();
+			if (rarityRand < 0.5f)
+			{
+				rarity = RORRarity.Uncommon;
+			}
 
 			List<int> items = ROREffectManager.GetItemTypesOfRarity(rarity);
 			if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
@@ -332,6 +339,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			return false;
 		}
 
+		//Unused
 		public static string GetDisplayNameOfEarliestNonBeatenBoss(out float progression)
 		{
 			string vanillaName = GetNameOfEarliestNonBeatenVanillaBoss(out float vanillaProgression);

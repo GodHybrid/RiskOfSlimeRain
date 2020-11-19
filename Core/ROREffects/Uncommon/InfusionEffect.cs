@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.ROREffects.Helpers;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
@@ -10,43 +12,49 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class InfusionEffect : RORUncommonEffect, IOnKill, IResetEffects
+	public class InfusionEffect : HealingPoolEffect, IOnKill, IResetEffects, IPostUpdateEquips
 	{
-		//public const float Initial = 0.5f;
-		//public const float Increase = 0.5f;
+		public override RORRarity Rarity => RORRarity.Uncommon;
 
-		public override float Initial => 1f;
+		public override float Initial => 0.1f;
 
-		public override float Increase => 0.5f;
+		/// <summary>
+		/// Amount of permanent max health increase
+		/// </summary>
+		public int BonusLife { get; private set; }
 
-		public float BonusLife { get; private set; }
+		private const int cap = 50;
 
-		//TODO lower Increase, cap with stack (50hp start)
+		private int Cap => cap * Math.Max(1, Stack);
 
 		public float CurrentIncrease => Formula();
 
-		public override string Description => $"Killing an enemy increases your health permanently by {Initial}";
+		public override float CurrentHeal => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
+
+		public override int HitCheckMax => 60;
+
+		public override string Description => $"Killing an enemy increases your health permanently by {Initial}, up to {cap}";
 
 		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
 		public override string UIInfo()
 		{
-			return $"Bonus life: {BonusLife}";
+			return $"Bonus life: {BonusLife}. Cap: {Cap}. Stored heal: {Math.Round(StoredHeals, 2)}";
 		}
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player, target);
+			HandleHealAndProjectile(player, target);
 		}
 
 		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
-			SpawnProjectile(player, target);
+			HandleHealAndProjectile(player, target);
 		}
 
 		public void ResetEffects(Player player)
 		{
-			player.statLifeMax2 += (int)BonusLife;
+			player.statLifeMax2 += Math.Min(Cap, BonusLife);
 		}
 
 		public override void PopulateTag(TagCompound tag)
@@ -56,7 +64,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override void PopulateFromTag(TagCompound tag)
 		{
-			BonusLife = tag.GetFloat("BonusLife");
+			BonusLife = tag.GetInt("BonusLife");
 		}
 
 		protected override void NetSend(BinaryWriter writer)
@@ -66,24 +74,38 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		protected override void NetReceive(BinaryReader reader)
 		{
-			BonusLife = reader.ReadSingle();
+			BonusLife = reader.ReadInt32();
 		}
 
-		private void SpawnProjectile(Player player, NPC target)
+		public void PostUpdateEquips(Player player)
 		{
+			UpdateHitCheckCount(player);
+		}
+
+		private void HandleHealAndProjectile(Player player, NPC target)
+		{
+			if (BonusLife >= Cap) return;
 			if (NPCHelper.IsWormBodyOrTail(target)) return;
 			if (NPCHelper.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
 			if (NPCHelper.IsSpawnedFromStatue(target)) return;
 			if (NPCHelper.AnyInvasion()) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
-			//The projectile reads from the effect of the owner how much health it gives him
-			PlayerBonusProj.NewProjectile<InfusionProj>(target.Center, new Vector2(player.direction, -1) * 8);
+			HandleStoredHeals();
+
+			int heal = GetHeal();
+			if (heal > 0)
+			{
+				PlayerBonusProj.NewProjectile(target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
+				{
+					inf.HealAmount = heal;
+				});
+			}
 		}
 
-		public void IncreaseBonusLife()
+		public void IncreaseBonusLife(int heal)
 		{
-			BonusLife += CurrentIncrease;
+			BonusLife += heal;
 			new ROREffectSyncSinglePacket(this).Send();
 		}
 

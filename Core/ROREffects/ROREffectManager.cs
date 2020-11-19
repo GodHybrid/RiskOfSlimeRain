@@ -60,6 +60,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				if (type.IsInterface)
 				{
+					//TODO change this: if(typeof(IROREffectInterface).IsAssignableFrom(type))
 					Type interf = type.GetInterface(typeof(IROREffectInterface).Name);
 					if (interf != null)
 					{
@@ -425,7 +426,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		//unused
 		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player);

@@ -1,19 +1,15 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
-using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
-using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	//It doesn't use IGetWeaponCrit because we want crit rate to be dynamic based on item use time (which requires proc chance)
 	//additional crit chance won't be shown on the tooltip
-	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IOnHit, IPlayerLayer
+	public class LensmakersGlassesEffect : RORCommonEffect, IModifyHit, IPlayerLayer
 	{
-		//const float Increase = 0.07f;
-
 		public override float Initial => ServerConfig.Instance.OriginalStats ? 0.07f : 0.04f;
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.07f : 0.04f;
@@ -31,8 +27,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
 		}
 
-		public override bool AlwaysProc => true;
-
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
 			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50));
@@ -48,24 +42,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (!Proc(Formula())) return;
 			crit = true;
-		}
-
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
-		{
-			SpawnProjectile(target, crit);
-		}
-
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
-		{
-			SpawnProjectile(target, crit);
-		}
-
-		void SpawnProjectile(NPC target, bool crit)
-		{
-			if (crit)
-			{
-				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<LensmakersGlassesProj>(), 0, 0, Main.myPlayer);
-			}
 		}
 	}
 }

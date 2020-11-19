@@ -29,9 +29,9 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// <summary>
 		/// Returns the item type of a random consumable ror item
 		/// </summary>
-		public static int GetRandomRORItem()
+		public static int GetRandomRORItem(RORRarity rarity = RORRarity.Common)
 		{
-			return WorldGen.genRand.Next(ROREffectManager.GetItemTypesOfRarity(RORRarity.Common));
+			return WorldGen.genRand.Next(ROREffectManager.GetItemTypesOfRarity(rarity));
 		}
 
 		/// <summary>
@@ -192,7 +192,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 
 			foreach (var chest in chests)
 			{
-				PutItemIntoChest(chest, GetRandomRORItem());
+				PutItemIntoChest(chest, GetRandomRORItem(RORRarity.Uncommon));
 			}
 		}
 

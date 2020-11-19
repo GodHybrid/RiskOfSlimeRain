@@ -49,7 +49,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				player.hurtCooldowns[i] = player.immuneTime;
 			}
-			Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
+			if (Main.myPlayer == player.whoAmI) Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
 			return false;
 		}
 	}
