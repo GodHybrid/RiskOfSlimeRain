@@ -1,5 +1,24 @@
 # Changelogs
 
+## 0.4
+* 10 new items of Uncommon rarity, dropped from bosses and found in post-Plantera dungeon chests
+    * AtG Missile Mk. 1
+    * Boxing Gloves
+    * Dead Man's Foot
+    * Golden Gun
+    * Guardian's Heart
+    * Harvester's Scythe
+    * Infusion
+    * Leeching Seed
+    * Panic Mines
+    * Tough Times
+
+* Paul's Goat Hoof now increases max speed in addition to acceleration
+* Lens-Maker's Glasses don't make a sound anymore
+* Various small bugfixes
+    * Added missing 'Burning Witness' player sprites
+    * Fixed projectiles that fall to the ground hovering just above it
+
 ## 0.3.3.3
 * Fixed only one effect triggering, preventing subsequent ones from going off
 

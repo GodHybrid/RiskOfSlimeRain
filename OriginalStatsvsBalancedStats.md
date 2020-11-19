@@ -1,14 +1,14 @@
 ## Original Stats vs Balanced Stats
 
 These are the two stat modes you can toggle between in the "Server Config". Reload of mods required to take effect.
-Only differences listed. 
+**Only differences listed.** 
 
 | Item | Original Stats | Balanced Stats |
 |-|-|-|
 | [Common Items](#commonitems)<a name="commonitems"></a>|-|-|
 | [Barbed Wire](#barbedwire)<a name="barbedwire"></a> | no difference | no difference |
 | [Bitter Root](#bitterroot)<a name="bitterroot"></a> | 8% max health, caps at 300% | 5% max health, caps at 100% |
-| [Bundle of Fireworks](#bundleoffireworks)<a name="bundleoffireworks"></a> | 900% damage | 700% damage|
+| [Bundle of Fireworks](#bundleoffireworks)<a name="bundleoffireworks"></a> | 900% damage | 700% damage |
 | [Bustling Fungus](#bustlingfungus)<a name="bustlingfungus"></a> | Spawn after 2s, 4.5% heal | Spawn after 4s, 2% heal |
 | [Crowbar](#crowbar)<a name="crowbar"></a> | Bonus above 80% HP; +30% damage/stack | Bonus above 85% HP;  +10% damage/stack |
 | [Fire Shield](#fireshield)<a name="fireshield"></a> | Trigger at 10% HP damage, 20 knockback | Trigger at 20% HP damage, 10 knockback |
@@ -31,5 +31,29 @@ Only differences listed.
 | [Sticky Bomb](#stickybomb)<a name="stickybomb"></a> | 140% damage, +40% damage/stack | 120% damage, +30% damage/stack |
 | [Taser](#taser)<a name="taser"></a> | no difference | no difference |
 | [Warbanner](#warbanner)<a name="warbanner"></a> | no difference | no difference |
+| [Uncommon Items](#uncommonitems)<a name="uncommonitems"></a> | - | - |
+| [AtG Missile Mk. 1](#atgmissilemk1)<a name="atgmissilemk1"></a> | 300% damage | 200% damage |
+| [Boxing Gloves](#boxinggloves)<a name="boxinggloves"></a> | no difference | no difference |
+| [Dead Man's Foot](#deadmansfoot)<a name="deadmansfoot"></a> | no difference | no difference |
+| [Golden Gun](#goldengun)<a name="goldengun"></a> | no difference | no difference |
+| [Guardian's Heart](#guardiansheart)<a name="guardiansheart"></a> | 60 shield, +60/stack | 30 shield, +30/stack |
+| [Harvester's Scythe](#harvestersscythe)<a name="harvestersscythe"></a> | +2%/stack | no increase/stack |
+| [Infusion](#infusion)<a name="infusion"></a> | 0.2HP/kill | 0.1HP/kill |
+| [Leeching Seed](#leechingseed)<a name="leechingseed"></a> | Heal 0.4 HP, +0.2 heal/stack | Heal 0.2 HP, +0.1 heal/stack |
+| [Panic Mines](#panicmines)<a name="panicmines"></a> | 500% damage | 300% damage |
+| [Tough Times](#toughtimes)<a name="toughtimes"></a> | no difference | no difference |
 | [Boss Items](#bossitems)<a name="bossitems"></a> | - | - |
 | [Burning Witness](#burningwitness)<a name="burningwitness"></a> | Initial duration 6s, speed +5%/stack | Initial duration: 3s, speed +2%/stack |
+
+/*
+    * AtG Missile Mk. 1
+    * Boxing Gloves
+    * Dead Man's Foot
+    * Golden Gun
+    * Guardian's Heart
+    * Harvester's Scythe
+    * Infusion
+    * Leeching Seed
+    * Panic Mines
+    * Tough Times
+*/
