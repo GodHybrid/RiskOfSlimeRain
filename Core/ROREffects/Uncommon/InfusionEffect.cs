@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float CurrentIncrease => Formula();
 
-		public override float CurrentHeal => 0.1f;
+		public override float CurrentHeal => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
 
 		public override int HitCheckMax => 60;
 

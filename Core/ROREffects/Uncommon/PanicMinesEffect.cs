@@ -16,11 +16,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public const float dmg = 5f;
 
+		public float Dmg => ServerConfig.Instance.OriginalStats ? dmg : dmg - 2f;
+
 		public const float damageThreshold = 0.15f;
 
 		public int MinesDropped => (int)Formula();
 
-		public override string Description => $"Drop a mine at low health for {dmg.ToPercent()} damage";
+		public override string Description => $"Drop a mine at low health for {Dmg.ToPercent()} damage";
 
 		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
 
@@ -35,7 +37,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			{
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();
-				int spawnDamage = (int)(dmg * player.GetDamage());
+				int spawnDamage = (int)(Dmg * player.GetDamage());
 				for (int i = MinesDropped; i > 0; i--)
 				{
 					if (!WorldUtils.Find(new Point(position.ToTileCoordinates().X + MinesDropped / 2 - (i - 1), position.ToTileCoordinates().Y + 1), Searches.Chain(new Searches.Right(1), new GenCondition[]

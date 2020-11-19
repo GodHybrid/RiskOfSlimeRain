@@ -83,10 +83,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void PostUpdateEquips(Player player)
 		{
-			if (Shield < MaxShield && player.GetRORPlayer().NoHurtTimer > time * 60)
+			if (Main.myPlayer == player.whoAmI && Shield < MaxShield && player.GetRORPlayer().NoHurtTimer > time * 60)
 			{
 				Main.PlaySound(SoundID.MaxMana, player.Center);
 				Shield = MaxShield;
+				new ROREffectSyncSinglePacket(this).Send();
 			}
 		}
 
