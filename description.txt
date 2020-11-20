@@ -6,7 +6,7 @@ The mod also features a config setting where you can selectively pick the amount
 
 [c/64bbde:"Risk of Slime Rain"] is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
 [i:3520] 25 items of [c/e9f2f2:Common] rarity - a nice variety of offensive, utility and defensive items. //989
-[i:989] 10 items of [c/66fa95:Uncommon] rarity - [!in the works] mostly defensive items and a handful of offensive ones.
+[i:989] 10 items of [c/66fa95:Uncommon] rarity - mostly defensive items and a handful of offensive ones.
 [i:560] 1 boss: [c/ffb034:Magma Worm] - Pre-Hardmode, drops his unique boss item.
 
 

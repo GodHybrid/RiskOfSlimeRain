@@ -83,7 +83,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			if (firstDrop)
 			{
 				//First time defeated
-				DropOneItemPerPlayer(npc);
+				DropOneItemPerPlayer(npc, true);
 			}
 			else
 			{
@@ -96,12 +96,12 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 
 				if (Main.rand.NextBool(random))
 				{
-					DropOneItemPerPlayer(npc);
+					DropOneItemPerPlayer(npc, false);
 				}
 			}
 		}
 
-		public static void DropOneItemPerPlayer(NPC npc)
+		public static void DropOneItemPerPlayer(NPC npc, bool first)
 		{
 			RORRarity rarity = RORRarity.Common;
 			//float rarityRand = Main.rand.NextFloat();
@@ -116,8 +116,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			//else common
 
 			//temporary
-			float rarityRand = Main.rand.NextFloat();
-			if (rarityRand < 0.5f)
+			if (first)
 			{
 				rarity = RORRarity.Uncommon;
 			}
