@@ -8,7 +8,7 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class AtGMissileMK1Effect : RORUncommonEffect, IOnHit, IPlayerLayer
+	public class AtGMissileMK1Effect : RORUncommonEffect, IOnHit, IPlayerLayer, IPostUpdateEquips
 	{
 		public const float damageIncrease = 3f;
 
@@ -17,6 +17,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		public override float Initial => 0.1f;
 
 		public override int MaxRecommendedStack => 10;
+		
+		int alphaCounter = 0;
+
+		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 5f + 4 / 5f;
 
 		public override string Description => $"{Initial.ToPercent()} chance to fire a missile that deals {damageIncrease.ToPercent()} damage";
 
@@ -31,7 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return new PlayerLayerParams("Textures/AtGMissileMK1", Vector2.Zero);
+			return new PlayerLayerParams("Textures/AtGMissileMK1", Vector2.Zero, Color.White * Alpha);
 		}
 
 		public override float Formula()
@@ -82,6 +86,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			if (Main.netMode != NetmodeID.Server) SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
 			Vector2 velo = new Vector2(Main.rand.NextFloat(4f) - 2f, -2f);
 			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(player.Center, velo, damage, 10f);
+		}
+
+		public void PostUpdateEquips(Player player)
+		{
+			if (Main.hasFocus) alphaCounter++;
 		}
 	}
 }
