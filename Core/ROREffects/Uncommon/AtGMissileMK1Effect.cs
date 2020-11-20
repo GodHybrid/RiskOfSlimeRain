@@ -16,11 +16,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Initial => 0.1f;
 
-		public override int MaxRecommendedStack => 10;
+		public override float Increase => 0.1f;
 		
 		int alphaCounter = 0;
 
-		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 5f + 4 / 5f;
+		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 4f + 3 / 4f;
 
 		public override string Description => $"{Initial.ToPercent()} chance to fire a missile that deals {damageIncrease.ToPercent()} damage";
 
