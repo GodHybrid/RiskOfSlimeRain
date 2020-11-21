@@ -43,7 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			{
 				//Apply more knockback the less knockBackResist target has
 				float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
-				knockback += 3f + 6f * antiKBResist;
+				knockback += 6f + 8f * antiKBResist;
 
 				if (Config.HiddenVisuals(player)) return;
 
