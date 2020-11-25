@@ -1,5 +1,12 @@
 # Changelogs
 
+## 0.4.0.1
+* Buffed minion/sentry proc rate by 100% (from 10% to 20%)
+* Fixed Magma Worm's fireballs making a sound and bouncing too many times
+* Fixed certain player bound textures showing up when they shouldn't
+* Fixed Barbed Wire tooltip
+* Fixed rocket projectiles not accelerating when no targets exist
+
 ## 0.4
 * 10 new items of Uncommon rarity, dropped from bosses and found in post-Plantera dungeon chests
     * AtG Missile Mk. 1
