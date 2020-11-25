@@ -487,7 +487,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 			Player dPlayer = drawInfo.drawPlayer;
 
-			if (dPlayer.dead) return;
+			if (dPlayer.dead || !dPlayer.active) return;
 
 			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
 			List<PlayerLayerParams> allParameters = new List<PlayerLayerParams>();

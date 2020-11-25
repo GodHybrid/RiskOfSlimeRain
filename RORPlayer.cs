@@ -501,6 +501,7 @@ namespace RiskOfSlimeRain
 				return;
 			}
 			if (Main.gameMenu) return;
+			if (player.dead || !player.active) return;
 			if (Config.HiddenVisuals(player)) return;
 			if (!ROREffectManager.ParentLayer.visible) return;
 
