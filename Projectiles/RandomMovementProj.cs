@@ -56,7 +56,11 @@ namespace RiskOfSlimeRain.Projectiles
 			set => projectile.localAI[0] = value;
 		}
 
+		//Status flag for when default acceleration takes place
 		public bool keepIncreasingVelocity = true;
+
+		//Set to true to enable accelerating when keepIncreasingVelocity is false
+		public bool doKeepIncreasingVelocity = true;
 
 		public virtual int RandomMoveTimerMax => 60;
 
@@ -156,6 +160,11 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public virtual void RandomMovement()
 		{
+			if (!keepIncreasingVelocity)
+			{
+				doKeepIncreasingVelocity = true;
+			}
+
 			RandomMoveTimer++;
 			if (RandomMoveTimer % RandomMoveDirectionChangeFrequency == 0)
 			{
@@ -178,6 +187,12 @@ namespace RiskOfSlimeRain.Projectiles
 		public virtual void Movement()
 		{
 			//Since this projectile is spawned with low speed
+			if (doKeepIncreasingVelocity)
+			{
+				doKeepIncreasingVelocity = false;
+				keepIncreasingVelocity = true;
+			}
+
 			if (keepIncreasingVelocity)
 			{
 				if (projectile.velocity.LengthSquared() < MaxHomingSpeed * MaxHomingSpeed)
