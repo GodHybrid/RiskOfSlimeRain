@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int wireTimer = 0;
 
-		int Radius => (initialWireRadius + Stack) * radIncrease;
+		int Radius => (initialWireRadius + Math.Max(1, Stack)) * radIncrease;
 
 		public override string Description => $"Touching enemies deals {Initial.ToPercent()} of your current damage every second";
 
