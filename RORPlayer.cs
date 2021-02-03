@@ -32,11 +32,6 @@ namespace RiskOfSlimeRain
 		//Key: Interface, Value: List of effects implementing this interface
 		public Dictionary<Type, List<ROREffect>> EffectByType { get; set; }
 
-		/// <summary>
-		/// Because we want DrawEffects to only be called once (without being affected by after images)
-		/// </summary>
-		public bool drawEffectsCalledOnce = false;
-
 		public bool burningWitnessDropped = false;
 
 		#region Warbanner
@@ -492,20 +487,13 @@ namespace RiskOfSlimeRain
 
 		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
-			if (!drawEffectsCalledOnce)
-			{
-				drawEffectsCalledOnce = true;
-			}
-			else
-			{
-				return;
-			}
 			if (Main.gameMenu) return;
 			if (player.dead || !player.active) return;
-			if (Config.HiddenVisuals(player)) return;
+			if (drawInfo.shadow != 0f) return;
+			if (Config.HiddenVisuals(drawInfo.drawPlayer)) return;
 			if (!ROREffectManager.ParentLayer.visible) return;
 
-			List<Effect> shaders = ROREffectManager.GetScreenShaders(player);
+			List<Effect> shaders = ROREffectManager.GetScreenShaders(drawInfo.drawPlayer);
 			foreach (var shader in shaders)
 			{
 				ShaderManager.ApplyToScreenOnce(Main.spriteBatch, shader);
@@ -584,13 +572,6 @@ namespace RiskOfSlimeRain
 
 		public override void PreUpdate()
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				if (drawEffectsCalledOnce)
-				{
-					drawEffectsCalledOnce = false;
-				}
-			}
 			//This is here because only here resetting the scrollwheel status works properly
 			RORInterfaceLayers.Update(player);
 		}
