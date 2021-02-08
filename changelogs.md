@@ -1,6 +1,6 @@
 # Changelogs
 
-## 0.4.1.2
+## 0.4.0.2
 * Added config setting to disable recipes for consumable power-up items
 
 ## 0.4.0.1
