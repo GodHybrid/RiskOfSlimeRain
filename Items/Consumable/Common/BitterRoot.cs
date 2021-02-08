@@ -6,7 +6,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	public class BitterRoot : RORConsumableItem<BitterRootEffect>
 	{
-		public override void AddRecipes()
+		public override void SafeAddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.LifeCrystal, 8);

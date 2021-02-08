@@ -6,7 +6,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	public class LensMakersGlasses : RORConsumableItem<LensmakersGlassesEffect>
 	{
-		public override void AddRecipes()
+		public override void SafeAddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.Lens, 140);

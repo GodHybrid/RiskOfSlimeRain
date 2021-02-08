@@ -6,7 +6,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	public class MeatNugget : RORConsumableItem<MeatNuggetEffect>
 	{
-		public override void AddRecipes()
+		public override void SafeAddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddRecipeGroup("RoR:EvilMaterial", 275);

@@ -41,6 +41,12 @@ namespace RiskOfSlimeRain
 		[BackgroundColor(30, 30, 30)]
 		public List<ItemDefinition> Blacklist = new List<ItemDefinition>();
 
+		[Label("Disable Recipes")]
+		[Tooltip("If enabled, disables recipes for the consumable power-up items")]
+		[ReloadRequired]
+		[DefaultValue(false)]
+		public bool DisableRecipes;
+
 		[Header("Hint: To go to the client config containing UI adjustments, press the '<' arrow in the bottom left")]
 		[Label("Hint")]
 		[JsonIgnore]

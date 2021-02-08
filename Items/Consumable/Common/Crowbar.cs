@@ -6,7 +6,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 {
 	public class Crowbar : RORConsumableItem<CrowbarEffect>
 	{
-		public override void AddRecipes()
+		public override void SafeAddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddRecipeGroup("RoR:SilvTungBar", 65);

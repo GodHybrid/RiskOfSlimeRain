@@ -87,6 +87,19 @@ namespace RiskOfSlimeRain.Items.Consumable
 			//When wanting to add more tooltips without flavorTextColor, call base.ModifyTooltips(tooltips) first
 		}
 
+		public sealed override void AddRecipes()
+		{
+			if (!ServerConfig.Instance.DisableRecipes)
+			{
+				SafeAddRecipes();
+			}
+		}
+
+		public virtual void SafeAddRecipes()
+		{
+
+		}
+
 		public override void SetDefaults()
 		{
 			item.maxStack = 99;
