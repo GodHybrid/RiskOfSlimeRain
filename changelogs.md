@@ -1,5 +1,8 @@
 # Changelogs
 
+## 0.4.1.2
+* Added config setting to disable recipes for consumable power-up items
+
 ## 0.4.0.1
 * Buffed minion/sentry proc rate by 100% (from 10% to 20%)
 * Fixed Magma Worm's fireballs making a sound and bouncing too many times

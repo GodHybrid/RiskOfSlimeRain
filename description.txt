@@ -17,17 +17,14 @@ Rodathus and Plantixx for most of the sprites.
 
 [c/888888:Changelog:]
 
+v0.4.0.2
+    + Added config setting to disable recipes for consumable power-up items
 v0.4.0.1
     + Buffed minion/sentry proc rate by 100% (from 10% to 20%)
     + Fixed Magma Worm's fireballs making a sound and bouncing too many times
     + Fixed certain player bound textures showing up when they shouldn't
     + Fixed Barbed Wire tooltip
     + Fixed rocket projectiles not accelerating when no targets exist
-v0.4
-    + 10 new items of Uncommon rarity, dropped from bosses and found in post-Plantera dungeon chests
-    + Paul's Goat Hoof now increases max speed in addition to acceleration
-    + Lens-Maker's Glasses don't make a sound anymore
-    + Various small bugfixes
 
 
 
