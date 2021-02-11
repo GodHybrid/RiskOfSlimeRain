@@ -389,7 +389,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			else if (vanillaDowned.BinarySearch(EvilBoss) < 0)
 			{
 				progression = EvilBoss;
-				ret = WorldGen.crimson ? "NPCName.BrainofCthulhu" : "$NPCName.EaterofWorldsHead";
+				ret = WorldGen.crimson ? "$NPCName.BrainofCthulhu" : "$NPCName.EaterofWorldsHead";
 			}
 			else if (vanillaDowned.BinarySearch(QueenBee) < 0)
 			{
