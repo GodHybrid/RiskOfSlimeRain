@@ -20,7 +20,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Additional DR: {DRIncrease.ToPercent(2)}";
 		}
 
-		public override float Formula()
+		public override float Formula(bool stacksMultiplicatively = false)
 		{
 			if (Stack > 1)
 			{

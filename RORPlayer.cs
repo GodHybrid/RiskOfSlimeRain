@@ -124,6 +124,11 @@ namespace RiskOfSlimeRain
 		public int NoOnHitTimer { get; private set; } = 0;
 
 		/// <summary>
+		/// Time the player hasn't dealt critical damage with an attack
+		/// </summary>
+		public int NoCritTimer { get; private set; } = 0;
+
+		/// <summary>
 		/// Time the player hasn't moved and used items
 		/// </summary>
 		public int NoInputTimer => Math.Min(NoMoveTimer, NoItemUseTimer);
@@ -161,6 +166,8 @@ namespace RiskOfSlimeRain
 			NoHurtTimer++;
 
 			NoOnHitTimer++;
+
+			NoCritTimer++;
 
 			if (ProcTimer > 0) ProcTimer--;
 		}
@@ -401,6 +408,8 @@ namespace RiskOfSlimeRain
 
 			if (!NPCHelper.IsHostile(target)) return;
 
+			if (crit) NoCritTimer = 0;
+
 			if (target.life <= 0)
 			{
 				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPC(player, item, target, damage, knockback, crit));
@@ -419,6 +428,8 @@ namespace RiskOfSlimeRain
 		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
 			NoOnHitTimer = 0;
+
+			if (crit) NoCritTimer = 0;
 
 			//This stuff should be at the bottom of everything
 			if (!NPCHelper.IsHostile(target)) return;
@@ -453,6 +464,12 @@ namespace RiskOfSlimeRain
 				&& !Main.rand.NextBool(5)) return;
 
 			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+		}
+
+		public override void OnHitByNPC(NPC npc, int damage, bool crit)
+		{
+			ResetNoHurtTimer();
+			ROREffectManager.Perform<IOnHitByNPC>(this, e => e.OnHitByNPC(npc, damage, crit));
 		}
 
 		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)

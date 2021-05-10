@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			string info = $"Heal amount: {Math.Round(CurrentHeal, 2)}";
+			string info = $"Heal amount: {Math.Round(Initial, 2)}";
 			if (ServerConfig.Instance.OriginalStats)
 			{
 				info = $"Crit chance increase: {CritChance.ToPercent()}. " + info;

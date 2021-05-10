@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string Description => $"Increases crit chance by 6% for each time you're in peril, up to {maxIncrease} times. Resets upon dying or drinking a potion";
 
-		public override string FlavorText => "You dirty----------er\nYou KNEW I had to win to pay off my debts";
+		public override string FlavorText => "You dirty ----------er\nYou KNEW I had to win to pay off my debts";
 
 		public override string UIInfo()
 		{

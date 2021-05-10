@@ -86,11 +86,13 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		/// <summary>
 		/// Initial + increase * (stack - 1). Example with 2 stacks (aka one increase): 0.6f = 0.4f + 0.2f * (2 - 1)
+		/// <para>If stackMultiplicatively is true, the formula changes to: 1 - (1 - (Initial + increase)) ^ stack</para>
 		/// </summary>
-		public virtual float Formula()
+		public virtual float Formula(bool stacksMultiplicatively = false)
 		{
 			//0 stack is treated as 1
-			return Initial + Increase * Math.Max(0, Stack - 1);
+			if (stacksMultiplicatively) return 1f - (float)Math.Pow((1 - (Initial + Increase)), Stack);
+			else return Initial + Increase * Math.Max(0, Stack - 1);
 		}
 
 		/// <summary>

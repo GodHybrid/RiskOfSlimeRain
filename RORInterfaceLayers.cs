@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Common;
+using RiskOfSlimeRain.Core.ROREffects.Uncommon;
 using RiskOfSlimeRain.Core.Warbanners;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Items;
@@ -409,7 +410,16 @@ namespace RiskOfSlimeRain
 		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
 		{
 			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer);
-			if (effect == null || effect?.Active == false || Config.HiddenVisuals(drawPlayer))
+			EnergyCellEffect effect2 = ROREffectManager.GetEffectOfType<EnergyCellEffect>(drawPlayer);
+
+			Color color;
+
+			bool quickCheck = effect2 != null && effect2?.Active == true && drawPlayer.statLife <= drawPlayer.statLifeMax2 / 2f;
+
+			if (quickCheck) color = Color.Blue;
+			else color = Color.Yellow;
+
+			if (effect == null && effect2 == null || effect?.Active == false && effect2?.Active == false || Config.HiddenVisuals(drawPlayer))
 			{
 				orig(self, drawPlayer, projectileDrawPosition, cHead);
 				return;
@@ -418,23 +428,57 @@ namespace RiskOfSlimeRain
 			//Modify Main.playerDrawData first
 			List<DrawData> drawDataCopy = new List<DrawData>(Main.playerDrawData);
 			List<DrawData> drawDatas = new List<DrawData>();
-
-			for (int i = 0; i < drawDataCopy.Count; i++)
+			if (effect != null && effect?.Active != false && !quickCheck)
 			{
-				try
+				for (int i = 0; i < drawDataCopy.Count; i++)
 				{
-					DrawData data = drawDataCopy[i];
-					if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
+					try
+					{
+						DrawData data = drawDataCopy[i];
+						if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
 
-					data.position += effect.shakePosOffset * effect.shakeTimer;
-					data.scale += effect.shakeScaleOffset * effect.shakeTimer;
-					data.color = data.color.MultiplyRGBA(Color.Yellow * 0.5f);
-					data.color *= 0.05f * effect.shakeTimer;
-					drawDatas.Add(data);
+						data.position += effect.shakePosOffset * effect.shakeTimer;
+						data.scale += effect.shakeScaleOffset * effect.shakeTimer;
+						data.color = data.color.MultiplyRGBA(color * 0.5f);
+						data.color *= 0.05f * effect.shakeTimer;
+						drawDatas.Add(data);
+					}
+					catch
+					{
+
+					}
 				}
-				catch
+			}
+			else
+			{
+				for (int i = 0; i < drawDataCopy.Count; i++)
 				{
+					try
+					{
+						DrawData data = drawDataCopy[i];
+						if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
 
+						data.position += effect2.shakePosOffset * effect2.shakeTimer;
+						data.scale += effect2.shakeScaleOffset * effect2.shakeTimer;
+						data.color = data.color.MultiplyRGBA(color * 0.5f);
+						data.color *= 0.05f * effect2.shakeTimer;
+						drawDatas.Add(data);
+						if (drawPlayer.statLife <= drawPlayer.statLifeMax2 / 5f)
+						{
+							data = drawDataCopy[i];
+							if (data.texture?.Name?.StartsWith("RiskOfSlimeRain") ?? false) continue;
+
+							data.position -= effect2.shakePosOffset * effect2.shakeTimer;
+							data.scale += effect2.shakeScaleOffset * effect2.shakeTimer;
+							data.color = data.color.MultiplyRGBA(color * 0.5f);
+							data.color *= 0.1f * effect2.shakeTimer;
+							drawDatas.Add(data);
+						}
+					}
+					catch
+					{
+
+					}
 				}
 			}
 
