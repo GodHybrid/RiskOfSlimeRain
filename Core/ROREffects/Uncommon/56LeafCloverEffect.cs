@@ -7,7 +7,7 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class _56LeafClover : RORUncommonEffect
+	public class _56LeafCloverEffect : RORUncommonEffect
 	{
 		public override float Initial => 0.04f;
 

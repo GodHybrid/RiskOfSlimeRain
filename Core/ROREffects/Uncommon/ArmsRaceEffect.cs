@@ -7,7 +7,7 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class ArmsRace : RORUncommonEffect
+	public class ArmsRaceEffect : RORUncommonEffect
 	{
 		public override float Initial => 0.09f;
 

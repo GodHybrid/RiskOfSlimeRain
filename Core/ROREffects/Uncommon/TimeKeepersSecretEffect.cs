@@ -23,8 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string Description => $"Falling to low health stops time for {Initial} seconds.";
 
-		public override string FlavorText => "My old grandfather's hourglass. As the Time Keeper in the Hall of The Revered, he valued this hourglass a lot.\n" +
-			"For some reason, the sand never seems to run out!\nMy old grandfather's hourglass. As the Time Keeper in the Hall...";
+		public override string FlavorText => "My old grandfather's hourglass. As the Time Keeper in the Hall of The Revered, he valued this hourglass a lot.\nFor some reason, the sand never seems to run out!\nMy old grandfather's hourglass. As the Time Keeper in the Hall...";
 
 		public override string Name => "Time Keeper's Secret";
 
