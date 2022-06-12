@@ -14,26 +14,29 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Increase => 1;
 
-		public const float dmg = 5f;
+		public const float baseDamage = 5f;
+		public const int balanceQuantCap = 8;
 
-		public float Dmg => ServerConfig.Instance.OriginalStats ? dmg : dmg - 2f;
+		public float Dmg => ServerConfig.Instance.OriginalStats ? baseDamage : baseDamage - 2f + (MinesDropped >= balanceQuantCap ? Formula() - (float)balanceQuantCap : 0);
 
-		public const float damageThreshold = 0.15f;
+		public const float lowHealthThreshold = 0.15f;
+		public const float damageThreshold = 0.2f;
 
-		public int MinesDropped => (int)Formula();
+		public int MinesDropped => ServerConfig.Instance.OriginalStats ? (int)Formula() : (int)MathHelper.Clamp(Formula(), 0f, 8f);
 
-		public override string Description => $"Drop a mine at low health for {Dmg.ToPercent()} damage";
+		public override string Description => $"Drop mines at low health for {Dmg.ToPercent()} damage";
 
 		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
 
 		public override string UIInfo()
 		{
-			return $"Mine count: {(int)Formula()}";
+			return ServerConfig.Instance.OriginalStats ? $"Mine count: {MinesDropped}"
+														: $"Mine count: {MinesDropped} " + (MinesDropped >= balanceQuantCap ? "(max)" : "") + $"\nMine damage: {Dmg.ToPercent()}";
 		}
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			if (Main.myPlayer == player.whoAmI && damage >= 50 || player.statLife <= (int)(player.statLifeMax2 * damageThreshold))
+			if (Main.myPlayer == player.whoAmI && (damage >= (int)(player.statLifeMax2 * damageThreshold) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
 			{
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();

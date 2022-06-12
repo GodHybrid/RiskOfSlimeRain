@@ -36,7 +36,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void PostUpdateEquips(Player player)
 		{
-			if (timer >= 0)
+			if (timer >= 0 && timer < MaxTimerHeal)
 			{
 				timer++;
 				if (timer == MaxTimerHeal && Main.myPlayer == player.whoAmI)
@@ -45,6 +45,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					//Because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe((int)Formula());
 				}
+				if (timer >= MaxTimer)
+				{
+					timer = -1;
+				}
+			}
+			else if (timer >= MaxTimerHeal)
+			{
+				timer += (int)(MaxTimerHeal / frameCount);
 				if (timer >= MaxTimer)
 				{
 					timer = -1;

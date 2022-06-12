@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool AlwaysProc => false;
 
-		public override float Chance => 0.07f;
+		public override float Chance => ServerConfig.Instance.OriginalStats ? 0.07f : 0.1f;
 
 		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{

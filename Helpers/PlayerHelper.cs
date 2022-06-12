@@ -38,7 +38,16 @@ namespace RiskOfSlimeRain.Helpers
 		public static int GetDamage(this Player player)
 		{
 			//TODO include ror mode check here
-			return player.GetWeaponDamage(player.HeldItem);
+			return Math.Max(player.GetWeaponDamage(player.HeldItem), (int)MinimalDamageProgressive());
+		}
+
+		/// <summary>
+		/// Base damage the effect deals when no weapon is held or when the weapon is too weak for the current stage.
+		/// <br>Increases as the player progresses through the game by defeating bosses.</br>
+		/// </summary>
+		public static float MinimalDamageProgressive()
+		{
+			return !Main.hardMode ? 15f : !NPC.downedMoonlord ? 45f : 80f;
 		}
 
 		/// <summary>

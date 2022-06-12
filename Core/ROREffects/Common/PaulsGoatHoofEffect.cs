@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Speed increase: {Formula()}";
+			return $"Speed increase: {Formula().ToPercent()}";
 		}
 
 		public void PostUpdateRunSpeeds(Player player)

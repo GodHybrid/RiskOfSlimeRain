@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using static System.Math;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -30,7 +31,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public int GetIncreaseAmount(Player player)
 		{
-			return (int)(player.statLifeMax2 * Formula());
+			return (int)Floor(player.statLifeMax2 * Formula()) + 1;
 		}
 
 		public void PostUpdateEquips(Player player)

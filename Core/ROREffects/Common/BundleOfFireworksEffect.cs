@@ -12,7 +12,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 	{
 		//const float Initial = 0.005f;
 		//const float Increase = 0.005f;
-		const int fireworkCount = 5;
+		public const int fireworkCount = 5;
+		public uint killCount = 0;
 
 		private float DamageIncrease => ServerConfig.Instance.OriginalStats ? 9f : 7f;
 
@@ -26,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}";
+			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}\nMonsters to kill: {50 - killCount % 50}";
 		}
 
 		//Original, todo
@@ -41,31 +42,51 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		 * 
 		 */
 
-		public override bool AlwaysProc => false;
+		//public override bool AlwaysProc => false;
 
-		public override float Chance => Formula();
+		private float RollChance => Formula();
 
 		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
 		{
+			killCount++;
 			SpawnProjectile(target, player);
 		}
 
 		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
 		{
+			killCount++;
 			SpawnProjectile(target, player);
 		}
 
 		void SpawnProjectile(NPC target, Player player)
 		{
-			if (NPCHelper.IsSpawnedFromStatue(target)) return; //No statue abuse for more fireworks
-
-			int damage = (int)(DamageIncrease * player.GetDamage());
-			SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
-			for (int i = 0; i < fireworkCount; i++)
+			if (NPCHelper.IsSpawnedFromStatue(target))
 			{
-				Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-				RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
+				killCount--;
+				return; //No statue abuse for more fireworks
 			}
+
+			if (killCount % 50 == 0 || Proc(RollChance))
+			{
+				int damage = (int)(DamageIncrease * player.GetDamage());
+				SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
+				for (int i = 0; i < fireworkCount; i++)
+				{
+					Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
+					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
+				}
+			}
+			if (target.boss)
+			{
+				int damage = (int)(DamageIncrease * player.GetDamage());
+				SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
+				for (int i = 0; i < fireworkCount * 3; i++)
+				{
+					Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
+					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
+				}
+			}
+			if (killCount % 50 == 0) killCount = 0;
 		}
 	}
 }

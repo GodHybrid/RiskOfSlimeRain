@@ -16,8 +16,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		public override float Increase => 1;
 
 		public const float damage = 1.5f;
-		public const int damageLow = 30;
-		public const float damageHigh = 0.175f;
+		public const int damageFlat = 30;
+		public const float damageThreshold = 0.175f;
+		public const float lowHealthThreshold = 0.15f;
 
 		private float Ticks => Formula();
 
@@ -34,9 +35,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
 		{
-			if (Main.myPlayer == player.whoAmI && damage >= Math.Max(damageLow, (int)(player.statLifeMax2 * damageHigh)) || player.statLife <= (int)(player.statLifeMax2 * 0.15f))
+			if (Main.myPlayer == player.whoAmI && 
+				(damage >= Math.Max(damageFlat, (int)(player.statLifeMax2 * damageThreshold)) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold))	)
 			{
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, player.GetDamage(), Ticks);
+				int damageForProj = player.GetDamage();
+				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);
 			}
 		}
 

@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;

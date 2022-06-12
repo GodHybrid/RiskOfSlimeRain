@@ -1,5 +1,20 @@
 # Changelogs
 
+## 0.4.1.0
+* ALL damage items now have a minimal damage threshold that increases as player progresses. Players are no longer required to hold a weapon for the effects to deal any damage.
+* Bundle Of Fireworks now spawns rockets every 50 kills, triple rockets every boss kill. The chance to fire rockets remains.
+* Bustling Mushroom now correctly heals, whereas it used to heal 1HP less than intended.
+* Fire Shield now correctly displays current stack stats of the item:
+    * Original stats: 200% damage -> 400% damage
+    * Balanced stats: 200% damage -> 600% damage; 10 knockback -> 15 knockback
+* Medkit had its animation drastically sped up after the heal was already applied
+* Pauls Goat Hood had its UI info fixed
+* Spikestrips now spawn on set X locations: covers less area if hit airborne, but is much useful if hit while grounded.
+* Panic Mines now activate at both low HP and after taking heavy damage.
+    * Balanced stats: Maximum quantity of mines is limited to 8 at 8 stacks, further stacks increase the damage instead.
+* Taser (Balanced stats): Chance 7% -> 10%
+
+
 ## 0.4.0.2
 * Added config setting to disable recipes for consumable power-up items
 
