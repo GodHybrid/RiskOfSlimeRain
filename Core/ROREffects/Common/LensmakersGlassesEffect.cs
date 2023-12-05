@@ -32,16 +32,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50));
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (!Proc(Formula())) return;
-			crit = true;
+			modifiers.SetCrit();
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (!Proc(Formula())) return;
-			crit = true;
+			modifiers.SetCrit();
 		}
 	}
 }

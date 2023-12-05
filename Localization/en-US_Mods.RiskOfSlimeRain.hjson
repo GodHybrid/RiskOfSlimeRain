@@ -1,0 +1,155 @@
+Items: {
+	MagmaWormSummon: {
+		DisplayName: Spicy Honey Donut
+		Tooltip: Summons the Magma Worm
+	}
+
+	Nullifier: {
+		DisplayName: Nullifier
+		Tooltip: Use to enable the ability to restore your used '{0}' items, for a price
+	}
+
+	ColossusPaintingItem: {
+		DisplayName: Colossus Painting
+		Tooltip: "'R. Odathus'"
+	}
+
+	WarbannerRemover: {
+		DisplayName: Warbanner Remover
+		Tooltip:
+			'''
+			Use to remove the nearest warbanner from '{0}'
+			Stand inside the range of a warbanner, and it will:
+			- Highlight the warbanner that's about to be removed
+			- Reset the killcount when used
+			'''
+	}
+
+	DebugItem: {
+		DisplayName: Debug Item
+		Tooltip: ""
+	}
+
+	EnteringItem: {
+		DisplayName: Entering Item
+		Tooltip: Use to enter a subworld. Only works with 'SubworldLibrary' Mod enabled
+	}
+}
+
+NPCs.MagmaWorm.CommonName: Magma Worm
+
+Projectiles: {
+	AtGMissileMK1Proj.DisplayName: At G Missile M K1 Proj
+	BundleOfFireworksProj.DisplayName: Bundle Of Fireworks Proj
+	BundleOfFireworksVisualExplosion.DisplayName: Bundle Of Fireworks Visual Explosion
+	BustlingFungusProj.DisplayName: Bustling Fungus Proj
+	CrowbarProj.DisplayName: Crowbar Proj
+	DeadMansFootDoTProj.DisplayName: Dead Mans Foot Do T Proj
+	DeadMansFootExplosionProj.DisplayName: Dead Mans Foot Explosion Proj
+	DeadMansFootMineProj.DisplayName: Dead Mans Foot Mine Proj
+	FireProj.DisplayName: Fire Proj
+	FireShieldExplosion.DisplayName: Fire Shield Explosion
+	HeadstompersProj.DisplayName: Headstompers Proj
+	HermitsScarfProj.DisplayName: Hermits Scarf Proj
+	FireballGravityBouncy.DisplayName: Fireball Gravity Bouncy
+	FireProjHostile.DisplayName: Fire Proj Hostile
+	InfusionProj.DisplayName: Infusion Proj
+	MeatNuggetProj.DisplayName: Meat Nugget Proj
+	MortarTubeExplosion.DisplayName: Mortar Tube Explosion
+	MortarTubeRocket.DisplayName: Mortar Tube Rocket
+	PanicMinesExplosionProj.DisplayName: Panic Mines Explosion Proj
+	PanicMinesProj.DisplayName: Panic Mines Proj
+	PaulsGoatHoofProj.DisplayName: Pauls Goat Hoof Proj
+	PlayerHealthProj.DisplayName: Player Health Proj
+	RustyKnifeProj.DisplayName: Rusty Knife Proj
+	SpikestripProj.DisplayName: Spikestrip Proj
+	StickyBombExplosion.DisplayName: Sticky Bomb Explosion
+	StickyBombProj.DisplayName: Sticky Bomb Proj
+	WarbannerProj.DisplayName: Warbanner Proj
+}
+
+Configs: {
+	Config: {
+		DisplayName: Client Config
+
+		Headers: {
+			ItemUI: Item UI
+			Visuals: Visuals
+			Hint: To go to the server config containing game mode settings, press the '>' arrow in the bottom right
+		}
+
+		CustomStacking: {
+			Label: Custom stacking
+			Tooltip: Manually select how many stacks an item has (up to the unlocked amount)
+		}
+
+		OnlyShowWhenOpenInventory: {
+			Label: Only show when open inventory
+			Tooltip: Toggle if the UI should be always shown or only when the inventory is open
+		}
+
+		ItemUIVerticalOffset: {
+			Label: Vertical offset
+			Tooltip: Adjust how far away the UI starts off vertically from the bottom
+		}
+
+		HideOwnVisuals: {
+			Label: Hide own player visuals
+			Tooltip: Toggle visuals created by effects (with exceptions)
+		}
+
+		HideOtherVisuals: {
+			Label: Hide other player visuals
+			Tooltip: Toggle visuals created by effects (with exceptions)
+		}
+
+		HideWarbannerRadius: {
+			Label: Hide warbanner radius
+			Tooltip: Toggle the warbanner circle
+		}
+
+		Hint: {
+			Label: Hint
+			Tooltip: ""
+		}
+	}
+
+	ServerConfig: {
+		DisplayName: Server Config
+
+		Headers: {
+			GameModes:
+				'''
+				Game Modes
+				You can only change those settings in the 'Mods' menu accessed from the main menu (not ingame)
+				'''
+			ServerTools: Server Tools
+			Hint: Hint: To go to the client config containing UI adjustments, press the '<' arrow in the bottom left
+		}
+
+		OriginalStats: {
+			Label: Original Stats
+			Tooltip: If enabled, replicates the item's stats from the original game for the most part. Leave it disabled for the recommended game balance
+		}
+
+		DifficultyScaling: {
+			Label: Difficulty Scaling
+			Tooltip: If enabled, scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance
+		}
+
+		Blacklist: {
+			Label: Item Blacklist
+			Tooltip: Customize which items will have no effect on players (they can still apply it, it'll just stay inactive)
+		}
+
+		DisableRecipes: {
+			Label: Disable Recipes
+			Tooltip: If enabled, disables recipes for the consumable power-up items
+		}
+
+		Hint: {
+			Label: Hint
+			Tooltip: ""
+		}
+	}
+}

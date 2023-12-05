@@ -1,14 +1,13 @@
 using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network
 {
-	public class PlayerHealPacket : NetworkPacket
+	public class PlayerHealPacket/* : NetworkPacket*/
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		public void Send(int toWho = -1, int fromWho = -1) { }
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
 		public int HealAmount { get; set; }
 
@@ -22,10 +21,10 @@ namespace RiskOfSlimeRain.Network
 			HealWhoAmI = whoAmI;
 		}
 
-		protected override bool PostReceive(BinaryReader reader, int fromWho)
-		{
-			Main.player[HealWhoAmI].HealMe(HealAmount, noBroadcast: true);
-			return base.PostReceive(reader, fromWho);
-		}
+		//protected override bool PostReceive(BinaryReader reader, int fromWho)
+		//{
+		//	Main.player[HealWhoAmI].HealMe(HealAmount, noBroadcast: true);
+		//	return base.PostReceive(reader, fromWho);
+		//}
 	}
 }

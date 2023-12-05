@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items.Consumable
@@ -22,19 +23,21 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public static Color FlavorColor => new Color(220, 220, 220);
 
 		public bool HasFlavorText => FlavorText != string.Empty;
+
+		[CloneByReference]
+		private ROREffect _effect;
+		public ROREffect Effect => _effect ??= ROREffect.CreateInstanceNoPlayer(typeof(T));
 		#endregion
 
 		#region tml hooks
+		//TODO
+		public override LocalizedText DisplayName => LocalizedText.Empty; //Effect.Name;
+
+		public override LocalizedText Tooltip => LocalizedText.Empty; //Effect.Description;
+
 		public sealed override void SetStaticDefaults()
 		{
 			ROREffectManager.RegisterItem(this);
-
-			ROREffect effect = ROREffect.CreateInstanceNoPlayer(typeof(T));
-			if (effect.Name != string.Empty)
-			{
-				DisplayName.SetDefault(effect.Name);
-			}
-			Tooltip.SetDefault(effect.Description);
 		}
 
 		private bool CanUse(Player player)
@@ -54,7 +57,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			return CanUse(player);
 		}
 
-		public sealed override bool UseItem(Player player)
+		public sealed override bool? UseItem(Player player)
 		{
 			//It is important that this runs on clients+server, otherwise big problems happen
 			ROREffectManager.ApplyEffect<T>(player.GetRORPlayer());
@@ -73,14 +76,14 @@ namespace RiskOfSlimeRain.Items.Consumable
 				for (int i = 0; i < lines.Length; i++)
 				{
 					string tooltip = "[c/" + color + ":" + lines[i] + "]";
-					tooltips.Add(new TooltipLine(mod, Name + i.ToString(), tooltip));
+					tooltips.Add(new TooltipLine(Mod, Name + i.ToString(), tooltip));
 				}
 			}
 			if (!CanUse(Main.LocalPlayer))
 			{
-				tooltips.Add(new TooltipLine(mod, "CanUse", "Max stack is enforced, you cannot stack more of this item!")
+				tooltips.Add(new TooltipLine(Mod, "CanUse", "Max stack is enforced, you cannot stack more of this item!")
 				{
-					overrideColor = Color.Orange
+					OverrideColor = Color.Orange
 				});
 			}
 
@@ -102,16 +105,16 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 99;
-			item.consumable = true;
-			item.width = 18;
-			item.height = 18;
-			item.useStyle = 4;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.value = Item.sellPrice(0, 2, 0, 0);
-			item.rare = (int)Rarity;
-			item.UseSound = SoundID.Item4;
+			Item.maxStack = 9999;
+			Item.consumable = true;
+			Item.width = 18;
+			Item.height = 18;
+			Item.useStyle = 4;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.value = Item.sellPrice(0, 2, 0, 0);
+			Item.rare = (int)Rarity;
+			Item.UseSound = SoundID.Item4;
 
 			//When wanting to add more SetDefaults, call base.SetDefaults() first
 		}

@@ -1,14 +1,14 @@
 ﻿using System.IO;
 using Terraria;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network
 {
 	/// <summary>
 	/// NetworkPacket that is tied to an NPC
 	/// </summary>
-	public abstract class NPCPacketBase : NetworkPacket
+	public abstract class NPCPacketBase/* : NetworkPacket*/
 	{
+		public void Send(int toWho = -1, int fromWho = -1) { }
 		//To identify the NPC fully
 		public int NPCWhoAmI { get; set; }
 
@@ -30,7 +30,7 @@ namespace RiskOfSlimeRain.Network
 		{
 			return true;
 		}
-
+		/*
 		protected sealed override bool MidReceive(BinaryReader reader, int fromWho)
 		{
 			if (NotValidNPC) return base.MidReceive(reader, fromWho);
@@ -39,6 +39,6 @@ namespace RiskOfSlimeRain.Network
 			bool ret = base.MidReceive(reader, fromWho) && NewMidReceive(reader, fromWho);
 
 			return ret;
-		}
+		}*/
 	}
 }

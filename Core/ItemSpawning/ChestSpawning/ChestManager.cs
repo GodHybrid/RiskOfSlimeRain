@@ -55,7 +55,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool IsChestOfType(Tile tile, int frameX)
 		{
-			return tile.type == TileID.Containers && tile.frameX == frameX * 36;
+			return tile.TileType == TileID.Containers && tile.TileFrameX == frameX * 36;
 		}
 
 		/// <summary>
@@ -63,7 +63,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool IsChestOfTypes(Tile tile, params int[] types)
 		{
-			return tile.type == TileID.Containers && Array.IndexOf(types, tile.frameX / 36) > -1;
+			return tile.TileType == TileID.Containers && Array.IndexOf(types, tile.TileFrameX / 36) > -1;
 		}
 
 		/// <summary>
@@ -158,7 +158,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		{
 			PutRORItemInOneRandomChest(delegate (Chest chest, Tile tile)
 			{
-				return IsChestOfType(tile, ChestType.Gold) && tile.wall == WallID.SandstoneBrick;
+				return IsChestOfType(tile, ChestType.Gold) && tile.WallType == WallID.SandstoneBrick;
 			});
 		}
 
@@ -225,7 +225,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 			//Count all chests in the world
 			chests = FindAllChestsOf(delegate (Chest chest, Tile tile)
 			{
-				return tile.type == TileID.Containers;
+				return tile.TileType == TileID.Containers;
 			});
 			totalChests = chests.Count;
 		}

@@ -168,16 +168,17 @@ namespace RiskOfSlimeRain.Helpers
 					NPC npc = new NPC();
 
 					// (maybe) tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
-					bool prev = Main.NPCLoaded[i];
-					if (prev && i >= Main.maxNPCTypes)
-					{
-						Main.NPCLoaded[i] = false;
-					}
+					//TODO 1.4.4 check if need to port
+					//bool prev = Main.NPCLoaded[i];
+					//if (prev && i >= Main.maxNPCTypes)
+					//{
+					//	Main.NPCLoaded[i] = false;
+					//}
 					npc.SetDefaults(i);
-					if (prev && i >= Main.maxNPCTypes)
-					{
-						Main.NPCLoaded[i] = true;
-					}
+					//if (prev && i >= Main.maxNPCTypes)
+					//{
+					//	Main.NPCLoaded[i] = true;
+					//}
 
 					for (int j = 0; j < npc.buffImmune.Length; j++)
 					{
@@ -193,9 +194,9 @@ namespace RiskOfSlimeRain.Helpers
 					}
 
 					//Modded only
-					if (i >= Main.maxNPCTypes)
+					if (i >= NPCID.Count)
 					{
-						ModNPC modNPC = npc.modNPC;
+						ModNPC modNPC = npc.ModNPC;
 						if (modNPC != null)
 						{
 							string name = modNPC.GetType().Name;
@@ -229,12 +230,13 @@ namespace RiskOfSlimeRain.Helpers
 		{
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (npc.townNPC)
+				if (npc.townNPC || newType == 107 || newType == 108)
 				{
 					npc.Transform(newType);
 					return;
 				}
 
+				int num = npc.extraValue;
 				bool noValue = false;
 				if (npc.value == 0f)
 				{
@@ -255,6 +257,14 @@ namespace RiskOfSlimeRain.Helpers
 					ai[i] = npc.ai[i];
 				}
 
+				//Added from SetDefaultsKeepPlayerInteraction, because it does not have the NPCSpawnParams parameter
+				bool[] interaction = new bool[npc.playerInteraction.Length];
+				for (int i = 0; i < npc.playerInteraction.Length; i++)
+				{
+					interaction[i] = npc.playerInteraction[i];
+				}
+
+				float num2 = npc.shimmerTransparency;
 				int oldType = npc.type;
 				int life = npc.life;
 				int lifeMax = npc.lifeMax;
@@ -263,7 +273,9 @@ namespace RiskOfSlimeRain.Helpers
 				int spriteDir = npc.spriteDirection;
 				bool spawnedFromStatue = npc.SpawnedFromStatue;
 
-				npc.SetDefaults(newType, scaleOverride);
+				var spawnParams = npc.GetMatchingSpawnParams();
+				spawnParams.sizeScaleOverride = scaleOverride;
+				npc.SetDefaults(newType, spawnParams);
 
 				npc.SpawnedFromStatue = spawnedFromStatue;
 				npc.spriteDirection = spriteDir;
@@ -278,17 +290,15 @@ namespace RiskOfSlimeRain.Helpers
 				{
 					npc.life = npc.lifeMax;
 				}
-				if (newType == 107 || newType == 108)
-				{
-					npc.homeTileX = (int)(npc.position.X + (npc.width / 2)) / 16;
-					npc.homeTileY = (int)(npc.position.Y + npc.height) / 16;
-					npc.homeless = true;
-				}
 
 				for (int i = 0; i < NPC.maxBuffs; i++)
 				{
 					npc.buffType[i] = buffTypes[i];
 					npc.buffTime[i] = buffTimes[i];
+				}
+				for (int j = 0; j < npc.playerInteraction.Length; j++)
+				{
+					npc.playerInteraction[j] = interaction[j];
 				}
 
 				if (syncAI)
@@ -298,26 +308,16 @@ namespace RiskOfSlimeRain.Helpers
 						npc.ai[i] = ai[i];
 					}
 				}
+				npc.shimmerTransparency = num2;
+				npc.extraValue = num;
 
 				if (Main.netMode == NetmodeID.Server)
 				{
 					npc.netUpdate = true;
 					NetMessage.SendData(MessageID.SyncNPC, number: npc.whoAmI);
-					NetMessage.SendData(MessageID.SendNPCBuffs, number: npc.whoAmI);
+					NetMessage.SendData(MessageID.NPCBuffs, number: npc.whoAmI);
 				}
 				npc.TransformVisuals(oldType, newType);
-
-				//Commented out because this won't be used for town NPCs
-				//if (NPC.TypeToHeadIndex(npc.type) != -1)
-				//{
-				//	Main.npc[npc.whoAmI].GivenName = NPC.getNewNPCName(npc.type);
-				//}
-				//npc.npcNameLookup = 0;
-				//if (npc.townNPC)
-				//{
-				//	npc.homeless = true;
-				//}
-				//npc.altTexture = 0;
 			}
 		}
 

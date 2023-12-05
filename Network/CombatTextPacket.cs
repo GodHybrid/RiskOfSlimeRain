@@ -2,14 +2,13 @@ using Microsoft.Xna.Framework;
 using System.IO;
 using Terraria;
 using Terraria.ID;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network
 {
-	public class CombatTextPacket : NetworkPacket
+	public class CombatTextPacket/* : NetworkPacket*/
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
+		public void Send(int toWho = -1, int fromWho = -1) { }
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
 
 		public Vector2 Position { get; set; }
 
@@ -54,10 +53,10 @@ namespace RiskOfSlimeRain.Network
 			return index;
 		}
 
-		protected override bool PostReceive(BinaryReader reader, int fromWho)
-		{
-			CombatText.NewText(Location, Color, Text, Bits[0], Bits[1]);
-			return base.PostReceive(reader, fromWho);
-		}
+		//protected override bool PostReceive(BinaryReader reader, int fromWho)
+		//{
+		//	CombatText.NewText(Location, Color, Text, Bits[0], Bits[1]);
+		//	return base.PostReceive(reader, fromWho);
+		//}
 	}
 }

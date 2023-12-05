@@ -14,28 +14,28 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(16);
-			projectile.friendly = true;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.alpha = 255;
-			projectile.timeLeft = 3;
+			Projectile.Size = new Vector2(16);
+			Projectile.friendly = true;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.alpha = 255;
+			Projectile.timeLeft = 3;
 
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 10;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 10;
 		}
 
-		public override void ModifyHitNPC(NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public override void ModifyHitNPC(NPC target, ref NPC.HitModifiers modifiers)
 		{
 			//To apply proper knockback based on what side the explosion is
-			hitDirection = (target.Center.X > projectile.Center.X).ToDirectionInt();
+			modifiers.HitDirectionOverride = (target.Center.X > Projectile.Center.X).ToDirectionInt();
 		}
 
 		public override void AI()
 		{
-			projectile.Damage(); //To apply damage
-			projectile.Kill(); //Do disappear right after it
+			Projectile.Damage(); //To apply damage
+			Projectile.Kill(); //Do disappear right after it
 		}
 	}
 }

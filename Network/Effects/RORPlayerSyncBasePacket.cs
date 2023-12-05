@@ -3,15 +3,15 @@ using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
 	/// <summary>
 	/// Sends the Effects list, and other various variables
 	/// </summary>
-	public abstract class RORPlayerSyncBasePacket : NetworkPacket
+	public abstract class RORPlayerSyncBasePacket/* : NetworkPacket*/
 	{
+		public void Send(int toWho = -1, int fromWho = -1) { }
 		//To do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
 
 		public int WhoAmI { get; set; }
@@ -27,10 +27,11 @@ namespace RiskOfSlimeRain.Network.Effects
 		public RORPlayerSyncBasePacket(RORPlayer mPlayer)
 		{
 			//GeneralHelper.Print("Making packet from " + mPlayer.player.whoAmI);
-			WhoAmI = mPlayer.player.whoAmI;
+			WhoAmI = mPlayer.Player.whoAmI;
 			Count = mPlayer.Effects.Count;
 		}
 
+		/*
 		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
 		{
 			//GeneralHelper.Print(GetType().Name + " " + (DateTime.Now.Ticks % 1000) + " sending " + Player.name + " " + Count + " effects");
@@ -66,6 +67,6 @@ namespace RiskOfSlimeRain.Network.Effects
 			ROREffectManager.Populate(ModPlayer);
 
 			return base.MidReceive(reader, fromWho);
-		}
+		}*/
 	}
 }

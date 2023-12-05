@@ -5,8 +5,6 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Extensions;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -17,25 +15,25 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetDefaults()
 		{
-			projectile.width = 34;
-			projectile.height = 4;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
+			Projectile.width = 34;
+			Projectile.height = 4;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
 			//projectile.tileCollide = true;
-			projectile.timeLeft = 300;
+			Projectile.timeLeft = 300;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = Vector2.Zero;
+			Projectile.velocity = Vector2.Zero;
 			return false;
 		}
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			//so it sticks to platforms
 			fallThrough = false;
-			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
 		}
 
 		public override bool? CanCutTiles()
@@ -45,26 +43,31 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int Duration
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public override void AI()
 		{
-			if (projectile.localAI[0] == 0f)
+			if (Projectile.localAI[0] == 0f)
 			{
-				projectile.localAI[0] = 1f;
-				projectile.timeLeft = Duration;
+				Projectile.localAI[0] = 1f;
+				Projectile.timeLeft = Duration;
 			}
 
-			projectile.velocity.Y += 0.5f;
-			Main.npc.WhereActive(n => n.CanBeChasedBy() && !n.boss && n.Hitbox.Intersects(projectile.Hitbox)).Do(delegate (NPC n)
+			Projectile.velocity.Y += 0.5f;
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				if (NPCHelper.IsBossPiece(n)) return;
-				if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) return;
-				if (NPCHelper.IsWormBodyOrTail(n)) return;
-				NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60);
-			});
+				NPC n = Main.npc[i];
+
+				if (n.active && !n.boss && n.CanBeChasedBy() && n.Hitbox.Intersects(Projectile.Hitbox))
+				{
+					if (NPCHelper.IsBossPiece(n)) continue;
+					if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) continue;
+					if (NPCHelper.IsWormBodyOrTail(n)) continue;
+					NPCEffectManager.ApplyNPCEffect<SpikestripNPCEffect>(n, 60);
+				}
+			}
 		}
 	}
 }

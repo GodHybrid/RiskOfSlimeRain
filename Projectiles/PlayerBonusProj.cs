@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -10,12 +11,12 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public abstract class PlayerBonusProj : ModProjectile
 	{
-		public static void NewProjectile<T>(Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : PlayerBonusProj
+		public static void NewProjectile<T>(IEntitySource source, Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : PlayerBonusProj
 		{
-			Projectile p = Projectile.NewProjectileDirect(position, velocity, ModContent.ProjectileType<T>(), 0, 0f, Main.myPlayer);
+			Projectile p = Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<T>(), 0, 0f, Main.myPlayer);
 			if (p.whoAmI < Main.maxProjectiles)
 			{
-				T t = p.modProjectile as T;
+				T t = p.ModProjectile as T;
 
 				onCreate?.Invoke(t);
 			}
@@ -23,14 +24,14 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int HomingTimer
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public int StartHomingTimer
 		{
-			get => (int)projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			get => (int)Projectile.localAI[0];
+			set => Projectile.localAI[0] = value;
 		}
 
 		public bool keepSlowingDown = true;
@@ -57,12 +58,12 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(16);
-			projectile.penetrate = 1;
-			projectile.tileCollide = false;
-			projectile.alpha = 150;
-			projectile.timeLeft = 950;
-			projectile.netImportant = true;
+			Projectile.Size = new Vector2(16);
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = false;
+			Projectile.alpha = 150;
+			Projectile.timeLeft = 950;
+			Projectile.netImportant = true;
 		}
 
 		public sealed override void AI()
@@ -74,16 +75,16 @@ namespace RiskOfSlimeRain.Projectiles
 					Player target = Main.player[targetIndex];
 					Homing(target);
 
-					if (projectile.Hitbox.Intersects(target.Hitbox))
+					if (Projectile.Hitbox.Intersects(target.Hitbox))
 					{
-						if (projectile.owner == Main.myPlayer) ApplyBonus(target);
-						projectile.Kill();
+						if (Projectile.owner == Main.myPlayer) ApplyBonus(target);
+						Projectile.Kill();
 						return;
 					}
 				}
 				else
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 			else
@@ -100,15 +101,15 @@ namespace RiskOfSlimeRain.Projectiles
 			StartHomingTimer++;
 			if (keepSlowingDown)
 			{
-				float lenSQ = projectile.velocity.LengthSquared();
+				float lenSQ = Projectile.velocity.LengthSquared();
 				if (lenSQ < 0.5f)
 				{
-					projectile.velocity = Vector2.Zero;
+					Projectile.velocity = Vector2.Zero;
 					keepSlowingDown = false;
 				}
 				else
 				{
-					projectile.velocity *= SlowDownFactor;
+					Projectile.velocity *= SlowDownFactor;
 				}
 			}
 		}
@@ -120,14 +121,14 @@ namespace RiskOfSlimeRain.Projectiles
 			 * And then curves towards the destination for 30 ticks
 			 */
 			HomingTimer++;
-			Vector2 direction = target.Center + target.velocity * 5f - projectile.Center;
+			Vector2 direction = target.Center + target.velocity * 5f - Projectile.Center;
 			int rot = Utils.Clamp(30 - HomingTimer, 0, 30);
 			direction.Normalize();
 			direction = direction.RotatedBy(MathHelper.ToRadians(6 * rot * Math.Sign(-direction.X)));
 			direction *= MaxHomingSpeed * (1f - (rot / 30f));
 			//For that nice initial curving
 			float accel = Utils.Clamp(MaxHomingAccel - HomingTimer, MinHomingAccel, MaxHomingAccel);
-			projectile.velocity = (projectile.velocity * (accel - 1) + direction) / accel;
+			Projectile.velocity = (Projectile.velocity * (accel - 1) + direction) / accel;
 		}
 
 		public virtual void OtherAI()

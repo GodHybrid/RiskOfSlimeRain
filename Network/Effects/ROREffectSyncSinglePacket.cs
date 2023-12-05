@@ -1,22 +1,21 @@
 using RiskOfSlimeRain.Core.ROREffects;
 using Terraria.ModLoader;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
-	public class ROREffectSyncSinglePacket : ModPlayerNetworkPacket<RORPlayer>
+	public class ROREffectSyncSinglePacket /*: ModPlayerNetworkPacket<RORPlayer>*/
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		public void Send(int toWho = -1, int fromWho = -1) { }
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
 		public int Index { get; set; } = -1;
-
+		
 		//ROREffect implements INetworkSerializable
-		public ROREffect Effect
-		{
-			get => base.ModPlayer.Effects[Index];
-			set { }
-		}
+		//public ROREffect Effect
+		//{
+		//	get => base.ModPlayer.Effects[Index];
+		//	set { }
+		//}
 
 		public ROREffectSyncSinglePacket() { }
 
@@ -25,11 +24,11 @@ namespace RiskOfSlimeRain.Network.Effects
 			Index = ROREffectManager.GetIndexOfEffect(effect);
 		}
 
-		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
-		{
-			if (Index < 0) return false; //In case the parameterless constructor gets used, or index isn't found
+		//protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
+		//{
+		//	if (Index < 0) return false; //In case the parameterless constructor gets used, or index isn't found
 
-			return base.PreSend(modPacket, fromWho, toWho);
-		}
+		//	return base.PreSend(modPacket, fromWho, toWho);
+		//}
 	}
 }

@@ -29,12 +29,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => 0.08f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -49,7 +49,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				height = Main.rand.Next(bound, target.height - bound);
 			}
 			Vector2 offset = new Vector2(width, height);
-			StickyProj.NewProjectile<StickyBombProj>(target, offset, damage);
+			StickyProj.NewProjectile<StickyBombProj>(GetEntitySource(player), target, offset, damage);
 		}
 	}
 }

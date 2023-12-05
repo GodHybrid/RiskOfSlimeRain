@@ -1,19 +1,18 @@
 using RiskOfSlimeRain.Core.ROREffects;
 using System.IO;
 using Terraria.ModLoader;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
-	public class ROREffectSyncSingleStackPacket : ModPlayerNetworkPacket<RORPlayer>
+	public class ROREffectSyncSingleStackPacket/* : ModPlayerNetworkPacket<RORPlayer>*/
 	{
+		public void Send(int toWho = -1, int fromWho = -1) { }
 		//to do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
 		public int Index { get; set; } = -1;
 
-		private ROREffect Effect => ModPlayer.Effects[Index];
+		//private ROREffect Effect => ModPlayer.Effects[Index];
 
 		public ROREffectSyncSingleStackPacket() { }
 
@@ -22,20 +21,20 @@ namespace RiskOfSlimeRain.Network.Effects
 			Index = ROREffectManager.GetIndexOfEffect(effect);
 		}
 
-		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
-		{
-			if (Index < 0) return false; //In case the parameterless constructor gets used, or index isn't found
+		//protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
+		//{
+		//	if (Index < 0) return false; //In case the parameterless constructor gets used, or index isn't found
 
-			Effect.NetSendStack(modPacket);
-			//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " sending stack " + Effect);
-			return base.PreSend(modPacket, fromWho, toWho);
-		}
+		//	Effect.NetSendStack(modPacket);
+		//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " sending stack " + Effect);
+		//	return base.PreSend(modPacket, fromWho, toWho);
+		//}
 
-		protected override bool MidReceive(BinaryReader reader, int fromWho)
-		{
-			Effect.NetReceiveStack(reader);
-			//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " receiving stack " + Effect);
-			return base.MidReceive(reader, fromWho);
-		}
+		//protected override bool MidReceive(BinaryReader reader, int fromWho)
+		//{
+		//	Effect.NetReceiveStack(reader);
+		//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " receiving stack " + Effect);
+		//	return base.MidReceive(reader, fromWho);
+		//}
 	}
 }

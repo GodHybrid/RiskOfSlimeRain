@@ -1,10 +1,8 @@
-using WebmilioCommons.Networking;
-
 namespace RiskOfSlimeRain.Network.Effects
 {
 	public class RORPlayerSyncToAllPacket : RORPlayerSyncBasePacket
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
 		public RORPlayerSyncToAllPacket() : base() { }
 

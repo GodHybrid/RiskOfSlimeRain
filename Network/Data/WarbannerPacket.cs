@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.Warbanners;
 using System.IO;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network.Data
 {
-	public class WarbannerPacket : NetworkPacket
+	public class WarbannerPacket/* : NetworkPacket*/
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToServer;
+		public void Send(int toWho = -1, int fromWho = -1) { }
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToServer;
 
 		public int Radius { get; set; }
 
@@ -25,11 +24,11 @@ namespace RiskOfSlimeRain.Network.Data
 			Y = position.Y;
 		}
 
-		protected override bool PostReceive(BinaryReader reader, int fromWho)
-		{
-			//Do something with the received data, which is now in the variables
-			WarbannerManager.AddWarbanner(Radius, X, Y);
-			return base.PostReceive(reader, fromWho);
-		}
+		//protected override bool PostReceive(BinaryReader reader, int fromWho)
+		//{
+		//	//Do something with the received data, which is now in the variables
+		//	WarbannerManager.AddWarbanner(Radius, X, Y);
+		//	return base.PostReceive(reader, fromWho);
+		//}
 	}
 }

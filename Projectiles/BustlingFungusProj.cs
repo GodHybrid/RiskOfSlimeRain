@@ -2,9 +2,9 @@
 using RiskOfSlimeRain.Core.ROREffects.Common;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -15,20 +15,20 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			Main.projFrames[projectile.type] = 8;
+			Main.projFrames[Projectile.type] = 8;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = Width;
-			projectile.height = Height;
-			projectile.friendly = false;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 60;
-			projectile.netImportant = true;
-			drawOriginOffsetY = 4;
+			Projectile.width = Width;
+			Projectile.height = Height;
+			Projectile.friendly = false;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 60;
+			Projectile.netImportant = true;
+			DrawOriginOffsetY = 4;
 		}
 
 		public const int TimerMax = 60;
@@ -41,26 +41,26 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int Heal
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public int Timer
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		public bool StoppedAnimating
 		{
-			get => projectile.localAI[0] == 1;
-			set => projectile.localAI[0] = value ? 1f : 0f;
+			get => Projectile.localAI[0] == 1;
+			set => Projectile.localAI[0] = value ? 1f : 0f;
 		}
 
 		public bool StartDespawning
 		{
-			get => projectile.localAI[1] == 1;
-			set => projectile.localAI[1] = value ? 1f : 0f;
+			get => Projectile.localAI[1] == 1;
+			set => Projectile.localAI[1] = value ? 1f : 0f;
 		}
 
 		public bool lastAnimating = true;
@@ -78,7 +78,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void TryDespawn()
 		{
-			RORPlayer mPlayer = projectile.GetOwner().GetRORPlayer();
+			RORPlayer mPlayer = Projectile.GetOwner().GetRORPlayer();
 			if (!StartDespawning)
 			{
 				BustlingFungusEffect effect = ROREffectManager.GetEffectOfType<BustlingFungusEffect>(mPlayer);
@@ -107,38 +107,38 @@ namespace RiskOfSlimeRain.Projectiles
 
 			if (StartDespawning)
 			{
-				projectile.alpha += 5;
-				if (projectile.alpha > 255) projectile.alpha = 255;
+				Projectile.alpha += 5;
+				if (Projectile.alpha > 255) Projectile.alpha = 255;
 			}
 			else
 			{
-				projectile.timeLeft = 60;
+				Projectile.timeLeft = 60;
 			}
 		}
 
 		private void AnimateAndSound()
 		{
-			bool animating = projectile.WaterfallAnimation(6);
+			bool animating = Projectile.WaterfallAnimation(6);
 
-			if (Main.myPlayer == projectile.owner)
+			if (Main.myPlayer == Projectile.owner)
 			{
 				if (animating != lastAnimating)
 				{
-					projectile.netUpdate = true;
+					Projectile.netUpdate = true;
 				}
 				lastAnimating = animating;
 			}
 
-			if (projectile.frame == 0 && projectile.frameCounter == 1)
+			if (Projectile.frame == 0 && Projectile.frameCounter == 1)
 			{
 				//Plant growing
-				Main.PlaySound(SoundID.Item51.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item51.Style, SoundHelper.FixVolume(1.1f), 0.6f);
+				SoundEngine.PlaySound(SoundID.Item51.WithVolumeScale(SoundHelper.FixVolume(1.1f)).WithPitchOffset(0.6f), Projectile.Center);
 			}
 
-			if ((projectile.frame == 1 || projectile.frame == 4) && projectile.frameCounter == 1)
+			if ((Projectile.frame == 1 || Projectile.frame == 4) && Projectile.frameCounter == 1)
 			{
 				//Generic weapon swing
-				Main.PlaySound(SoundID.Item19.SoundId, (int)projectile.Center.X, (int)projectile.Center.Y, SoundID.Item19.Style, 0.63f, -0.35f);
+				SoundEngine.PlaySound(SoundID.Item19.WithVolumeScale(0.63f).WithPitchOffset(-3.5f), Projectile.Center);
 			}
 		}
 
@@ -148,20 +148,38 @@ namespace RiskOfSlimeRain.Projectiles
 			if (Timer > TimerMax && !StartDespawning)
 			{
 				Timer = 0;
-				Main.npc.WhereActive(n => n.townNPC && n.DistanceSQ(projectile.Center) < RadiusSQ).Do(n => n.HealMe(Heal));
-				if (projectile.owner == Main.myPlayer)
+
+				for (int i = 0; i < Main.maxNPCs; i++)
+				{
+					NPC n = Main.npc[i];
+
+					if (n.active && n.townNPC && n.DistanceSQ(Projectile.Center) < RadiusSQ)
+					{
+						n.HealMe(Heal);
+					}
+				}
+
+				if (Projectile.owner == Main.myPlayer)
 				{
 					if (Main.netMode == NetmodeID.SinglePlayer)
 					{
-						Player player = projectile.GetOwner();
-						if (player.DistanceSQ(projectile.Center) < RadiusSQ)
+						Player player = Projectile.GetOwner();
+						if (player.DistanceSQ(Projectile.Center) < RadiusSQ)
 						{
 							player.HealMe(Heal);
 						}
 					}
 					else
 					{
-						Main.player.WhereActive(p => p.DistanceSQ(projectile.Center) < RadiusSQ).Do(p => p.HealMe(Heal));
+						for (int i = 0; i < Main.maxPlayers; i++)
+						{
+							Player p = Main.player[i];
+
+							if (p.active && !p.dead && p.DistanceSQ(Projectile.Center) < RadiusSQ)
+							{
+								p.HealMe(Heal);
+							}
+						}
 					}
 				}
 			}

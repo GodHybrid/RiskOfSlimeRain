@@ -5,18 +5,18 @@ using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
-using Terraria.World.Generation;
-using WebmilioCommons.Tinq;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.Warbanners
 {
 	/// <summary>
 	/// Responsible for operating on warbanners and saving/loading them via RORWorld
 	/// </summary>
-	public static class WarbannerManager
+	public class WarbannerManager : ModSystem
 	{
 		public const int LIMIT = 100;
 
@@ -95,38 +95,43 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (unspawnedWarbanners.Count == 0) return;
 
-			Main.player.DoActive(delegate (Player p)
+			for (int i = 0; i < Main.maxPlayers; i++)
 			{
-				List<Warbanner> spawned = new List<Warbanner>();
-				for (int j = 0; j < unspawnedWarbanners.Count; j++)
-				{
-					Warbanner banner = unspawnedWarbanners[j];
-					float distance = banner.radius + 1200; //1080 is width of the screen, add a bit of buffer
-					float playerDistance = p.DistanceSQ(banner.position);
-					if (playerDistance < distance * distance)
-					{
-						//Adjust position in case tiles below it are gone if world is loaded again (means it will float if tiles are broken under an already spawned one)
-						if (!banner.fresh)
-						{
-							int maxDistance = Math.Max(1, Main.maxTilesY - 45 - (int)(banner.position.Y / 16));
-							FindNearestBelow(ref banner.position, maxDistance);
-						}
+				Player p = Main.player[i];
 
-						//Spawn banner projectile
-						int whoami = Projectile.NewProjectile(banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
-						if (whoami < Main.maxProjectiles)
+				if (p.active && !p.dead)
+				{
+					List<Warbanner> spawned = new List<Warbanner>();
+					for (int j = 0; j < unspawnedWarbanners.Count; j++)
+					{
+						Warbanner banner = unspawnedWarbanners[j];
+						float distance = banner.radius + 1200; //1080 is width of the screen, add a bit of buffer
+						float playerDistance = p.DistanceSQ(banner.position);
+						if (playerDistance < distance * distance)
 						{
-							banner.associatedProjIdentity = Main.projectile[whoami].identity;
-							spawned.Add(banner);
+							//Adjust position in case tiles below it are gone if world is loaded again (means it will float if tiles are broken under an already spawned one)
+							if (!banner.fresh)
+							{
+								int maxDistance = Math.Max(1, Main.maxTilesY - 45 - (int)(banner.position.Y / 16));
+								FindNearestBelow(ref banner.position, maxDistance);
+							}
+
+							//Spawn banner projectile
+							int whoami = Projectile.NewProjectile(new EntitySource_Misc("Warbanner"), banner.position, Vector2.Zero, ModContent.ProjectileType<WarbannerProj>(), 0, 0, Main.myPlayer, banner.radius, banner.fresh.ToDirectionInt());
+							if (whoami < Main.maxProjectiles)
+							{
+								banner.associatedProjIdentity = Main.projectile[whoami].identity;
+								spawned.Add(banner);
+							}
 						}
 					}
-				}
 
-				foreach (var banner in spawned)
-				{
-					unspawnedWarbanners.Remove(banner);
+					foreach (var banner in spawned)
+					{
+						unspawnedWarbanners.Remove(banner);
+					}
 				}
-			});
+			}
 		}
 
 		/// <summary>
@@ -174,7 +179,16 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public static Projectile FindWarbannerProj(int identity)
 		{
-			return Main.projectile.FirstActiveOrDefault(p => p.modProjectile is WarbannerProj && p.identity == identity);
+			for (int i = 0; i < Main.maxProjectiles; i++)
+			{
+				Projectile proj = Main.projectile[i];
+
+				if (proj.active && proj.ModProjectile is WarbannerProj && proj.identity == identity)
+				{
+					return proj;
+				}
+			}
+			return null;
 		}
 
 		/// <summary>
@@ -187,7 +201,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			for (int i = 0; i < Main.maxProjectiles; i++)
 			{
 				Projectile p = Main.projectile[i];
-				if (p.active && p.modProjectile is WarbannerProj)
+				if (p.active && p.ModProjectile is WarbannerProj)
 				{
 					float between = Vector2.DistanceSquared(center, p.Center);
 					if (distanceSQ > between)
@@ -223,7 +237,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		}
 
 
-		public static void Init()
+		public override void ClearWorld()
 		{
 			warbanners = new List<Warbanner>();
 			unspawnedWarbanners = new List<Warbanner>();
@@ -237,7 +251,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			unspawnedWarbanners = new List<Warbanner>(warbanners);
 		}
 
-		public static void Unload()
+		public override void OnModUnload()
 		{
 			warbanners = unspawnedWarbanners = null;
 		}

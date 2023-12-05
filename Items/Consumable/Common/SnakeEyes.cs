@@ -1,4 +1,5 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects.Common;
+using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -8,14 +9,12 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 	{
 		public override void SafeAddRecipes()
 		{
-			ModRecipe recipe = new ModRecipe(mod);
+			Recipe recipe = CreateRecipe(1);
 			recipe.AddIngredient(ItemID.RedCounterweight, 5);
 			recipe.AddIngredient(ItemID.Ruby, 62);
 			recipe.AddIngredient(ItemID.RichMahogany, 410);
 			recipe.AddIngredient(ItemID.RedAcidDye, 10);
-
-			recipe.SetResult(this, 1);
-			recipe.AddRecipe();
+			recipe.Register();
 		}
 	}
 }

@@ -6,7 +6,7 @@ using static System.Math;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -50,7 +50,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					position = p.ToWorldCoordinates(8f, 0f);
 					position.Y -= BustlingFungusProj.Height >> 1; //Half the projectiles height
 					int heal = GetIncreaseAmount(player);
-					Projectile.NewProjectile(position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax >> 1);
+					Projectile.NewProjectile(GetEntitySource(player), position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax >> 1);
 				}
 			}
 		}

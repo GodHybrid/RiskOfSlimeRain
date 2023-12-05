@@ -12,7 +12,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Firework explosion");
+			// DisplayName.SetDefault("Firework explosion");
 		}
 
 		public override void PostCreateDust(Dust dust)

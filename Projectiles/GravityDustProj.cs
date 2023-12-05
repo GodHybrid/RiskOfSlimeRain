@@ -1,18 +1,19 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
 	public abstract class GravityDustProj : ModProjectile
 	{
-		public static void NewProjectile<T>(Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : GravityDustProj
+		public static void NewProjectile<T>(IEntitySource source, Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : GravityDustProj
 		{
-			Projectile p = Projectile.NewProjectileDirect(position, velocity, ModContent.ProjectileType<T>(), 0, 0f, Main.myPlayer);
+			Projectile p = Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<T>(), 0, 0f, Main.myPlayer);
 			if (p.whoAmI < Main.maxProjectiles)
 			{
-				T t = p.modProjectile as T;
+				T t = p.ModProjectile as T;
 
 				onCreate?.Invoke(t);
 			}
@@ -20,8 +21,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int Timer
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public abstract int DustType { get; }
@@ -46,12 +47,12 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.penetrate = -1;
-			projectile.tileCollide = false;
-			projectile.friendly = true;
-			projectile.timeLeft = 55;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = false;
+			Projectile.friendly = true;
+			Projectile.timeLeft = 55;
 		}
 
 		public sealed override void AI()
@@ -68,15 +69,15 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				Timer = SlowdownStart;
 				//stop spreading
-				projectile.velocity.X *= SlowdownX;
+				Projectile.velocity.X *= SlowdownX;
 				//fall down
-				projectile.velocity.Y += Gravity;
+				Projectile.velocity.Y += Gravity;
 			}
 
 			//velocity cap
-			if (projectile.velocity.Y > VelocityCapY)
+			if (Projectile.velocity.Y > VelocityCapY)
 			{
-				projectile.velocity.Y = VelocityCapY;
+				Projectile.velocity.Y = VelocityCapY;
 			}
 		}
 
@@ -91,7 +92,7 @@ namespace RiskOfSlimeRain.Projectiles
 		private void Visuals()
 		{
 			if (Main.rand.NextFloat() > DustChance) return;
-			Dust dust = Dust.NewDustPerfect(projectile.Center, DustType, Vector2.Zero, DustAlpha, DustColor, DustScale);
+			Dust dust = Dust.NewDustPerfect(Projectile.Center, DustType, Vector2.Zero, DustAlpha, DustColor, DustScale);
 			PostCreateDust(dust);
 		}
 	}

@@ -33,13 +33,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Debuff duration: {30 * (int)Formula()}";
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
 			if (Main.myPlayer == player.whoAmI && 
 				(damage >= Math.Max(damageFlat, (int)(player.statLifeMax2 * damageThreshold)) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold))	)
 			{
 				int damageForProj = player.GetDamage();
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);
+				Projectile.NewProjectile(GetEntitySource(player), player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);
 			}
 		}
 

@@ -7,7 +7,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -47,17 +46,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			wireTimer++;
 			if (wireTimer > wireTimerMax)
 			{
-				NPC npc = Main.npc.FirstActiveOrDefault(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16));
-				if (npc != null)
+				for (int i = 0; i < Main.maxNPCs; i++)
 				{
-					int damage = (int)(Formula() * player.GetDamage());
-					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
-					Item item = player.HeldItem;
-					if (!item.IsAir)
+					NPC npc = Main.npc[i];
+
+					if (npc.active && npc.CanBeChasedBy() && player.DistanceSQ(npc.Center) <= (Radius + 16) * (Radius + 16))
 					{
-						ItemLoader.OnHitNPC(item, player, npc, damage, 0f, false);
-						NPCLoader.OnHitByItem(npc, player, item, damage, 0f, false);
-						PlayerHooks.OnHitNPC(player, item, npc, damage, 0f, false);
+						int damage = (int)(Formula() * player.GetDamage());
+						//TODO test
+						player.ApplyDamageToNPC(npc, damage, 0f, 0, false);  //Procs ModPlayer.OnHitNPC but not the item/projectile variants
+						break;
 					}
 				}
 				wireTimer = 0;

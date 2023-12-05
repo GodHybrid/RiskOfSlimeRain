@@ -13,7 +13,6 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.NPCs
 {
@@ -43,17 +42,17 @@ namespace RiskOfSlimeRain.NPCs
 			foreach (var effect in NPCEffects) effect.DrawEffects(npc, ref drawColor);
 		}
 
-		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
+		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			foreach (var effect in NPCEffects) effect.PostDraw(npc, spriteBatch, drawColor);
 		}
 
-		public override void SetupShop(int type, Chest shop, ref int nextSlot)
+		public override void ModifyShop(NPCShop shop)
 		{
+			int type = shop.NpcType;
 			if (type == NPCID.Painter)
 			{
-				shop.item[nextSlot].SetDefaults(ModContent.ItemType<ColossusPaintingItem>());
-				nextSlot++;
+				shop.Add(ModContent.ItemType<ColossusPaintingItem>());
 			}
 		}
 
@@ -81,7 +80,7 @@ namespace RiskOfSlimeRain.NPCs
 			}
 		}
 
-		public override void NPCLoot(NPC npc)
+		public override void OnKill(NPC npc)
 		{
 			if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection
 
@@ -122,24 +121,29 @@ namespace RiskOfSlimeRain.NPCs
 			if (Main.netMode == NetmodeID.Server)
 			{
 				//Slightly modified from vanilla here: instead of spawning 1 item, then sending each player this item, spawn a new item and only send it to that player
-				Main.player.WhereActive(p => (npc.playerInteraction[p.whoAmI] || !interactionRequired) && (npCondition?.Invoke(npc, p) ?? true)).Do(delegate (Player player)
+				for (int i = 0; i < Main.maxPlayers; i++)
 				{
-					int itemType = itemTypeFunc();
-					int i = Item.NewItem((int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemType, itemStack, true);
-					Item item = Main.item[i];
-					onDropped?.Invoke(player, item);
-					Main.itemLockoutTime[i] = 54000;
-					NetMessage.SendData(MessageID.InstancedItem, player.whoAmI, -1, null, i);
-					item.active = false;
-					atleastOneDropped = true;
-				});
+					Player p = Main.player[i];
+
+					if (p.active && !p.dead && (npc.playerInteraction[p.whoAmI] || !interactionRequired) && (npCondition?.Invoke(npc, p) ?? true))
+					{
+						int itemType = itemTypeFunc();
+						int it = Item.NewItem(npc.GetSource_FromThis(), (int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemType, itemStack, true);
+						Item item = Main.item[it];
+						onDropped?.Invoke(p, item);
+						Main.timeItemSlotCannotBeReusedFor[it] = 54000;
+						NetMessage.SendData(MessageID.InstancedItem, p.whoAmI, -1, null, it);
+						item.active = false;
+						atleastOneDropped = true;
+					}
+				}
 			}
 			else if (Main.netMode == NetmodeID.SinglePlayer)
 			{
 				if (npCondition?.Invoke(npc, Main.LocalPlayer) ?? true)
 				{
-					int i = Item.NewItem((int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemTypeFunc(), itemStack);
-					Item item = Main.item[i];
+					int it = Item.NewItem(npc.GetSource_FromThis(), (int)Position.X, (int)Position.Y, (int)HitboxSize.X, (int)HitboxSize.Y, itemTypeFunc(), itemStack);
+					Item item = Main.item[it];
 					onDropped?.Invoke(Main.LocalPlayer, item);
 					atleastOneDropped = true;
 				}

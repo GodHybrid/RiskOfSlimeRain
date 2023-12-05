@@ -25,24 +25,24 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Heal amount: {Formula()}";
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			SpawnProjectile(target);
+			SpawnProjectile(player, target);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
-			SpawnProjectile(target);
+			SpawnProjectile(player, target);
 		}
 
-		void SpawnProjectile(NPC target)
+		void SpawnProjectile(Player player, NPC target)
 		{
 			if (NPCHelper.IsWormBodyOrTail(target)) return;
 			if (NPCHelper.IsBossPiece(target)) return; //No free max health from creepers/probes/bees
 			if (NPCHelper.IsSpawnedFromStatue(target)) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
-			PlayerBonusProj.NewProjectile(target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
+			PlayerBonusProj.NewProjectile(GetEntitySource(player), target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
 			{
 				proj.HealAmount = (int)Formula();
 			});

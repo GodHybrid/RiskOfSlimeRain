@@ -20,39 +20,39 @@ namespace RiskOfSlimeRain.Projectiles
 		/// </summary>
 		public int StrikeTimer
 		{
-			get => (int)projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			get => (int)Projectile.localAI[0];
+			set => Projectile.localAI[0] = value;
 		}
 
 		public bool SetDirection
 		{
-			get => projectile.localAI[1] == 1f;
-			set => projectile.localAI[1] = value ? 1f : 0f;
+			get => Projectile.localAI[1] == 1f;
+			set => Projectile.localAI[1] = value ? 1f : 0f;
 		}
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Rusty Knife");
-			Main.projFrames[projectile.type] = 6;
+			// DisplayName.SetDefault("Rusty Knife");
+			Main.projFrames[Projectile.type] = 6;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(26, 34);
-			projectile.timeLeft = TimeLeftDefault;
+			Projectile.Size = new Vector2(26, 34);
+			Projectile.timeLeft = TimeLeftDefault;
 		}
 
 		public override void WhileStuck(NPC npc)
 		{
-			if (Main.myPlayer == projectile.owner)
+			if (Main.myPlayer == Projectile.owner)
 			{
 				StrikeTimer++;
 				if (StrikeTimer > StrikeTimerMax)
 				{
 					StrikeTimer = 0;
-					Player player = projectile.GetOwner();
-					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
+					//TODO test
+					npc.SimpleStrikeNPC(damage, 0); //Does not proc, syncs
 				}
 			}
 		}
@@ -61,11 +61,11 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (!SetDirection)
 			{
-				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
+				Projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
 				SetDirection = true;
 			}
 
-			projectile.WaterfallAnimation(5);
+			Projectile.WaterfallAnimation(5);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

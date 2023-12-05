@@ -10,21 +10,21 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dead Man's Foot's Explosion");
-			Main.projFrames[projectile.type] = 6;
+			// DisplayName.SetDefault("Dead Man's Foot's Explosion");
+			Main.projFrames[Projectile.type] = 6;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(106, 184);
-			projectile.timeLeft = 26;
-			drawOriginOffsetY = -projectile.height / 3;
+			Projectile.Size = new Vector2(106, 184);
+			Projectile.timeLeft = 26;
+			DrawOriginOffsetY = -Projectile.height / 3;
 		}
 
 		public override void AI()
 		{
-			projectile.WaterfallAnimation(4);
+			Projectile.WaterfallAnimation(4);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

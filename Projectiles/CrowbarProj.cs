@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
 
@@ -14,31 +15,31 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Crowbar");
-			Main.projFrames[projectile.type] = 4;
+			// DisplayName.SetDefault("Crowbar");
+			Main.projFrames[Projectile.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(26);
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.melee = true;
-			projectile.penetrate = -1;
-			projectile.hide = true;
-			projectile.timeLeft = 14;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
+			Projectile.Size = new Vector2(26);
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.DamageType = DamageClass.Melee;
+			Projectile.penetrate = -1;
+			Projectile.hide = true;
+			Projectile.timeLeft = 14;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
 		}
 
 		//index of the current target
 		public int TargetWhoAmI
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
+		public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
 		{
 			//if attached to an NPC, draw behind tiles (and the npc) if that NPC is behind tiles, otherwise just behind the NPC.
 			int npcIndex = TargetWhoAmI;
@@ -46,25 +47,25 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (Main.npc[npcIndex].behindTiles)
 				{
-					drawCacheProjsBehindNPCsAndTiles.Add(index);
+					behindNPCsAndTiles.Add(index);
 				}
 				else
 				{
-					drawCacheProjsBehindProjectiles.Add(index);
+					behindProjectiles.Add(index);
 				}
 			}
 		}
 
 		public override void AI()
 		{
-			if (projectile.localAI[0] != 1f)
+			if (Projectile.localAI[0] != 1f)
 			{
-				Main.PlaySound(SoundID.Shatter, (int)projectile.Center.X, (int)projectile.Center.Y, -1, 0.8f, Main.rand.NextFloat(-0.9f, -0.6f));
-				projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
-				projectile.localAI[0] = 1f;
+				SoundEngine.PlaySound(SoundID.Shatter.WithVolumeScale(0.8f).WithPitchOffset(Main.rand.NextFloat(-0.9f, -0.6f)), Projectile.Center);
+				Projectile.spriteDirection = Main.rand.NextBool().ToDirectionInt();
+				Projectile.localAI[0] = 1f;
 			}
 
-			projectile.LoopAnimation(3);
+			Projectile.LoopAnimation(3);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

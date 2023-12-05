@@ -28,12 +28,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Damage: {Formula().ToPercent()}";
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -55,7 +55,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				int spawnLight = x == 0 ? 1 : 0;
 
-				Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, Dutation, spawnLight);
+				Projectile.NewProjectile(GetEntitySource(player), target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, Dutation, spawnLight);
 				count++;
 			}
 		}

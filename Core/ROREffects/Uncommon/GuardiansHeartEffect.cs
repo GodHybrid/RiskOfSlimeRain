@@ -4,13 +4,13 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.Effects;
 using System.IO;
 using Terraria;
-using Terraria.DataStructures;
+using Terraria.Audio;
 using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	//TODO proper visuals with the healthbar
-	public class GuardiansHeartEffect : RORUncommonEffect, IPlayerLayer, IPreHurt, IPostUpdateEquips
+	public class GuardiansHeartEffect : RORUncommonEffect, IPlayerLayer, IConsumableDodge, IPostUpdateEquips
 	{
 		public override float Initial => ServerConfig.Instance.OriginalStats ? 60 : 30;
 
@@ -40,44 +40,44 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			else return null;
 		}
 
-		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public bool ConsumableDodge(Player player, Player.HurtInfo info)
 		{
-			if (Shield > 0)
+			if (Shield <= 0)
 			{
-				player.GetRORPlayer().ResetNoHurtTimer();
-				Shield -= damage;
-				CombatText.NewText(player.Hitbox, new Color(177, 215, 222), damage, dramatic: true);
-				Shield = Utils.Clamp(Shield, 0, MaxShield);
-
-				//vanilla immune times divided by 3
-				player.immune = true;
-				player.immuneTime = 20;
-				if (player.longInvince)
-				{
-					player.immuneTime += 10;
-				}
-				for (int i = 0; i < player.hurtCooldowns.Length; i++)
-				{
-					player.hurtCooldowns[i] = player.immuneTime;
-				}
-
-				if (playSound)
-				{
-					if (Shield <= 0)
-					{
-						//Death from martian dude
-						Main.PlaySound(SoundID.NPCKilled, (int)player.Center.X, (int)player.Center.Y, 45, volumeScale: 0.8f, pitchOffset: 0.2f);
-					}
-					else
-					{
-						//Shield hit from martian dude
-						Main.PlaySound(SoundID.NPCHit, (int)player.Center.X, (int)player.Center.Y, 43, volumeScale: 0.8f, pitchOffset: 0.1f);
-					}
-				}
-
-				if (Main.myPlayer == player.whoAmI) new ROREffectSyncSinglePacket(this).Send();
 				return false;
 			}
+			player.GetRORPlayer().ResetNoHurtTimer();
+			Shield -= info.Damage;
+			CombatText.NewText(player.Hitbox, new Color(177, 215, 222), info.Damage, dramatic: true);
+			Shield = Utils.Clamp(Shield, 0, MaxShield);
+
+			//vanilla immune times divided by 3
+			player.immune = true;
+			player.immuneTime = 20;
+			if (player.longInvince)
+			{
+				player.immuneTime += 10;
+			}
+			for (int i = 0; i < player.hurtCooldowns.Length; i++)
+			{
+				player.hurtCooldowns[i] = player.immuneTime;
+			}
+
+			if (!info.SoundDisabled)
+			{
+				if (Shield <= 0)
+				{
+					//Death from martian dude
+					SoundEngine.PlaySound(SoundID.NPCDeath45.WithVolumeScale(0.8f).WithPitchOffset(0.2f), player.Center);
+				}
+				else
+				{
+					//Shield hit from martian dude
+					SoundEngine.PlaySound(SoundID.NPCHit43.WithVolumeScale(0.8f).WithPitchOffset(0.1f), player.Center);
+				}
+			}
+
+			new ROREffectSyncSinglePacket(this).Send();
 			return true;
 		}
 
@@ -85,7 +85,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		{
 			if (Main.myPlayer == player.whoAmI && Shield < MaxShield && player.GetRORPlayer().NoHurtTimer > time * 60)
 			{
-				Main.PlaySound(SoundID.MaxMana, player.Center);
+				SoundEngine.PlaySound(SoundID.MaxMana, player.Center);
 				Shield = MaxShield;
 				new ROREffectSyncSinglePacket(this).Send();
 			}

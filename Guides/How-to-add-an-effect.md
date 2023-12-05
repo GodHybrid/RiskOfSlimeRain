@@ -66,12 +66,12 @@ public class InfusionEffect : RORUncommonEffect, IOnHit
 
 	public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-	public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		throw new System.NotImplementedException();
 	}
@@ -87,12 +87,12 @@ public class InfusionEffect : RORUncommonEffect, IOnHit
 
 	public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-	public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		SpawnProjectile(player, target);
 	}
 
-	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		SpawnProjectile(player, target);
 	}

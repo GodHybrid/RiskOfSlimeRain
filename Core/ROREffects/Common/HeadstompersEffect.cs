@@ -8,7 +8,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
-	public class HeadstompersEffect : RORCommonEffect, IPostUpdateEquips, IPreHurt
+	public class HeadstompersEffect : RORCommonEffect, IPostUpdateEquips, IFreeDodge
 	{
 		public const float velocityDecrease = 0.9f;
 		//const float Initial = 5.07f;
@@ -32,29 +32,23 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			player.maxFallSpeed += 6f;
 		}
 
-		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public bool FreeDodge(Player player, Player.HurtInfo info)
 		{
-			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && damageSource.SourceNPCIndex > -1)
+			int whoAmI = info.DamageSource.SourceNPCIndex;
+			if (player.velocity.Y > 10f && Math.Abs(player.velocity.X) < 15f && whoAmI > -1)
 			{
 				player.immune = true;
 				player.immuneTime = 5;
 				if (Main.myPlayer == player.whoAmI)
 				{
-					NPC npc = Main.npc[damageSource.SourceNPCIndex];
+					NPC npc = Main.npc[whoAmI];
 					int dmg = (int)(player.GetDamage() * (Formula() * player.velocity.Y / 16));
-					player.ApplyDamageToNPC(npc, dmg, 2f, 0, false);
-					Item item = player.HeldItem;
-					if (!item.IsAir)
-					{
-						ItemLoader.OnHitNPC(item, player, npc, dmg, 0f, false);
-						NPCLoader.OnHitByItem(npc, player, item, dmg, 0f, false);
-						PlayerHooks.OnHitNPC(player, item, npc, dmg, 0f, false);
-					}
-					Projectile.NewProjectile(npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, damageSource.SourceNPCIndex);
+					player.ApplyDamageToNPC(npc, dmg, 2f, 0, false); //Procs ModPlayer.OnHitNPC but not the item/projectile variants
+					Projectile.NewProjectile(GetEntitySource(player), npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, whoAmI);
 				}
-				return false;
+				return true;
 			}
-			return true;
+			return false;
 		}
 	}
 }

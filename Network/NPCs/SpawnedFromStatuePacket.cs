@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using Terraria;
 using Terraria.ID;
-using WebmilioCommons.Networking;
 
 namespace RiskOfSlimeRain.Network.NPCs
 {
@@ -12,7 +11,7 @@ namespace RiskOfSlimeRain.Network.NPCs
 	/// </summary>
 	public class SpawnedFromStatuePacket : NPCPacketBase
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
 
 		public SpawnedFromStatuePacket() : base() { }
 
@@ -22,7 +21,7 @@ namespace RiskOfSlimeRain.Network.NPCs
 		/// Because SpawnedFromStatue is set AFTER SyncNPC, we want to sync our stuff 1 tick later
 		/// </summary>
 		private static List<NPC> toSendNextTick = null;
-
+		/*
 		protected override bool PostReceive(BinaryReader reader, int fromWho)
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient)
@@ -34,6 +33,7 @@ namespace RiskOfSlimeRain.Network.NPCs
 			}
 			return base.PostReceive(reader, fromWho);
 		}
+		*/
 
 		/// <summary>
 		/// Detects if an NPC spawned from a statue, then sends this to clients

@@ -55,8 +55,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 		public static void Load()
 		{
-			subworldLibrary = ModLoader.GetMod("SubworldLibrary");
-			if (subworldLibrary != null)
+			if (ModLoader.TryGetMod("SubworldLibrary", out Mod subworldLibrary))
 			{
 				PaintCache = new Dictionary<int, byte>();
 				for (int i = 0; i < ItemLoader.ItemCount; i++)

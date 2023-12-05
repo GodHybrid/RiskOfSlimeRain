@@ -42,12 +42,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Bonus life: {BonusLife}. Cap: {Cap}. Stored heal: {Math.Round(StoredHeals, 2)}";
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleHealAndProjectile(player, target);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleHealAndProjectile(player, target);
 		}
@@ -96,7 +96,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			int heal = GetHeal();
 			if (heal > 0)
 			{
-				PlayerBonusProj.NewProjectile(target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
+				PlayerBonusProj.NewProjectile(GetEntitySource(player), target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
 				{
 					inf.HealAmount = heal;
 				});

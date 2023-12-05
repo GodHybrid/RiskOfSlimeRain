@@ -8,13 +8,17 @@ using RiskOfSlimeRain.Projectiles.Hostile;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
+using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.NPCs.Bosses
 {
+	//TODO 1.4.4 custom health bar
 	//TODO MagmaWorm
 	// Energized version
 	public abstract class MagmaWorm : ModNPC
@@ -28,91 +32,97 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public virtual bool IsTail => this is MagmaWormTail;
 
-		public virtual bool IsOtherBody(NPC other) => other.modNPC is MagmaWormBody || other.modNPC is MagmaWormTail;
+		public virtual bool IsOtherBody(NPC other) => other.ModNPC is MagmaWormBody || other.ModNPC is MagmaWormTail;
+
+		public static LocalizedText CommonNameText { get; private set; }
+
+		public override LocalizedText DisplayName => CommonNameText;
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Magma Worm");
-			Main.npcFrameCount[npc.type] = 3;
+			string category = $"NPCs.{nameof(MagmaWorm)}.";
+			CommonNameText ??= Mod.GetLocalization($"{category}CommonName");
+			// DisplayName.SetDefault("Magma Worm");
+			Main.npcFrameCount[NPC.type] = 3;
 		}
 
 		public override void SetDefaults()
 		{
-			npc.Size = new Vector2(defaultSize);
-			npc.aiStyle = -1;
-			npc.netAlways = true;
-			npc.damage = 56;
-			npc.defense = 10;
-			npc.lifeMax = 4000;
-			npc.HitSound = SoundID.NPCHit7;
-			npc.DeathSound = SoundID.NPCDeath8;
-			npc.noGravity = true;
-			npc.noTileCollide = true;
-			npc.lavaImmune = true;
+			NPC.Size = new Vector2(defaultSize);
+			NPC.aiStyle = -1;
+			NPC.netAlways = true;
+			NPC.damage = 56;
+			NPC.defense = 10;
+			NPC.lifeMax = 4000;
+			NPC.HitSound = SoundID.NPCHit7;
+			NPC.DeathSound = SoundID.NPCDeath8;
+			NPC.noGravity = true;
+			NPC.noTileCollide = true;
+			NPC.lavaImmune = true;
 			//TODO remove when making it first level exclusive
 			//npc.behindTiles = true;
-			npc.knockBackResist = 0f;
-			npc.value = Item.sellPrice(gold: 1);
-			npc.scale = 1.4f;
-			npc.buffImmune[BuffID.Poisoned] = true;
-			npc.buffImmune[BuffID.OnFire] = true;
-			npc.buffImmune[BuffID.CursedInferno] = true;
-			npc.buffImmune[BuffID.Frostburn] = true;
-			npc.boss = true;
+			NPC.knockBackResist = 0f;
+			NPC.value = Item.sellPrice(gold: 1);
+			NPC.scale = 1.4f;
+			NPC.buffImmune[BuffID.Poisoned] = true;
+			NPC.buffImmune[BuffID.OnFire] = true;
+			NPC.buffImmune[BuffID.CursedInferno] = true;
+			NPC.buffImmune[BuffID.Frostburn] = true;
+			NPC.boss = true;
 
 			if (IsHead)
 			{
-				npc.npcSlots = 5f;
+				NPC.npcSlots = 5f;
 			}
 			else
 			{
-				npc.defense = npc.defense << 1;
-				npc.damage = npc.damage >> 1;
-				npc.dontCountMe = true;
+				NPC.defense = NPC.defense << 1;
+				NPC.damage = NPC.damage >> 1;
+				NPC.dontCountMe = true;
 			}
 		}
 
 		public int ChildWhoAmI
 		{
-			get => (int)npc.ai[0];
-			protected set => npc.ai[0] = value;
+			get => (int)NPC.ai[0];
+			protected set => NPC.ai[0] = value;
 		}
 
 		public int ParentWhoAmI
 		{
-			get => (int)npc.ai[1];
-			protected set => npc.ai[1] = value;
+			get => (int)NPC.ai[1];
+			protected set => NPC.ai[1] = value;
 		}
 
 		public float Scale
 		{
-			get => npc.ai[2];
-			private set => npc.ai[2] = value;
+			get => NPC.ai[2];
+			private set => NPC.ai[2] = value;
 		}
 
 		public int AttachedHealthWhoAmI
 		{
-			get => (int)npc.ai[3];
-			protected set => npc.ai[3] = value;
+			get => (int)NPC.ai[3];
+			protected set => NPC.ai[3] = value;
 		}
 
 		public bool Synced
 		{
-			get => npc.localAI[0] == 1f;
-			protected set => npc.localAI[0] = value ? 1f : 0f;
+			get => NPC.localAI[0] == 1f;
+			protected set => NPC.localAI[0] = value ? 1f : 0f;
 		}
 
 		public bool SpawnedDead
 		{
-			get => npc.localAI[1] == 1f;
-			protected set => npc.localAI[1] = value ? 1f : 0f;
+			get => NPC.localAI[1] == 1f;
+			protected set => NPC.localAI[1] = value ? 1f : 0f;
 		}
 
 		public NPC Child => Main.npc[ChildWhoAmI];
 
 		public NPC Parent => Main.npc[ParentWhoAmI];
 
-		public Player Target => Main.player[npc.target];
+		public Player Target => Main.player[NPC.target];
 
 		/// <summary>
 		/// Handles spawning/despawning
@@ -123,26 +133,26 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			{
 				if (IsHead && ChildWhoAmI == 0f)
 				{
-					AttachedHealthWhoAmI = npc.whoAmI;
-					npc.realLife = npc.whoAmI;
-					int parentWhoAmI = npc.whoAmI;
+					AttachedHealthWhoAmI = NPC.whoAmI;
+					NPC.realLife = NPC.whoAmI;
+					int parentWhoAmI = NPC.whoAmI;
 					int maxSegments = 23;
-					float nextScaleStep = (npc.scale / maxSegments) * 0.60f; // Last segment will have 40% the starting scale
-					float nextScale = npc.scale - nextScaleStep;
+					float nextScaleStep = (NPC.scale / maxSegments) * 0.60f; // Last segment will have 40% the starting scale
+					float nextScale = NPC.scale - nextScaleStep;
 
 					// Spawn the hitbox extension
-					int childWhoAmI = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, ModContent.NPCType<MagmaWormHeadExtension>(), npc.whoAmI);
+					int childWhoAmI = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Bottom.Y, ModContent.NPCType<MagmaWormHeadExtension>(), NPC.whoAmI);
 					NPC childNPC = Main.npc[childWhoAmI];
 
-					childNPC.realLife = npc.whoAmI;
-					MagmaWorm childMW = childNPC.modNPC as MagmaWorm;
-					childMW.AttachedHealthWhoAmI = npc.whoAmI;
+					childNPC.realLife = NPC.whoAmI;
+					MagmaWorm childMW = childNPC.ModNPC as MagmaWorm;
+					childMW.AttachedHealthWhoAmI = NPC.whoAmI;
 					childMW.ParentWhoAmI = parentWhoAmI;
 					childMW.Scale = nextScale;
 
 					NetMessage.SendData(MessageID.SyncNPC, number: childWhoAmI);
 
-					Scale = npc.scale;
+					Scale = NPC.scale;
 
 					int body = ModContent.NPCType<MagmaWormBody>();
 					int tail = ModContent.NPCType<MagmaWormTail>();
@@ -154,17 +164,17 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 							selectedType = tail;
 						}
 
-						childWhoAmI = NPC.NewNPC((int)npc.Center.X, (int)npc.Bottom.Y, selectedType, npc.whoAmI);
+						childWhoAmI = NPC.NewNPC(NPC.GetSource_FromThis(), (int)NPC.Center.X, (int)NPC.Bottom.Y, selectedType, NPC.whoAmI);
 						childNPC = Main.npc[childWhoAmI];
 
-						childNPC.realLife = npc.whoAmI;
-						childMW = childNPC.modNPC as MagmaWorm;
-						childMW.AttachedHealthWhoAmI = npc.whoAmI;
+						childNPC.realLife = NPC.whoAmI;
+						childMW = childNPC.ModNPC as MagmaWorm;
+						childMW.AttachedHealthWhoAmI = NPC.whoAmI;
 						childMW.ParentWhoAmI = parentWhoAmI;
 						childMW.Scale = nextScale;
 
 						NPC parentNPC = Main.npc[parentWhoAmI];
-						MagmaWorm parentMW = parentNPC.modNPC as MagmaWorm;
+						MagmaWorm parentMW = parentNPC.ModNPC as MagmaWorm;
 						parentMW.ChildWhoAmI = childWhoAmI;
 
 						NetMessage.SendData(MessageID.SyncNPC, number: childWhoAmI);
@@ -175,31 +185,31 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				if (!IsHead)
 				{
-					bool parentIsHead = (Parent.modNPC as MagmaWorm)?.IsHead ?? false;
+					bool parentIsHead = (Parent.ModNPC as MagmaWorm)?.IsHead ?? false;
 					if (!Parent.active || !(IsOtherBody(Parent) || parentIsHead))
 					{
-						npc.life = 0;
-						npc.HitEffect(0, 10.0);
-						npc.active = false;
-						NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
+						NPC.life = 0;
+						NPC.HitEffect(0, 10.0);
+						NPC.active = false;
+						NetMessage.SendData(MessageID.DamageNPC, number: NPC.whoAmI, number2: -1f);
 					}
 				}
 
 				if (!(IsTail || IsHeadExtension))
 				{
-					bool childIsTail = (Parent.modNPC as MagmaWorm)?.IsTail ?? false;
+					bool childIsTail = (Parent.ModNPC as MagmaWorm)?.IsTail ?? false;
 					if (!Child.active || !(IsOtherBody(Child) || childIsTail))
 					{
-						npc.life = 0;
-						npc.HitEffect(0, 10.0);
-						npc.active = false;
-						NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
+						NPC.life = 0;
+						NPC.HitEffect(0, 10.0);
+						NPC.active = false;
+						NetMessage.SendData(MessageID.DamageNPC, number: NPC.whoAmI, number2: -1f);
 					}
 				}
 
-				if (!npc.active && Main.netMode == NetmodeID.Server)
+				if (!NPC.active && Main.netMode == NetmodeID.Server)
 				{
-					NetMessage.SendData(MessageID.StrikeNPC, number: npc.whoAmI, number2: -1f);
+					NetMessage.SendData(MessageID.DamageNPC, number: NPC.whoAmI, number2: -1f);
 				}
 			}
 		}
@@ -211,23 +221,23 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			if (AttachedHealthWhoAmI > 0)
 			{
-				npc.realLife = AttachedHealthWhoAmI;
+				NPC.realLife = AttachedHealthWhoAmI;
 			}
 
-			if (npc.target < 0 || npc.target == 255 || Target.dead)
+			if (NPC.target < 0 || NPC.target == 255 || Target.dead)
 			{
-				npc.TargetClosest(true);
+				NPC.TargetClosest(true);
 			}
 
 			if (Target.dead)
 			{
-				if (npc.timeLeft > 300)
+				if (NPC.timeLeft > 300)
 				{
-					npc.timeLeft = 300;
+					NPC.timeLeft = 300;
 				}
 			}
 
-			npc.scale = Scale == 0 ? npc.scale : Scale;
+			NPC.scale = Scale == 0 ? NPC.scale : Scale;
 		}
 
 		public enum MWState : byte
@@ -323,7 +333,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			{
 				Me.EmergeWarning = true;
 				Me.Location = Me.Target.Bottom;
-				Main.PlaySound(SoundID.Roar, (int)Me.Location.X, (int)Me.Location.Y, 0, 0.8f);
+				SoundEngine.PlaySound(SoundID.Roar.WithVolumeScale(0.8f), Me.Location);
 			}
 
 			//TODO proper watchdog timeout reset (so it runs even when state stays the same at invalid transition)
@@ -338,7 +348,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			private void DoEmerging()
 			{
 				Me.AITimer++;
-				Vector2 direction = Me.Location - Me.npc.Center;
+				Vector2 direction = Me.Location - Me.NPC.Center;
 				int timerInvert = emergingTimerCurveMax - Me.AITimer;
 				int rot = Utils.Clamp(timerInvert, 0, emergingTimerCurveMax);
 				direction.Normalize();
@@ -361,10 +371,10 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				// For that nice initial curving
 				float accel = Utils.Clamp(timerInvert, 20, emergingTimerCurveMax);
-				Me.npc.velocity = (Me.npc.velocity * (accel - 1) + direction * magnitude) / accel;
+				Me.NPC.velocity = (Me.NPC.velocity * (accel - 1) + direction * magnitude) / accel;
 
 				// Warning
-				if (!Me.EmergeWarning && Me.npc.oldVelocity.Y >= 0 && Me.npc.velocity.Y < Me.npc.oldVelocity.Y)
+				if (!Me.EmergeWarning && Me.NPC.oldVelocity.Y >= 0 && Me.NPC.velocity.Y < Me.NPC.oldVelocity.Y)
 				{
 					Warning();
 				}
@@ -373,13 +383,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			private void DoSlowingDown()
 			{
 				Me.AITimer++;
-				Me.npc.velocity *= 0.98f;
+				Me.NPC.velocity *= 0.98f;
 			}
 
 			private void DoDiving()
 			{
 				Me.AITimer++;
-				Vector2 direction = Me.Target.Center + Me.Target.velocity * 5f - Me.npc.Center;
+				Vector2 direction = Me.Target.Center + Me.Target.velocity * 5f - Me.NPC.Center;
 				int timerInvert = divingTimerCurveMax - Me.AITimer;
 				int rot = Utils.Clamp(timerInvert, 0, divingTimerCurveMax);
 				direction.Normalize();
@@ -397,14 +407,14 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				// For that nice initial curving
 				float accel = Math.Max(divingTimerCurveMax - Me.AITimer / 2, 14f);
-				Me.npc.velocity = (Me.npc.velocity * (accel - 1) + direction * magnitude) / accel;
+				Me.NPC.velocity = (Me.NPC.velocity * (accel - 1) + direction * magnitude) / accel;
 			}
 
 			private void DoDisappearing()
 			{
 				Me.AITimer++;
-				Me.npc.velocity.X *= 0.97f;
-				Me.npc.velocity.Y = Math.Min(Me.npc.velocity.Y + 0.3f, 18f);
+				Me.NPC.velocity.X *= 0.97f;
+				Me.NPC.velocity.Y = Math.Min(Me.NPC.velocity.Y + 0.3f, 18f);
 			}
 
 			public override void UpdateState()
@@ -425,19 +435,19 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					{
 						//TODO fix looping all states when about to emerge but still far below player
 						case MWState.Disappearing:
-							if (!Me.Target.dead && (Me.AITimer > disappearTimerMax || Me.npc.position.Y > Me.Target.BottomLeft.Y + 800))
+							if (!Me.Target.dead && (Me.AITimer > disappearTimerMax || Me.NPC.position.Y > Me.Target.BottomLeft.Y + 800))
 							{
 								// Go 800 coordinates below the player
 								Reset();
 								MoveNext(MWCommand.Emerge);
 								if (Main.netMode != NetmodeID.MultiplayerClient)
 								{
-									Me.npc.netUpdate = true;
+									Me.NPC.netUpdate = true;
 								}
 							}
 							break;
 						case MWState.Emerging:
-							if (Me.npc.Top.Y < Me.Location.Y)
+							if (Me.NPC.Top.Y < Me.Location.Y)
 							{
 								Reset();
 								//Main.NewText(Me.npc.velocity);
@@ -449,7 +459,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 							//if (Me.npc.velocity.LengthSquared() < 4f)
 							// TODO other condition here, make it similar to emerge but other way around
 							//if (Me.npc.velocity.Y > 0)
-							if (Me.AITimer > 24 || Me.npc.velocity.LengthSquared() <= 14f * 14f)
+							if (Me.AITimer > 24 || Me.NPC.velocity.LengthSquared() <= 14f * 14f)
 							{
 								Reset();
 								MoveNext(MWCommand.Dive);
@@ -461,7 +471,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 								Reset();
 								MoveNext(MWCommand.Reset);
 							}
-							else if (Me.npc.Bottom.Y > Me.Target.Top.Y)
+							else if (Me.NPC.Bottom.Y > Me.Target.Top.Y)
 							{
 								Reset();
 								MoveNext(MWCommand.Disappear);
@@ -547,13 +557,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public virtual void HeadAI()
 		{
-			if (npc.velocity.X < 0f)
+			if (NPC.velocity.X < 0f)
 			{
-				npc.spriteDirection = 1;
+				NPC.spriteDirection = 1;
 			}
-			else if (npc.velocity.X > 0f)
+			else if (NPC.velocity.X > 0f)
 			{
-				npc.spriteDirection = -1;
+				NPC.spriteDirection = -1;
 			}
 
 			FSM.UpdateState();
@@ -562,11 +572,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			//Main.NewText(npc.velocity.Length());
 			SpawnGroundFireAndDoScreenShake();
 
-			npc.rotation = npc.velocity.ToRotation() + 1.57f;
+			NPC.rotation = NPC.velocity.ToRotation() + 1.57f;
 
 			if (Main.netMode == NetmodeID.Server && !Synced)
 			{
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 				Synced = true;
 			}
 		}
@@ -574,13 +584,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		private bool TileAirOrNonSolid(Tile tile)
 		{
 			// If air, or if non-actuated and not a solid
-			return !tile.nactive() || (tile.active() && !Main.tileSolid[tile.type]);
+			return !tile.HasUnactuatedTile || (tile.HasTile && !Main.tileSolid[tile.TileType]);
 		}
 
 		private bool TileSolid(Tile tile)
 		{
 			// If non-actuated and a solid or solid top
-			return tile.nactive() && (Main.tileSolid[tile.type] || Main.tileSolidTop[tile.type]);
+			return tile.HasUnactuatedTile && (Main.tileSolid[tile.TileType] || Main.tileSolidTop[tile.TileType]);
 		}
 
 		/// <summary>
@@ -602,9 +612,9 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 					Vector2 position = new Vector2(point.X * 16 + 8, point.Y * 16 + 8);
 
 					// damageMultiplier is 2 if it's expert, 2 because hostile, another 2 because it shouldn't deal that much damage
-					int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 2));
+					int damage = (int)(NPC.damage / (Main.GameModeInfo.EnemyDamageMultiplier * 2 * 2));
 
-					Projectile.NewProjectile(position.X, position.Y, 0, 1, type, damage, 0, Main.myPlayer);
+					Projectile.NewProjectile(NPC.GetSource_FromThis(), position.X, position.Y, 0, 1, type, damage, 0, Main.myPlayer);
 				}
 				return true;
 			}
@@ -631,26 +641,26 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public void SpawnGroundFireAndDoScreenShake(bool actuallySpawnFires = true)
 		{
-			float velocitySQ = npc.velocity.LengthSquared();
+			float velocitySQ = NPC.velocity.LengthSquared();
 
 			if (velocitySQ < 5f * 5f) return; // Prevent fire spawn if moving slowly (only happens when manually spawned via cheatsheet)
 
 			int type = ModContent.ProjectileType<FireProjHostile>();
 
-			Point16 bottomCenter = npc.Bottom.ToTileCoordinates16();
+			Point16 bottomCenter = NPC.Bottom.ToTileCoordinates16();
 
 			SpawnFires(bottomCenter, type, actuallySpawnFires);
 			if (SpawnedFires.Count <= 0 && velocitySQ > 16 * 16)
 			{
 				// If the NPC moves so fast that it starts skipping tiles, try spawning fires again at a different place
 				// This pretty much guarantees fires
-				Point16 center = npc.Center.ToTileCoordinates16();
+				Point16 center = NPC.Center.ToTileCoordinates16();
 				SpawnFires(center, type, actuallySpawnFires);
 			}
 
 			if (SpawnedFires.Count > 0 && Main.netMode != NetmodeID.Server)
 			{
-				DoScreenShake(npc.Center);
+				DoScreenShake(NPC.Center);
 			}
 
 			SpawnedFires.Clear();
@@ -660,7 +670,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				int amount = Math.Min((int)(2f * npc.lifeMax / npc.life), 10);
+				int amount = Math.Min((int)(2f * NPC.lifeMax / NPC.life), 10);
 
 				if (Main.expertMode)
 				{
@@ -670,16 +680,16 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				float degrees = 5f;
 				Vector2 direction = -Vector2.UnitY;
 
-				float distanceX = Target.Center.X + Target.velocity.X - npc.Center.X;
+				float distanceX = Target.Center.X + Target.velocity.X - NPC.Center.X;
 				int sign = (distanceX > 0).ToDirectionInt();
 				float tilt = 20 * Math.Min(1f, Math.Abs(distanceX) / 600);
 
 				direction = direction.RotatedBy(MathHelper.ToRadians(sign * tilt));
 				direction = direction.RotatedBy(-MathHelper.ToRadians(-degrees / 2 + degrees * amount / 2));
-				int damage = (int)(npc.damage / (Main.damageMultiplier * 2 * 4));
+				int damage = (int)(NPC.damage / (Main.GameModeInfo.EnemyDamageMultiplier * 2 * 4));
 				for (int i = 0; i < amount; i++)
 				{
-					Projectile.NewProjectile(npc.Top, direction * 10f, ModContent.ProjectileType<FireballGravityBouncy>(), damage, 0f, Main.myPlayer);
+					Projectile.NewProjectile(NPC.GetSource_FromThis(), NPC.Top, direction * 10f, ModContent.ProjectileType<FireballGravityBouncy>(), damage, 0f, Main.myPlayer);
 					direction = direction.RotatedBy(MathHelper.ToRadians(degrees));
 				}
 			}
@@ -690,11 +700,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			Vector2 pCenter = Parent.Center;
 			float parentRotation = Parent.rotation;
 
-			npc.velocity = Vector2.Zero;
-			Vector2 newVelocity = pCenter - npc.Center;
-			if (parentRotation != npc.rotation)
+			NPC.velocity = Vector2.Zero;
+			Vector2 newVelocity = pCenter - NPC.Center;
+			if (parentRotation != NPC.rotation)
 			{
-				float rotatedBy = MathHelper.WrapAngle(parentRotation - npc.rotation);
+				float rotatedBy = MathHelper.WrapAngle(parentRotation - NPC.rotation);
 				newVelocity = newVelocity.RotatedBy(rotatedBy * 0.1f);
 			}
 
@@ -704,18 +714,18 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				newVelocity = -Parent.velocity;
 			}
 
-			npc.rotation = newVelocity.ToRotation() + 1.57f;
+			NPC.rotation = newVelocity.ToRotation() + 1.57f;
 
 			// Rearrange position based on scale
-			npc.position = npc.Center;
-			npc.width = npc.height = (int)(defaultSize * npc.scale);
-			npc.Center = npc.position;
+			NPC.position = NPC.Center;
+			NPC.width = NPC.height = (int)(defaultSize * NPC.scale);
+			NPC.Center = NPC.position;
 
 			if (newVelocity != Vector2.Zero)
 			{
-				npc.Center = pCenter - Vector2.Normalize(newVelocity) * positionOffset * npc.scale;
+				NPC.Center = pCenter - Vector2.Normalize(newVelocity) * positionOffset * NPC.scale;
 			}
-			npc.spriteDirection = (newVelocity.X > 0f) ? -1 : 1;
+			NPC.spriteDirection = (newVelocity.X > 0f) ? -1 : 1;
 		}
 
 		/// <summary>
@@ -725,13 +735,13 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			if (!IsHead && ParentWhoAmI >= 0f && ParentWhoAmI < Main.maxNPCs)
 			{
-				if (Parent.modNPC is MagmaWorm mwb && mwb != null)
+				if (Parent.ModNPC is MagmaWorm mwb && mwb != null)
 				{
 					BodyAI();
 				}
 				else
 				{
-					npc.active = false; // Gets handled in HandleSegments
+					NPC.active = false; // Gets handled in HandleSegments
 				}
 			}
 			else if (IsHead)
@@ -749,14 +759,14 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			AllAI();
 		}
 
-		public override void HitEffect(int hitDirection, double damage)
+		public override void HitEffect(NPC.HitInfo hit)
 		{
-			if (npc.life > 0)
+			if (NPC.life > 0)
 			{
 				int i = 0;
-				while (i < damage / npc.lifeMax * 50.0)
+				while (i < hit.Damage / NPC.lifeMax * 50.0)
 				{
-					Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.Fire, 0f, 0f, 0, default(Color), 1.5f);
+					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Torch, 0f, 0f, 0, default(Color), 1.5f);
 					dust.velocity *= 1.5f;
 					dust.noGravity = true;
 					i++;
@@ -766,7 +776,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			{
 				for (int i = 0; i < 10; i++)
 				{
-					Dust dust = Dust.NewDustDirect(npc.position, npc.width, npc.height, DustID.Fire, 0f, 0f, 0, default(Color), 1.5f);
+					Dust dust = Dust.NewDustDirect(NPC.position, NPC.width, NPC.height, DustID.Torch, 0f, 0f, 0, default(Color), 1.5f);
 					dust.velocity *= 2f;
 					dust.noGravity = true;
 				}
@@ -783,19 +793,19 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			 * Finally, it's modulo'd out to just between 0 and 2 for npc.frame.Y
 			 */
 
-			int count = Main.npcFrameCount[npc.type];
+			int count = Main.npcFrameCount[NPC.type];
 
 			if (frameOffset == -1)
 			{
-				int offset = npc.whoAmI % count;
+				int offset = NPC.whoAmI % count;
 				frameOffset = offset;
 				frame = offset;
 			}
 
-			npc.frameCounter++;
-			if (npc.frameCounter > 8)
+			NPC.frameCounter++;
+			if (NPC.frameCounter > 8)
 			{
-				npc.frameCounter = 0;
+				NPC.frameCounter = 0;
 				frame++;
 				if (frame >= count + frameOffset)
 				{
@@ -803,26 +813,28 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				}
 			}
 
-			npc.frame.Y = (frame % count) * frameHeight;
+			NPC.frame.Y = (frame % count) * frameHeight;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color drawColor)
+		public override bool PreDraw(SpriteBatch spriteBatch, Vector2 screenPos, Color drawColor)
 		{
 			if (!IsHead) return false;
 
-			List<NPC> allNPCs = Main.npc.WhereActive(n => n.realLife == npc.whoAmI && !(n.modNPC is MagmaWormHeadExtension));
-			//allNPCs.Reverse();
-
-			foreach (NPC n in allNPCs)
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				float yoff = 56f * n.scale + 4f; // No clue why those magic numbers, 56 seems to be the distance between top pixel and first "body" pixel
-				Texture2D texture = Main.npcTexture[n.type];
-				Rectangle frame = n.frame;
-				Vector2 drawOrigin = frame.Size() / 2;
+				NPC n = Main.npc[i];
 
-				Vector2 drawPos = new Vector2(n.Center.X - Main.screenPosition.X - frame.Width * n.scale / 2f + drawOrigin.X * n.scale, n.position.Y - Main.screenPosition.Y + n.height - frame.Height * n.scale + drawOrigin.Y * n.scale + yoff);
-				SpriteEffects spriteEffects = n.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
-				spriteBatch.Draw(texture, drawPos, frame, n.GetAlpha(drawColor), n.rotation, drawOrigin, n.scale, spriteEffects, 0f);
+				if (n.active && n.realLife == NPC.whoAmI && n.ModNPC is not MagmaWormHeadExtension)
+				{
+					float yoff = 56f * n.scale + 4f; // No clue why those magic numbers, 56 seems to be the distance between top pixel and first "body" pixel
+					Texture2D texture = TextureAssets.Npc[n.type].Value;
+					Rectangle frame = n.frame;
+					Vector2 drawOrigin = frame.Size() / 2;
+
+					Vector2 drawPos = new Vector2(n.Center.X - Main.screenPosition.X - frame.Width * n.scale / 2f + drawOrigin.X * n.scale, n.position.Y - Main.screenPosition.Y + n.height - frame.Height * n.scale + drawOrigin.Y * n.scale + yoff);
+					SpriteEffects spriteEffects = n.spriteDirection == 1 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+					spriteBatch.Draw(texture, drawPos, frame, n.GetAlpha(drawColor), n.rotation, drawOrigin, n.scale, spriteEffects, 0f);
+				}
 			}
 
 			return false;
@@ -840,71 +852,61 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 			Vector2 newPos = position;
 
-			NPC tailNPC = Main.npc.FirstActiveOrDefault(n => n.modNPC is MagmaWormTail && n.realLife == npc.whoAmI);
-			if (tailNPC != null)
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				// Calculate position between head and tail
-				newPos += tailNPC.position;
-				newPos /= 2f;
+				NPC tailNPC = Main.npc[i];
 
-				position = newPos;
-				scale = npc.scale;
+				if (tailNPC.active && tailNPC.ModNPC is MagmaWormTail && tailNPC.realLife == NPC.whoAmI)
+				{
+					// Calculate position between head and tail
+					newPos += tailNPC.position;
+					newPos /= 2f;
+
+					position = newPos;
+					scale = NPC.scale;
+					break;
+				}
 			}
 			return true;
 		}
 
-		public void GuaranteedNPCLoot()
-		{
-			Item.NewItem(npc.Hitbox, ItemID.Obsidian, Main.rand.Next(20, 26));
-			Item.NewItem(npc.Hitbox, ItemID.Hellstone, Main.rand.Next(10, 14));
-		}
-
-		public override void NPCLoot()
+		public override void ModifyNPCLoot(NPCLoot npcLoot)
 		{
 			//TODO redo this so it doesnt spawn items in terrain, but like destroyer does
-			if (Main.netMode != NetmodeID.Server && Main.gameMenu && npc.Center == new Vector2(1000))
-			{
-				//Recipe browser
-				Item.NewItem(npc.Hitbox, ModContent.ItemType<BurningWitness>());
-				GuaranteedNPCLoot();
-			}
-			else
-			{
-				GuaranteedNPCLoot();
+			npcLoot.Add(ItemDropRule.ByCondition(new Conditions.NeverTrue(), ModContent.ItemType<BurningWitness>()));
+			npcLoot.Add(ItemDropRule.Common(ItemID.Obsidian, 1, 20, 25));
+			npcLoot.Add(ItemDropRule.Common(ItemID.Hellstone, 1, 10, 13));
+		}
 
-				//NPCLoot is only called on the head anyway: if (npc.realLife >= 0 && npc.realLife != npc.whoAmI)
-				RORGlobalNPC.DropItemInstanced(npc, npc.position, npc.Hitbox.Size(), ModContent.ItemType<BurningWitness>(),
-					npCondition: delegate (NPC n, Player player)
-					{
-						bool dropped = player.GetRORPlayer().burningWitnessDropped;
-						if (dropped)
-						{
-							int random = NPCLootManager.RepeatedDropRate;
-							if (Main.hardMode)
-							{
-								random = (int)(random * NPCLootManager.HMDropRateMultiplierForPreHMBosses);
-							}
+		public override void OnKill()
+		{
+			//TODO redo this so it doesnt spawn items in terrain, but like destroyer does
 
-							return Main.rand.NextBool(random);
-						}
-						else return true;
-					},
-					onDropped: delegate (Player player, Item item)
-					{
-						player.GetRORPlayer().burningWitnessDropped = true;
-						new BurningWitnessDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
-					}
-				);
-
-				if (!RORWorld.downedMagmaWorm)
+			//NPCLoot is only called on the head anyway: if (npc.realLife >= 0 && npc.realLife != npc.whoAmI)
+			RORGlobalNPC.DropItemInstanced(NPC, NPC.position, NPC.Hitbox.Size(), ModContent.ItemType<BurningWitness>(),
+				npCondition: delegate (NPC n, Player player)
 				{
-					RORWorld.downedMagmaWorm = true;
-					if (Main.netMode == NetmodeID.Server)
+					bool dropped = player.GetRORPlayer().burningWitnessDropped;
+					if (dropped)
 					{
-						new DownedMagmaWormPacket().Send();
+						int random = NPCLootManager.RepeatedDropRate;
+						if (Main.hardMode)
+						{
+							random = (int)(random * NPCLootManager.HMDropRateMultiplierForPreHMBosses);
+						}
+
+						return Main.rand.NextBool(random);
 					}
+					else return true;
+				},
+				onDropped: delegate (Player player, Item item)
+				{
+					player.GetRORPlayer().burningWitnessDropped = true;
+					new BurningWitnessDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
 				}
-			}
+			);
+
+			NPC.SetEventFlagCleared(ref RORWorld.downedMagmaWorm, -1);
 		}
 
 		public override bool CheckDead()
@@ -912,12 +914,12 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			if (!SpawnedDead)
 			{
 				SpawnedDead = true;
-				npc.damage = 0;
-				npc.life = npc.lifeMax;
-				npc.dontTakeDamage = true;
+				NPC.damage = 0;
+				NPC.life = NPC.lifeMax;
+				NPC.dontTakeDamage = true;
 				//npc.netUpdate = true;
-				npc.NPCLoot();
-				Main.PlaySound(SoundID.Roar, (int)npc.position.X, (int)npc.position.Y, 0, 1f, -0.18f);
+				NPC.NPCLoot();
+				SoundEngine.PlaySound(SoundID.Roar.WithPitchOffset(-0.18f), NPC.position);
 				SpawnDead();
 
 				return false;
@@ -927,16 +929,20 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		private void SpawnDead()
 		{
-			List<NPC> allNPCs = Main.npc.WhereActive(n => n.realLife == npc.whoAmI && !(n.modNPC is MagmaWormHeadExtension));
 			int newHead = ModContent.NPCType<MagmaWormDeadHead>();
 			int newBody = ModContent.NPCType<MagmaWormDeadBody>();
 			int newTail = ModContent.NPCType<MagmaWormDeadTail>();
-			foreach (NPC n in allNPCs)
+			for (int i = 0; i < Main.maxNPCs; i++)
 			{
-				if (!(n.modNPC is MagmaWorm worm)) continue;
+				NPC n = Main.npc[i];
 
-				int newType = worm.IsHead ? newHead : (worm.IsTail ? newTail : newBody);
-				NPCHelper.Transform(n, newType, worm.Scale, true, true);
+				if (n.active && n.realLife == NPC.whoAmI && n.ModNPC is not MagmaWormHeadExtension)
+				{
+					if (n.ModNPC is not MagmaWorm worm) continue;
+
+					int newType = worm.IsHead ? newHead : (worm.IsTail ? newTail : newBody);
+					NPCHelper.Transform(n, newType, worm.Scale, true, true);
+				}
 			}
 		}
 
@@ -945,7 +951,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		/// </summary>
 		public static void DoScreenShake(Vector2 position)
 		{
-			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode.SoundId, (int)position.X, (int)position.Y, SoundID.DD2_ExplosiveTrapExplode.Style, 0.5f, Main.rand.NextFloat(-0.6f, -0.4f));
+			SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode.WithVolumeScale(0.5f).WithPitchOffset(Main.rand.NextFloat(-0.6f, -0.4f)), position);
 			float lengthSQ = Vector2.DistanceSquared(Main.LocalPlayer.Center, position);
 			float ratio = lengthSQ / (1080 * 1080);
 			ratio = Utils.Clamp(ratio, 0f, 1f);

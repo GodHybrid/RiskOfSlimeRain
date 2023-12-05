@@ -9,7 +9,7 @@ using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
-	public class SnakeEyesEffect : RORCommonEffect, IPreHurt, IKill, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
+	public class SnakeEyesEffect : RORCommonEffect, IPostHurt, IKill, IModifyWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
 		//TODO In multiplayer, another player succeeding at a shrine will remove your Snake Eyes counter. Them failing will also up your Snake Eyes count. 
 		//TODO this currently doesnt work like in ror, because no shrines yet
@@ -54,17 +54,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (!ready && player.statLifeMax2 >= player.statLife) ready = true;
 		}
 
-		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
-			if (ready && failedAttempts < maxIncrease && player.statLife - damage < player.statLifeMax2 * 0.1)
+			if (ready && failedAttempts < maxIncrease && player.statLife < player.statLifeMax2 * 0.1)
 			{
 				failedAttempts++;
 				ready = false;
 			}
-			return true;
 		}
 
-		public void GetWeaponCrit(Player player, Item item, ref int crit)
+		public void ModifyWeaponCrit(Player player, Item item, ref float crit)
 		{
 			crit = Math.Min(100, crit + CritIncrease);
 		}

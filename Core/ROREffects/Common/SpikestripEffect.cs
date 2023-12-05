@@ -4,7 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -29,12 +29,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Spikestrip lifetime: {Formula()}s";
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
 			if (Main.myPlayer != player.whoAmI) return;
 			//for (int i = -1; i < countDropped - 1; i++)
 			//{
-			//	Projectile.NewProjectile(player.Bottom + new Vector2(0, -6), new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
+			//	Projectile.NewProjectile(GetEntitySource(player), player.Bottom + new Vector2(0, -6), new Vector2(2 * i, 0), ModContent.ProjectileType<SpikestripProj>(), 0, 0, Main.myPlayer, (int)Formula() * 60);
 			//}
 
 			Vector2 position = player.Center;
@@ -47,10 +47,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 						new Conditions.IsSolid()
 				}), out _))
 				{
-					Projectile.NewProjectile(new Vector2(position.X + ((countDropped / 2) - (i - 1)) * 36, position.Y + 1), Vector2.Zero,
+					Projectile.NewProjectile(GetEntitySource(player), new Vector2(position.X + ((countDropped / 2) - (i - 1)) * 36, position.Y + 1), Vector2.Zero,
 												type, 0, 0, Main.myPlayer, lifetime);
 				}
-				else Projectile.NewProjectile(player.Bottom, Vector2.Zero, type, 0, 0, Main.myPlayer, lifetime);
+				else Projectile.NewProjectile(GetEntitySource(player), player.Bottom, Vector2.Zero, type, 0, 0, Main.myPlayer, lifetime);
 			}
 		}
 	}

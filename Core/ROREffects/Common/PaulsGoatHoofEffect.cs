@@ -59,7 +59,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					{
 						timer = 0;
 						Vector2 position = new Vector2(player.position.X + (player.direction > 0 ? 0 : player.width), player.position.Y + player.gfxOffY + Main.rand.Next(player.height));
-						Projectile.NewProjectile(position, Vector2.Zero, ModContent.ProjectileType<PaulsGoatHoofProj>(), 0, 0, Main.myPlayer);
+						Projectile.NewProjectile(GetEntitySource(player), position, Vector2.Zero, ModContent.ProjectileType<PaulsGoatHoofProj>(), 0, 0, Main.myPlayer);
 					}
 				}
 			}

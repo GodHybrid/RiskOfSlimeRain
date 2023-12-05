@@ -6,13 +6,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.NPCEffects
 {
 	/// <summary>
 	/// Responsible for operating on NPCEffects of RORGlobalNPC
 	/// </summary>
-	public static class NPCEffectManager
+	public class NPCEffectManager : ModSystem
 	{
 		public static readonly string prefix = "RiskOfSlimeRain.Core.NPCEffects.";
 		public static readonly string suffix = "NPCEffect";
@@ -22,7 +23,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 		/// </summary>
 		private static List<Type> NPCEffectTypes;
 
-		public static void Load()
+		public override void OnModLoad()
 		{
 			//Reflection shenanigans
 			Type[] types = typeof(NPCEffectManager).Assembly.GetTypes();
@@ -47,7 +48,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects
 			}
 		}
 
-		public static void Unload()
+		public override void OnModUnload()
 		{
 			NPCEffectTypes = null;
 		}

@@ -10,7 +10,7 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 {
-	public static class BossChecklistManager
+	public class BossChecklistManager : ModSystem
 	{
 		private static readonly Version BossChecklistAPIVersion = new Version(1, 1);
 		public static Dictionary<string, BossChecklistBossInfo> moddedBossInfoDict;
@@ -19,9 +19,9 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 
 		public static bool DoBossChecklistIntegration(out Dictionary<string, BossChecklistBossInfo> bossInfos)
 		{
+			//TODO 1.4.4
 			//Make sure to call this method in PostAddRecipes or later for best results
-			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
-			if (BossChecklist != null && BossChecklist.Version >= BossChecklistAPIVersion)
+			if (ModLoader.TryGetMod("BossChecklist", out Mod BossChecklist) && BossChecklist.Version >= BossChecklistAPIVersion)
 			{
 				object currentBossInfoResponse = BossChecklist.Call("GetBossInfoDictionary", RiskOfSlimeRainMod.Instance, BossChecklistAPIVersion.ToString());
 				if (currentBossInfoResponse is Dictionary<string, Dictionary<string, object>> bossInfoList)
@@ -67,8 +67,8 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 
 		public static void RegisterBosses()
 		{
-			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
-			if (BossChecklist != null && BossChecklist.Version >= new Version(1, 0))
+			//TODO 1.4.4
+			if (ModLoader.TryGetMod("BossChecklist", out Mod BossChecklist) && BossChecklist.Version >= new Version(1, 0))
 			{
 				Mod mod = RiskOfSlimeRainMod.Instance;
 				string tooltip = MagmaWormSummon.tooltip;
@@ -102,7 +102,17 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 			}
 		}
 
-		public static void Unload()
+		public override void PostSetupContent()
+		{
+			RegisterBosses();
+		}
+
+		public override void PostAddRecipes()
+		{
+			LoadBossInfo();
+		}
+
+		public override void OnModUnload()
 		{
 			moddedBossInfoDict = null;
 		}

@@ -30,12 +30,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => Formula();
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -43,7 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		void SpawnProjectile(Player player, NPC target)
 		{
 			int damage = (int)(Damage * player.GetDamage());
-			StickyProj.NewProjectile<RustyKnifeProj>(target, damage: damage);
+			StickyProj.NewProjectile<RustyKnifeProj>(GetEntitySource(player), target, damage: damage);
 		}
 	}
 }

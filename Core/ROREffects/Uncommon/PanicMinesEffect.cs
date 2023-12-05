@@ -4,7 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -34,9 +34,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 														: $"Mine count: {MinesDropped} " + (MinesDropped >= balanceQuantCap ? "(max)" : "") + $"\nMine damage: {Dmg.ToPercent()}";
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
-			if (Main.myPlayer == player.whoAmI && (damage >= (int)(player.statLifeMax2 * damageThreshold) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
+			if (Main.myPlayer == player.whoAmI && (info.Damage >= (int)(player.statLifeMax2 * damageThreshold) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
 			{
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();
@@ -48,10 +48,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 						new Conditions.IsSolid()
 					}), out _))
 					{
-						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 24, position.Y + 1), Vector2.Zero,
+						Projectile.NewProjectile(GetEntitySource(player), new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 24, position.Y + 1), Vector2.Zero,
 													type, 0, 0, Main.myPlayer, spawnDamage);
 					}
-					else Projectile.NewProjectile(player.Center, Vector2.Zero, type, 0, 0, Main.myPlayer, spawnDamage);
+					else Projectile.NewProjectile(GetEntitySource(player), player.Center, Vector2.Zero, type, 0, 0, Main.myPlayer, spawnDamage);
 				}
 			}
 		}

@@ -163,7 +163,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static void RegisterItem<T>(RORConsumableItem<T> rItem) where T : ROREffect
 		{
-			int type = rItem.item.type;
+			int type = rItem.Item.type;
 
 			//To set the effects texture to the item texture
 			texture[typeof(T)] = rItem.Texture;
@@ -216,7 +216,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			else
 			{
 				//Effect doesn't exist, add one
-				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.player);
+				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.Player);
 				newEffect.OnCreate();
 				//By definition of the list order, append
 				mPlayer.Effects.Add(newEffect);
@@ -353,23 +353,21 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static bool CanDoEffect<T>(ROREffect effect) where T : IROREffectInterface
 		{
 			if (!effect.Active) return false;
-			if (!effect.AlwaysProc)
+			if (effect.AlwaysProc) return true;
+
+			RORPlayer mPlayer = effect.Player.GetRORPlayer();
+			if (mPlayer.CanProc())
 			{
-				RORPlayer mPlayer = effect.Player.GetRORPlayer();
-				if (mPlayer.CanProc())
+				//If ProcTimer is 0
+				bool result = effect.Proc();
+				if (result)
 				{
-					//If ProcTimer is 0
-					bool result = effect.Proc();
-					if (result)
-					{
-						//If proced, set timer
-						mPlayer.SetProcTimer();
-					}
-					return result;
+					//If proced, set timer
+					mPlayer.SetProcTimer();
 				}
-				return false;
+				return result;
 			}
-			return true;
+			return false;
 		}
 
 		#region Hooks
@@ -388,50 +386,50 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		public static void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public static void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (CanDoEffect<IModifyHit>(effect))
 				{
-					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref modifiers);
 				}
 			}
 		}
 
-		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (CanDoEffect<IModifyHit>(effect))
 				{
-					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref modifiers);
 				}
 			}
 		}
 
-		public static void GetWeaponCrit(Player player, Item item, ref int crit)
+		public static void ModifyWeaponCrit(Player player, Item item, ref float crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player);
+			List<ROREffect> effects = GetEffectsOf<IModifyWeaponCrit>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
 				{
-					((IGetWeaponCrit)effect).GetWeaponCrit(player, item, ref crit);
+					((IModifyWeaponCrit)effect).ModifyWeaponCrit(player, item, ref crit);
 				}
 			}
 		}
 
-		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
+		public static void ModifyWeaponDamage(Player player, Item item, ref StatModifier damage)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
 				{
-					((IModifyWeaponDamage)effect).ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
+					((IModifyWeaponDamage)effect).ModifyWeaponDamage(player, item, ref damage);
 				}
 			}
 		}
@@ -449,20 +447,40 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return multiplier;
 		}
 
-		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public static bool FreeDodge(Player player, Player.HurtInfo info)
 		{
-			bool ret = true;
-			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player);
+			List<ROREffect> effects = GetEffectsOf<IFreeDodge>(player);
 			foreach (var effect in effects)
 			{
-				if (CanDoEffect<IPreHurt>(effect))
+				if (CanDoEffect<IFreeDodge>(effect))
 				{
-					ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+					if (((IFreeDodge)effect).FreeDodge(player, info))
+					{
+						return true;
+					}
 				}
 			}
 			//if atleast one PreHurt returns false, it will return false
-			return ret;
+			return false;
 		}
+
+		public static bool ConsumableDodge(Player player, Player.HurtInfo info)
+		{
+			List<ROREffect> effects = GetEffectsOf<IConsumableDodge>(player);
+			foreach (var effect in effects)
+			{
+				if (CanDoEffect<IConsumableDodge>(effect))
+				{
+					if (((IConsumableDodge)effect).ConsumableDodge(player, info))
+					{
+						return true;
+					}
+				}
+			}
+			//if atleast one PreHurt returns false, it will return false
+			return false;
+		}
+		#endregion
 
 		public static List<Effect> GetScreenShaders(Player player)
 		{
@@ -479,67 +497,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return shaders;
 		}
 
-		public static readonly PlayerLayer ParentLayer = PlayerLayer.MiscEffectsBack;
-
-		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", ParentLayer, delegate (PlayerDrawInfo drawInfo)
-		{
-			if (drawInfo.shadow != 0f) return;
-
-			Player dPlayer = drawInfo.drawPlayer;
-
-			if (dPlayer.dead || !dPlayer.active) return;
-
-			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
-			List<PlayerLayerParams> allParameters = new List<PlayerLayerParams>();
-			foreach (var effect in effects)
-			{
-				if (effect.Active)
-				{
-					PlayerLayerParams parameters = ((IPlayerLayer)effect).GetPlayerLayerParams(dPlayer);
-					if (parameters != null)
-					{
-						allParameters.Add(parameters);
-					}
-				}
-			}
-
-			foreach (var parameters in allParameters)
-			{
-				Texture2D tex = parameters.Texture;
-				float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
-				float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
-
-				Vector2 off = parameters.Offset;
-				SpriteEffects spriteEffects = SpriteEffects.None;
-
-				if (dPlayer.gravDir < 0f)
-				{
-					off.Y = -off.Y;
-					spriteEffects = SpriteEffects.FlipVertically;
-				}
-				drawY += off.Y + dPlayer.gfxOffY;
-				drawX += off.X;
-
-				Color color = parameters.Color ?? Color.White;
-				if (!(parameters.IgnoreAlpha ?? false))
-				{
-					color *= (255 - dPlayer.immuneAlpha) / 255f;
-				}
-
-				Rectangle sourceRect = parameters.GetFrame();
-
-				DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
-				{
-					ignorePlayerRotation = true
-				};
-				Main.playerDrawData.Add(data);
-			}
-		});
-
-		public static void DrawPlayerLayers(List<PlayerLayer> layers)
-		{
-			layers.Insert(0, AllInOne);
-		}
-		#endregion
+		public static PlayerDrawLayer ParentLayer => PlayerDrawLayers.FirstVanillaLayer;
+		public static PlayerDrawLayer ParentVisibilityLayer => PlayerDrawLayers.ElectrifiedDebuffBack;
 	}
 }

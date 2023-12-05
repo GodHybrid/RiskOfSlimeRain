@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -60,9 +61,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			}
 		}
 
-		public void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
+		public void ModifyWeaponDamage(Player player, Item item, ref StatModifier damage)
 		{
-			add += DamageIncrease;
+			damage += DamageIncrease;
 		}
 	}
 }

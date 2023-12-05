@@ -7,7 +7,7 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
+	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IModifyWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
 		public const float critChance = 0.05f;
 
@@ -42,12 +42,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return new PlayerLayerParams("Textures/HarvestersScythe", new Vector2(0, -48));
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}
@@ -57,7 +57,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			UpdateHitCheckCount(player);
 		}
 
-		public void GetWeaponCrit(Player player, Item item, ref int crit)
+		public void ModifyWeaponCrit(Player player, Item item, ref float crit)
 		{
 			crit += (int)(CritChance * 100);
 		}

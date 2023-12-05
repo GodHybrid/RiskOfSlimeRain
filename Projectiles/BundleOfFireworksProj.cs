@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -12,21 +13,21 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void SetStaticDefaults()
 		{
 			base.SetStaticDefaults();
-			Main.projFrames[projectile.type] = 4;
+			Main.projFrames[Projectile.type] = 4;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(10);
+			Projectile.Size = new Vector2(10);
 		}
 
-		public int TextureIndex => projectile.identity % Main.projFrames[projectile.type];
+		public int TextureIndex => Projectile.identity % Main.projFrames[Projectile.type];
 
 		public bool Spawned
 		{
-			get => projectile.localAI[1] == 1f;
-			set => projectile.localAI[1] = value ? 1f : 0f;
+			get => Projectile.localAI[1] == 1f;
+			set => Projectile.localAI[1] = value ? 1f : 0f;
 		}
 
 		public override void FadeIn()
@@ -34,7 +35,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (!Spawned)
 			{
 				//Assign texture once on spawn
-				projectile.frame = TextureIndex;
+				Projectile.frame = TextureIndex;
 				Spawned = true;
 			}
 			base.FadeIn();
@@ -46,14 +47,14 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SpawnDust();
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
-			Main.PlaySound(SoundID.Item14.WithVolume(0.6f), projectile.Center);
+			SoundEngine.PlaySound(SoundID.Item14.WithVolumeScale(0.6f), Projectile.Center);
 			Vector2 velo;
 			for (int i = 0; i < explosionCount; i++)
 			{
 				velo = Vector2.UnitX.RotatedBy(-45).RotatedByRandom(270) * 4;
-				GravityDustProj.NewProjectile<BundleOfFireworksVisualExplosion>(projectile.Center, velo);
+				GravityDustProj.NewProjectile<BundleOfFireworksVisualExplosion>(Projectile.GetSource_FromThis(), Projectile.Center, velo);
 			}
 		}
 	}

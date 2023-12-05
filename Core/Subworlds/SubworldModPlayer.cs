@@ -5,14 +5,14 @@ namespace RiskOfSlimeRain.Core.Subworlds
 {
 	public class SubworldModPlayer : ModPlayer
 	{
-		public override bool CloneNewInstances => false;
+		protected override bool CloneNewInstances => false;
 
 		public override void PostUpdateBuffs()
 		{
 			if (SubworldManager.IsActive(FirstLevelBasic.id) ?? false)
 			{
-				player.noBuilding = true;
-				player.AddBuff(BuffID.NoBuilding, 3);
+				Player.noBuilding = true;
+				Player.AddBuff(BuffID.NoBuilding, 3);
 			}
 		}
 	}

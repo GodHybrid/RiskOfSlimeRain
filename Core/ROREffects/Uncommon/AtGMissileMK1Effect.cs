@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -52,12 +53,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float RollChance => Formula();
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			RollSpawn(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			RollSpawn(player);
 		}
@@ -83,9 +84,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		{
 			//In ror, it actually uses the dealt damage for the missile damage, not the players damage
 			int damage = (int)(DamageIncrease * player.GetDamage());
-			if (Main.netMode != NetmodeID.Server) SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
+			if (Main.netMode != NetmodeID.Server) SoundEngine.PlaySound(SoundID.Item13.WithVolumeScale(SoundHelper.FixVolume(2f)).WithPitchOffset(0.4f), player.Center);
 			Vector2 velo = new Vector2(Main.rand.NextFloat(4f) - 2f, -2f);
-			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(player.Center, velo, damage, 10f);
+			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(GetEntitySource(player), player.Center, velo, damage, 10f);
 		}
 
 		public void PostUpdateEquips(Player player)

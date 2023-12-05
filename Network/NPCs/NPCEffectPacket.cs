@@ -2,13 +2,13 @@
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
-using WebmilioCommons.Networking;
 
 namespace RiskOfSlimeRain.Network.NPCs
 {
 	public class NPCEffectPacket : NPCPacketBase
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		public void Send(int toWho = -1, int fromWho = -1) { }
+		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
 
 		//Effect parameters
 		public int EffectTime { get; set; }
@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Network.NPCs
 			EffectTime = effect.Time;
 			EffectType = effect.Type;
 		}
-
+		/*
 		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
 		{
 			if (Effect == null)
@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Network.NPCs
 			}
 			Effect?.NetSend(modPacket);
 			return base.PreSend(modPacket, fromWho, toWho);
-		}
+		}*/
 
 		protected override bool NewMidReceive(BinaryReader reader, int fromWho)
 		{

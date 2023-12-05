@@ -1,6 +1,7 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
@@ -66,11 +67,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 			if (justOpenedInventory && savings > 0)
 			{
-				Main.PlaySound(SoundID.CoinPickup);
-				lastWithdrawn = (amount * savings).MoneyToString();
-				//*5 cause sell/buy value stuff
-				player.SellItem(amount * 5, savings);
-				total += amount * savings;
+				SoundEngine.PlaySound(SoundID.CoinPickup);
+				int money = amount * savings;
+				lastWithdrawn = money.MoneyToString();
+				player.GiveCoinsToPlayer(money);
+				total += money;
 				totalText = total.MoneyToString();
 				savings = 0;
 				nextMoneyWithdrawn = 0.MoneyToString();

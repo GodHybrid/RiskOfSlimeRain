@@ -8,8 +8,8 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
-using WebmilioCommons.Networking.Packets;
-using WebmilioCommons.Networking.Serializing;
+using Terraria.DataStructures;
+using RiskOfSlimeRain.Core.EntitySources;
 
 namespace RiskOfSlimeRain.Core.ROREffects
 {
@@ -17,9 +17,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	/// The base class of all effects. Will be saved on the player once applied
 	/// </summary>
 	//IComparable because we use it in a list to sort
-	//INetworkSerializable because we manually have to sync an entire effect sometimes (from webmiliocommons)
 	//Effects are created via the ROREffect.CreateInstance method
-	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable, ICloneable
+	public abstract class ROREffect : IComparable<ROREffect>/*, INetworkSerializable*/, ICloneable //TODO 1.4.4 INetworkSerializable used for ROREffectSyncSinglePacket
 	{
 		//Something you can save in a TagCompound, hence why string, not Type
 		/// <summary>
@@ -34,6 +33,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public Player Player { get; private set; }
 
+		//TODO 1.4.4 make temp code that populates lang file with all these first
 		/// <summary>
 		/// This will be the name of the item responsible for the effect to apply
 		/// </summary>
@@ -44,7 +44,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 				string name = GetType().Name;
 				//if it ends with "Effect", split the name up without the effect. example:
 				//"BitterRootEffect" -> "Bitter Root"
-				if (name.EndsWith("Effect")) name = GetType().Name.Replace("Effect", "");
+				const string effectName = "Effect";
+				if (name.EndsWith(effectName)) name = name.Substring(0, name.Length - effectName.Length);
 				return Regex.Replace(name, "([A-Z])", " $1").Trim();
 			}
 		}
@@ -281,6 +282,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			//TODO ror mode something?
 		}
 
+		public IEntitySource GetEntitySource(Player player, string? context = null)
+		{
+			return new EntitySource_FromEffect(player, this, context);
+		}
+
 		/// <summary>
 		/// This returns a new effect of the given type with its creation time set accordingly
 		/// </summary>
@@ -344,10 +350,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
 			//TODO arkhalis/channel weapons
 			Item item = player.HeldItem;
-			if (item.damage < 1 || item.summon) return 1f;
+			if (item.damage < 1 || item.CountsAsClass(DamageClass.Summon)) return 1f;
 			int useTime = item.useTime;
 			//fix for melee weapons
-			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
+			if (item.CountsAsClass(DamageClass.Melee) && item.shoot <= 0) useTime = item.useAnimation;
 			float byUseTime = 2 * useTime / 60f;
 			byUseTime = Utils.Clamp(byUseTime, 0, 2);
 			return byUseTime;
@@ -537,16 +543,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public int CompareTo(ROREffect other)
 		{
 			return _CreationTime.CompareTo(other._CreationTime);
-		}
-
-		public void Send(NetworkPacket networkPacket, ModPacket modPacket)
-		{
-			Send(modPacket);
-		}
-
-		public void Receive(NetworkPacket networkPacket, BinaryReader reader)
-		{
-			Receive(reader);
 		}
 
 		public object Clone()

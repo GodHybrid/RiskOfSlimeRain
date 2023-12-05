@@ -14,14 +14,14 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dead Man's DoT");
+			// DisplayName.SetDefault("Dead Man's DoT");
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(8);
-			projectile.timeLeft = 420; //Default, changed in OtherAI
+			Projectile.Size = new Vector2(8);
+			Projectile.timeLeft = 420; //Default, changed in OtherAI
 		}
 
 		private const int StrikeTimerMax = 30;
@@ -29,8 +29,8 @@ namespace RiskOfSlimeRain.Projectiles
 		//Timer for strikes on only that NPC
 		public int StrikeTimer
 		{
-			get => (int)projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			get => (int)Projectile.localAI[0];
+			set => Projectile.localAI[0] = value;
 		}
 
 		public ushort TimeLeft { get; set; } //Synced
@@ -39,14 +39,13 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void WhileStuck(NPC npc)
 		{
-			if (Main.myPlayer == projectile.owner)
+			if (Main.myPlayer == Projectile.owner)
 			{
 				StrikeTimer++;
 				if (StrikeTimer > StrikeTimerMax)
 				{
 					StrikeTimer = 0;
-					Player player = projectile.GetOwner();
-					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
+					npc.SimpleStrikeNPC(damage, 0); //Does not proc, syncs
 				}
 			}
 		}
@@ -56,7 +55,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (!appliedTimeLeft && TimeLeft != 0)
 			{
 				appliedTimeLeft = true;
-				projectile.timeLeft = TimeLeft;
+				Projectile.timeLeft = TimeLeft;
 			}
 		}
 

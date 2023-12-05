@@ -6,7 +6,6 @@ using System;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Boss
 {
@@ -35,7 +34,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return new PlayerLayerParams("Textures/BurningWitness", new Vector2(-12, -36));
+			return timer > 0 ? new PlayerLayerParams("Textures/BurningWitness", new Vector2(-12, -36)) : null;
 		}
 
 		//To restrict rapidly spawning projectiles optop of eachother, used in inflating the players hitbox alot after spawning one
@@ -58,14 +57,26 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 				Rectangle hitbox = player.Hitbox;
 				hitbox.Inflate(spawnTimer, spawnTimer);
-				bool noTrail = !Main.projectile.AnyActive(p => p.Hitbox.Intersects(hitbox));
-				int fireDuration = 50;
-				if (noTrail || timer % (fireDuration - 10) == 0)
+
+				bool noExistingTrail = true;
+				int type = ModContent.ProjectileType<FireProj>();
+				for (int i = 0; i < Main.maxProjectiles; i++)
 				{
-					int type = ModContent.ProjectileType<FireProj>();
+					Projectile proj = Main.projectile[i];
+
+					if (proj.active && proj.type == type && proj.Hitbox.Intersects(hitbox))
+					{
+						noExistingTrail = false;
+						break;
+					}
+				}
+
+				int fireDuration = 50;
+				if (timer % (fireDuration - 10) == 0 || noExistingTrail)
+				{
 					int damage = (int)(0.35f * player.GetDamage());
 
-					Projectile.NewProjectile(player.Center.X - player.direction * player.width / 2, player.Center.Y + 6f, 0, 1, type, damage, 0, Main.myPlayer, fireDuration);
+					Projectile.NewProjectile(GetEntitySource(player), player.Center.X - player.direction * player.width / 2, player.Center.Y + 6f, 0, 1, type, damage, 0, Main.myPlayer, fireDuration);
 					spawnTimer = 20;
 				}
 			}
@@ -77,22 +88,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 			player.moveSpeed += player.moveSpeed * Formula();
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) damage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += 1;
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) damage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += 1;
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (target.life <= 0) timer = Duration * 60;
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (target.life <= 0) timer = Duration * 60;
 		}

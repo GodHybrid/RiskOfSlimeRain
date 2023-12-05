@@ -25,11 +25,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Damage: {(Damage * Stack).ToPercent()}\nKnockback: {(KB + Stack).ToPercent()}";
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
-			if (Main.myPlayer == player.whoAmI && damage >= player.statLifeMax2 * HPlimit)
+			if (Main.myPlayer == player.whoAmI && info.Damage >= player.statLifeMax2 * HPlimit)
 			{
-				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (int)(Damage * Stack * player.GetDamage()), KB + Stack, Main.myPlayer);
+				Projectile.NewProjectile(GetEntitySource(player), player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (int)(Damage * Stack * player.GetDamage()), KB + Stack, Main.myPlayer);
 			}
 		}
 	}

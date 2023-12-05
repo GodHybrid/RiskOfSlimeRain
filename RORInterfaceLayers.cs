@@ -12,7 +12,9 @@ using RiskOfSlimeRain.NPCs.Bosses;
 using System;
 using System.Collections.Generic;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -21,7 +23,7 @@ using Terraria.UI.Chat;
 
 namespace RiskOfSlimeRain
 {
-	public static class RORInterfaceLayers
+	public class RORInterfaceLayers : ModSystem
 	{
 		private const int inventorySize = 47;
 
@@ -29,7 +31,7 @@ namespace RiskOfSlimeRain
 		private const int iconPadding = iconSize + 6;
 		private const int verticalLineHeight = 50;
 
-		public static string Name => ModContent.GetInstance<RiskOfSlimeRainMod>().Name;
+		public static string ModName => ModContent.GetInstance<RiskOfSlimeRainMod>().Name;
 
 		public static int hoverIndex = -1;
 
@@ -44,18 +46,18 @@ namespace RiskOfSlimeRain
 
 		private const int syncTimer = 25;
 
-		public static void Load()
+		public override void OnModLoad()
 		{
 			TimeByIndex = new Dictionary<int, Ref<int>>();
-			On.Terraria.Main.DrawPlayer_DrawAllLayers += Main_DrawPlayer_DrawAllLayers;
+			On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += On_PlayerDrawLayers_DrawPlayer_RenderAllLayers;
 		}
 
-		public static void Unload()
+		public override void OnModUnload()
 		{
 			TimeByIndex = null;
 		}
 
-		public static void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
+		public override void ModifyInterfaceLayers(List<GameInterfaceLayer> layers)
 		{
 			if (Main.gameMenu) return;
 			//int mouseIndex = layers.FindIndex(layer => layer.Name.Equals("Vanilla: Hotbar"));
@@ -63,17 +65,17 @@ namespace RiskOfSlimeRain
 			if (mouseIndex != -1)
 			{
 				layers.Insert(mouseIndex, new LegacyGameInterfaceLayer(
-					$"{Name}: {nameof(Effects)}",
+					$"{ModName}: {nameof(Effects)}",
 					Effects,
 					InterfaceScaleType.UI
 				));
 				layers.Insert(mouseIndex + 1, new LegacyGameInterfaceLayer(
-					$"{Name}: {nameof(WarbannerArrow)}",
+					$"{ModName}: {nameof(WarbannerArrow)}",
 					WarbannerArrow,
 					InterfaceScaleType.Game
 				));
 				layers.Insert(mouseIndex + 2, new LegacyGameInterfaceLayer(
-						$"{Name}: {nameof(MagmaWormWarning)}",
+						$"{ModName}: {nameof(MagmaWormWarning)}",
 						MagmaWormWarning,
 						InterfaceScaleType.Game
 					));
@@ -89,12 +91,12 @@ namespace RiskOfSlimeRain
 			{
 				NPC npc = Main.npc[i];
 
-				if (npc.active && npc.modNPC is MagmaWormHead head && head.EmergeWarning)
+				if (npc.active && npc.ModNPC is MagmaWormHead head && head.EmergeWarning)
 				{
 					Vector2 location = head.Location;
 					if (location == Vector2.Zero) continue;
 					Vector2 drawCenter = location - Main.screenPosition;
-					Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/MagmaWormWarning");
+					Texture2D texture = ModContent.Request<Texture2D>("RiskOfSlimeRain/Textures/MagmaWormWarning").Value;
 					Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
 
 					int offsetY = (int)(Main.GameUpdateCount / 8) % 2;
@@ -153,7 +155,7 @@ namespace RiskOfSlimeRain
 			for (int i = 0; i < effects.Count; i++)
 			{
 				effect = effects[i];
-				texture = ModContent.GetTexture(effect.Texture);
+				texture = ModContent.Request<Texture2D>(effect.Texture).Value;
 
 				lineOffset = i / numHorizontal;
 				//2 * INVENTORY_SIZE is the distance needed to not overlap with recipe UI
@@ -163,7 +165,7 @@ namespace RiskOfSlimeRain
 
 				if (drawingInfo)
 				{
-					texture = mPlayer.nullifierActive ? Main.itemTexture[ModContent.ItemType<Nullifier>()] : Main.npcHeadTexture[0];
+					texture = mPlayer.nullifierActive ? TextureAssets.Item[ModContent.ItemType<Nullifier>()].Value : TextureAssets.NpcHead[0].Value;
 					xPosition -= iconPadding; //Go left one icon distance
 				}
 
@@ -231,7 +233,7 @@ namespace RiskOfSlimeRain
 				{
 					string text = "x" + effect.Stack.ToString();
 					if (!effect.FullStack) text += "/" + effect.UnlockedStack;
-					Vector2 length = Main.fontItemStack.MeasureString(text);
+					Vector2 length = FontAssets.ItemStack.Value.MeasureString(text);
 
 					leftCenter.Y -= length.Y / 2;
 					color = Color.White;
@@ -239,16 +241,16 @@ namespace RiskOfSlimeRain
 					{
 						color = Color.LawnGreen;
 					}
-					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
 
 					if (mPlayer.nullifierActive)
 					{
 						leftCenter.Y -= length.Y;
 						text = "x" + effect.NullifierStack.ToString();
-						length = Main.fontItemStack.MeasureString(text);
+						length = FontAssets.ItemStack.Value.MeasureString(text);
 
 						color = Color.OrangeRed;
-						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
+						ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
 					}
 				}
 			}
@@ -257,7 +259,7 @@ namespace RiskOfSlimeRain
 			{
 				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
 				player.mouseInterface = true;
-				player.showItemIcon = false;
+				player.cursorItemIconEnabled = false;
 
 				effect = effects[hoverIndex];
 				string name = effect.Name;
@@ -277,14 +279,14 @@ namespace RiskOfSlimeRain
 
 				Vector2 textPos = GetTextPosFromMouse(text);
 
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, name, textPos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, name, textPos, effect.RarityColor * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 			}
 			else if (hoverIndex == -2) //Misc
 			{
 				if (Main.hoverItemName != "" || player.mouseInterface || Main.mouseText) return true;
 				player.mouseInterface = true;
-				player.showItemIcon = false;
+				player.cursorItemIconEnabled = false;
 
 				string modName = RiskOfSlimeRainMod.Instance.DisplayName;
 				string text = $"This UI shows all your currently used items from '{modName}'";
@@ -328,18 +330,18 @@ namespace RiskOfSlimeRain
 
 				Vector2 textPos = GetTextPosFromMouse(text);
 
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontMouseText, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.MouseText.Value, text, textPos, Color.White * (Main.mouseTextColor / 255f), 0, Vector2.Zero, Vector2.One);
 			}
 
 			if (hoverIndex != -2 && mPlayer.nullifierActive && mPlayer.savings > -1)
 			{
 				//Don't draw it if you mouseover the info icon because of readability issues
 				string text = "Savings: " + mPlayer.savings.MoneyToString();
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 
 				priceDrawPos.Y += iconSize;
 				text = "Total price: " + mPlayer.nullifierMoney.MoneyToString();
-				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, Main.fontItemStack, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
+				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
 
 			EffectsVisible = true;
@@ -356,7 +358,7 @@ namespace RiskOfSlimeRain
 			Player player = Main.LocalPlayer;
 			RORPlayer mPlayer = player.GetRORPlayer();
 			if (WarbannerManager.warbanners.Count <= 0) return true;
-			if (!(player.HeldItem.modItem is WarbannerRemover)) return true;
+			if (!(player.HeldItem.ModItem is WarbannerRemover)) return true;
 
 			Color color = Color.White;
 			Vector2 target = default(Vector2);
@@ -398,25 +400,26 @@ namespace RiskOfSlimeRain
 				Vector2 drawPosition = playerCenter - Main.screenPosition + offset;
 				fade = Math.Min(1f, (length - 20) / 70) * (1 - fade);
 
-				Texture2D arrow = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrow");
-				Texture2D arrowWhite = ModContent.GetTexture("RiskOfSlimeRain/Textures/EnemyArrowWhite");
+				Texture2D arrow = ModContent.Request<Texture2D>("RiskOfSlimeRain/Textures/EnemyArrow").Value;
+				Texture2D arrowWhite = ModContent.Request<Texture2D>("RiskOfSlimeRain/Textures/EnemyArrowWhite").Value;
 				Main.spriteBatch.Draw(arrowWhite, drawPosition, null, Color.White * fade, rotation, arrowWhite.Size() / 2, new Vector2(1.3f), SpriteEffects.None, 0);
 				Main.spriteBatch.Draw(arrow, drawPosition, null, color * fade, rotation, arrow.Size() / 2, new Vector2(1), SpriteEffects.None, 0);
 			}
 			return true;
 		};
 
-		private static void Main_DrawPlayer_DrawAllLayers(On.Terraria.Main.orig_DrawPlayer_DrawAllLayers orig, Main self, Player drawPlayer, int projectileDrawPosition, int cHead)
+		private static void On_PlayerDrawLayers_DrawPlayer_RenderAllLayers(On_PlayerDrawLayers.orig_DrawPlayer_RenderAllLayers orig, ref PlayerDrawSet drawinfo)
 		{
+			var drawPlayer = drawinfo.drawPlayer;
 			SoldiersSyringeEffect effect = ROREffectManager.GetEffectOfType<SoldiersSyringeEffect>(drawPlayer);
 			if (effect == null || effect?.Active == false || Config.HiddenVisuals(drawPlayer))
 			{
-				orig(self, drawPlayer, projectileDrawPosition, cHead);
+				orig(ref drawinfo);
 				return;
 			}
 
 			//Modify Main.playerDrawData first
-			List<DrawData> drawDataCopy = new List<DrawData>(Main.playerDrawData);
+			List<DrawData> drawDataCopy = new List<DrawData>(drawinfo.DrawDataCache);
 			List<DrawData> drawDatas = new List<DrawData>();
 
 			for (int i = 0; i < drawDataCopy.Count; i++)
@@ -438,9 +441,9 @@ namespace RiskOfSlimeRain
 				}
 			}
 
-			Main.playerDrawData.AddRange(drawDatas);
+			drawinfo.DrawDataCache.AddRange(drawDatas);
 
-			orig(self, drawPlayer, projectileDrawPosition, cHead);
+			orig(ref drawinfo);
 		}
 
 		/// <summary>
@@ -451,7 +454,7 @@ namespace RiskOfSlimeRain
 			Vector2 mousePos = new Vector2(Main.mouseX, Main.mouseY);
 			mousePos += new Vector2(Main.ThickMouse ? 22 : 16);
 
-			Vector2 size = Main.fontMouseText.MeasureString(text);
+			Vector2 size = FontAssets.MouseText.Value.MeasureString(text);
 
 			if (mousePos.X + size.X + 4f > Main.screenWidth)
 			{
@@ -510,13 +513,13 @@ namespace RiskOfSlimeRain
 						{
 							effect.NullifierStack++;
 							PlayerInput.ScrollWheelDelta = 0;
-							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+							SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 						}
 						else if (mPlayer.mouseRight || PlayerInput.ScrollWheelDelta < 0)
 						{
 							effect.NullifierStack--;
 							PlayerInput.ScrollWheelDelta = 0;
-							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+							SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 						}
 					}
 					else if (Config.Instance.CustomStacking)
@@ -529,13 +532,13 @@ namespace RiskOfSlimeRain
 						{
 							effect.Stack++;
 							PlayerInput.ScrollWheelDelta = 0;
-							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+							SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 						}
 						else if (mPlayer.mouseRight || PlayerInput.ScrollWheelDelta < 0)
 						{
 							effect.Stack--;
 							PlayerInput.ScrollWheelDelta = 0;
-							Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+							SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 						}
 
 						if (Main.netMode != NetmodeID.SinglePlayer && oldStack != effect.Stack)

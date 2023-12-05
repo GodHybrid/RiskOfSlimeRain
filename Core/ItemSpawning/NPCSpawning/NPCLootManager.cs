@@ -9,11 +9,12 @@ using System.Linq;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 {
-	public static class NPCLootManager
+	public class NPCLootManager : ModSystem
 	{
 		//Contains the "progression" values of each relevant downed vanilla boss
 		public static List<float> vanillaDowned;
@@ -56,7 +57,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			bool progressionAllowed = CheckProgression(isPreHM);
 			bool drop = false;
 			bool firstDrop = false;
-			if (npc.modNPC == null)
+			if (npc.ModNPC == null)
 			{
 				float vanilla = CheckVanilla(npc, ref drop);
 				if (progressionAllowed && vanilla >= KingSlime)
@@ -315,7 +316,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		/// </summary>
 		public static bool IsPreHardmode(NPC npc)
 		{
-			if (npc.modNPC == null)
+			if (npc.ModNPC == null)
 			{
 				switch (npc.type)
 				{
@@ -455,7 +456,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			return displayName?.StartsWith("$") == true ? Language.GetTextValue(displayName.Substring(1)) : displayName;
 		}
 
-		public static void Init()
+		public override void ClearWorld()
 		{
 			vanillaDowned = new List<float>();
 			moddedDowned = new Dictionary<string, float>();
@@ -551,7 +552,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			}
 		}
 
-		public static void Unload()
+		public override void OnModUnload()
 		{
 			vanillaDowned = null;
 			moddedDowned = null;

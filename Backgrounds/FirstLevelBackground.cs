@@ -4,13 +4,18 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Backgrounds
 {
-	public class FirstLevelBackground : ModSurfaceBgStyle
+	public class FirstLevelModSceneEffect : ModSceneEffect
 	{
-		public override bool ChooseBgStyle()
+		public override ModSurfaceBackgroundStyle SurfaceBackgroundStyle => ModContent.GetInstance<FirstLevelBackground>();
+
+		public override bool IsSceneEffectActive(Player player)
 		{
 			return !Main.gameMenu && (SubworldManager.IsActive(FirstLevelBasic.id) ?? false);
 		}
+	}
 
+	public class FirstLevelBackground : ModSurfaceBackgroundStyle
+	{
 		// Use this to keep far Backgrounds like the mountains
 		public override void ModifyFarFades(float[] fades, float transitionSpeed)
 		{
@@ -37,7 +42,7 @@ namespace RiskOfSlimeRain.Backgrounds
 
 		public override int ChooseMiddleTexture()
 		{
-			return mod.GetBackgroundSlot("Backgrounds/FirstLevelBackgroundMid");
+			return BackgroundTextureLoader.GetBackgroundSlot(Mod, "Backgrounds/FirstLevelBackgroundMid");
 		}
 	}
 }
