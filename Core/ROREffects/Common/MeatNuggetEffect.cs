@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,9 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 6f;
 
-		public override string Description => $"Enemies will have a {Chance.ToPercent()} chance to drop a meat nugget that recovers {Initial} health";
-
-		public override string FlavorText => "MM. Delicious\nJust kidding, it's awful";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Chance.ToPercent(), Initial);
 
 		public override string UIInfo()
 		{

@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -33,9 +34,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override int HitCheckMax => 60;
 
-		public override string Description => $"Killing an enemy increases your health permanently by {Initial}, up to {cap}";
-
-		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, cap);
 
 		public override string UIInfo()
 		{

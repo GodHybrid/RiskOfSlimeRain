@@ -11,6 +11,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.UI;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects
@@ -36,7 +37,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		private static Type[] interfaceCanProc;
 
 		//Those two need caching cause they are used in ModifyTooltips dynamically for multiline tooltips with color
-		private static Dictionary<Type, string> flavorText;
+		private static Dictionary<Type, LocalizedText> displayName;
+		private static Dictionary<Type, LocalizedText> description;
+		private static Dictionary<Type, LocalizedText> flavorText;
 		private static Dictionary<Type, RORRarity> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
@@ -51,7 +54,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
 			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
-			flavorText = new Dictionary<Type, string>();
+			displayName = new Dictionary<Type, LocalizedText>();
+			description = new Dictionary<Type, LocalizedText>();
+			flavorText = new Dictionary<Type, LocalizedText>();
 			rarity = new Dictionary<Type, RORRarity>();
 			texture = new Dictionary<Type, string>();
 			itemType = new Dictionary<Type, int>();
@@ -82,6 +87,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
+					displayName[type] = effect.DisplayName;
+					description[type] = effect.Description;
 					flavorText[type] = effect.FlavorText;
 					rarity[type] = effect.Rarity;
 					effectTypes.Add(type);
@@ -103,6 +110,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static void Unload()
 		{
 			validInterfaces = null;
+			displayName = null;
+			description = null;
 			flavorText = null;
 			rarity = null;
 			texture = null;
@@ -120,9 +129,29 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		public static string GetDisplayName<T>() where T : ROREffect
+		{
+			return displayName[typeof(T)].ToString();
+		}
+
+		public static string GetDisplayName(ROREffect effect)
+		{
+			return displayName[effect.GetType()].ToString();
+		}
+
+		public static string GetDescription<T>() where T : ROREffect
+		{
+			return description[typeof(T)].ToString();
+		}
+
+		public static string GetDescription(ROREffect effect)
+		{
+			return description[effect.GetType()].ToString();
+		}
+
 		public static string GetFlavorText<T>() where T : ROREffect
 		{
-			return flavorText[typeof(T)];
+			return flavorText[typeof(T)].ToString();
 		}
 
 		public static RORRarity GetRarity<T>() where T : ROREffect

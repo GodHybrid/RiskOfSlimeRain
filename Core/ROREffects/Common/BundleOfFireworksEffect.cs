@@ -6,6 +6,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -22,9 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 0.005f;
 
-		public override string Description => $" {Initial.ToPercent()} chance to fire {fireworkCount} fireworks that deal {DamageIncrease.ToPercent()} damage";
-
-		public override string FlavorText => "Disguising homing missiles as fireworks?\nDon't ever quote me on it, but it was pretty smart";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), DamageIncrease.ToPercent());
 
 		public override string UIInfo()
 		{
@@ -34,7 +33,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		//Original, todo
 		//const int Initial = 6;
 		//const int Increase = 2;
-		//public override string Description => $"Fire {Initial + Increase} fireworks that deal {damageIncrease.ToPercent()} damage";
+		//public override LocalizedText Description => base.Description.WithFormatArgs() $"Fire {Initial + Increase} fireworks that deal {damageIncrease.ToPercent()} damage";
 		/*
 		 * 
 		 for loop up to Initial + Increase * Stack

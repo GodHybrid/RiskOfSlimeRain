@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,9 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 5f : 1f;
 
-		public override string Description => $"Killing an enemy will heal you for {Initial} health";
-
-		public override string FlavorText => "Sometimes I felt like it helped me on hunts, ya know?\nLike... instincts";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial);
 
 		public override string UIInfo()
 		{

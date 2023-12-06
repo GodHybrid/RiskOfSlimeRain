@@ -4,6 +4,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -36,9 +37,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			totalText = total.MoneyToString();
 		}
 
-		public override string Description => $"Generate {amount} copper every {interval / 60} seconds. Withdraw by opening the inventory";
-
-		public override string FlavorText => "hi im billy and heer is money for mom thanks";
+		public override LocalizedText Description => base.Description.WithFormatArgs(amount, interval / 60);
 
 		public override string UIInfo()
 		{

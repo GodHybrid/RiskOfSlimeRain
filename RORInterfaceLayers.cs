@@ -262,8 +262,8 @@ namespace RiskOfSlimeRain
 				player.cursorItemIconEnabled = false;
 
 				effect = effects[hoverIndex];
-				string name = effect.Name;
-				string text = "\n" + effect.Description;
+				string name = ROREffectManager.GetDisplayName(effect);
+				string text = "\n" + ROREffectManager.GetDescription(effect);
 				if (effect.UIInfo() != string.Empty)
 				{
 					text += "\n" + effect.UIInfo();

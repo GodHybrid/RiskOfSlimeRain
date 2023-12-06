@@ -2,9 +2,10 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
-using static System.Math;
+using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -19,9 +20,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.045f : 0.02f;
 
-		public override string Description => $"After {NoMoveTimerMax / 60} seconds, heal for {Increase.ToPercent()} of your max health every second";
-
-		public override string FlavorText => "The strongest biological healing agent...\n...is a mushroom";
+		public override LocalizedText Description => base.Description.WithFormatArgs(NoMoveTimerMax / 60, Increase.ToPercent());
 
 		public override string UIInfo()
 		{
@@ -31,7 +30,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public int GetIncreaseAmount(Player player)
 		{
-			return (int)Floor(player.statLifeMax2 * Formula()) + 1;
+			return (int)Math.Floor(player.statLifeMax2 * Formula()) + 1;
 		}
 
 		public void PostUpdateEquips(Player player)

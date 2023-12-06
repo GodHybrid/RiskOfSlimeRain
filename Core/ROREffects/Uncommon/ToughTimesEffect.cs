@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -11,9 +12,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Increase => 0.07f;
 
-		public override string Description => $"Increase damage reduction by {Initial.ToPercent()}, stacks multiplicatively";
-
-		public override string FlavorText => "Bears are just about the only toy that can lose just about everything and still maintain their dignity and worth.\nDon't forget, hon. I'm coming home soon. Stay strong.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{

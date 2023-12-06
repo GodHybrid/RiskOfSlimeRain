@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Boss
@@ -12,6 +13,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 	public class BurningWitnessEffect : RORBossEffect, IPostUpdateEquips, IModifyHit, IOnHit, IPostUpdateRunSpeeds, IPlayerLayer
 	{
 		const int durationIncrease = 3;
+		const int flatDamage = 1;
 		int InitialDuration => ServerConfig.Instance.OriginalStats ? 6 : 3;
 
 		int timer = -1;
@@ -23,9 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		int Duration => InitialDuration + durationIncrease * Math.Max(0, Stack - 1);
 
-		public override string Description => $"Grant +{Initial.ToPercent()} movement speed, +1 damage, and a firetrail on kill for {InitialDuration} seconds";
-
-		public override string FlavorText => "The Worm's eye seems to still see... watching... rewarding...";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), flatDamage, InitialDuration);
 
 		public override string UIInfo()
 		{
@@ -90,12 +90,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) modifiers.FlatBonusDamage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += flatDamage;
 		}
 
 		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) modifiers.FlatBonusDamage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += flatDamage;
 		}
 
 		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)

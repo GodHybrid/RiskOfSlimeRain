@@ -6,6 +6,7 @@ using System;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -23,11 +24,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 4f + 3 / 4f;
 
-		public override string Description => $"{Initial.ToPercent()} chance to fire a missile that deals {damageIncrease.ToPercent()} damage";
-
-		public override string FlavorText => "Lightweight and attachable to torso for free use of both hands.\nCan store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]";
-
-		public override string Name => "AtG Missile Mk. 1";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), damageIncrease.ToPercent());
 
 		public override string UIInfo()
 		{

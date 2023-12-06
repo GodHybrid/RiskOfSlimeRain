@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -20,9 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 1f;
 
-		public override string Description => $"Drop spikestrips on hit, slowing enemies by {slow.ToPercent()}";
-
-		public override string FlavorText => "The doctors say I don't have much time left\nSince you're in the force now and all, I felt obligated to return it to you";
+		public override LocalizedText Description => base.Description.WithFormatArgs(slow.ToPercent());
 
 		public override string UIInfo()
 		{

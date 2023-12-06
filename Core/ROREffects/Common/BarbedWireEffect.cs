@@ -6,6 +6,7 @@ using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -30,9 +31,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int Radius => (initialWireRadius + Math.Max(1, Stack)) * radIncrease;
 
-		public override string Description => $"Touching enemies deals {Initial.ToPercent()} of your current damage every second";
-
-		public override string FlavorText => "Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{

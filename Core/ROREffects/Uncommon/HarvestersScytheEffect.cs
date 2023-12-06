@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -21,11 +22,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override int HitCheckMax => 1; //Minimum, max once per second
 
-		public override string Description => $"Gain {critChance.ToPercent()} crit chance. Critical strikes heal for {Initial} health";
-
-		public override string FlavorText => "It takes a brave man to look death in the eye and claim they don't need help.";
-
-		public override string Name => "Harvester's Scythe";
+		public override LocalizedText Description => base.Description.WithFormatArgs(critChance.ToPercent(), Initial);
 
 		public override string UIInfo()
 		{

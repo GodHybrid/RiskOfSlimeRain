@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
+using RiskOfSlimeRain.Helpers;
 using System;
 using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -26,9 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int CritIncrease => (int)(failedAttempts * Formula());
 
-		public override string Description => $"Increases crit chance by 6% for each time you're in peril, up to {maxIncrease} times. Resets upon dying or drinking a potion";
-
-		public override string FlavorText => "You dirty----------er\nYou KNEW I had to win to pay off my debts";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), maxIncrease);
 
 		public override string UIInfo()
 		{

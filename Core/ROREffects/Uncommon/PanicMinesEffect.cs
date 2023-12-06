@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 
@@ -24,9 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public int MinesDropped => ServerConfig.Instance.OriginalStats ? (int)Formula() : (int)MathHelper.Clamp(Formula(), 0f, 8f);
 
-		public override string Description => $"Drop mines at low health for {Dmg.ToPercent()} damage";
-
-		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Dmg.ToPercent());
 
 		public override string UIInfo()
 		{

@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ModLoader;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -15,9 +16,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 1.7f : 1.2f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to fire a mortar for {Initial.ToPercent()} damage";
-
-		public override string FlavorText => "You stick explosives down the end, then you fire the explosive\nI suppose you can beat them with the tube afterwards";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Chance.ToPercent(), Initial.ToPercent());
 
 		public override string UIInfo()
 		{

@@ -10,6 +10,7 @@ using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
 using Terraria.DataStructures;
 using RiskOfSlimeRain.Core.EntitySources;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects
 {
@@ -20,6 +21,8 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	//Effects are created via the ROREffect.CreateInstance method
 	public abstract class ROREffect : IComparable<ROREffect>/*, INetworkSerializable*/, ICloneable //TODO 1.4.4 INetworkSerializable used for ROREffectSyncSinglePacket
 	{
+		public string LocalizationCategory => "ROREffects";
+
 		//Something you can save in a TagCompound, hence why string, not Type
 		/// <summary>
 		/// Shortened identifier name, unique
@@ -33,28 +36,28 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public Player Player { get; private set; }
 
-		//TODO 1.4.4 make temp code that populates lang file with all these first
+		private string MakeDefaultDisplayName()
+		{
+			string name = GetType().Name;
+			//if it ends with "Effect", split the name up without the effect. example:
+			//"BitterRootEffect" -> "Bitter Root"
+			const string effectName = "Effect";
+			if (name.EndsWith(effectName)) name = name.Substring(0, name.Length - effectName.Length);
+			return Regex.Replace(name, "([A-Z])", " $1").Trim();
+		}
+
+		//TypeName contains the rarity separated via "." already so it's handy here for organization
+		//Cached, so not dynamic
 		/// <summary>
 		/// This will be the name of the item responsible for the effect to apply
 		/// </summary>
-		public virtual string Name
-		{
-			get
-			{
-				string name = GetType().Name;
-				//if it ends with "Effect", split the name up without the effect. example:
-				//"BitterRootEffect" -> "Bitter Root"
-				const string effectName = "Effect";
-				if (name.EndsWith(effectName)) name = name.Substring(0, name.Length - effectName.Length);
-				return Regex.Replace(name, "([A-Z])", " $1").Trim();
-			}
-		}
+		public virtual LocalizedText DisplayName => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.DisplayName", MakeDefaultDisplayName);
 
 		//Cached, so not dynamic
-		public virtual string Description => string.Empty;
+		public virtual LocalizedText Description => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.Description", () => string.Empty);
 
 		//Cached, so not dynamic
-		public virtual string FlavorText => string.Empty;
+		public virtual LocalizedText FlavorText => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.FlavorText", () => string.Empty);
 
 		//Cached, so not dynamic
 		public virtual RORRarity Rarity => RORRarity.Common;
@@ -245,6 +248,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		//TODO localize
 		/// <summary>
 		/// Use to display additional info when mouseovered in the UI
 		/// </summary>
@@ -524,7 +528,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		#endregion
 
 		#region object overrides and interfaces
-		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
+		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(DisplayName)}: {DisplayName}";
 
 		public override bool Equals(object obj)
 		{

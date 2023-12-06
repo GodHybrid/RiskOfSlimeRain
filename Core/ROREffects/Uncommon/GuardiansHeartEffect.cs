@@ -6,6 +6,7 @@ using System.IO;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -22,11 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public int Shield { get; private set; } = 0;
 
-		public override string Description => $"Gain {Initial} shields. Recharges in {time} seconds out of combat";
-
-		public override string FlavorText => "While living, the subject had advanced muscle growth, cell regeneration, higher agility...\nHis heart seems to still beat independent of the rest of the body.";
-
-		public override string Name => "Guardian's Heart";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, time);
 
 		public override string UIInfo()
 		{

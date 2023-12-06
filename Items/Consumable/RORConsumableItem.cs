@@ -30,10 +30,9 @@ namespace RiskOfSlimeRain.Items.Consumable
 		#endregion
 
 		#region tml hooks
-		//TODO
-		public override LocalizedText DisplayName => LocalizedText.Empty; //Effect.Name;
+		public override LocalizedText DisplayName => Effect.DisplayName;
 
-		public override LocalizedText Tooltip => LocalizedText.Empty; //Effect.Description;
+		public override LocalizedText Tooltip => Effect.Description;
 
 		public sealed override void SetStaticDefaults()
 		{
@@ -106,6 +105,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 		public override void SetDefaults()
 		{
 			Item.maxStack = 9999;
+			Item.autoReuse = true;
 			Item.consumable = true;
 			Item.width = 18;
 			Item.height = 18;

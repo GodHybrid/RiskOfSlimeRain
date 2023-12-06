@@ -1,3 +1,347 @@
+ROREffects: {
+	Uncommon: {
+		AtGMissileMK1: {
+			DisplayName: AtG Missile Mk. 1
+			Description: "{0} chance to fire a missile that deals {1} damage"
+			FlavorText:
+				'''
+				Lightweight and attachable to torso for free use of both hands.
+				Can store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]
+				'''
+		}
+
+		BoxingGloves: {
+			DisplayName: Boxing Gloves
+			Description: "{0} chance to knock enemies back on hit"
+			FlavorText:
+				'''
+				These should work fine for the kids you're training.
+				A bit musty, though. It'll make your trainees hit like a pro, ha!
+				'''
+		}
+
+		DeadMansFoot: {
+			DisplayName: Dead Man's Foot
+			Description: Drop a poison mine at low health or after taking significant damage for {0}x{1} damage
+			FlavorText:
+				'''
+				It looks like he was infested by some bug-like creatures, and exploded when I got close.
+				I hope his death wasn't too painful; his family will know how he died.
+				'''
+		}
+
+		GoldenGun: {
+			DisplayName: Golden Gun
+			Description: Deals bonus damage scaling by money in your inventory, up to {0} damage at {1} platinum
+			FlavorText: Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.
+		}
+
+		GuardiansHeart: {
+			DisplayName: Guardian's Heart
+			Description: Gain {0} shields. Recharges in {1} seconds out of combat
+			FlavorText:
+				'''
+				While living, the subject had advanced muscle growth, cell regeneration, higher agility...
+				His heart seems to still beat independent of the rest of the body.
+				'''
+		}
+
+		HarvestersScythe: {
+			DisplayName: Harvester's Scythe
+			Description: Gain {0} crit chance. Critical strikes heal for {1} health
+			FlavorText: It takes a brave man to look death in the eye and claim they don't need help.
+		}
+
+		Infusion: {
+			DisplayName: Infusion
+			Description: Killing an enemy increases your health permanently by {0}, up to {1}
+			FlavorText:
+				'''
+				You can add whatever blood sample you want, as far as I know.
+				Remember that sampling from other creatures is a great basis for experimentation!
+				'''
+		}
+
+		LeechingSeed: {
+			DisplayName: Leeching Seed
+			Description: Dealing damage heals you for {0} health
+			FlavorText:
+				'''
+				These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.
+				However, before they die, they feel increased health and state of mind!
+				'''
+		}
+
+		PanicMines: {
+			DisplayName: Panic Mines
+			Description: Drop mines at low health for {0} damage
+			FlavorText:
+				'''
+				Must be strapped onto vehicles, NOT personnel!
+				Includes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.
+				'''
+		}
+
+		ToughTimes: {
+			DisplayName: Tough Times
+			Description: Increase damage reduction by {0}, stacks multiplicatively
+			FlavorText:
+				'''
+				Bears are just about the only toy that can lose just about everything and still maintain their dignity and worth.
+				Don't forget, hon. I'm coming home soon. Stay strong.
+				'''
+		}
+	}
+
+	Common: {
+		BarbedWire: {
+			DisplayName: Barbed Wire
+			Description: Touching enemies deals {0} of your current damage every second
+			FlavorText: Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...
+		}
+
+		BitterRoot: {
+			DisplayName: Bitter Root
+			Description: Increases maximum life by roughly {0}
+			FlavorText: Biggest. Ginseng. Root. Ever.
+		}
+
+		BundleOfFireworks: {
+			DisplayName: Bundle Of Fireworks
+			Description: "{0} chance to fire 5 fireworks that deal {1} damage"
+			FlavorText:
+				'''
+				Disguising homing missiles as fireworks?
+				Don't ever quote me on it, but it was pretty smart
+				'''
+		}
+
+		BustlingFungus: {
+			DisplayName: Bustling Fungus
+			Description: After {0} seconds, heal for {1} of your max health every second
+			FlavorText:
+				'''
+				The strongest biological healing agent...
+				...is a mushroom
+				'''
+		}
+
+		Crowbar: {
+			DisplayName: Crowbar
+			Description: Deal {0} more damage to enemies above {1} health
+			FlavorText:
+				'''
+				Crowbar/prybar/wrecking bar allows for both prying and smashing! 
+				Carbon steel, so it should last for a very long time, at least until the 3rd edition arrives
+				'''
+		}
+
+		FireShield: {
+			DisplayName: Fire Shield
+			Description: After being hit for {0} of your max health - explode, dealing {1} damage and knocking back enemies.
+			FlavorText:
+				'''
+				The thing is only half-done, but it will do the job
+				PLEASE handle with care!
+				'''
+		}
+
+		Gasoline: {
+			DisplayName: Gasoline
+			Description: Killing enemies burns the ground to deal {0} damage and set enemies on fire
+			FlavorText:
+				'''
+				Gasoline, eh?
+				Surprising to find a gas station these days, with everyone drivin' around them electro cars
+				'''
+		}
+
+		Headstompers: {
+			DisplayName: Headstompers
+			Description: Hurt enemies by falling for up to {0} damage
+			FlavorText:
+				'''
+				Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. 
+				Literally. Vertically.
+				'''
+		}
+
+		HermitsScarf: {
+			DisplayName: Hermit's Scarf
+			Description: Allows you to evade attacks with {0} chance
+			FlavorText:
+				'''
+				This thing survived that horrible day
+				It must be able to survive whatever I have to endure, right?
+				'''
+		}
+
+		LensmakersGlasses: {
+			DisplayName: Lens-Maker's Glasses
+			Description: Increases crit chance by {0}
+			FlavorText:
+				'''
+				Calibrated for high focal alignment
+				Should allow for the precision you were asking for
+				'''
+		}
+
+		LifeSavings: {
+			DisplayName: Life Savings
+			Description: Generate {0} copper every {1} seconds. Withdraw by opening the inventory
+			FlavorText: hi im billy and heer is money for mom thanks
+		}
+
+		MeatNugget: {
+			DisplayName: Meat Nugget
+			Description: Enemies will have a {0} chance to drop a meat nugget that recovers {1} health
+			FlavorText:
+				'''
+				MM. Delicious
+				Just kidding, it's awful
+				'''
+		}
+
+		Medkit: {
+			DisplayName: Medkit
+			Description: Heal for {0} health {1} seconds after receiving damage
+			FlavorText:
+				'''
+				Each Medkit should contain bandages, sterile dressings, soap,
+				antiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen
+				'''
+		}
+
+		MonsterTooth: {
+			DisplayName: Monster Tooth
+			Description: Killing an enemy will heal you for {0} health
+			FlavorText:
+				'''
+				Sometimes I felt like it helped me on hunts, ya know?
+				Like... instincts
+				'''
+		}
+
+		MortarTube: {
+			DisplayName: Mortar Tube
+			Description: "{0} chance to fire a mortar for {1} damage"
+			FlavorText:
+				'''
+				You stick explosives down the end, then you fire the explosive
+				I suppose you can beat them with the tube afterwards
+				'''
+		}
+
+		MysteriousVial: {
+			DisplayName: Mysterious Vial
+			Description: Increases health regeneration by {0} health per second
+			FlavorText:
+				'''
+				Side effects may include itching, rashes, bleeding, sensitivity of skin,
+				dry patches, permanent scarring, misaligned bone regrowth, rotting of the...
+				'''
+		}
+
+		PaulsGoatHoof: {
+			DisplayName: Paul's Goat Hoof
+			Description: Run {0} faster
+			FlavorText:
+				'''
+				A hoof from one of my many goats
+				Thinking it was cancerous, I went to the doctors and low-and-behold; it was
+				'''
+		}
+
+		RustyKnife: {
+			DisplayName: Rusty Knife
+			Description: "{0} chance to cause bleeding. Bleeding deals {1}x{2} damage"
+			FlavorText:
+				'''
+				Murder weapon, case name ELIAS. Probably a lover's spat?
+				There is still dried blood on the knife, so mark it as biological.
+				'''
+		}
+
+		SnakeEyes: {
+			DisplayName: Snake Eyes
+			Description: Increases crit chance by {0} for each time you're in peril, up to {1} times. Resets upon dying or drinking a potion
+			FlavorText:
+				'''
+				You dirty----------er
+				You KNEW I had to win to pay off my debts
+				'''
+		}
+
+		SoldiersSyringe: {
+			DisplayName: Soldier's Syringe
+			Description: Increase attack speed by {0}
+			FlavorText:
+				'''
+				Should help multi-purpose requirements needed of soldiers
+				Contains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...
+				'''
+		}
+
+		Spikestrip: {
+			DisplayName: Spikestrip
+			Description: Drop spikestrips on hit, slowing enemies by {0}
+			FlavorText:
+				'''
+				The doctors say I don't have much time left
+				Since you're in the force now and all, I felt obligated to return it to you
+				'''
+		}
+
+		SproutingEgg: {
+			DisplayName: Sprouting Egg
+			Description: Increases health regeneration by {0} health per second when out of combat for {1} seconds
+			FlavorText:
+				'''
+				This egg seems to be somewhere between hatching and dying
+				I can't bring it to myself to cook it alive
+				'''
+		}
+
+		StickyBomb: {
+			DisplayName: Sticky Bomb
+			Description: "{0} chance to attach a bomb to an enemy, detonating for {1} damage"
+			FlavorText:
+				'''
+				Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.
+				YOU STICK THAT END ON BAD THINGS, NOT YOURSELF
+				'''
+		}
+
+		Taser: {
+			DisplayName: Taser
+			Description: "{0} chance to snare enemies for {1} seconds"
+			FlavorText:
+				'''
+				You say you can fix 'em?
+				These tasers are very very faulty
+				'''
+		}
+
+		Warbanner: {
+			DisplayName: Warbanner
+			Description: Drop an empowering banner after killing enough enemies
+			FlavorText:
+				'''
+				Very very valuable
+				Don't drop it; it's worth more than you
+				'''
+		}
+	}
+
+	Boss: {
+		BurningWitness: {
+			DisplayName: Burning Witness
+			Description: Grant +{0} movement speed, +{1} damage, and a firetrail on kill for {2} seconds
+			FlavorText: The Worm's eye seems to still see... watching... rewarding...
+		}
+	}
+}
+
 Items: {
 	MagmaWormSummon: {
 		DisplayName: Spicy Honey Donut
@@ -39,33 +383,33 @@ Items: {
 NPCs.MagmaWorm.CommonName: Magma Worm
 
 Projectiles: {
-	AtGMissileMK1Proj.DisplayName: At G Missile M K1 Proj
-	BundleOfFireworksProj.DisplayName: Bundle Of Fireworks Proj
-	BundleOfFireworksVisualExplosion.DisplayName: Bundle Of Fireworks Visual Explosion
-	BustlingFungusProj.DisplayName: Bustling Fungus Proj
-	CrowbarProj.DisplayName: Crowbar Proj
-	DeadMansFootDoTProj.DisplayName: Dead Mans Foot Do T Proj
-	DeadMansFootExplosionProj.DisplayName: Dead Mans Foot Explosion Proj
-	DeadMansFootMineProj.DisplayName: Dead Mans Foot Mine Proj
-	FireProj.DisplayName: Fire Proj
-	FireShieldExplosion.DisplayName: Fire Shield Explosion
-	HeadstompersProj.DisplayName: Headstompers Proj
-	HermitsScarfProj.DisplayName: Hermits Scarf Proj
-	FireballGravityBouncy.DisplayName: Fireball Gravity Bouncy
-	FireProjHostile.DisplayName: Fire Proj Hostile
-	InfusionProj.DisplayName: Infusion Proj
-	MeatNuggetProj.DisplayName: Meat Nugget Proj
-	MortarTubeExplosion.DisplayName: Mortar Tube Explosion
-	MortarTubeRocket.DisplayName: Mortar Tube Rocket
-	PanicMinesExplosionProj.DisplayName: Panic Mines Explosion Proj
-	PanicMinesProj.DisplayName: Panic Mines Proj
-	PaulsGoatHoofProj.DisplayName: Pauls Goat Hoof Proj
-	PlayerHealthProj.DisplayName: Player Health Proj
-	RustyKnifeProj.DisplayName: Rusty Knife Proj
-	SpikestripProj.DisplayName: Spikestrip Proj
-	StickyBombExplosion.DisplayName: Sticky Bomb Explosion
-	StickyBombProj.DisplayName: Sticky Bomb Proj
-	WarbannerProj.DisplayName: Warbanner Proj
+	AtGMissileMK1Proj.DisplayName: "{$ROREffects.Uncommon.AtGMissileMK1.DisplayName}"
+	BundleOfFireworksProj.DisplayName: "{$ROREffects.Common.BundleOfFireworks.DisplayName}"
+	BundleOfFireworksVisualExplosion.DisplayName: "{$ROREffects.Common.BundleOfFireworks.DisplayName}"
+	BustlingFungusProj.DisplayName: "{$ROREffects.Common.BustlingFungus.DisplayName}"
+	CrowbarProj.DisplayName: "{$ROREffects.Common.Crowbar.DisplayName}"
+	DeadMansFootDoTProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	DeadMansFootExplosionProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	DeadMansFootMineProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	FireProj.DisplayName: Fire
+	FireShieldExplosion.DisplayName: "{$ROREffects.Common.FireShield.DisplayName}"
+	HeadstompersProj.DisplayName: "{$ROREffects.Common.Headstompers.DisplayName}"
+	HermitsScarfProj.DisplayName: "{$ROREffects.Common.HermitsScarf.DisplayName}"
+	FireballGravityBouncy.DisplayName: Fireball
+	FireProjHostile.DisplayName: Fire
+	InfusionProj.DisplayName: "{$ROREffects.Uncommon.Infusion.DisplayName}"
+	MeatNuggetProj.DisplayName: "{$ROREffects.Common.MeatNugget.DisplayName}"
+	MortarTubeExplosion.DisplayName: "{$ROREffects.Common.MortarTube.DisplayName}"
+	MortarTubeRocket.DisplayName: "{$ROREffects.Common.MortarTube.DisplayName}"
+	PanicMinesExplosionProj.DisplayName: "{$ROREffects.Uncommon.PanicMines.DisplayName}"
+	PanicMinesProj.DisplayName: "{$ROREffects.Uncommon.PanicMines.DisplayName}"
+	PaulsGoatHoofProj.DisplayName: "{$ROREffects.Common.PaulsGoatHoof.DisplayName}"
+	PlayerHealthProj.DisplayName: Health
+	RustyKnifeProj.DisplayName: "{$ROREffects.Common.RustyKnife.DisplayName}"
+	SpikestripProj.DisplayName: "{$ROREffects.Common.Spikestrip.DisplayName}"
+	StickyBombExplosion.DisplayName: "{$ROREffects.Common.StickyBomb.DisplayName}"
+	StickyBombProj.DisplayName: "{$ROREffects.Common.StickyBomb.DisplayName}"
+	WarbannerProj.DisplayName: "{$ROREffects.Common.Warbanner.DisplayName}"
 }
 
 Configs: {

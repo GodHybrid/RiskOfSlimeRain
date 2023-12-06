@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -13,9 +14,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Increase => 0.06f;
 
-		public override string Description => $"{Initial.ToPercent()} chance to knock enemies back on hit";
-
-		public override string FlavorText => "These should work fine for the kids you're training.\nA bit musty, though. It'll make your trainees hit like a pro, ha!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{

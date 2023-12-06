@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -17,9 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.3f : 0.1f;
 
-		public override string Description => $"Deal {Initial.ToPercent()} more damage to enemies above {HealthLimit.ToPercent()} health";
-
-		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), HealthLimit.ToPercent());
 
 		public override string UIInfo()
 		{

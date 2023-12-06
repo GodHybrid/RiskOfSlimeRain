@@ -3,7 +3,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
-using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -18,9 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 0.3f;
 
-		public override string Description => $"Hurt enemies by falling for up to {Initial.ToPercent()} damage";
-
-		public override string FlavorText => "Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. \nLiterally. Vertically.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{

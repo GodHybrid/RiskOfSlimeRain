@@ -32,10 +32,6 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		/// </summary>
 		public bool WarbannerReadyToDrop { get; set; } = false;
 
-		public override string Description => "Drop an empowering banner after killing enough enemies";
-
-		public override string FlavorText => "Very very valuable\nDon't drop it; it's worth more than you";
-
 		public override string UIInfo()
 		{
 			return $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"

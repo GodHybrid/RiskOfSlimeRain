@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,9 +17,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 0.5f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to snare enemies for {Initial} seconds";
-
-		public override string FlavorText => "You say you can fix 'em?\nThese tasers are very very faulty";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Chance.ToPercent(), Initial);
 
 		public override string UIInfo()
 		{

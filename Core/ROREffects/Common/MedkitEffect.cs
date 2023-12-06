@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -26,9 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 10f : 5f;
 
-		public override string Description => $"Heal for {Initial} health {MaxTimerHeal / 60d} seconds after receiving damage";
-
-		public override string FlavorText => "Each Medkit should contain bandages, sterile dressings, soap,\nantiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, MaxTimerHeal / 60d);
 
 		public override string UIInfo()
 		{

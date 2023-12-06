@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -22,11 +23,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float Ticks => Formula();
 
-		public override string Description => $"Drop a poison mine at low health or after taking significant damage for {Initial}x{damage.ToPercent()} damage";
-
-		public override string FlavorText => "It looks like he was infested by some bug-like creatures, and exploded when I got close.\nI hope his death wasn't too painful; his family will know how he died.";
-
-		public override string Name => "Dead Man's Foot";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, damage.ToPercent());
 
 		public override string UIInfo()
 		{

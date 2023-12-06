@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -17,9 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 7 : 19;
 
-		public override string Description => $"{Initial.ToPercent()} chance to cause bleeding. Bleeding deals {RustyKnifeProj.tickAmount}x{Damage.ToPercent()} damage";
-
-		public override string FlavorText => "Murder weapon, case name ELIAS. Probably a lover's spat?\nThere is still dried blood on the knife, so mark it as biological.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), RustyKnifeProj.tickAmount, Damage.ToPercent());
 
 		public override string UIInfo()
 		{

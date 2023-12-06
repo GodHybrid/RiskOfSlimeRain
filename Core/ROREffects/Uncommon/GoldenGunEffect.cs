@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -30,9 +31,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float DamageIncrease => Formula() * Ratio;
 
-		public override string Description => $"Deals bonus damage scaling by money in your inventory, up to {Initial.ToPercent()} damage at {defMaxMoney / Item.platinum} platinum";
-
-		public override string FlavorText => "Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), defMaxMoney / Item.platinum);
 
 		public override string UIInfo()
 		{

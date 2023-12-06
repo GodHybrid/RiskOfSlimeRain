@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -27,15 +28,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.1f : 0.05f;
 
-		public override string Name => "Soldier's Syringe";
-
 		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 13 : 20;
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Increase attack speed by {(Initial + virtualMargin).ToPercent()}";
-
-		public override string FlavorText => "Should help multi-purpose requirements needed of soldiers\nContains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...";
+		public override LocalizedText Description => base.Description.WithFormatArgs((Initial + virtualMargin).ToPercent());
 
 		public override string UIInfo()
 		{

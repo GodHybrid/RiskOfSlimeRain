@@ -4,7 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
-using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -22,11 +22,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Name => "Hermit's Scarf";
-
-		public override string Description => $"Allows you to evade attacks with {Initial.ToPercent()} chance";
-
-		public override string FlavorText => "This thing survived that horrible day\nIt must be able to survive whatever I have to endure, right?";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{

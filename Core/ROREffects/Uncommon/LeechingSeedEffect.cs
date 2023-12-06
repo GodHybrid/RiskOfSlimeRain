@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Dusts;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -20,9 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.2f : 0.1f;
 
-		public override string Description => $"Dealing damage heals you for {Initial} health";
-
-		public override string FlavorText => "These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.\nHowever, before they die, they feel increased health and state of mind!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial);
 
 		public override string UIInfo()
 		{
