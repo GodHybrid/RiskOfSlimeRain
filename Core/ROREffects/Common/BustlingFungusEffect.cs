@@ -47,9 +47,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 						}), out p))
 				{
 					position = p.ToWorldCoordinates(8f, 0f);
-					position.Y -= BustlingFungusProj.Height >> 1; //Half the projectiles height
+					position.Y -= BustlingFungusProj.Height / 2; //Half the projectiles height
 					int heal = GetIncreaseAmount(player);
-					Projectile.NewProjectile(GetEntitySource(player), position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax >> 1);
+					Projectile.NewProjectile(GetEntitySource(player), position, Vector2.Zero, type, 0, 0, Main.myPlayer, heal, BustlingFungusProj.TimerMax / 2);
 				}
 			}
 		}

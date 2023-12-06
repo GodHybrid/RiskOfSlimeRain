@@ -24,7 +24,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Heal amount: {Formula()}";
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}

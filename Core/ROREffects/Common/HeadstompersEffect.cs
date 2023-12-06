@@ -37,13 +37,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				player.immune = true;
 				player.immuneTime = 5;
-				if (Main.myPlayer == player.whoAmI)
-				{
-					NPC npc = Main.npc[whoAmI];
-					int dmg = (int)(player.GetDamage() * (Formula() * player.velocity.Y / 16));
-					player.ApplyDamageToNPC(npc, dmg, 2f, 0, false); //Procs ModPlayer.OnHitNPC but not the item/projectile variants
-					Projectile.NewProjectile(GetEntitySource(player), npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, whoAmI);
-				}
+				NPC npc = Main.npc[whoAmI];
+				int dmg = (int)(player.GetDamage() * (Formula() * player.velocity.Y / 16));
+				player.ApplyDamageToNPC_ProcHeldItem(npc, dmg, 2f, damageType: ModContent.GetInstance<ArmorPenDamageClass>());
+				Projectile.NewProjectile(GetEntitySource(player), npc.Center.X, npc.Bottom.Y - 11f, 0, 0, ModContent.ProjectileType<HeadstompersProj>(), 0, 0, Main.myPlayer, (int)npc.Top.Y, whoAmI);
+
 				return true;
 			}
 			return false;

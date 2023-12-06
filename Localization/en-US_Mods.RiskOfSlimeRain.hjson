@@ -108,7 +108,7 @@ ROREffects: {
 
 		BundleOfFireworks: {
 			DisplayName: Bundle Of Fireworks
-			Description: "{0} chance to fire 5 fireworks that deal {1} damage"
+			Description: "{0} chance to fire 5 fireworks on kill that deal {1} damage"
 			FlavorText:
 				'''
 				Disguising homing missiles as fireworks?

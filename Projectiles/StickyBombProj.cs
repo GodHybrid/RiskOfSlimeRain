@@ -12,7 +12,6 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Sticky Bomb");
 			Main.projFrames[Projectile.type] = 2;
 		}
 

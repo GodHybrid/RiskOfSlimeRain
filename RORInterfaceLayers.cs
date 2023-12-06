@@ -141,6 +141,7 @@ namespace RiskOfSlimeRain
 
 			int lineOffset = 0;
 			int numLines = effects.Count / (numHorizontal + 1);
+			//Above calc sometimes can cause next row of effects to not show if theres only 1 item in them, depending on resolution
 			int yStart = initialVerticalOffset - numLines * verticalLineHeight;
 			ROREffect effect;
 			Texture2D texture;
@@ -214,7 +215,7 @@ namespace RiskOfSlimeRain
 
 				Main.spriteBatch.Draw(texture, destRect, sourceRect, color);
 
-				Vector2 leftCenter = new Vector2(xPosition - (width >> 1), yPosition + (iconSize >> 1) - 2);
+				Vector2 leftCenter = new Vector2(xPosition - (width / 2), yPosition + (iconSize / 2) - 2);
 				//Vector2 bottomCenter = destRect.BottomLeft();
 
 				if (drawingInfo)
@@ -222,7 +223,7 @@ namespace RiskOfSlimeRain
 					if (mPlayer.nullifierActive && mPlayer.savings > -1)
 					{
 						priceDrawPos = new Vector2(xPosition, yPosition);
-						priceDrawPos.X -= width >> 1;
+						priceDrawPos.X -= width / 2;
 						priceDrawPos.Y -= 10 + 2 * iconSize;
 					}
 

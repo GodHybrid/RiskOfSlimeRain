@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}\nMonsters to kill: {50 - killCount % 50}";
+			return $"Chance: {Math.Min(RollChance, 1f).ToPercent()}\nMonsters to kill: {50 - killCount % 50}";
 		}
 
 		//Original, todo
@@ -46,7 +46,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		private float RollChance => Formula();
 
-		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			killCount++;
 			SpawnProjectile(target, player);

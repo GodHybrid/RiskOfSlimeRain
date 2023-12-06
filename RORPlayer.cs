@@ -79,7 +79,11 @@ namespace RiskOfSlimeRain
 					Player.HealMe(heal);
 				}
 			}
-			if (InWarbannerRange) WarbannerBuffTime--;
+			if (InWarbannerRange)
+			{
+				Player.GetAttackSpeed(DamageClass.Generic) += 0.15f;
+				WarbannerBuffTime--;
+			}
 			if (!InWarbannerRange) LastWarbannerIdentity = -1;
 
 			WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(this);
@@ -370,14 +374,6 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(Player));
 		}
 
-		public override float UseTimeMultiplier(Item item)
-		{
-			float mult = 1f;
-			ROREffectManager.UseTimeMultiplier(Player, item, ref mult);
-			if (InWarbannerRange) mult -= 0.15f; //Seems to mimic roughly 30% dps increase 
-			return mult;
-		}
-
 		public override void UpdateLifeRegen()
 		{
 			ROREffectManager.Perform<IUpdateLifeRegen>(this, e => e.UpdateLifeRegen(Player));
@@ -399,10 +395,10 @@ namespace RiskOfSlimeRain
 
 			if (target.life <= 0)
 			{
-				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPC(Player, item, target, hit, damageDone));
+				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithItem(Player, item, target, hit, damageDone));
 			}
 
-			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(Player, item, target, hit, damageDone));
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithItem(Player, item, target, hit, damageDone));
 		}
 
 		public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
@@ -459,7 +455,8 @@ namespace RiskOfSlimeRain
 
 		public override bool ConsumableDodge(Player.HurtInfo info)
 		{
-			return base.ConsumableDodge(info);
+			bool ret = ROREffectManager.ConsumableDodge(Player, info);
+			return ret;
 		}
 
 		public override void ModifyHurt(ref Player.HurtModifiers modifiers)

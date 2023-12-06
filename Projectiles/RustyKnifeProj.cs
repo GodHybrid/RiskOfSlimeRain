@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -13,7 +14,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public const int StrikeTimerMax = 30;
 
-		public int TimeLeftDefault => tickAmount * StrikeTimerMax + StrikeTimerMax >> 1;
+		public int TimeLeftDefault => tickAmount * StrikeTimerMax + StrikeTimerMax / 2;
 
 		/// <summary>
 		/// Timer for strikes on only that NPC
@@ -32,7 +33,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Rusty Knife");
 			Main.projFrames[Projectile.type] = 6;
 		}
 
@@ -51,8 +51,7 @@ namespace RiskOfSlimeRain.Projectiles
 				if (StrikeTimer > StrikeTimerMax)
 				{
 					StrikeTimer = 0;
-					//TODO test
-					npc.SimpleStrikeNPC(damage, 0); //Does not proc, syncs
+					npc.SimpleStrikeNPC(damage, 0, damageType: ModContent.GetInstance<ArmorPenDamageClass>()); //Does not proc, syncs
 				}
 			}
 		}

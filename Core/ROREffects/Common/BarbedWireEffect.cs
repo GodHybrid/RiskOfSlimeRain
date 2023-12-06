@@ -52,8 +52,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					if (npc.active && npc.CanBeChasedBy() && player.DistanceSQ(npc.Center) <= (Radius + 16) * (Radius + 16))
 					{
 						int damage = (int)(Formula() * player.GetDamage());
-						//TODO test
-						player.ApplyDamageToNPC(npc, damage, 0f, 0, false);  //Procs ModPlayer.OnHitNPC but not the item/projectile variants
+						player.ApplyDamageToNPC_ProcHeldItem(npc, damage, damageType: ModContent.GetInstance<ArmorPenDamageClass>());
 						break;
 					}
 				}

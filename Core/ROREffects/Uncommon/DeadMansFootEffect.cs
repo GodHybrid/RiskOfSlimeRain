@@ -46,7 +46,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 			if (Main.rand.NextBool(30))
 			{
-				Dust dust = Dust.NewDustDirect(player.Left, player.width, player.height >> 1, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightYellow * 0.78f, 1.25f);
+				Dust dust = Dust.NewDustDirect(player.Left, player.width, player.height / 2, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightYellow * 0.78f, 1.25f);
 				dust.customData = new InAndOutData(inSpeed: 30, outSpeed: 10, reduceScale: false);
 				dust.velocity.X *= 0f;
 				dust.velocity.Y = 0.3f;

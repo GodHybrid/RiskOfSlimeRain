@@ -14,7 +14,6 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Headstompers");
 			Main.projFrames[Projectile.type] = 8;
 		}
 

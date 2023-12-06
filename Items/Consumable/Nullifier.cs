@@ -13,11 +13,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 	{
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
 
-		public override void SetStaticDefaults()
-		{
-			// Tooltip.SetDefault("Use to enable the ability to restore your used '" + RiskOfSlimeRainMod.Instance.DisplayName + "' items, for a price");
-		}
-
 		public override bool CanUseItem(Player player)
 		{
 			return !player.GetRORPlayer().nullifierEnabled;

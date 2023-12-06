@@ -10,7 +10,6 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Panic Mine's Explosion");
 			Main.projFrames[Projectile.type] = 6;
 		}
 
@@ -19,7 +18,7 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			Projectile.Size = new Vector2(106, 184);
 			Projectile.timeLeft = 26;
-			DrawOriginOffsetY = -Projectile.height / 3;
+			DrawOriginOffsetY = -Projectile.height / 3 - 8;
 		}
 
 		public override void AI()

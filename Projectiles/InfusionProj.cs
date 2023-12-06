@@ -14,11 +14,6 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class InfusionProj : PlayerBonusCircleProj
 	{
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Infusion Orb");
-		}
-
 		public override float SlowDownFactor => 0.97f;
 
 		public override int StartHomingTimerMax => 30;

@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -11,11 +12,6 @@ namespace RiskOfSlimeRain.Projectiles
 	public class DeadMansFootDoTProj : StickyProj
 	{
 		public override string Texture => "RiskOfSlimeRain/Empty";
-
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Dead Man's DoT");
-		}
 
 		public override void SetDefaults()
 		{
@@ -45,7 +41,7 @@ namespace RiskOfSlimeRain.Projectiles
 				if (StrikeTimer > StrikeTimerMax)
 				{
 					StrikeTimer = 0;
-					npc.SimpleStrikeNPC(damage, 0); //Does not proc, syncs
+					npc.SimpleStrikeNPC(damage, 0, damageType: ModContent.GetInstance<ArmorPenDamageClass>()); //Does not proc, syncs
 				}
 			}
 		}

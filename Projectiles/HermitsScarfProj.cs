@@ -5,10 +5,6 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class HermitsScarfProj : ModProjectile
 	{
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Evasion text");
-		}
 		public override void SetDefaults()
 		{
 			Projectile.aiStyle = -1;

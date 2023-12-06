@@ -4,13 +4,14 @@ using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
 	/// <summary>
 	/// Effects of this on the player are hardcoded in RORInterfaceLayers for now
 	/// </summary>
-	public class SoldiersSyringeEffect : RORCommonEffect, IUseTimeMultiplier, IPostUpdateEquips
+	public class SoldiersSyringeEffect : RORCommonEffect, IPostUpdateEquips
 	{
 		//const float Increase = 0.1f;
 		public const int shakeTimerMax = 6; //To and back
@@ -39,14 +40,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return $"Attack speed increase: {(Initial + virtualMargin + (Increase + virtualMargin) * Math.Max(0, Stack - 1)).ToPercent()}";
 		}
 
-		//TODO 1.4.4 maybe UseSpeedMultiplier is better?
-		public void UseTimeMultiplier(Player player, Item item, ref float multiplier)
-		{
-			if (item.damage > 0 || item.axe > 0 || item.hammer > 0 || item.pick > 0) multiplier -= Formula(); //15% is made into 10%, but it still works as 15%
-		}
-
 		public void PostUpdateEquips(Player player)
 		{
+			player.GetAttackSpeed(DamageClass.Generic) += Formula(); //15% is made into 10%, but it still works as 15%
+
 			if (increment)
 			{
 				if (shakeTimer < shakeTimerMax)

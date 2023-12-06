@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			IncreaseKillCountAndPrepareWarbannerSpawn(target);
 		}

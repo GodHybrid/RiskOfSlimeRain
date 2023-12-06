@@ -6,11 +6,6 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class PlayerHealthProj : PlayerBonusCircleProj
 	{
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Player Health Orb");
-		}
-
 		public int HealAmount
 		{
 			get => (int)Projectile.ai[1];

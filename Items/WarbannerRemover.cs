@@ -15,14 +15,6 @@ namespace RiskOfSlimeRain.Items
 	{
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
 
-		public override void SetStaticDefaults()
-		{
-			/* Tooltip.SetDefault("Use to remove the nearest warbanner from '" + RiskOfSlimeRainMod.Instance.DisplayName + "'"
-				+ "\nStand inside the range of a warbanner, and it will:"
-				+ "\n- Highlight the warbanner that's about to be removed"
-				+ "\n- Reset the killcount when used"); */
-		}
-
 		public override void SetDefaults()
 		{
 			Item.maxStack = 9999;

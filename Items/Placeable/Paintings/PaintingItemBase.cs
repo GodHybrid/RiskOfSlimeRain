@@ -11,8 +11,7 @@ namespace RiskOfSlimeRain.Items.Placeable.Paintings
 	{
 		public sealed override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault(PaintingName);
-			// Tooltip.SetDefault($"'{PaintingAuthor}'");
+
 		}
 
 		public sealed override void SetDefaults()

@@ -34,7 +34,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
 		{
-			return timer > 0 ? new PlayerLayerParams("Textures/BurningWitness", new Vector2(-12, -36)) : null;
+			return new PlayerLayerParams("Textures/BurningWitness", new Vector2(-12, -36));
 		}
 
 		//To restrict rapidly spawning projectiles optop of eachother, used in inflating the players hitbox alot after spawning one
@@ -98,7 +98,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 			if (timer > 0) modifiers.FlatBonusDamage += flatDamage;
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (target.life <= 0) timer = Duration * 60;
 		}

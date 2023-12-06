@@ -9,7 +9,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Interfaces
 	[CanProc]
 	public interface IOnKill : IROREffectInterface
 	{
-		void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone);
+		//Split because projectiles follow different proc logic
+		void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone);
 
 		void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone);
 	}

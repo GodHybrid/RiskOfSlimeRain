@@ -13,13 +13,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 	{
 		public static string tooltip = "Summons the Magma Worm";
 
-		public override void SetStaticDefaults()
-		{
-			//TODO
-			// DisplayName.SetDefault("Spicy Honey Donut");
-			// Tooltip.SetDefault(tooltip);
-		}
-
 		public override bool? UseItem(Player player)
 		{
 			Summon(player);

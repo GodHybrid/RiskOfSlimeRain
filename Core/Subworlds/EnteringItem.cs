@@ -11,12 +11,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 	/*
 	public class EnteringItem : ModItem
 	{
-		public override string Texture => "Terraria/Item_" + ItemID.Extractinator;
-
-		public override void SetStaticDefaults()
-		{
-			// Tooltip.SetDefault("Use to enter a subworld. Only works with 'SubworldLibrary' Mod enabled");
-		}
+		public override string Texture => "Terraria/Images/Item_" + ItemID.Extractinator;
 
 		public override void SetDefaults()
 		{

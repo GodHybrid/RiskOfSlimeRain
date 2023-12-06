@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => ServerConfig.Instance.OriginalStats ? 0.07f : 0.1f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			AddBuff(target);
 		}

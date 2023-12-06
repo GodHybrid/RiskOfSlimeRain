@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => 0.09f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player);
 		}
@@ -40,7 +40,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		void SpawnProjectile(Player player)
 		{
 			int damage = (int)(Formula() * player.GetDamage());
-			Projectile.NewProjectile(GetEntitySource(player), player.Center - new Vector2(0, player.height >> 1), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, damage);
+			Projectile.NewProjectile(GetEntitySource(player), player.Center - new Vector2(0, player.height / 2), new Vector2(5 * player.direction, -5), ModContent.ProjectileType<MortarTubeRocket>(), 0, 0, Main.myPlayer, damage);
 		}
 	}
 }

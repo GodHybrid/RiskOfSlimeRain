@@ -39,7 +39,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return new PlayerLayerParams("Textures/HarvestersScythe", new Vector2(0, -48));
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}

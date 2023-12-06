@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Chance => 0.08f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -43,7 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			int damage = (int)(Formula() * player.GetDamage());
 			int width = Main.rand.Next(target.width);
 			int height = bound;
-			if ((target.height >> 1) > bound)
+			if ((target.height / 2) > bound)
 			{
 				height = Main.rand.Next(bound, target.height - bound);
 			}

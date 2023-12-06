@@ -8,11 +8,6 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class PaulsGoatHoofProj : ModProjectile
 	{
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Paul's Goat Hoof Trail");
-		}
-
 		public override void SetDefaults()
 		{
 			Projectile.Size = new Vector2(40, 2);

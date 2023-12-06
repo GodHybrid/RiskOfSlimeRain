@@ -65,7 +65,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 				}), out p))
 			{
 				position = p.ToWorldCoordinates(8f, 0f);
-				position.Y -= WarbannerProj.Height >> 1; //Half the projectiles height
+				position.Y -= WarbannerProj.Height / 2; //Half the projectiles height
 				success = true;
 			}
 			return success;

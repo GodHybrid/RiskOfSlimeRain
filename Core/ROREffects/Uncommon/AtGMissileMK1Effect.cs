@@ -50,7 +50,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float RollChance => Formula();
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			RollSpawn(player);
 		}

@@ -28,11 +28,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override string Texture => "RiskOfSlimeRain/Empty";
 
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Fire");
-		}
-
 		public override void SetDefaults()
 		{
 			Projectile.width = 8;

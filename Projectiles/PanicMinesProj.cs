@@ -26,7 +26,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Panic Mines");
 			Main.projFrames[Projectile.type] = 4;
 		}
 
@@ -79,7 +78,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (timer >= 0 && timer % 5 == 0)
 				{
-					SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode.WithVolumeScale(0.8f).WithPitchOffset(0.6f), Projectile.Center);
+					SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact.WithVolumeScale(0.8f).WithPitchOffset(0.6f), Projectile.Center);
 				}
 				timer--;
 			}
@@ -102,7 +101,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 					if (n.active && n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
-						n.SimpleStrikeNPC(Damage, 0); //Does not proc, syncs
+						n.SimpleStrikeNPC(Damage, 0, damageType: ModContent.GetInstance<ArmorPenDamageClass>()); //Does not proc, syncs
 					}
 				}
 			}

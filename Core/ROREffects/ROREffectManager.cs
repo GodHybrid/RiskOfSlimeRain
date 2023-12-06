@@ -463,19 +463,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
-		{
-			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player);
-			foreach (var effect in effects)
-			{
-				if (effect.Active)
-				{
-					((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
-				}
-			}
-			return multiplier;
-		}
-
 		public static bool FreeDodge(Player player, Player.HurtInfo info)
 		{
 			List<ROREffect> effects = GetEffectsOf<IFreeDodge>(player);

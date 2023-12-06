@@ -10,7 +10,6 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Dead Man's Foot's Explosion");
 			Main.projFrames[Projectile.type] = 6;
 		}
 

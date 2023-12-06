@@ -2,6 +2,7 @@
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Helpers
 {
@@ -255,6 +256,26 @@ namespace RiskOfSlimeRain.Helpers
 			}
 
 			return true;
+		}
+
+		public static void ApplyDamageToNPC_ProcHeldItem(this Player player, NPC target, int damage, float knockback = 0f, int direction = 0, bool crit = false, DamageClass damageType = null)
+		{
+			player.ApplyDamageToNPC(target, damage, knockback, direction, crit, damageType); //Procs ModPlayer.OnHitNPC (which we can't use) but not the item/projectile variants
+
+			var item = player.HeldItem;
+			if (item?.damage > 0)
+			{
+				//Copied vanilla code to calculate hitInfo to feed into OnHitNPCWithItem
+				var modifiers = target.GetIncomingStrikeModifiers(damageType ?? DamageClass.Default, 0);
+				PlayerLoader.ModifyHitNPC(player, target, ref modifiers);
+
+				player.ApplyBannerOffenseBuff(target, ref modifiers);
+
+				modifiers.ArmorPenetration += player.GetTotalArmorPenetration(damageType ?? DamageClass.Generic);
+
+				var hitInfo = modifiers.ToHitInfo(damage, crit, knockback, false, player.luck);
+				PlayerLoader.OnHitNPCWithItem(player, item, target, hitInfo, damage); //damage is not accurate here but we don't have access to damageDone
+			}
 		}
 
 		public static void Unload()

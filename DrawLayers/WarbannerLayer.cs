@@ -45,7 +45,7 @@ namespace RiskOfSlimeRain.DrawLayers
 			float drawX = (int)player.Center.X - Main.screenPosition.X;
 			float drawY = (int)player.Center.Y + player.gfxOffY - Main.screenPosition.Y;
 
-			Vector2 off = new Vector2(0, -(40 + (42 >> 1)));
+			Vector2 off = new Vector2(0, -(40 + (42 / 2)));
 			SpriteEffects spriteEffects = SpriteEffects.None;
 			if (player.gravDir < 0f)
 			{
@@ -53,7 +53,7 @@ namespace RiskOfSlimeRain.DrawLayers
 				spriteEffects = SpriteEffects.FlipVertically;
 			}
 
-			drawY -= player.gravDir * (40 + (42 >> 1));
+			drawY -= player.gravDir * (40 + (42 / 2));
 			Color color = Color.White;
 
 			if (player.whoAmI == Main.myPlayer)

@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Stored heal: {Math.Round(StoredHeals, 2)}. Heal amount: {Math.Round(CurrentHeal, 2)}";
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}

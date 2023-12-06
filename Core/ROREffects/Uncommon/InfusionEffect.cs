@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return $"Bonus life: {BonusLife}. Cap: {Cap}. Stored heal: {Math.Round(StoredHeals, 2)}";
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleHealAndProjectile(player, target);
 		}

@@ -11,7 +11,6 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Meat Nugget");
 			Main.projFrames[Projectile.type] = 5;
 		}
 

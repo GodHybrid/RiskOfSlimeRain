@@ -80,6 +80,14 @@ namespace RiskOfSlimeRain.NPCs
 			}
 		}
 
+		public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
+		{
+			if (modifiers.DamageType == ModContent.GetInstance<ArmorPenDamageClass>())
+			{
+				modifiers.ScalingArmorPenetration += 1f;
+			}
+		}
+
 		public override void OnKill(NPC npc)
 		{
 			if (Main.netMode != NetmodeID.Server && Main.gameMenu) return; //RecipeBrowser protection

@@ -18,11 +18,6 @@ namespace RiskOfSlimeRain.Projectiles.Hostile
 			}
 		}
 
-		public override void SetStaticDefaults()
-		{
-			// DisplayName.SetDefault("Fireball");
-		}
-
 		public override void SetDefaults()
 		{
 			Projectile.CloneDefaults(ProjectileID.Fireball);

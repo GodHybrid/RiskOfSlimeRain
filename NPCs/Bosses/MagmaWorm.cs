@@ -42,7 +42,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			string category = $"NPCs.{nameof(MagmaWorm)}.";
 			CommonNameText ??= Mod.GetLocalization($"{category}CommonName");
-			// DisplayName.SetDefault("Magma Worm");
 			Main.npcFrameCount[NPC.type] = 3;
 		}
 
@@ -77,7 +76,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			else
 			{
 				NPC.defense = NPC.defense << 1;
-				NPC.damage = NPC.damage >> 1;
+				NPC.damage = NPC.damage / 2;
 				NPC.dontCountMe = true;
 			}
 		}

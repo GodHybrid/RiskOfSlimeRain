@@ -19,7 +19,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			// DisplayName.SetDefault("Dead Man's Mine");
 			Main.projFrames[Projectile.type] = 7;
 		}
 
