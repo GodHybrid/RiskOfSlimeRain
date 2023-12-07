@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void SafeAddRecipes()
 		{
 			Recipe recipe = CreateRecipe(1);
-			recipe.AddRecipeGroup("RoR:FastBoots", 1);
+			recipe.AddRecipeGroup(RORWorld.BasicBootsGroup, 1);
 			recipe.AddIngredient(ItemID.Bone, 355);
 			recipe.AddIngredient(ItemID.FossilOre, 280);
 			recipe.AddIngredient(ItemID.Rally, 3);

@@ -39,8 +39,8 @@ namespace RiskOfSlimeRain
 		public bool DisableRecipes;
 
 		[Header("Hint")]
-		[Label("Hint")]
 		[JsonIgnore]
+		[ShowDespiteJsonIgnore]
 		public bool Hint => true;
 
 		public static bool IsPlayerLocalServerOwner(int whoAmI)

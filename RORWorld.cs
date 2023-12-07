@@ -16,6 +16,26 @@ namespace RiskOfSlimeRain
 		//public static bool rorMode;
 		public static bool downedMagmaWorm = false;
 
+		public static LocalizedText RecipeGroupAnyText { get; private set; }
+		public static LocalizedText ChestText { get; private set; }
+		public static LocalizedText JellyfishText { get; private set; }
+		public static LocalizedText EvilWaterText { get; private set; }
+		public static LocalizedText EvilMaterialText { get; private set; }
+		public static LocalizedText BasicBootsText { get; private set; }
+		public static LocalizedText EvilMushroomText { get; private set; }
+
+		public override void OnModLoad()
+		{
+			string category = $"RecipeGroups.";
+			RecipeGroupAnyText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}Any"));
+			ChestText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}Chest"));
+			JellyfishText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}Jellyfish"));
+			EvilWaterText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}EvilWater"));
+			EvilMaterialText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}EvilMaterial"));
+			BasicBootsText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}BasicBoots"));
+			EvilMushroomText ??= Language.GetOrRegister(Mod.GetLocalizationKey($"{category}EvilMushroom"));
+		}
+
 		public override void ClearWorld()
 		{
 			//rorMode = false;
@@ -73,37 +93,45 @@ namespace RiskOfSlimeRain
 			SpawnedFromStatuePacket.SendSpawnedFromStatues();
 		}
 
+		public static int HMTier3BarGroup { get; private set; }
+		public static int SilvTungBarGroup { get; private set; }
+		public static int GoldPlatBarGroup { get; private set; }
+		public static int ChestGroup { get; private set; }
+		public static int JellyfishGroup { get; private set; }
+		public static int EvilWaterGroup { get; private set; }
+		public static int EvilMaterialGroup { get; private set; }
+		public static int BasicBootsGroup { get; private set; }
+		public static int EvilMushroomGroup { get; private set; }
+
 		public override void AddRecipeGroups()
 		{
-			RecipeGroup HMTier3Bar_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Tier 3 Hardmode bar", new int[]
+			string any = Language.GetTextValue("LegacyMisc.37");
+			HMTier3BarGroup = RecipeGroup.RegisterGroup(nameof(ItemID.AdamantiteBar), new RecipeGroup(() => RecipeGroupAnyText.Format(any, Lang.GetItemNameValue(ItemID.AdamantiteBar)), new int[]
 			{
 				ItemID.AdamantiteBar,
 				ItemID.TitaniumBar
-			});
-			RecipeGroup.RegisterGroup("RoR:Tier3HMBar", HMTier3Bar_Group);
+			}));
 
-			RecipeGroup SilvTung_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Tier 3 incipient bar", new int[]
-				{
-					ItemID.SilverBar,
-					ItemID.TungstenBar
-				});
-			RecipeGroup.RegisterGroup("RoR:SilvTungBar", SilvTung_Group);
-
-			RecipeGroup GoldPlat_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Tier 4 incipient bar", new int[]
+			SilvTungBarGroup = RecipeGroup.RegisterGroup(nameof(ItemID.SilverBar), new RecipeGroup(() => RecipeGroupAnyText.Format(any, Lang.GetItemNameValue(ItemID.SilverBar)), new int[]
 			{
-				ItemID.PlatinumBar,
-				ItemID.GoldBar
-			});
-			RecipeGroup.RegisterGroup("RoR:GoldPlatBar", GoldPlat_Group);
+				ItemID.SilverBar,
+				ItemID.TungstenBar
+			}));
 
-			RecipeGroup Chest_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Chest", new int[]
+			GoldPlatBarGroup = RecipeGroup.RegisterGroup(nameof(ItemID.GoldBar), new RecipeGroup(() => RecipeGroupAnyText.Format(any, Lang.GetItemNameValue(ItemID.GoldBar)), new int[]
+			{
+				ItemID.GoldBar,
+				ItemID.PlatinumBar
+			}));
+
+			ChestGroup = RecipeGroup.RegisterGroup(nameof(ItemID.Chest), new RecipeGroup(() => RecipeGroupAnyText.Format(any, ChestText), new int[]
 			{
 				#region Chest_List
+				ItemID.Chest,
 				ItemID.BlueDungeonChest,
 				ItemID.BoneChest,
 				ItemID.BorealWoodChest,
 				ItemID.CactusChest,
-				ItemID.Chest,
 				ItemID.CorruptionChest,
 				ItemID.CrimsonChest,
 				ItemID.CrystalChest,
@@ -142,45 +170,40 @@ namespace RiskOfSlimeRain
 				ItemID.WaterChest,
 				ItemID.WebCoveredChest
 				#endregion
-			});
-			RecipeGroup.RegisterGroup("RoR:AnyChest", Chest_Group);
+			}));
 
-			RecipeGroup Jellyfish_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Jellyfish", new int[]
+			JellyfishGroup = RecipeGroup.RegisterGroup(nameof(ItemID.BlueJellyfish), new RecipeGroup(() => RecipeGroupAnyText.Format(any, JellyfishText), new int[]
 			{
 				ItemID.BlueJellyfish,
 				ItemID.GreenJellyfish,
 				ItemID.PinkJellyfish
-			});
-			RecipeGroup.RegisterGroup("RoR:Jellyfish", Jellyfish_Group);
+			}));
 
-			RecipeGroup EvilWater_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " Evil water", new int[]
+			EvilWaterGroup = RecipeGroup.RegisterGroup(nameof(ItemID.UnholyWater), new RecipeGroup(() => RecipeGroupAnyText.Format(any, EvilWaterText), new int[]
 			{
 				ItemID.UnholyWater,
 				ItemID.BloodWater
-			});
-			RecipeGroup.RegisterGroup("RoR:EvilWater", EvilWater_Group);
+			}));
 
-			RecipeGroup EvilMat_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " common evil material", new int[]
+			EvilMaterialGroup = RecipeGroup.RegisterGroup(nameof(ItemID.RottenChunk), new RecipeGroup(() => RecipeGroupAnyText.Format(any, EvilMaterialText), new int[]
 			{
-				ItemID.Vertebrae,
-				ItemID.RottenChunk
-			});
-			RecipeGroup.RegisterGroup("RoR:EvilMaterial", EvilMat_Group);
+				ItemID.RottenChunk,
+				ItemID.Vertebrae
+			}));
 
-			RecipeGroup FastBoots_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " common speed-up boots", new int[]
+			BasicBootsGroup = RecipeGroup.RegisterGroup(nameof(ItemID.HermesBoots), new RecipeGroup(() => RecipeGroupAnyText.Format(any, BasicBootsText), new int[]
 			{
-				ItemID.FlurryBoots,
 				ItemID.HermesBoots,
-				ItemID.SailfishBoots
-			});
-			RecipeGroup.RegisterGroup("RoR:FastBoots", FastBoots_Group);
+				ItemID.FlurryBoots,
+				ItemID.SailfishBoots,
+				ItemID.SandBoots
+			}));
 
-			RecipeGroup EvilShroom_Group = new RecipeGroup(() => Language.GetTextValue("LegacyMisc.37") + " evil mushroom", new int[]
+			EvilMushroomGroup = RecipeGroup.RegisterGroup(nameof(ItemID.VileMushroom), new RecipeGroup(() => RecipeGroupAnyText.Format(any, EvilMushroomText), new int[]
 			{
-				ItemID.ViciousMushroom,
-				ItemID.VileMushroom
-			});
-			RecipeGroup.RegisterGroup("RoR:EvilMushrooms", EvilShroom_Group);
+				ItemID.VileMushroom,
+				ItemID.ViciousMushroom
+			}));
 		}
 
 		public override bool HijackSendData(int whoAmI, int msgType, int remoteClient, int ignoreClient, NetworkText text, int number, float number2, float number3, float number4, int number5, int number6, int number7)

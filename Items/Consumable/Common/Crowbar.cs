@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void SafeAddRecipes()
 		{
 			Recipe recipe = CreateRecipe(1);
-			recipe.AddRecipeGroup("RoR:SilvTungBar", 65);
+			recipe.AddRecipeGroup(RORWorld.SilvTungBarGroup, 65);
 			recipe.AddIngredient(ItemID.BreathingReed, 3);
 			recipe.AddIngredient(ItemID.Wrench, 6);
 			recipe.AddIngredient(ItemID.BlackDye, 30);

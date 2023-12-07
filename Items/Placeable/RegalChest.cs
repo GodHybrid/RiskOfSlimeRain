@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Items.Placeable
 		{
 			ModRecipe recipe = new ModRecipe(mod);
 			recipe.AddIngredient(ItemID.LunarBar, 66);
-			recipe.AddRecipeGroup("RoR:GoldPlatBar", 99);
+			recipe.AddRecipeGroup(RORWorld.GoldPlat_Group, 99);
 			recipe.AddIngredient(ItemID.SpectreBar, 66);
 			recipe.AddIngredient(ModContent.ItemType<UncoveredChest>(), 2);
 			recipe.SetResult(this);

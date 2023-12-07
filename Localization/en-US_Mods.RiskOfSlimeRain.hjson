@@ -497,3 +497,13 @@ Configs: {
 		}
 	}
 }
+
+RecipeGroups: {
+	Any: "{0} {1}"
+	Chest: Chest
+	Jellyfish: Jellyfish
+	EvilWater: Evil Water
+	EvilMaterial: Evil Material
+	BasicBoots: Basic Boots
+	EvilMushroom: Evil Mushroom
+}

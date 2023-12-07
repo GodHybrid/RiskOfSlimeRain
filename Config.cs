@@ -37,8 +37,8 @@ namespace RiskOfSlimeRain
 		public bool HideWarbannerRadius;
 
 		[Header("Hint")]
-		[Label("Hint")]
 		[JsonIgnore]
+		[ShowDespiteJsonIgnore]
 		public bool Hint => true;
 
 		/// <summary>

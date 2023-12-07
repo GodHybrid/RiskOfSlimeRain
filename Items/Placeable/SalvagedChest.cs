@@ -26,8 +26,8 @@ namespace RiskOfSlimeRain.Items.Placeable
 		public override void AddRecipes()
 		{
 			ModRecipe recipe = new ModRecipe(mod);
-			recipe.AddRecipeGroup("RoR:Tier3HMBar", 90);
-			recipe.AddRecipeGroup("RoR:AnyChest", 1);
+			recipe.AddRecipeGroup(RORWorld.HMTier3Bar_Group, 90);
+			recipe.AddRecipeGroup(RORWorld.Chest_Group, 1);
 			recipe.SetResult(this);
 			recipe.AddRecipe();
 		}

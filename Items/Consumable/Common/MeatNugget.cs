@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void SafeAddRecipes()
 		{
 			Recipe recipe = CreateRecipe(1);
-			recipe.AddRecipeGroup("RoR:EvilMaterial", 275);
+			recipe.AddRecipeGroup(RORWorld.EvilMaterialGroup, 275);
 			recipe.AddIngredient(ItemID.Gel, 990);
 			recipe.AddIngredient(ItemID.PinkGel, 170);
 			recipe.AddIngredient(ItemID.Bunny, 50);

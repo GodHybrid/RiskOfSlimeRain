@@ -34,6 +34,10 @@ namespace RiskOfSlimeRain
 		public static string ModName => ModContent.GetInstance<RiskOfSlimeRainMod>().Name;
 
 		public static int hoverIndex = -1;
+		public static float hoverAlphaMax = 0.8f;
+		public static float hoverAlphaMin = 0;
+		public static float hoverAlpha = 0;
+		public static float hoverAlphaColorMultForOther => 1f - Math.Clamp(hoverAlpha, hoverAlphaMin, hoverAlphaMax);
 
 		public static bool EffectsVisible { private set; get; }
 
@@ -75,10 +79,10 @@ namespace RiskOfSlimeRain
 					InterfaceScaleType.Game
 				));
 				layers.Insert(mouseIndex + 2, new LegacyGameInterfaceLayer(
-						$"{ModName}: {nameof(MagmaWormWarning)}",
-						MagmaWormWarning,
-						InterfaceScaleType.Game
-					));
+					$"{ModName}: {nameof(MagmaWormWarning)}",
+					MagmaWormWarning,
+					InterfaceScaleType.Game
+				));
 			}
 		}
 
@@ -212,6 +216,10 @@ namespace RiskOfSlimeRain
 						hoverIndex = -2;
 					}
 				}
+				else
+				{
+					color *= hoverAlphaColorMultForOther;
+				}
 
 				Main.spriteBatch.Draw(texture, destRect, sourceRect, color);
 
@@ -241,6 +249,10 @@ namespace RiskOfSlimeRain
 					if (effect.Capped)
 					{
 						color = Color.LawnGreen;
+					}
+					if (hoverIndex != i)
+					{
+						color *= hoverAlphaColorMultForOther;
 					}
 					ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, leftCenter, color, 0, Vector2.Zero, Vector2.One * 0.78f);
 
@@ -471,6 +483,22 @@ namespace RiskOfSlimeRain
 		public static void Update(Player player)
 		{
 			RORPlayer mPlayer = player.GetRORPlayer();
+
+			if (Main.myPlayer == player.whoAmI)
+			{
+				float alphaSpeed = 2f / 60;
+
+				if (hoverIndex > 0)
+				{
+					hoverAlpha += alphaSpeed;
+					hoverAlpha = Math.Min(hoverAlpha, hoverAlphaMax + 0.2f); //Additional to "stagger" fade in when switching mouseover targets
+				}
+				else
+				{
+					hoverAlpha -= alphaSpeed;
+					hoverAlpha = Math.Max(hoverAlpha, 0f);
+				}
+			}
 
 			if (Main.myPlayer == player.whoAmI && hoverIndex != -1)
 			{
