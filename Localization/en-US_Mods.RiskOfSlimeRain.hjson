@@ -507,3 +507,35 @@ RecipeGroups: {
 	BasicBoots: Basic Boots
 	EvilMushroom: Evil Mushroom
 }
+
+UI: {
+	EffectUI: {
+		Misc: {
+			Header: This UI shows all your currently used items from '{0}'
+			NullifierExplanation:
+				'''
+				Nullifier view currently active
+				Left/right click or use the mousewheel on an icon to increase/decrease removed stack count
+				Double left click on this icon twice to pay the price, remove the effects and return the items
+				Right click to switch to normal UI
+				'''
+			CheckConfig: Check the config of this mod to customize the UI
+			ChangeStack: Left/right click or use the mousewheel on an icon to increase/decrease stack
+			SwitchToNullifier: Right click to switch to nullifier UI
+			Info:
+				'''
+				Misc Info:
+				Proc multiplier (based on held weapon): {0}
+				'''
+			DifficultyScaling:
+				'''
+				Taken damage multiplier: {0}
+				Spawn increase multiplier: {1}
+				'''
+			HasChests: This world originally generated with {0} chests filled with items from '{1}'
+			NoChests: This world has no '{0}' items generated in chests. Make a new world!
+			NullifierSavings: Savings: {0}
+			NullifierTotal: Total price: {0}
+		}
+	}
+}

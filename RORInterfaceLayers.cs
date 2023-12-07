@@ -17,6 +17,7 @@ using Terraria.DataStructures;
 using Terraria.GameContent;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 using Terraria.UI;
 using Terraria.UI.Chat;
@@ -50,10 +51,35 @@ namespace RiskOfSlimeRain
 
 		private const int syncTimer = 25;
 
+		public static LocalizedText EffectUIMiscHeaderText { get; private set; }
+		public static LocalizedText EffectUIMiscNullifierExplanationText { get; private set; }
+		public static LocalizedText EffectUIMiscCheckConfigText { get; private set; }
+		public static LocalizedText EffectUIMiscChangeStackText { get; private set; }
+		public static LocalizedText EffectUIMiscSwitchToNullifierText { get; private set; }
+		public static LocalizedText EffectUIMiscInfoText { get; private set; }
+		public static LocalizedText EffectUIMiscDifficultyScalingText { get; private set; }
+		public static LocalizedText EffectUIMiscHasChestsText { get; private set; }
+		public static LocalizedText EffectUIMiscNoChestsText { get; private set; }
+		public static LocalizedText EffectUIMiscNullifierSavingsText { get; private set; }
+		public static LocalizedText EffectUIMiscNullifierTotalText { get; private set; }
+
 		public override void OnModLoad()
 		{
 			TimeByIndex = new Dictionary<int, Ref<int>>();
 			On_PlayerDrawLayers.DrawPlayer_RenderAllLayers += On_PlayerDrawLayers_DrawPlayer_RenderAllLayers;
+
+			string category = $"UI.EffectUI.Misc.";
+			EffectUIMiscHeaderText ??= Mod.GetLocalization($"{category}Header");
+			EffectUIMiscNullifierExplanationText ??= Mod.GetLocalization($"{category}NullifierExplanation");
+			EffectUIMiscCheckConfigText ??= Mod.GetLocalization($"{category}CheckConfig");
+			EffectUIMiscChangeStackText ??= Mod.GetLocalization($"{category}ChangeStack");
+			EffectUIMiscSwitchToNullifierText ??= Mod.GetLocalization($"{category}SwitchToNullifier");
+			EffectUIMiscInfoText ??= Mod.GetLocalization($"{category}Info");
+			EffectUIMiscDifficultyScalingText ??= Mod.GetLocalization($"{category}DifficultyScaling");
+			EffectUIMiscHasChestsText ??= Mod.GetLocalization($"{category}HasChests");
+			EffectUIMiscNoChestsText ??= Mod.GetLocalization($"{category}NoChests");
+			EffectUIMiscNullifierSavingsText ??= Mod.GetLocalization($"{category}NullifierSavings");
+			EffectUIMiscNullifierTotalText ??= Mod.GetLocalization($"{category}NullifierTotal");
 		}
 
 		public override void OnModUnload()
@@ -277,9 +303,10 @@ namespace RiskOfSlimeRain
 				effect = effects[hoverIndex];
 				string name = ROREffectManager.GetDisplayName(effect);
 				string text = "\n" + ROREffectManager.GetDescription(effect);
-				if (effect.UIInfo() != string.Empty)
+				var uiInfo = effect.UIInfo();
+				if (uiInfo != string.Empty)
 				{
-					text += "\n" + effect.UIInfo();
+					text += "\n" + uiInfo;
 				}
 				if (effect.Capped)
 				{
@@ -302,42 +329,37 @@ namespace RiskOfSlimeRain
 				player.cursorItemIconEnabled = false;
 
 				string modName = RiskOfSlimeRainMod.Instance.DisplayName;
-				string text = $"This UI shows all your currently used items from '{modName}'";
+				string text = EffectUIMiscHeaderText.Format(modName);
 
 				if (mPlayer.nullifierActive)
 				{
-					text += "\nNullifier view currently active";
-					text += "\nLeft/right click or use the mousewheel on an icon to increase/decrease removed stack count";
-					text += "\nDouble left click on this icon twice to pay the price, remove the effects and return the items";
-					text += "\nRight click to switch to normal UI";
+					text += "\n" + EffectUIMiscNullifierExplanationText.ToString();
 				}
 				else
 				{
-					text += "\nCheck the config of this mod to customize the UI";
+					text += "\n" + EffectUIMiscCheckConfigText.ToString();
 					if (Config.Instance.CustomStacking)
 					{
-						text += "\nLeft/right click or use the mousewheel on an icon to increase/decrease stack";
+						text += "\n" + EffectUIMiscChangeStackText.ToString();
 					}
 					if (mPlayer.nullifierEnabled)
 					{
-						text += "\nRight click to switch to nullifier UI";
+						text += "\n" + EffectUIMiscSwitchToNullifierText.ToString();
 					}
-					text += "\nMisc Info:";
-					text += "\nProc multiplier (based on held weapon): " + ROREffect.GetProcByUseTime(player).ToPercent(2);
+					text += "\n" + EffectUIMiscInfoText.Format(ROREffect.GetProcByUseTime(player).ToPercent(2));
 					//text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _); //Iffy when progression is blocked
 					if (ServerConfig.Instance.DifficultyScaling)
 					{
-						text += "\nTaken damage multiplier: " + mPlayer.TakenDamageMultiplier().ToPercent();
-						text += "\nSpawn increase multiplier: " + mPlayer.SpawnIncreaseMultiplier().ToPercent();
+						text += "\n" + EffectUIMiscDifficultyScalingText.Format(mPlayer.TakenDamageMultiplier().ToPercent(), mPlayer.SpawnIncreaseMultiplier().ToPercent());
 					}
 					int chestCount = ChestManager.totalChests;
 					if (chestCount > 0)
 					{
-						text += $"\nThis world originally generated with {chestCount} '{modName}' items in chests";
+						text += "\n" + EffectUIMiscHasChestsText.Format(chestCount, modName);
 					}
 					else
 					{
-						text += $"\nThis world has no '{modName}' items generated in chests. Make a new world!";
+						text += "\n" + EffectUIMiscNoChestsText.Format(modName);
 					}
 				}
 
@@ -349,11 +371,11 @@ namespace RiskOfSlimeRain
 			if (hoverIndex != -2 && mPlayer.nullifierActive && mPlayer.savings > -1)
 			{
 				//Don't draw it if you mouseover the info icon because of readability issues
-				string text = "Savings: " + mPlayer.savings.MoneyToString();
+				string text = EffectUIMiscNullifierSavingsText.Format(mPlayer.savings.MoneyToString());
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 
 				priceDrawPos.Y += iconSize;
-				text = "Total price: " + mPlayer.nullifierMoney.MoneyToString();
+				text = EffectUIMiscNullifierTotalText.Format(mPlayer.nullifierMoney.MoneyToString());
 				ChatManager.DrawColorCodedStringWithShadow(Main.spriteBatch, FontAssets.ItemStack.Value, text, priceDrawPos, Color.White, 0, Vector2.Zero, Vector2.One * 0.78f);
 			}
 
@@ -488,7 +510,7 @@ namespace RiskOfSlimeRain
 			{
 				float alphaSpeed = 2f / 60;
 
-				if (hoverIndex > 0)
+				if (hoverIndex > -1 || hoverIndex == -2)
 				{
 					hoverAlpha += alphaSpeed;
 					hoverAlpha = Math.Min(hoverAlpha, hoverAlphaMax + 0.2f); //Additional to "stagger" fade in when switching mouseover targets
