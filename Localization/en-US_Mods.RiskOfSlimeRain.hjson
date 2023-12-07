@@ -351,6 +351,9 @@ Items: {
 	Nullifier: {
 		DisplayName: Nullifier
 		Tooltip: Use to enable the ability to restore your used '{0}' items, for a price
+		AlreadyEnabled: Nullifier is already enabled! Click the "?" in the UI
+		Obtainment: 25% chance to be sold by the Traveling Merchant in hardmode
+		Flavor: Gone with the wind...
 	}
 
 	ColossusPaintingItem: {
@@ -367,6 +370,8 @@ Items: {
 			- Highlight the warbanner that's about to be removed
 			- Reset the killcount when used
 			'''
+		CantUse: You aren't standing inside the range of any warbanners!
+		Obtainment: 25% chance to be sold by the Traveling Merchant after Skeletron has been defeated
 	}
 
 	DebugItem: {
@@ -378,6 +383,8 @@ Items: {
 		DisplayName: Entering Item
 		Tooltip: Use to enter a subworld. Only works with 'SubworldLibrary' Mod enabled
 	}
+
+	RORConsumableItem.CantUse: Max stack is enforced, you cannot stack more of this item!
 }
 
 NPCs.MagmaWorm.CommonName: Magma Worm

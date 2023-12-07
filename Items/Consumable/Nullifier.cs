@@ -2,7 +2,6 @@
 using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
-using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -12,6 +11,17 @@ namespace RiskOfSlimeRain.Items.Consumable
 	public class Nullifier : ModItem
 	{
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
+
+		public static LocalizedText AlreadyEnabledText { get; private set; }
+		public static LocalizedText ObtainmentText { get; private set; }
+		public static LocalizedText FlavorText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			AlreadyEnabledText = this.GetLocalization("AlreadyEnabled");
+			ObtainmentText = this.GetLocalization("Obtainment");
+			FlavorText = this.GetLocalization("Flavor");
+		}
 
 		public override bool CanUseItem(Player player)
 		{
@@ -31,22 +41,23 @@ namespace RiskOfSlimeRain.Items.Consumable
 			{
 				if (Main.LocalPlayer.GetRORPlayer().nullifierEnabled)
 				{
-					tooltips.Add(new TooltipLine(Mod, Name, "Nullifier is already enabled! Click the \"?\" in the UI"));
+					tooltips.Add(new TooltipLine(Mod, nameof(AlreadyEnabledText), AlreadyEnabledText.ToString()));
 				}
 			}
 			else
 			{
 				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				var line = new TooltipLine(Mod, nameof(ObtainmentText), ObtainmentText.ToString());
 				if (index > -1)
 				{
-					tooltips.Insert(++index, new TooltipLine(Mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
+					tooltips.Insert(++index, line);
 				}
 				else
 				{
-					tooltips.Add(new TooltipLine(Mod, Name, "25% chance to be sold by the Traveling Merchant in hardmode"));
+					tooltips.Add(line);
 				}
 			}
-			tooltips.Add(new TooltipLine(Mod, Name, "Gone with the wind...")
+			tooltips.Add(new TooltipLine(Mod, nameof(FlavorText), FlavorText.ToString())
 			{
 				OverrideColor = Color.Red * (Main.mouseTextColor / 255f)
 			});

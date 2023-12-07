@@ -15,6 +15,15 @@ namespace RiskOfSlimeRain.Items
 	{
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
 
+		public static LocalizedText CantUseText { get; private set; }
+		public static LocalizedText ObtainmentText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			CantUseText = this.GetLocalization("CantUse");
+			ObtainmentText = this.GetLocalization("Obtainment");
+		}
+
 		public override void SetDefaults()
 		{
 			Item.maxStack = 9999;
@@ -55,7 +64,7 @@ namespace RiskOfSlimeRain.Items
 			{
 				if (!Main.LocalPlayer.GetRORPlayer().InWarbannerRange)
 				{
-					tooltips.Add(new TooltipLine(Mod, Name, "You aren't standing inside the range of any warbanners!")
+					tooltips.Add(new TooltipLine(Mod, nameof(CantUseText), CantUseText.ToString())
 					{
 						OverrideColor = Color.OrangeRed
 					});
@@ -64,7 +73,7 @@ namespace RiskOfSlimeRain.Items
 			else
 			{
 				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
-				TooltipLine line = new TooltipLine(Mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated");
+				TooltipLine line = new TooltipLine(Mod, nameof(ObtainmentText), ObtainmentText.ToString());
 				if (index > -1)
 				{
 					tooltips.Insert(++index, line);

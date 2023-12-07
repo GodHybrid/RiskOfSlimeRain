@@ -34,8 +34,13 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public override LocalizedText Tooltip => Effect.Description;
 
+		public static LocalizedText CantUseText { get; private set; }
+
 		public sealed override void SetStaticDefaults()
 		{
+			string category = $"Items.RORConsumableItem.";
+			CantUseText ??= Mod.GetLocalization($"{category}CantUse");
+
 			ROREffectManager.RegisterItem(this);
 		}
 
@@ -80,7 +85,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			}
 			if (!CanUse(Main.LocalPlayer))
 			{
-				tooltips.Add(new TooltipLine(Mod, "CanUse", "Max stack is enforced, you cannot stack more of this item!")
+				tooltips.Add(new TooltipLine(Mod, nameof(CantUseText), CantUseText.ToString())
 				{
 					OverrideColor = Color.Orange
 				});
