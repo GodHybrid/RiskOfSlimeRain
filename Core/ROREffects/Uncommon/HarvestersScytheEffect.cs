@@ -10,6 +10,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
 	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IModifyWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
+		public override RORRarity Rarity => RORRarity.Uncommon;
+
 		public const float critChance = 0.05f;
 
 		public float CritChance => critChance + (ServerConfig.Instance.OriginalStats ? 0.02f * Math.Max(0, Stack - 1) : 0f);
