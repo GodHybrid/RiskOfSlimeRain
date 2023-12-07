@@ -31,7 +31,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Heal amount: {Formula()}";
+			return UIInfoText.Format(Formula());
 		}
 
 		public void PostUpdateEquips(Player player)

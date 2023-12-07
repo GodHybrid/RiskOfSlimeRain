@@ -3,7 +3,6 @@ using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network.NPCs;
 using System.IO;
-using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain
@@ -25,6 +24,7 @@ namespace RiskOfSlimeRain
 
 		public override void PostSetupContent()
 		{
+			ROREffectManager.PostSetupContent();
 			NPCHelper.Load();
 			SubworldManager.Load();
 			NPCHelper.LogBadModNPCs();

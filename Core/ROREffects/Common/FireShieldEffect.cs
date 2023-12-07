@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Damage: {(Damage * Stack).ToPercent()}\nKnockback: {(KB + Stack).ToPercent()}";
+			return UIInfoText.Format((Damage * Stack).ToPercent(), (KB + Stack).ToPercent());
 		}
 
 		public void PostHurt(Player player, Player.HurtInfo info)

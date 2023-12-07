@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Current damage: {Formula().ToPercent()}. Current radius: {Radius / radIncrease} Tiles";
+			return UIInfoText.Format(Formula().ToPercent(), Radius / radIncrease);
 		}
 
 		public void PostUpdateEquips(Player player)

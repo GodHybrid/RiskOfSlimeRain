@@ -32,7 +32,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Crit chance increase: {CritIncrease}%";
+			return UIInfoText.Format(CritIncrease);
 		}
 
 		public void Kill(Player player, double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)

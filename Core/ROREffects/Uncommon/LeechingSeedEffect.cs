@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Stored heal: {Math.Round(StoredHeals, 2)}. Heal amount: {Math.Round(CurrentHeal, 2)}";
+			return UIInfoText.Format(Math.Round(StoredHeals, 2), Math.Round(CurrentHeal, 2));
 		}
 
 		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)

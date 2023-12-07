@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Knockback chance: {RollChance.ToPercent(2)}";
+			return UIInfoText.Format(RollChance.ToPercent(2));
 		}
 
 		public override float Formula()
@@ -38,23 +38,24 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		private void ModifyKnockback(Player player, ref NPC.HitModifiers modifiers, NPC target)
 		{
 			//Custom rolling
-			if (Proc(RollChance))
+			if (!Proc(RollChance))
 			{
-				//Apply more knockback the less knockBackResist target has
-				float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
-				//TODO 1.4.4 test
-				modifiers.Knockback.Flat += 6f + 8f * antiKBResist;
+				return;
+			}
 
-				if (Config.HiddenVisuals(player)) return;
+			//Apply more knockback the less knockBackResist target has
+			float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
+			modifiers.Knockback.Flat += 6f + 8f * antiKBResist;
 
-				for (int i = 0; i < 14; i++)
+			if (Config.HiddenVisuals(player)) return;
+
+			for (int i = 0; i < 14; i++)
+			{
+				Dust dust = Dust.NewDustDirect(target.position, target.width, target.height, DustID.Smoke, 0f, 0f, 100, Color.MintCream, 1f);
+				dust.velocity = new Vector2(0, -1f);
+				if (Main.rand.NextBool(2))
 				{
-					Dust dust = Dust.NewDustDirect(target.position, target.width, target.height, DustID.Smoke, 0f, 0f, 100, Color.MintCream, 1f);
-					dust.velocity = new Vector2(0, -1f);
-					if (Main.rand.NextBool(2))
-					{
-						dust.scale = 0.5f;
-					}
+					dust.scale = 0.5f;
 				}
 			}
 		}

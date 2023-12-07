@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Damage increase: {Formula().ToPercent()}";
+			return UIInfoText.Format(Formula().ToPercent());
 		}
 
 		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)

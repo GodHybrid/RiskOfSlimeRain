@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Shield: {Shield}/{MaxShield}";
+			return UIInfoText.Format(Shield, MaxShield);
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

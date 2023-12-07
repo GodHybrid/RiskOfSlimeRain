@@ -37,7 +37,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Attack speed increase: {(Initial + virtualMargin + (Increase + virtualMargin) * Math.Max(0, Stack - 1)).ToPercent()}";
+			return UIInfoText.Format((Initial + virtualMargin + (Increase + virtualMargin) * Math.Max(0, Stack - 1)).ToPercent());
 		}
 
 		public void PostUpdateEquips(Player player)

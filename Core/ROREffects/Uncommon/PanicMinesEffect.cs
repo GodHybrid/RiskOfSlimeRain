@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
 using Terraria.Localization;
 using Terraria.ModLoader;
@@ -27,10 +28,20 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override LocalizedText Description => base.Description.WithFormatArgs(Dmg.ToPercent());
 
+		public static LocalizedText UIInfoOGStatsText { get; private set; }
+		public static LocalizedText UIInfoMaxText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoOGStatsText ??= GetLocalization("UIInfoOGStats");
+			UIInfoMaxText ??= GetLocalization("UIInfoMax");
+		}
+
 		public override string UIInfo()
 		{
-			return ServerConfig.Instance.OriginalStats ? $"Mine count: {MinesDropped}"
-														: $"Mine count: {MinesDropped} " + (MinesDropped >= balanceQuantCap ? "(max)" : "") + $"\nMine damage: {Dmg.ToPercent()}";
+			string minesDropped = UIInfoOGStatsText.Format(MinesDropped);
+			return ServerConfig.Instance.OriginalStats ? minesDropped
+				: (MinesDropped >= balanceQuantCap ? UIInfoMaxText.Format(minesDropped, Dmg.ToPercent()) : UIInfoText.Format(minesDropped, Dmg.ToPercent()));
 		}
 
 		public void PostHurt(Player player, Player.HurtInfo info)

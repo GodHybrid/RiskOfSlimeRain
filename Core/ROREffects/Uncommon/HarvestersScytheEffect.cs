@@ -26,12 +26,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override LocalizedText Description => base.Description.WithFormatArgs(critChance.ToPercent(), Initial);
 
+		public static LocalizedText UIInfoTextOGStats { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoTextOGStats ??= GetLocalization("UIInfoOGStats");
+		}
+
 		public override string UIInfo()
 		{
-			string info = $"Heal amount: {Math.Round(CurrentHeal, 2)}";
+			string info = UIInfoText.Format(Math.Round(CurrentHeal, 2));
 			if (ServerConfig.Instance.OriginalStats)
 			{
-				info = $"Crit chance increase: {CritChance.ToPercent()}. " + info;
+				info = UIInfoTextOGStats.Format(CritChance.ToPercent(), info);
 			}
 			return info;
 		}

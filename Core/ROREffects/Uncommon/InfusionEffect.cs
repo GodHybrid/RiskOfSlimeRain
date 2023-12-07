@@ -38,7 +38,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Bonus life: {BonusLife}. Cap: {Cap}. Stored heal: {Math.Round(StoredHeals, 2)}";
+			return UIInfoText.Format(BonusLife, Cap, Math.Round(StoredHeals, 2));
 		}
 
 		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)

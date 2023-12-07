@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Damage: {DamageIncrease.ToPercent()}. Max: {Math.Round((float)MaxMoney / Item.platinum, 1)} Platinum";
+			return UIInfoText.Format(DamageIncrease.ToPercent(), Math.Round((float)MaxMoney / Item.platinum, 1));
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

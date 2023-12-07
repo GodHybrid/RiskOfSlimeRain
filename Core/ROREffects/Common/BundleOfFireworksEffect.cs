@@ -27,13 +27,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(RollChance, 1f).ToPercent()}\nMonsters to kill: {50 - killCount % 50}";
+			return UIInfoText.Format(Math.Min(RollChance, 1f).ToPercent(), 50 - killCount % 50);
 		}
 
 		//Original, todo
 		//const int Initial = 6;
 		//const int Increase = 2;
-		//public override LocalizedText Description => base.Description.WithFormatArgs() $"Fire {Initial + Increase} fireworks that deal {damageIncrease.ToPercent()} damage";
+		//public override LocalizedText Description => base.Description.WithFormatArgs(Initial + Increase, damageIncrease.ToPercent()) $"Fire {0} fireworks that deal {1} damage";
 		/*
 		 * 
 		 for loop up to Initial + Increase * Stack

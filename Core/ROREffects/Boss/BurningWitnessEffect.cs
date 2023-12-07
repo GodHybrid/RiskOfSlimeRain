@@ -29,7 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		public override string UIInfo()
 		{
-			return $"Current speed increase: {Formula().ToPercent()}. Current duration: {Duration}";
+			return UIInfoText.Format(Formula().ToPercent(), Duration);
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

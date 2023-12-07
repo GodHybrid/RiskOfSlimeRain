@@ -39,18 +39,27 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override LocalizedText Description => base.Description.WithFormatArgs(amount, interval / 60);
 
+		public static LocalizedText UIInfoNextText { get; private set; }
+		public static LocalizedText UIInfoTotalText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoNextText ??= GetLocalization("UIInfoNext");
+			UIInfoTotalText ??= GetLocalization("UIInfoTotal");
+		}
+
 		public override string UIInfo()
 		{
 			string text = string.Empty;
 			if (Main.playerInventory)
 			{
-				text += $"Last withdrawn: {lastWithdrawn}";
+				text += UIInfoText.Format(lastWithdrawn);
 			}
 			else
 			{
-				text += $"Next withdrawal: {nextMoneyWithdrawn}";
+				text += UIInfoText.Format(nextMoneyWithdrawn);
 			}
-			return text + $"\nTotal money generated: {totalText}";
+			return text + $"\n" + UIInfoText.Format(totalText);
 		}
 
 		public void PostUpdateEquips(Player player)

@@ -24,8 +24,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return "Requires solid ground below you to spawn" +
-				$"\nHeal amount: {GetIncreaseAmount(Player)}";
+			return UIInfoText.Format(GetIncreaseAmount(Player));
 		}
 
 		public int GetIncreaseAmount(Player player)

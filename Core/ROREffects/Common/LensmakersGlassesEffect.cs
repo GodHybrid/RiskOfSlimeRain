@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
+			return UIInfoText.Format(Math.Min(Formula(), 1f).ToPercent());
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

@@ -92,7 +92,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 					if (n.active && n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
-						n.AddBuff(BuffID.Venom, 30 * Ticks);
+						n.AddBuff(BuffID.Venom, 8 * Ticks);
 						int damage = (int)(1.5f * Damage);
 						StickyProj.NewProjectile(Projectile.GetSource_FromThis(), n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
 						{

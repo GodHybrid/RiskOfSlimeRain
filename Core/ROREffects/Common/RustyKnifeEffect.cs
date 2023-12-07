@@ -22,7 +22,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}";
+			return UIInfoText.Format(Math.Min(Chance, 1f).ToPercent());
 		}
 
 		public override bool AlwaysProc => false;

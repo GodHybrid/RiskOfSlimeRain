@@ -8,6 +8,7 @@ ROREffects: {
 				Lightweight and attachable to torso for free use of both hands.
 				Can store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]
 				'''
+			UIInfo: Spawn chance: {0}
 		}
 
 		BoxingGloves: {
@@ -18,6 +19,7 @@ ROREffects: {
 				These should work fine for the kids you're training.
 				A bit musty, though. It'll make your trainees hit like a pro, ha!
 				'''
+			UIInfo: Knockback chance: {0}
 		}
 
 		DeadMansFoot: {
@@ -28,12 +30,14 @@ ROREffects: {
 				It looks like he was infested by some bug-like creatures, and exploded when I got close.
 				I hope his death wasn't too painful; his family will know how he died.
 				'''
+			UIInfo: Debuff duration: {0}
 		}
 
 		GoldenGun: {
 			DisplayName: Golden Gun
 			Description: Deals bonus damage scaling by money in your inventory, up to {0} damage at {1} platinum
 			FlavorText: Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.
+			UIInfo: Damage: {0}. Max: {1} Platinum
 		}
 
 		GuardiansHeart: {
@@ -44,12 +48,15 @@ ROREffects: {
 				While living, the subject had advanced muscle growth, cell regeneration, higher agility...
 				His heart seems to still beat independent of the rest of the body.
 				'''
+			UIInfo: Shield: {0}/{1}
 		}
 
 		HarvestersScythe: {
 			DisplayName: Harvester's Scythe
 			Description: Gain {0} crit chance. Critical strikes heal for {1} health
 			FlavorText: It takes a brave man to look death in the eye and claim they don't need help.
+			UIInfo: Heal amount: {0}
+			UIInfoOGStats: Crit chance increase: {0}. {1}
 		}
 
 		Infusion: {
@@ -60,6 +67,7 @@ ROREffects: {
 				You can add whatever blood sample you want, as far as I know.
 				Remember that sampling from other creatures is a great basis for experimentation!
 				'''
+			UIInfo: Bonus life: {0}. Cap: {1}. Stored heal: {2}
 		}
 
 		LeechingSeed: {
@@ -70,6 +78,7 @@ ROREffects: {
 				These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.
 				However, before they die, they feel increased health and state of mind!
 				'''
+			UIInfo: Stored heal: {0}. Heal amount: {1}
 		}
 
 		PanicMines: {
@@ -79,6 +88,17 @@ ROREffects: {
 				'''
 				Must be strapped onto vehicles, NOT personnel!
 				Includes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.
+				'''
+			UIInfoOGStats: Mine count: {0}
+			UIInfo:
+				'''
+				{0}
+				Mine damage: {1}
+				'''
+			UIInfoMax:
+				'''
+				{0} (max)
+				Mine damage: {1}
 				'''
 		}
 
@@ -90,6 +110,7 @@ ROREffects: {
 				Bears are just about the only toy that can lose just about everything and still maintain their dignity and worth.
 				Don't forget, hon. I'm coming home soon. Stay strong.
 				'''
+			UIInfo: Additional DR: {0}
 		}
 	}
 
@@ -98,12 +119,14 @@ ROREffects: {
 			DisplayName: Barbed Wire
 			Description: Touching enemies deals {0} of your current damage every second
 			FlavorText: Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...
+			UIInfo: Current damage: {0}. Current radius: {1} Tiles
 		}
 
 		BitterRoot: {
 			DisplayName: Bitter Root
 			Description: Increases maximum life by roughly {0}
 			FlavorText: Biggest. Ginseng. Root. Ever.
+			UIInfo: Life increase: {0}
 		}
 
 		BundleOfFireworks: {
@@ -113,6 +136,11 @@ ROREffects: {
 				'''
 				Disguising homing missiles as fireworks?
 				Don't ever quote me on it, but it was pretty smart
+				'''
+			UIInfo:
+				'''
+				Chance: {0}
+				Monsters to kill for guaranteed fireworks: {1}
 				'''
 		}
 
@@ -124,6 +152,11 @@ ROREffects: {
 				The strongest biological healing agent...
 				...is a mushroom
 				'''
+			UIInfo:
+				'''
+				Requires solid ground below you to spawn
+				Heal amount: {0}
+				'''
 		}
 
 		Crowbar: {
@@ -134,6 +167,7 @@ ROREffects: {
 				Crowbar/prybar/wrecking bar allows for both prying and smashing! 
 				Carbon steel, so it should last for a very long time, at least until the 3rd edition arrives
 				'''
+			UIInfo: Damage increase: {0}
 		}
 
 		FireShield: {
@@ -143,6 +177,11 @@ ROREffects: {
 				'''
 				The thing is only half-done, but it will do the job
 				PLEASE handle with care!
+				'''
+			UIInfo:
+				'''
+				Damage: {0}
+				Knockback: {1}
 				'''
 		}
 
@@ -154,6 +193,7 @@ ROREffects: {
 				Gasoline, eh?
 				Surprising to find a gas station these days, with everyone drivin' around them electro cars
 				'''
+			UIInfo: Damage: {0}
 		}
 
 		Headstompers: {
@@ -164,6 +204,7 @@ ROREffects: {
 				Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. 
 				Literally. Vertically.
 				'''
+			UIInfo: Damage: {0}
 		}
 
 		HermitsScarf: {
@@ -174,6 +215,7 @@ ROREffects: {
 				This thing survived that horrible day
 				It must be able to survive whatever I have to endure, right?
 				'''
+			UIInfo: Chance: {0}
 		}
 
 		LensmakersGlasses: {
@@ -184,12 +226,16 @@ ROREffects: {
 				Calibrated for high focal alignment
 				Should allow for the precision you were asking for
 				'''
+			UIInfo: Crit chance increase: {0}
 		}
 
 		LifeSavings: {
 			DisplayName: Life Savings
 			Description: Generate {0} copper every {1} seconds. Withdraw by opening the inventory
 			FlavorText: hi im billy and heer is money for mom thanks
+			UIInfo: Last withdrawn: {0}
+			UIInfoNext: Next withdrawal: {0}
+			UIInfoTotal: Total money generated: {0}
 		}
 
 		MeatNugget: {
@@ -200,6 +246,7 @@ ROREffects: {
 				MM. Delicious
 				Just kidding, it's awful
 				'''
+			UIInfo: Heal amount: {0}
 		}
 
 		Medkit: {
@@ -210,6 +257,7 @@ ROREffects: {
 				Each Medkit should contain bandages, sterile dressings, soap,
 				antiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen
 				'''
+			UIInfo: Heal amount: {0}
 		}
 
 		MonsterTooth: {
@@ -220,6 +268,7 @@ ROREffects: {
 				Sometimes I felt like it helped me on hunts, ya know?
 				Like... instincts
 				'''
+			UIInfo: Heal amount: {0}
 		}
 
 		MortarTube: {
@@ -230,6 +279,7 @@ ROREffects: {
 				You stick explosives down the end, then you fire the explosive
 				I suppose you can beat them with the tube afterwards
 				'''
+			UIInfo: Damage: {0}
 		}
 
 		MysteriousVial: {
@@ -240,6 +290,7 @@ ROREffects: {
 				Side effects may include itching, rashes, bleeding, sensitivity of skin,
 				dry patches, permanent scarring, misaligned bone regrowth, rotting of the...
 				'''
+			UIInfo: Regeneration: {0}/s
 		}
 
 		PaulsGoatHoof: {
@@ -250,6 +301,7 @@ ROREffects: {
 				A hoof from one of my many goats
 				Thinking it was cancerous, I went to the doctors and low-and-behold; it was
 				'''
+			UIInfo: Speed increase: {0}
 		}
 
 		RustyKnife: {
@@ -260,6 +312,7 @@ ROREffects: {
 				Murder weapon, case name ELIAS. Probably a lover's spat?
 				There is still dried blood on the knife, so mark it as biological.
 				'''
+			UIInfo: Chance: {0}
 		}
 
 		SnakeEyes: {
@@ -270,6 +323,7 @@ ROREffects: {
 				You dirty----------er
 				You KNEW I had to win to pay off my debts
 				'''
+			UIInfo: Crit chance increase: {0}%
 		}
 
 		SoldiersSyringe: {
@@ -280,6 +334,7 @@ ROREffects: {
 				Should help multi-purpose requirements needed of soldiers
 				Contains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...
 				'''
+			UIInfo: Attack speed increase: {0}
 		}
 
 		Spikestrip: {
@@ -290,6 +345,7 @@ ROREffects: {
 				The doctors say I don't have much time left
 				Since you're in the force now and all, I felt obligated to return it to you
 				'''
+			UIInfo: Spikestrip lifetime: {0}s
 		}
 
 		SproutingEgg: {
@@ -300,6 +356,7 @@ ROREffects: {
 				This egg seems to be somewhere between hatching and dying
 				I can't bring it to myself to cook it alive
 				'''
+			UIInfo: Regeneration: {0}/s
 		}
 
 		StickyBomb: {
@@ -310,6 +367,7 @@ ROREffects: {
 				Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.
 				YOU STICK THAT END ON BAD THINGS, NOT YOURSELF
 				'''
+			UIInfo: Damage: {0}
 		}
 
 		Taser: {
@@ -320,6 +378,7 @@ ROREffects: {
 				You say you can fix 'em?
 				These tasers are very very faulty
 				'''
+			UIInfo: Duration: {0}s
 		}
 
 		Warbanner: {
@@ -330,6 +389,9 @@ ROREffects: {
 				Very very valuable
 				Don't drop it; it's worth more than you
 				'''
+			UIInfo: Kills required for next banner: {0}. Active banners: {1}
+			UIInfoReady: New banner ready, leave the current area of effect or return to solid ground
+			UIInfoInvasion: Kill countdown is disabled while an invasion is in progress
 		}
 	}
 
@@ -338,7 +400,15 @@ ROREffects: {
 			DisplayName: Burning Witness
 			Description: Grant +{0} movement speed, +{1} damage, and a firetrail on kill for {2} seconds
 			FlavorText: The Worm's eye seems to still see... watching... rewarding...
+			UIInfo: Current speed increase: {0}. Current duration: {1}
 		}
+	}
+
+	CommonUI: {
+		ReachedRecommended: You reached the recommended stack amount!
+		ReachedRecommendedWithWeapon: With the currently held weapon, you reached the recommended stack amount!
+		BlockedByConfig: This item is blocked via the Server Config
+		BlockedByConfigMPExtra: . The host is responsible for the item blacklist
 	}
 }
 

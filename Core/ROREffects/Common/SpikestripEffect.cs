@@ -25,7 +25,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Spikestrip lifetime: {Formula()}s";
+			return UIInfoText.Format(Formula());
 		}
 
 		public void PostHurt(Player player, Player.HurtInfo info)

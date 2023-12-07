@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Spawn chance: {RollChance.ToPercent(2)}";
+			return UIInfoText.Format(RollChance.ToPercent(2));
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)

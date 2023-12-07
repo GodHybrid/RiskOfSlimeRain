@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	//Effects are created via the ROREffect.CreateInstance method
 	public abstract class ROREffect : IComparable<ROREffect>/*, INetworkSerializable*/, ICloneable //TODO 1.4.4 INetworkSerializable used for ROREffectSyncSinglePacket
 	{
-		public string LocalizationCategory => "ROREffects";
+		public static readonly string LocalizationCategory = "ROREffects";
 
 		//Something you can save in a TagCompound, hence why string, not Type
 		/// <summary>
@@ -46,18 +46,22 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return Regex.Replace(name, "([A-Z])", " $1").Trim();
 		}
 
+		public LocalizedText GetLocalization(string name, Func<string> makeDefaultValue = null) => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.{name}", makeDefaultValue);
+
 		//TypeName contains the rarity separated via "." already so it's handy here for organization
 		//Cached, so not dynamic
 		/// <summary>
 		/// This will be the name of the item responsible for the effect to apply
 		/// </summary>
-		public virtual LocalizedText DisplayName => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.DisplayName", MakeDefaultDisplayName);
+		public virtual LocalizedText DisplayName => GetLocalization("DisplayName", MakeDefaultDisplayName);
 
 		//Cached, so not dynamic
-		public virtual LocalizedText Description => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.Description", () => string.Empty);
+		public virtual LocalizedText Description => GetLocalization("Description", () => string.Empty);
 
 		//Cached, so not dynamic
-		public virtual LocalizedText FlavorText => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.FlavorText", () => string.Empty);
+		public virtual LocalizedText FlavorText => GetLocalization("FlavorText", () => string.Empty);
+
+		public LocalizedText UIInfoText => GetLocalization("UIInfo", () => string.Empty);
 
 		//Cached, so not dynamic
 		public virtual RORRarity Rarity => RORRarity.Common;
@@ -205,11 +209,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				if (Main.LocalPlayer.HeldItem.damage < 1 || EnforceMaxStack)
 				{
-					return "You reached the recommended stack amount!";
+					return ReachedRecommendedText.ToString();
 				}
 				else
 				{
-					return "With the currently held weapon, you reached the recommended stack amount!";
+					return ReachedRecommendedWithWeaponText.ToString();
 				}
 			}
 		}
@@ -218,10 +222,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			get
 			{
-				string msg = "This item is blocked via the Server Config";
+				string msg = BlockedByConfigText.ToString();
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
-					msg += ". The host is responsible for the item blacklist";
+					msg += BlockedByConfigMPExtraText.ToString();
 				}
 				return msg;
 			}
@@ -248,7 +252,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		//TODO localize
+		public virtual void SetStaticDefaults()
+		{
+
+		}
+
 		/// <summary>
 		/// Use to display additional info when mouseovered in the UI
 		/// </summary>
@@ -289,6 +297,21 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public IEntitySource GetEntitySource(Player player, string? context = null)
 		{
 			return new EntitySource_FromEffect(player, this, context);
+		}
+
+		public static LocalizedText ReachedRecommendedText { get; private set; }
+		public static LocalizedText ReachedRecommendedWithWeaponText { get; private set; }
+		public static LocalizedText BlockedByConfigText { get; private set; }
+		public static LocalizedText BlockedByConfigMPExtraText { get; private set; }
+
+		internal static void SetupLocalization()
+		{
+			var mod = RiskOfSlimeRainMod.Instance;
+			string category = $"{LocalizationCategory}.CommonUI.";
+			ReachedRecommendedText ??= mod.GetLocalization($"{category}ReachedRecommended");
+			ReachedRecommendedWithWeaponText ??= mod.GetLocalization($"{category}ReachedRecommendedWithWeapon");
+			BlockedByConfigText ??= mod.GetLocalization($"{category}BlockedByConfig");
+			BlockedByConfigMPExtraText ??= mod.GetLocalization($"{category}BlockedByConfigMPExtra");
 		}
 
 		/// <summary>

@@ -29,6 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		//Maps a rarity to a list of all associated items of that rarity
 		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
+		private static List<ROREffect> effects;
 		//Used to index each effect type for mp, and check for type validity
 		private static Type[] indexedEffects;
 		//Used to build the dictionary EffectByType on RORPlayer
@@ -54,6 +55,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
 			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
+			effects = new List<ROREffect>();
 			displayName = new Dictionary<Type, LocalizedText>();
 			description = new Dictionary<Type, LocalizedText>();
 			flavorText = new Dictionary<Type, LocalizedText>();
@@ -87,6 +89,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
+					effects.Add(effect);
 					displayName[type] = effect.DisplayName;
 					description[type] = effect.Description;
 					flavorText[type] = effect.FlavorText;
@@ -109,6 +112,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void Unload()
 		{
+			effects = null;
 			validInterfaces = null;
 			displayName = null;
 			description = null;
@@ -116,6 +120,16 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			rarity = null;
 			texture = null;
 			itemType = null;
+		}
+
+		internal static void PostSetupContent()
+		{
+			ROREffect.SetupLocalization();
+			foreach (var effect in effects)
+			{
+				_ = effect.UIInfoText; //To register localization
+				effect.SetStaticDefaults();
+			}
 		}
 
 		/// <summary>

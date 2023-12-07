@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -32,11 +33,27 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		/// </summary>
 		public bool WarbannerReadyToDrop { get; set; } = false;
 
+		public static LocalizedText UIInfoReadyText { get; private set; }
+		public static LocalizedText UIInfoInvasionText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoReadyText ??= GetLocalization("UIInfoReady");
+			UIInfoInvasionText ??= GetLocalization("UIInfoInvasion");
+		}
+
 		public override string UIInfo()
 		{
-			return $"Kills required for next banner: {Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount)}. Active banners: {WarbannerManager.warbanners.Count}"
-				+ (WarbannerReadyToDrop ? "\nNew banner ready, leave the current area of effect or return to solid ground" : "")
-				+ (NPCHelper.AnyInvasion() ? "\nKill countdown is disabled while an invasion is in progress" : "");
+			var text = UIInfoText.Format(Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount), WarbannerManager.warbanners.Count);
+			if (WarbannerReadyToDrop)
+			{
+				text += "\n" + UIInfoReadyText.ToString();
+			}
+			if (NPCHelper.AnyInvasion())
+			{
+				text += "\n" + UIInfoInvasionText.ToString();
+			}
+			return text;
 		}
 
 		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)

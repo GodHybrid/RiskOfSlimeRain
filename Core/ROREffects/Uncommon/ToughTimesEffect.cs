@@ -16,7 +16,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Additional DR: {DRIncrease.ToPercent(2)}";
+			return UIInfoText.Format(DRIncrease.ToPercent(2));
 		}
 
 		public override float Formula()

@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Duration: {Formula()}s";
+			return UIInfoText.Format(Formula());
 		}
 
 		public override bool AlwaysProc => false;

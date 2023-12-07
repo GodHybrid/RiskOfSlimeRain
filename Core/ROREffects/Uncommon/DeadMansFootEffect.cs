@@ -27,7 +27,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return $"Debuff duration: {30 * (int)Formula()}";
+			return UIInfoText.Format(30 * (int)Formula());
 		}
 
 		public void PostHurt(Player player, Player.HurtInfo info)

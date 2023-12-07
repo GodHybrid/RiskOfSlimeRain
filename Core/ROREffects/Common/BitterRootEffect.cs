@@ -44,7 +44,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override string UIInfo()
 		{
-			return $"Life increase: {GetIncreaseAmount(Player)}";
+			return UIInfoText.Format(GetIncreaseAmount(Player));
 		}
 
 		public void ResetEffects(Player player)
