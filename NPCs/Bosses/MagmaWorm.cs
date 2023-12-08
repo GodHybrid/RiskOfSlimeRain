@@ -35,6 +35,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		public virtual bool IsOtherBody(NPC other) => other.ModNPC is MagmaWormBody || other.ModNPC is MagmaWormTail;
 
 		public static LocalizedText CommonNameText { get; private set; }
+		public static LocalizedText SpawnInfoText { get; private set; }
 
 		public override LocalizedText DisplayName => CommonNameText;
 
@@ -42,6 +43,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			string category = $"NPCs.{nameof(MagmaWorm)}.";
 			CommonNameText ??= Mod.GetLocalization($"{category}CommonName");
+			SpawnInfoText ??= Mod.GetLocalization($"{category}SpawnInfo");
 			Main.npcFrameCount[NPC.type] = 3;
 		}
 

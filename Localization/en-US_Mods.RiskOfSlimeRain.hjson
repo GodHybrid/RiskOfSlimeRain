@@ -458,7 +458,12 @@ Items: {
 	RORConsumableItem.CantUse: Max stack is enforced, you cannot stack more of this item!
 }
 
-NPCs.MagmaWorm.CommonName: Magma Worm
+NPCs: {
+	MagmaWorm: {
+		CommonName: Magma Worm
+		SpawnInfo: Summons the {$NPCs.MagmaWorm.CommonName}. Drops '{$ROREffects.Boss.BurningWitness.DisplayName}' on first death, then with 1% chance
+	}
+}
 
 Projectiles: {
 	AtGMissileMK1Proj.DisplayName: "{$ROREffects.Uncommon.AtGMissileMK1.DisplayName}"

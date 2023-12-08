@@ -65,10 +65,9 @@ namespace RiskOfSlimeRain.Projectiles
 
 			if (InitTimer < 8)
 			{
-				//TODO 1.4.4 test if correct sound
 				//167 also decent
-				if (InitTimer == 0) SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode.WithVolumeScale(0.8f).WithPitchOffset(0.8f), Projectile.Center);
-				if (InitTimer == 7) SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode.WithVolumeScale(0.8f).WithPitchOffset(0.6f), Projectile.Center);
+				if (InitTimer == 0) SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact.WithVolumeScale(0.8f).WithPitchOffset(0.8f), Projectile.Center);
+				if (InitTimer == 7) SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact.WithVolumeScale(0.8f).WithPitchOffset(0.6f), Projectile.Center);
 				InitTimer++;
 			}
 		}

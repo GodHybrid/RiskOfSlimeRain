@@ -11,8 +11,6 @@ namespace RiskOfSlimeRain.Items.Consumable
 {
 	public class MagmaWormSummon : ModItem
 	{
-		public static string tooltip = "Summons the Magma Worm";
-
 		public override bool? UseItem(Player player)
 		{
 			Summon(player);
