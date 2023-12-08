@@ -17,11 +17,6 @@ namespace RiskOfSlimeRain.Helpers
 		private static int[] isModdedWormBodyOrTail;
 
 		/// <summary>
-		/// Types of NPCs which are immune to all buffs
-		/// </summary>
-		private static int[] isBuffImmune;
-
-		/// <summary>
 		/// Modded NPC types that have thrown exceptions during the caching process
 		/// </summary>
 		private static int[] badModNPCs;
@@ -126,7 +121,6 @@ namespace RiskOfSlimeRain.Helpers
 		public static void Unload()
 		{
 			isModdedWormBodyOrTail = null;
-			isBuffImmune = null;
 		}
 
 		/// <summary>
@@ -143,7 +137,7 @@ namespace RiskOfSlimeRain.Helpers
 		/// </summary>
 		public static bool IsBuffImmune(NPC npc)
 		{
-			return Array.BinarySearch(isBuffImmune, npc.type) >= 0;
+			return NPCID.Sets.ImmuneToRegularBuffs[npc.type];
 		}
 
 		public static bool AnyInvasion()
@@ -164,7 +158,6 @@ namespace RiskOfSlimeRain.Helpers
 			{
 				try
 				{
-					bool buffImmune = true;
 					NPC npc = new NPC();
 
 					// (maybe) tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
@@ -179,19 +172,6 @@ namespace RiskOfSlimeRain.Helpers
 					//{
 					//	Main.NPCLoaded[i] = true;
 					//}
-
-					for (int j = 0; j < npc.buffImmune.Length; j++)
-					{
-						if (!npc.buffImmune[j])
-						{
-							buffImmune = false;
-							break;
-						}
-					}
-					if (buffImmune)
-					{
-						buffList.Add(i);
-					}
 
 					//Modded only
 					if (i >= NPCID.Count)
@@ -216,9 +196,6 @@ namespace RiskOfSlimeRain.Helpers
 
 			isModdedWormBodyOrTail = wormList.ToArray();
 			Array.Sort(isModdedWormBodyOrTail);
-
-			isBuffImmune = buffList.ToArray();
-			Array.Sort(isBuffImmune);
 
 			badModNPCs = badModNPCsList.ToArray();
 		}

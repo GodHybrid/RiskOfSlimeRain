@@ -2,7 +2,6 @@ using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -19,7 +18,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	/// </summary>
 	//IComparable because we use it in a list to sort
 	//Effects are created via the ROREffect.CreateInstance method
-	public abstract class ROREffect : IComparable<ROREffect>/*, INetworkSerializable*/, ICloneable //TODO 1.4.4 INetworkSerializable used for ROREffectSyncSinglePacket
+	public abstract class ROREffect : IComparable<ROREffect>, ICloneable
 	{
 		public static readonly string LocalizationCategory = "ROREffects";
 

@@ -16,7 +16,7 @@ namespace RiskOfSlimeRain.DrawLayers
 			if (Main.gameMenu) return false;
 
 			Player drawPlayer = drawInfo.drawPlayer;
-			if (drawPlayer.dead || !drawPlayer.GetRORPlayer().InWarbannerRange)
+			if (drawPlayer.dead || drawInfo.shadow != 0f || !drawPlayer.GetRORPlayer().InWarbannerRange)
 			{
 				return false;
 			}
@@ -33,12 +33,6 @@ namespace RiskOfSlimeRain.DrawLayers
 
 		protected override void Draw(ref PlayerDrawSet drawInfo)
 		{
-			//TODO 1.4.4 test if can move to DefaultVisibility
-			if (drawInfo.shadow != 0f)
-			{
-				return;
-			}
-
 			Player player = drawInfo.drawPlayer;
 
 			Texture2D tex = ModContent.Request<Texture2D>("RiskOfSlimeRain/Textures/Warbanner").Value;

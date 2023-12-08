@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Core;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
-using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -18,7 +17,7 @@ namespace RiskOfSlimeRain.DrawLayers
 			if (Main.gameMenu) return false;
 
 			Player drawPlayer = drawInfo.drawPlayer;
-			if (drawPlayer.dead)
+			if (drawPlayer.dead || drawInfo.shadow != 0f)
 			{
 				return false;
 			}
@@ -35,9 +34,6 @@ namespace RiskOfSlimeRain.DrawLayers
 
 		protected override void Draw(ref PlayerDrawSet drawInfo)
 		{
-			//TODO 1.4.4 test if can move to DefaultVisibility
-			if (drawInfo.shadow != 0f) return;
-
 			Player dPlayer = drawInfo.drawPlayer;
 
 			var effects = ROREffectManager.GetEffectsOf<IPlayerLayer>(dPlayer);

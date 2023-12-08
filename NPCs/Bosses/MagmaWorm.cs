@@ -45,6 +45,11 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			CommonNameText ??= Mod.GetLocalization($"{category}CommonName");
 			SpawnInfoText ??= Mod.GetLocalization($"{category}SpawnInfo");
 			Main.npcFrameCount[NPC.type] = 3;
+
+			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Confused] = true;
+			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Poisoned] = true;
+			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.OnFire] = true;
+			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Frostburn] = true;
 		}
 
 		public override void SetDefaults()
@@ -65,10 +70,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			NPC.knockBackResist = 0f;
 			NPC.value = Item.sellPrice(gold: 1);
 			NPC.scale = 1.4f;
-			NPC.buffImmune[BuffID.Poisoned] = true;
-			NPC.buffImmune[BuffID.OnFire] = true;
-			NPC.buffImmune[BuffID.CursedInferno] = true;
-			NPC.buffImmune[BuffID.Frostburn] = true;
+			NPC.SpawnWithHigherTime(30);
 			NPC.boss = true;
 
 			if (IsHead)
@@ -77,7 +79,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			}
 			else
 			{
-				NPC.defense = NPC.defense << 1;
+				NPC.defense = NPC.defense * 2;
 				NPC.damage = NPC.damage / 2;
 				NPC.dontCountMe = true;
 			}
@@ -975,7 +977,12 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 	public class MagmaWormHead : MagmaWorm
 	{
+		public override void SetDefaults()
+		{
+			base.SetDefaults();
 
+			NPC.BossBar = ModContent.GetInstance<MagmaWormBossBar>();
+		}
 	}
 
 	/// <summary>
@@ -995,4 +1002,6 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 	{
 
 	}
+
+
 }
