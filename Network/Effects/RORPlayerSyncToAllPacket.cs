@@ -1,11 +1,14 @@
 namespace RiskOfSlimeRain.Network.Effects
 {
-	public class RORPlayerSyncToAllPacket : RORPlayerSyncBasePacket
+	public class RORPlayerSyncToAllPacket : RORPlayerSyncPacket
 	{
-		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
+		public override bool Broadcast => true;
 
-		public RORPlayerSyncToAllPacket() : base() { }
+		public RORPlayerSyncToAllPacket() { }
 
-		public RORPlayerSyncToAllPacket(RORPlayer mPlayer) : base(mPlayer) { }
+		public RORPlayerSyncToAllPacket(RORPlayer mPlayer) : base(mPlayer)
+		{
+
+		}
 	}
 }

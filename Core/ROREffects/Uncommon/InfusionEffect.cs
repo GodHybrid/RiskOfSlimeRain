@@ -68,12 +68,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		protected override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(BonusLife);
+			writer.Write7BitEncodedInt(BonusLife);
 		}
 
 		protected override void NetReceive(BinaryReader reader)
 		{
-			BonusLife = reader.ReadInt32();
+			BonusLife = reader.Read7BitEncodedInt();
 		}
 
 		public void PostUpdateEquips(Player player)
@@ -102,10 +102,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			}
 		}
 
-		public void IncreaseBonusLife(int heal)
+		public void IncreaseBonusLife(Player player, int heal)
 		{
 			BonusLife += heal;
-			new ROREffectSyncSinglePacket(this).Send();
+			new ROREffectSyncSinglePacket(player, this).Send();
 		}
 
 		public override string ToString()

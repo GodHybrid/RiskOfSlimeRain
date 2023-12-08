@@ -20,6 +20,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 	{
 		public const int LIMIT = 100;
 
+		//Clients do not have this info
 		/// <summary>
 		/// List to save and load warbanners
 		/// </summary>

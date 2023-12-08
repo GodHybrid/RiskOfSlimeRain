@@ -33,7 +33,7 @@ namespace RiskOfSlimeRain.Projectiles
 			InfusionEffect effect = ROREffectManager.GetEffectOfType<InfusionEffect>(target);
 			if (effect != null)
 			{
-				effect.IncreaseBonusLife(HealAmount);
+				effect.IncreaseBonusLife(target, HealAmount);
 				CombatTextPacket.NewText(target.getRect(), CombatText.DamagedHostileCrit, HealAmount, false, false);
 			}
 		}

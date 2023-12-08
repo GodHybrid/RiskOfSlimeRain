@@ -1,40 +1,44 @@
-using RiskOfSlimeRain.Core.ROREffects;
+using RiskOfSlimeRain.Helpers;
 using System.IO;
-using Terraria.ModLoader;
+using Terraria;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Network.Effects
 {
-	public class ROREffectSyncSingleStackPacket/* : ModPlayerNetworkPacket<RORPlayer>*/
+	public class ROREffectSyncSingleStackPacket : PlayerPacket
 	{
-		public void Send(int toWho = -1, int fromWho = -1) { }
-		//to do manual syncing via the overrides, you need PreSend to send, and MidReceive to receive
-		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
-
-		public int Index { get; set; } = -1;
-
-		//private ROREffect Effect => ModPlayer.Effects[Index];
+		public readonly int index;
 
 		public ROREffectSyncSingleStackPacket() { }
 
-		public ROREffectSyncSingleStackPacket(ROREffect effect)
+		public ROREffectSyncSingleStackPacket(Player player, int index) : base(player)
 		{
-			Index = ROREffectManager.GetIndexOfEffect(effect);
+			this.index = index;
 		}
 
-		//protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
-		//{
-		//	if (Index < 0) return false; //In case the parameterless constructor gets used, or index isn't found
+		protected override void PostSend(BinaryWriter writer, Player player)
+		{
+			writer.Write7BitEncodedInt(index);
 
-		//	Effect.NetSendStack(modPacket);
-		//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " sending stack " + Effect);
-		//	return base.PreSend(modPacket, fromWho, toWho);
-		//}
+			var effect = player.GetRORPlayer().Effects[index];
+			effect.NetSendStack(writer);
+			//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " sending stack " + Effect);
+		}
 
-		//protected override bool MidReceive(BinaryReader reader, int fromWho)
-		//{
-		//	Effect.NetReceiveStack(reader);
-		//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " receiving stack " + Effect);
-		//	return base.MidReceive(reader, fromWho);
-		//}
+		protected override void PostReceive(BinaryReader reader, int sender, Player player)
+		{
+			int index = reader.Read7BitEncodedInt();
+
+			var mPlayer = player.GetRORPlayer();
+			var effect = mPlayer.Effects[index];
+			effect.NetReceiveStack(reader);
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				new ROREffectSyncSingleStackPacket(player, index).Send(from: sender);
+			}
+
+			//	//GeneralHelper.Print("" + (DateTime.Now.Ticks % 1000) + " receiving stack " + Effect);
+		}
 	}
 }

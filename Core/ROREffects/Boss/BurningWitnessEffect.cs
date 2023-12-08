@@ -58,21 +58,24 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 				Rectangle hitbox = player.Hitbox;
 				hitbox.Inflate(spawnTimer, spawnTimer);
 
-				bool noExistingTrail = true;
+				int fireDuration = 50;
 				int type = ModContent.ProjectileType<FireProj>();
-				for (int i = 0; i < Main.maxProjectiles; i++)
+				bool canDrop = timer % (fireDuration - 10) == 0;
+				if (!canDrop)
 				{
-					Projectile proj = Main.projectile[i];
-
-					if (proj.active && proj.type == type && proj.Hitbox.Intersects(hitbox))
+					for (int i = 0; i < Main.maxProjectiles; i++)
 					{
-						noExistingTrail = false;
-						break;
+						Projectile proj = Main.projectile[i];
+
+						if (proj.active && proj.type == type && proj.Hitbox.Intersects(hitbox))
+						{
+							canDrop = true;
+							break;
+						}
 					}
 				}
 
-				int fireDuration = 50;
-				if (timer % (fireDuration - 10) == 0 || noExistingTrail)
+				if (canDrop)
 				{
 					int damage = (int)(0.35f * player.GetDamage());
 

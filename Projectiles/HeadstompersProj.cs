@@ -87,7 +87,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override Color? GetAlpha(Color lightColor)
 		{
-			return Color.White * ((255 - Projectile.alpha) / 255f);
+			return Color.White * Projectile.Opacity;
 		}
 	}
 }

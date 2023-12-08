@@ -107,10 +107,13 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				Player p = Main.player[i];
 
-				RORPlayer mPlayer = p.GetRORPlayer();
-				if (p.active && !p.dead && mPlayer.CanReceiveWarbannerBuff && p.DistanceSQ(Projectile.Center) < Radius * Radius)
+				if (p.active && !p.dead)
 				{
-					mPlayer.ActivateWarbanner(Projectile.identity);
+					RORPlayer mPlayer = p.GetRORPlayer();
+					if (mPlayer.CanReceiveWarbannerBuff && p.DistanceSQ(Projectile.Center) < Radius * Radius)
+					{
+						mPlayer.ActivateWarbanner(Projectile.identity);
+					}
 				}
 			}
 		}

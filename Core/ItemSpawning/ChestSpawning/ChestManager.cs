@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
@@ -20,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		public static SortedSet<int> filledChests;
 
 		/// <summary>
-		/// Saved on the world
+		/// Saved on the world, synced for "misc info"
 		/// </summary>
 		public static int totalChests = 0;
 
@@ -39,6 +40,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool CanSpawnInChest(int y)
 		{
+			//TODO 1.4.4 dontdigup
 			//40% chance of no item in a chest in the middle third of a world. 80% chance of no item on the surface and close to hell
 			float noItem = 0.4f;
 			//-200 is the "top" of hell, so add 100 more
@@ -304,6 +306,16 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		public static void Save(TagCompound tag)
 		{
 			tag.Add("totalChests", totalChests);
+		}
+
+		internal static void NetSend(BinaryWriter writer)
+		{
+			writer.Write7BitEncodedInt(totalChests);
+		}
+
+		internal static void NetReceive(BinaryReader reader)
+		{
+			totalChests = reader.Read7BitEncodedInt();
 		}
 	}
 }

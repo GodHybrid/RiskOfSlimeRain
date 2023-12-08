@@ -539,14 +539,14 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public void NetSendStack(BinaryWriter writer)
 		{
-			writer.Write(UnlockedStack);
-			writer.Write(Stack);
+			writer.Write7BitEncodedInt(UnlockedStack);
+			writer.Write7BitEncodedInt(Stack);
 		}
 
 		public void NetReceiveStack(BinaryReader reader)
 		{
-			UnlockedStack = reader.ReadInt32();
-			Stack = reader.ReadInt32();
+			UnlockedStack = reader.Read7BitEncodedInt();
+			Stack = reader.Read7BitEncodedInt();
 		}
 		#endregion
 

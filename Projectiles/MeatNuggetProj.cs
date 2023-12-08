@@ -66,9 +66,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					if (Main.LocalPlayer.Hitbox.Intersects(Projectile.Hitbox))
 					{
-						SoundEngine.PlaySound(SoundID.Item86.WithVolumeScale(0.7f).WithPitchOffset(0.6f), Projectile.Center);
-						Main.LocalPlayer.HealMe(Heal);
-						Projectile.Kill();
+						HealAndKillSelf(Main.LocalPlayer);
 					}
 				}
 				else
@@ -79,14 +77,19 @@ namespace RiskOfSlimeRain.Projectiles
 
 						if (player.active && !player.dead && player.Hitbox.Intersects(Projectile.Hitbox))
 						{
-							SoundEngine.PlaySound(SoundID.Item86.WithVolumeScale(0.7f).WithPitchOffset(0.6f), Projectile.Center);
-							player.HealMe(Heal);
-							Projectile.Kill();
+							HealAndKillSelf(player);
 							break;
 						}
 					}
 				}
 			}
+		}
+
+		private void HealAndKillSelf(Player player)
+		{
+			SoundEngine.PlaySound(SoundID.Item86.WithVolumeScale(0.7f).WithPitchOffset(0.6f), Projectile.Center);
+			player.HealMe(Heal);
+			Projectile.Kill();
 		}
 	}
 }

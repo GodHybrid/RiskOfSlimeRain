@@ -177,7 +177,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 							if (p.active && !p.dead && p.DistanceSQ(Projectile.Center) < RadiusSQ)
 							{
-								p.HealMe(Heal);
+								p.HealMe(Heal, healer: Main.LocalPlayer);
 							}
 						}
 					}

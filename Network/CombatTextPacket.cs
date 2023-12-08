@@ -5,31 +5,26 @@ using Terraria.ID;
 
 namespace RiskOfSlimeRain.Network
 {
-	public class CombatTextPacket/* : NetworkPacket*/
+	public class CombatTextPacket : MPPacket
 	{
-		public void Send(int toWho = -1, int fromWho = -1) { }
-		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
-
-		public Vector2 Position { get; set; }
-
-		public Color Color { get; set; }
-
-		public string Text { get; set; }
-
-		public byte Flags { get; set; }
-
-		private BitsByte Bits => Flags;
-
-		private Rectangle Location => new Rectangle((int)Position.X, (int)Position.Y, 0, 0);
+		public readonly Vector2 position;
+		public readonly Color color;
+		public readonly string text;
+		public readonly byte flags;
 
 		public CombatTextPacket() { }
 
-		public CombatTextPacket(Rectangle location, Color color, string text, bool dramatic = false, bool dot = false)
+		public CombatTextPacket(Vector2 position, Color color, string text, byte flags)
 		{
-			Position = location.TopLeft();
-			Color = color;
-			Text = text;
-			Flags = new BitsByte(b1: dramatic, b2: dot);
+			this.position = position;
+			this.color = color;
+			this.text = text;
+			this.flags = flags;
+		}
+
+		public CombatTextPacket(Rectangle location, Color color, string text, bool dramatic = false, bool dot = false) : this(location.TopLeft(), color, text, new BitsByte(b1: dramatic, b2: dot))
+		{
+
 		}
 
 		/// <summary>
@@ -53,10 +48,29 @@ namespace RiskOfSlimeRain.Network
 			return index;
 		}
 
-		//protected override bool PostReceive(BinaryReader reader, int fromWho)
-		//{
-		//	CombatText.NewText(Location, Color, Text, Bits[0], Bits[1]);
-		//	return base.PostReceive(reader, fromWho);
-		//}
+		public override void Send(BinaryWriter writer)
+		{
+			writer.WriteVector2(position);
+			writer.WriteRGB(color);
+			writer.Write((string)text);
+			writer.Write((byte)flags);
+		}
+
+		public override void Receive(BinaryReader reader, int sender)
+		{
+			var position = reader.ReadVector2();
+			var color = reader.ReadRGB();
+			var text = reader.ReadString();
+			var flags = (BitsByte)reader.ReadByte();
+
+			if (Main.netMode == NetmodeID.MultiplayerClient)
+			{
+				CombatText.NewText(new Rectangle((int)position.X, (int)position.Y, 0, 0), color, text, flags[0], flags[1]);
+			}
+			else
+			{
+				new CombatTextPacket(position, color, text, flags).Send(from: sender);
+			}
+		}
 	}
 }

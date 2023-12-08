@@ -74,7 +74,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 				}
 			}
 
-			new ROREffectSyncSinglePacket(this).Send();
+			new ROREffectSyncSinglePacket(player, this).Send();
 			return true;
 		}
 
@@ -84,18 +84,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			{
 				SoundEngine.PlaySound(SoundID.MaxMana, player.Center);
 				Shield = MaxShield;
-				new ROREffectSyncSinglePacket(this).Send();
+				new ROREffectSyncSinglePacket(player, this).Send();
 			}
-		}
-
-		protected override void NetReceive(BinaryReader reader)
-		{
-			Shield = reader.ReadInt32();
 		}
 
 		protected override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(Shield);
+			writer.Write7BitEncodedInt(Shield);
+		}
+
+		protected override void NetReceive(BinaryReader reader)
+		{
+			Shield = reader.Read7BitEncodedInt();
 		}
 	}
 }

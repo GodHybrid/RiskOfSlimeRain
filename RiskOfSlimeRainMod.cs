@@ -1,6 +1,7 @@
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.Subworlds;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Network;
 using RiskOfSlimeRain.Network.NPCs;
 using System.IO;
 using Terraria.ModLoader;
@@ -18,6 +19,7 @@ namespace RiskOfSlimeRain
 
 		public override void Load()
 		{
+			NetHandler.Load();
 			ROREffectManager.Load();
 			SpawnedFromStatuePacket.Load();
 		}
@@ -32,6 +34,7 @@ namespace RiskOfSlimeRain
 
 		public override void Unload()
 		{
+			NetHandler.Unload();
 			ROREffectManager.Unload();
 			NPCHelper.Unload();
 			SubworldManager.Unload();
@@ -43,7 +46,7 @@ namespace RiskOfSlimeRain
 
 		public override void HandlePacket(BinaryReader reader, int whoAmI)
 		{
-			//NetworkPacketLoader.Instance.HandlePacket(reader, whoAmI);
+			NetHandler.HandlePackets(reader, whoAmI);
 		}
 	}
 }

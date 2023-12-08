@@ -389,7 +389,8 @@ ROREffects: {
 				Very very valuable
 				Don't drop it; it's worth more than you
 				'''
-			UIInfo: Kills required for next banner: {0}. Active banners: {1}
+			UIInfo: Kills required for next banner: {0}
+			UIInfoActive: . Active banners: {0}
 			UIInfoReady: New banner ready, leave the current area of effect or return to solid ground
 			UIInfoInvasion: Kill countdown is disabled while an invasion is in progress
 		}
@@ -437,9 +438,9 @@ Items: {
 			'''
 			Use to remove the nearest warbanner from '{0}'
 			Stand inside the range of a warbanner, and it will:
-			- Highlight the warbanner that's about to be removed
 			- Reset the killcount when used
 			'''
+		Highlight: - Highlight the warbanner that's about to be removed
 		CantUse: You aren't standing inside the range of any warbanners!
 		Obtainment: 25% chance to be sold by the Traveling Merchant after Skeletron has been defeated
 	}

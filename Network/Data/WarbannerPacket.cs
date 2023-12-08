@@ -1,34 +1,34 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.Warbanners;
 using System.IO;
+using Terraria;
 
 namespace RiskOfSlimeRain.Network.Data
 {
-	public class WarbannerPacket/* : NetworkPacket*/
+	public class WarbannerPacket : MPPacket
 	{
-		public void Send(int toWho = -1, int fromWho = -1) { }
-		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToServer;
-
-		public int Radius { get; set; }
-
-		public float X { get; set; }
-
-		public float Y { get; set; }
+		public readonly int radius;
+		public readonly Vector2 position;
 
 		public WarbannerPacket() { }
 
 		public WarbannerPacket(int radius, Vector2 position)
 		{
-			Radius = radius;
-			X = position.X;
-			Y = position.Y;
+			this.radius = radius;
+			this.position = position;
 		}
 
-		//protected override bool PostReceive(BinaryReader reader, int fromWho)
-		//{
-		//	//Do something with the received data, which is now in the variables
-		//	WarbannerManager.AddWarbanner(Radius, X, Y);
-		//	return base.PostReceive(reader, fromWho);
-		//}
+		public override void Send(BinaryWriter writer)
+		{
+			writer.Write7BitEncodedInt(radius);
+			writer.WriteVector2(position);
+		}
+
+		public override void Receive(BinaryReader reader, int sender)
+		{
+			int radius = reader.Read7BitEncodedInt();
+			Vector2 position = reader.ReadVector2();
+			WarbannerManager.AddWarbanner(radius, position.X, position.Y);
+		}
 	}
 }

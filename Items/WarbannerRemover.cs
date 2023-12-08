@@ -15,11 +15,13 @@ namespace RiskOfSlimeRain.Items
 	{
 		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
 
+		public static LocalizedText HighlightText { get; private set; }
 		public static LocalizedText CantUseText { get; private set; }
 		public static LocalizedText ObtainmentText { get; private set; }
 
 		public override void SetStaticDefaults()
 		{
+			HighlightText = this.GetLocalization("Highlight");
 			CantUseText = this.GetLocalization("CantUse");
 			ObtainmentText = this.GetLocalization("Obtainment");
 		}
@@ -60,6 +62,24 @@ namespace RiskOfSlimeRain.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
+			int index;
+			TooltipLine line;
+			bool added = false;
+			if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				line = new TooltipLine(Mod, nameof(HighlightText), HighlightText.ToString());
+				if (index > -1)
+				{
+					tooltips.Insert(++index, line);
+				}
+				else
+				{
+					tooltips.Add(line);
+				}
+				added = true;
+			}
+
 			if (Main.LocalPlayer.HasItem(Item.type))
 			{
 				if (!Main.LocalPlayer.GetRORPlayer().InWarbannerRange)
@@ -72,8 +92,9 @@ namespace RiskOfSlimeRain.Items
 			}
 			else
 			{
-				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
-				TooltipLine line = new TooltipLine(Mod, nameof(ObtainmentText), ObtainmentText.ToString());
+				index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				if (added) index++;
+				line = new TooltipLine(Mod, nameof(ObtainmentText), ObtainmentText.ToString());
 				if (index > -1)
 				{
 					tooltips.Insert(++index, line);

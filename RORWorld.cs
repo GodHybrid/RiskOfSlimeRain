@@ -53,6 +53,7 @@ namespace RiskOfSlimeRain
 			NPCLootManager.NetSend(writer, false);
 
 			//Warbanner backend is all serverside, so clients don't need to know about that
+			ChestManager.NetSend(writer);
 		}
 
 		public override void NetReceive(BinaryReader reader)
@@ -62,6 +63,8 @@ namespace RiskOfSlimeRain
 
 			NPCLootManager.NetReceive(reader, true);
 			NPCLootManager.NetReceive(reader, false);
+
+			ChestManager.NetReceive(reader);
 		}
 
 		public override void LoadWorldData(TagCompound tag)

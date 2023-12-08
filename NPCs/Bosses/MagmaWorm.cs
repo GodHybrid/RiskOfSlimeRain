@@ -901,7 +901,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 				onDropped: delegate (Player player, Item item)
 				{
 					player.GetRORPlayer().burningWitnessDropped = true;
-					new BurningWitnessDroppedPacket(player.whoAmI).Send(toWho: player.whoAmI);
+					new BurningWitnessDroppedPacket(player).Send(to: player.whoAmI);
 				}
 			);
 

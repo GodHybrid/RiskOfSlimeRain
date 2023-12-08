@@ -18,7 +18,7 @@ namespace RiskOfSlimeRain.Helpers
 		/// </summary>
 		public static void SetLocalRORPlayer(RORPlayer mPlayer)
 		{
-			if (!mPlayer.Player.isDisplayDollOrInanimate)
+			if (Main.myPlayer == mPlayer.Player.whoAmI && !mPlayer.Player.isDisplayDollOrInanimate)
 			{
 				localRORPlayer = mPlayer;
 			}
@@ -26,7 +26,6 @@ namespace RiskOfSlimeRain.Helpers
 
 		public static RORPlayer GetRORPlayer(this Player player)
 		{
-			//TODO 1.4.4 same fix as thorium with the dummy
 			if (!Main.gameMenu && player.whoAmI == Main.myPlayer && !player.isDisplayDollOrInanimate && localRORPlayer != null)
 			{
 				return localRORPlayer;
@@ -55,8 +54,13 @@ namespace RiskOfSlimeRain.Helpers
 		/// <summary>
 		/// Make sure to call this only clientside (== Main.myPlayer check where appropriate)
 		/// </summary>
-		public static void HealMe(this Player player, int heal, bool noBroadcast = false)
+		public static void HealMe(this Player player, int heal, bool noBroadcast = false, Player healer = null)
 		{
+			if (healer == null)
+			{
+				healer = player;
+			}
+
 			int clampHeal = Math.Min(heal, player.statLifeMax2 - player.statLife);
 			if (clampHeal < 0) //Something wrong
 			{
@@ -66,11 +70,14 @@ namespace RiskOfSlimeRain.Helpers
 					clampHeal = 0;
 				}
 			}
+
 			player.HealEffect(heal, false);
 			player.statLife += clampHeal;
+
 			if (!noBroadcast && Main.netMode != NetmodeID.SinglePlayer)
 			{
-				new PlayerHealPacket((byte)player.whoAmI, heal).Send();
+				//Do not send it back to the same player that already healed the player (the healer)
+				new PlayerHealPacket(player, heal, healer).Send(from: healer.whoAmI);
 			}
 			//NetMessage.SendData(MessageID.SpiritHeal, -1, -1, null, player.whoAmI, clampHeal);
 		}
@@ -92,12 +99,14 @@ namespace RiskOfSlimeRain.Helpers
 			long piggy = Utils.CoinsCount(out _, player.bank.item, empty);
 			long safe = Utils.CoinsCount(out _, player.bank2.item, empty);
 			long forge = Utils.CoinsCount(out _, player.bank3.item, empty);
+			long pouch = Utils.CoinsCount(out _, player.bank4.item, empty);
 			return Utils.CoinsCombineStacks(out _, new long[]
 			{
 				inv,
 				piggy,
 				safe,
-				forge
+				forge,
+				pouch,
 			});
 		}
 

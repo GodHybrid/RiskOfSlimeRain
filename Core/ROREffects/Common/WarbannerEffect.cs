@@ -33,18 +33,24 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		/// </summary>
 		public bool WarbannerReadyToDrop { get; set; } = false;
 
+		public static LocalizedText UIInfoActiveText { get; private set; }
 		public static LocalizedText UIInfoReadyText { get; private set; }
 		public static LocalizedText UIInfoInvasionText { get; private set; }
 
 		public override void SetStaticDefaults()
 		{
+			UIInfoActiveText ??= GetLocalization("UIInfoActive");
 			UIInfoReadyText ??= GetLocalization("UIInfoReady");
 			UIInfoInvasionText ??= GetLocalization("UIInfoInvasion");
 		}
 
 		public override string UIInfo()
 		{
-			var text = UIInfoText.Format(Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount), WarbannerManager.warbanners.Count);
+			var text = UIInfoText.Format(Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount));
+			if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				text += UIInfoActiveText.Format(WarbannerManager.warbanners.Count);
+			}
 			if (WarbannerReadyToDrop)
 			{
 				text += "\n" + UIInfoReadyText.ToString();
@@ -99,12 +105,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		protected override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(KillCount);
+			writer.Write7BitEncodedInt(KillCount);
 		}
 
 		protected override void NetReceive(BinaryReader reader)
 		{
-			KillCount = reader.ReadInt32();
+			KillCount = reader.Read7BitEncodedInt();
 		}
 
 		public override string ToString()

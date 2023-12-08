@@ -87,16 +87,12 @@ namespace RiskOfSlimeRain
 			if (!InWarbannerRange) LastWarbannerIdentity = -1;
 
 			WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(this);
-			if ((effect?.Active ?? false) && Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer)
+			if (!InWarbannerRange && (effect?.Active ?? false) && Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer && effect.WarbannerReadyToDrop)
 			{
-				if (effect.WarbannerReadyToDrop && !InWarbannerRange)
+				if (WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(Player.Center.X, Player.Top.Y))
 				{
-					bool success = WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(Player.Center.X, Player.Top.Y));
-					if (success)
-					{
-						effect.ResetKillCount();
-						effect.WarbannerReadyToDrop = false;
-					}
+					effect.ResetKillCount();
+					effect.WarbannerReadyToDrop = false;
 				}
 			}
 		}
@@ -508,15 +504,11 @@ namespace RiskOfSlimeRain
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			if (Main.netMode == NetmodeID.Server)
-			{
-				new RORPlayerSyncToAllClientsPacket(this).Send(fromWho, toWho);
-			}
-			else
+			if (Main.netMode != NetmodeID.Server)
 			{
 				ROREffectManager.Populate(this);
-				new RORPlayerSyncToServerPacket(this).Send(fromWho, toWho);
 			}
+			new RORPlayerSyncPacket(this).Send(toWho, fromWho);
 		}
 
 		public override void SaveData(TagCompound tag)
@@ -557,6 +549,8 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Init(this);
 
 			nullifierEnabled = false;
+			warbannerRemoverDropped = false;
+			burningWitnessDropped = false;
 		}
 
 		public override void ModifyScreenPosition()

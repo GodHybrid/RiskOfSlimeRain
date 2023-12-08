@@ -25,6 +25,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public const int RepeatedDropRate = 100;
 		public const float HMDropRateMultiplierForPreHMBosses = 2;
 
+		//TODO 1.4.4
 		//Unique float identifiers for each boss, copy from BossChecklist
 		public const float KingSlime = 1f;
 		public const float EyeOfCthulhu = 2f;
@@ -506,7 +507,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		{
 			if (vanilla)
 			{
-				writer.Write(vanillaDowned.Count);
+				writer.Write7BitEncodedInt(vanillaDowned.Count);
 				for (int i = 0; i < vanillaDowned.Count; i++)
 				{
 					writer.Write((float)vanillaDowned[i]);
@@ -514,7 +515,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			}
 			else
 			{
-				writer.Write(moddedDowned.Count);
+				writer.Write7BitEncodedInt(moddedDowned.Count);
 				foreach (var entry in moddedDowned)
 				{
 					writer.Write(entry.Key);
@@ -531,7 +532,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			if (vanilla)
 			{
 				vanillaDowned = new List<float>();
-				int count = reader.ReadInt32();
+				int count = reader.Read7BitEncodedInt();
 				for (int i = 0; i < count; i++)
 				{
 					float value = reader.ReadSingle();
@@ -542,7 +543,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			else
 			{
 				moddedDowned = new Dictionary<string, float>();
-				int count = reader.ReadInt32();
+				int count = reader.Read7BitEncodedInt();
 				for (int i = 0; i < count; i++)
 				{
 					string key = reader.ReadString();

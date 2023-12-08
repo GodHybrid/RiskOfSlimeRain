@@ -643,7 +643,7 @@ namespace RiskOfSlimeRain
 			{
 				if (TimeByIndex[index].Value <= 0)
 				{
-					new ROREffectSyncSingleStackPacket(effects[index]).Send();
+					new ROREffectSyncSingleStackPacket(player, index).Send();
 					toRemove.Add(index);
 				}
 			}

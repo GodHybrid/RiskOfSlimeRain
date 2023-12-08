@@ -7,28 +7,23 @@ namespace RiskOfSlimeRain.Network
 	/// <summary>
 	/// Sent to the client that got a Warbanner Remover dropped, simply sets the flag of that player to true
 	/// </summary>
-	public class WarbannerRemoverDroppedPacket/* : NetworkPacket*/
+	public class WarbannerRemoverDroppedPacket : PlayerPacket
 	{
-		public void Send(int toWho = -1, int fromWho = -1) { }
-		//public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToClient;
-
-		public int WhoAmI { get; set; }
-
-		private Player Player => Main.player[WhoAmI];
-
-		private RORPlayer ModPlayer => Player.GetRORPlayer();
-
 		public WarbannerRemoverDroppedPacket() { }
 
-		public WarbannerRemoverDroppedPacket(int whoAmI)
+		public WarbannerRemoverDroppedPacket(Player player) : base(player)
 		{
-			WhoAmI = whoAmI;
+
 		}
 
-		//protected override bool PostReceive(BinaryReader reader, int fromWho)
-		//{
-		//	ModPlayer.warbannerRemoverDropped = true;
-		//	return base.PostReceive(reader, fromWho);
-		//}
+		protected override void PostSend(BinaryWriter writer, Player player)
+		{
+
+		}
+
+		protected override void PostReceive(BinaryReader reader, int sender, Player player)
+		{
+			player.GetRORPlayer().warbannerRemoverDropped = true;
+		}
 	}
 }
