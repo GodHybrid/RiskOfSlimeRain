@@ -317,6 +317,11 @@ namespace RiskOfSlimeRain
 			return Effects.Sum(e => e.Stack);
 		}
 
+		public int CountTotalEffects()
+		{
+			return Effects.Sum(e => e.UnlockedStack);
+		}
+
 		public float TakenDamageMultiplier()
 		{
 			return 1 + (CountActiveEffects() * ServerConfig.TakenDamageMultiplier);

@@ -57,6 +57,7 @@ namespace RiskOfSlimeRain
 		public static LocalizedText EffectUIMiscChangeStackText { get; private set; }
 		public static LocalizedText EffectUIMiscSwitchToNullifierText { get; private set; }
 		public static LocalizedText EffectUIMiscInfoText { get; private set; }
+		public static LocalizedText EffectUIMiscTotalStacksText { get; private set; }
 		public static LocalizedText EffectUIMiscDifficultyScalingText { get; private set; }
 		public static LocalizedText EffectUIMiscHasChestsText { get; private set; }
 		public static LocalizedText EffectUIMiscNoChestsText { get; private set; }
@@ -75,6 +76,7 @@ namespace RiskOfSlimeRain
 			EffectUIMiscChangeStackText ??= Mod.GetLocalization($"{category}ChangeStack");
 			EffectUIMiscSwitchToNullifierText ??= Mod.GetLocalization($"{category}SwitchToNullifier");
 			EffectUIMiscInfoText ??= Mod.GetLocalization($"{category}Info");
+			EffectUIMiscTotalStacksText ??= Mod.GetLocalization($"{category}TotalStacks");
 			EffectUIMiscDifficultyScalingText ??= Mod.GetLocalization($"{category}DifficultyScaling");
 			EffectUIMiscHasChestsText ??= Mod.GetLocalization($"{category}HasChests");
 			EffectUIMiscNoChestsText ??= Mod.GetLocalization($"{category}NoChests");
@@ -347,6 +349,11 @@ namespace RiskOfSlimeRain
 						text += "\n" + EffectUIMiscSwitchToNullifierText.ToString();
 					}
 					text += "\n" + EffectUIMiscInfoText.Format(ROREffect.GetProcByUseTime(player).ToPercent(2));
+
+					int activeStacks = mPlayer.CountActiveEffects();
+					int totalStacks = mPlayer.CountTotalEffects();
+					text += "\n" + EffectUIMiscTotalStacksText.Format(activeStacks, totalStacks);
+
 					//text += "\nNext boss to fight for guaranteed item: " + NPCLootManager.GetDisplayNameOfEarliestNonBeatenBoss(out _); //Iffy when progression is blocked
 					if (ServerConfig.Instance.DifficultyScaling)
 					{

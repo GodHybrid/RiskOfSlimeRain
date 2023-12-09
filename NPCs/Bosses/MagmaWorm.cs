@@ -11,6 +11,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.Bestiary;
 using Terraria.GameContent.ItemDropRules;
 using Terraria.ID;
 using Terraria.Localization;
@@ -18,7 +19,6 @@ using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.NPCs.Bosses
 {
-	//TODO 1.4.4 custom health bar
 	//TODO MagmaWorm
 	// Energized version
 	public abstract class MagmaWorm : ModNPC
@@ -36,6 +36,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public static LocalizedText CommonNameText { get; private set; }
 		public static LocalizedText SpawnInfoText { get; private set; }
+		public static LocalizedText BestiaryFlavorTextText { get; private set; }
 
 		public override LocalizedText DisplayName => CommonNameText;
 
@@ -44,12 +45,16 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			string category = $"NPCs.{nameof(MagmaWorm)}.";
 			CommonNameText ??= Mod.GetLocalization($"{category}CommonName");
 			SpawnInfoText ??= Mod.GetLocalization($"{category}SpawnInfo");
+			BestiaryFlavorTextText ??= Mod.GetLocalization($"{category}BestiaryFlavorText");
 			Main.npcFrameCount[NPC.type] = 3;
 
 			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Confused] = true;
 			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Poisoned] = true;
 			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.OnFire] = true;
 			NPCID.Sets.SpecificDebuffImmunity[NPC.type][BuffID.Frostburn] = true;
+
+			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers() { Hide = true };
+			NPCID.Sets.NPCBestiaryDrawOffset[NPC.type] = drawModifier;
 		}
 
 		public override void SetDefaults()
@@ -977,6 +982,31 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 	public class MagmaWormHead : MagmaWorm
 	{
+		public override void SetStaticDefaults()
+		{
+			base.SetStaticDefaults();
+
+			var drawModifier = new NPCID.Sets.NPCBestiaryDrawModifiers()
+			{
+				CustomTexturePath = "RiskOfSlimeRain/NPCs/Bosses/MagmaWorm_Bestiary",
+				Scale = 0.75f,
+				PortraitScale = 0.8f,
+				Position = new Vector2(70, -50),
+				PortraitPositionXOverride = 45,
+				PortraitPositionYOverride = -40,
+			};
+			NPCID.Sets.NPCBestiaryDrawOffset[NPC.type] = drawModifier;
+		}
+
+		public override void SetBestiary(BestiaryDatabase database, BestiaryEntry bestiaryEntry)
+		{
+			bestiaryEntry.Info.AddRange(new IBestiaryInfoElement[]
+			{
+				new FlavorTextBestiaryInfoElement(BestiaryFlavorTextText.Key),
+				BestiaryDatabaseNPCsPopulator.CommonTags.SpawnConditions.Biomes.TheUnderworld,
+			});
+		}
+
 		public override void SetDefaults()
 		{
 			base.SetDefaults();

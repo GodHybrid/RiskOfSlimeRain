@@ -462,6 +462,7 @@ NPCs: {
 	MagmaWorm: {
 		CommonName: Magma Worm
 		SpawnInfo: Summons the {$NPCs.MagmaWorm.CommonName}. Drops '{$ROREffects.Boss.BurningWitness.DisplayName}' on first death, then with 1% chance
+		BestiaryFlavorText: With its massive size, the Magma Worm must either eat VAST amounts of food a day or hibernate for a very, very, very long time below ground.
 	}
 }
 
@@ -610,6 +611,7 @@ UI: {
 				Misc Info:
 				Proc multiplier (based on held weapon): {0}
 				'''
+			TotalStacks: Active items: {0}/{1}
 			DifficultyScaling:
 				'''
 				Taken damage multiplier: {0}
