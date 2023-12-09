@@ -464,7 +464,7 @@ namespace RiskOfSlimeRain
 		{
 			if (ServerConfig.Instance.DifficultyScaling)
 			{
-				modifiers.SourceDamage += TakenDamageMultiplier();
+				modifiers.SourceDamage += 1f - TakenDamageMultiplier();
 			}
 		}
 
