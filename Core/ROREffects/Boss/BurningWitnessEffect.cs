@@ -63,15 +63,21 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 				bool canDrop = timer % (fireDuration - 10) == 0;
 				if (!canDrop)
 				{
+					bool noTrail = true;
 					for (int i = 0; i < Main.maxProjectiles; i++)
 					{
 						Projectile proj = Main.projectile[i];
 
 						if (proj.active && proj.type == type && proj.Hitbox.Intersects(hitbox))
 						{
-							canDrop = true;
+							noTrail = false;
 							break;
 						}
+					}
+
+					if (noTrail)
+					{
+						canDrop = true;
 					}
 				}
 

@@ -67,7 +67,7 @@ ROREffects: {
 				You can add whatever blood sample you want, as far as I know.
 				Remember that sampling from other creatures is a great basis for experimentation!
 				'''
-			UIInfo: Bonus life: {0}. Cap: {1}. Stored heal: {2}
+			UIInfo: Bonus life: {0}. Cap: {1}. Stored life: {2}
 		}
 
 		LeechingSeed: {
