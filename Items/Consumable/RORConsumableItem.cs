@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Network.Effects;
 using System;
 using System.Collections.Generic;
 using Terraria;
@@ -63,8 +64,18 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public sealed override bool? UseItem(Player player)
 		{
-			//It is important that this runs on clients+server, otherwise big problems happen
-			ROREffectManager.ApplyEffect<T>(player.GetRORPlayer());
+			if (Main.myPlayer == player.whoAmI)
+			{
+				var mPlayer = player.GetRORPlayer();
+				//It is important that this runs on client only, and send to server
+				var effect = ROREffectManager.ApplyEffect<T>(mPlayer);
+
+				if (Main.netMode == NetmodeID.MultiplayerClient)
+				{
+					new ROREffectApplyPacket(mPlayer, effect).Send();
+				}
+			}
+
 			return true;
 		}
 

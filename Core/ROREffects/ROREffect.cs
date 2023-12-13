@@ -318,7 +318,15 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static ROREffect NewInstance<T>(Player player) where T : ROREffect
 		{
-			ROREffect effect = CreateInstance(player, typeof(T));
+			return NewInstance(player, typeof(T));
+		}
+
+		/// <summary>
+		/// This returns a new effect of the given type with its creation time set accordingly
+		/// </summary>
+		public static ROREffect NewInstance(Player player, Type type)
+		{
+			ROREffect effect = CreateInstance(player, type);
 			effect.SetCreationTime();
 			return effect;
 		}

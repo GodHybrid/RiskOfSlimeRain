@@ -246,28 +246,53 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// <summary>
 		/// Adds an effect to the list (or increases the stack of an existing effect)
 		/// </summary>
-		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
+		public static ROREffect ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
+		{
+			return ApplyEffect(mPlayer, typeof(T));
+		}
+
+		/// <summary>
+		/// Adds an effect to the list (or increases the stack of an existing effect)
+		/// </summary>
+		public static ROREffect ApplyEffect(RORPlayer mPlayer, int id)
+		{
+			Type effectType = GetEffectOfId(id);
+			if (effectType == null)
+			{
+				//TODO Issue here is that the effects list will be desynced if nothing happens here. But This can only happen if id is invalid (tampered with from outside)
+				//RiskOfSlimeRainMod.Instance.Logger.Warn("Effect could not be applied");
+			}
+			return ApplyEffect(mPlayer, effectType);
+		}
+
+		/// <summary>
+		/// Adds an effect to the list (or increases the stack of an existing effect)
+		/// </summary>
+		public static ROREffect ApplyEffect(RORPlayer mPlayer, Type type)
 		{
 			//First, check if effect exists
-			ROREffect existing = GetEffectOfType<T>(mPlayer);
+			ROREffect existing = GetEffectOfType(mPlayer, type);
 			if (existing != null)
 			{
 				//Effect exists, increase stack
 				//CanStack already checked in the hook ran in CanUseItem
 				existing.IncreaseStack();
+				return existing;
 			}
 			else
 			{
 				//Effect doesn't exist, add one
-				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.Player);
+				ROREffect newEffect = ROREffect.NewInstance(mPlayer.Player, type);
 				newEffect.OnCreate();
 				//By definition of the list order, append
 				mPlayer.Effects.Add(newEffect);
-				Type[] validInterfaces = GetValidInterfaces(typeof(T));
+				Type[] validInterfaces = GetValidInterfaces(type);
 				foreach (var interf in validInterfaces)
 				{
 					mPlayer.EffectByType[interf].Add(newEffect);
 				}
+
+				return newEffect;
 			}
 		}
 
@@ -379,7 +404,15 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			return mPlayer.Effects.FirstOrDefault(e => e.GetType().Equals(typeof(T))) as T;
+			return GetEffectOfType(mPlayer, typeof(T)) as T;
+		}
+
+		/// <summary>
+		/// Used to retreive an effect of a type on the player. null if not found
+		/// </summary>
+		public static ROREffect GetEffectOfType(RORPlayer mPlayer, Type type)
+		{
+			return mPlayer.Effects.FirstOrDefault(e => e.GetType().Equals(type));
 		}
 
 		/// <summary>
