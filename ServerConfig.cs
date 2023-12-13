@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain
 		[DefaultValue(false)]
 		public bool OriginalStats;
 
-		public const float TakenDamageMultiplier = 0.01f;
+		public const float TakenDamageMultiplier = 0.02f;
 
 		public const float SpawnRateMultiplier = 0.02f;
 
