@@ -60,7 +60,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				NPC n = Main.npc[i];
 
-				if (n.active && !n.boss && n.CanBeChasedBy() && n.Hitbox.Intersects(Projectile.Hitbox))
+				if (!n.boss && n.CanBeChasedBy() && n.Hitbox.Intersects(Projectile.Hitbox))
 				{
 					if (NPCHelper.IsBossPiece(n)) continue;
 					if (n.type == NPCID.WallofFlesh || n.type == NPCID.WallofFleshEye) continue;

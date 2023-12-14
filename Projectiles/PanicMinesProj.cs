@@ -67,7 +67,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					NPC npc = Main.npc[i];
 
-					if (npc.active && npc.CanBeChasedBy() && npc.Hitbox.Intersects(Projectile.Hitbox))
+					if (npc.CanBeChasedBy() && npc.Hitbox.Intersects(Projectile.Hitbox))
 					{
 						activate = true;
 					}
@@ -99,7 +99,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					NPC n = Main.npc[i];
 
-					if (n.active && n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
+					if (n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
 						n.SimpleStrikeNPC(Damage, 0, damageType: ModContent.GetInstance<ArmorPenDamageClass>()); //Does not proc, syncs
 					}

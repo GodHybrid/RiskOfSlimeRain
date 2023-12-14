@@ -70,7 +70,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					NPC npc = Main.npc[i];
 
-					if (npc.active && npc.CanBeChasedBy() && npc.Hitbox.Intersects(Projectile.Hitbox))
+					if (npc.CanBeChasedBy() && npc.Hitbox.Intersects(Projectile.Hitbox))
 					{
 						Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
 						Projectile.Kill();
@@ -90,7 +90,7 @@ namespace RiskOfSlimeRain.Projectiles
 				{
 					NPC n = Main.npc[i];
 
-					if (n.active && n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
+					if (n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
 						n.AddBuff(BuffID.Venom, 8 * Ticks);
 						int damage = (int)(1.5f * Damage);

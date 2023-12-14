@@ -30,6 +30,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		int wireTimer = 0;
 
 		int Radius => (initialWireRadius + Math.Max(1, Stack)) * radIncrease;
+		int RadiusSQ => (Radius + 16) * (Radius + 16);
 
 		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
@@ -42,21 +43,25 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		{
 			if (Main.hasFocus) alphaCounter++;
 			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
-			wireTimer++;
-			if (wireTimer > wireTimerMax)
+
+			if (wireTimer >= wireTimerMax)
 			{
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					NPC npc = Main.npc[i];
 
-					if (npc.active && npc.CanBeChasedBy() && player.DistanceSQ(npc.Center) <= (Radius + 16) * (Radius + 16))
+					if (npc.CanBeChasedBy() && player.DistanceSQ(npc.Center) <= RadiusSQ)
 					{
 						int damage = (int)(Formula() * player.GetDamage());
 						player.ApplyDamageToNPC_ProcHeldItem(npc, damage, damageType: ModContent.GetInstance<ArmorPenDamageClass>());
+						wireTimer = 0;
 						break;
 					}
 				}
-				wireTimer = 0;
+			}
+			else
+			{
+				wireTimer++;
 			}
 		}
 
