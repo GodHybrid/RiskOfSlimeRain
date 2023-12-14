@@ -26,12 +26,9 @@ namespace RiskOfSlimeRain.Helpers
 		/// </summary>
 		public static bool IsBossPiece(NPC npc)
 		{
-			if (IsChild(npc, out NPC parent))
+			if (IsChild(npc, out NPC parent) && parent.whoAmI != npc.whoAmI && parent.boss)
 			{
-				if (parent.boss)
-				{
-					return true;
-				}
+				return true;
 			}
 
 			switch (npc.type)
