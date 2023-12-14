@@ -15,6 +15,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameContent;
+using Terraria.GameContent.UI.Chat;
 using Terraria.GameInput;
 using Terraria.ID;
 using Terraria.Localization;
@@ -82,6 +83,18 @@ namespace RiskOfSlimeRain
 			EffectUIMiscNoChestsText ??= Mod.GetLocalization($"{category}NoChests");
 			EffectUIMiscNullifierSavingsText ??= Mod.GetLocalization($"{category}NullifierSavings");
 			EffectUIMiscNullifierTotalText ??= Mod.GetLocalization($"{category}NullifierTotal");
+
+			On_RemadeChatMonitor.DrawChat += On_RemadeChatMonitor_DrawChat;
+		}
+
+		private static void On_RemadeChatMonitor_DrawChat(On_RemadeChatMonitor.orig_DrawChat orig, RemadeChatMonitor self, bool drawingPlayerChat)
+		{
+			if (EffectsVisible && hoverIndex != -1)
+			{
+				return;
+			}
+
+			orig(self, drawingPlayerChat);
 		}
 
 		public override void OnModUnload()
