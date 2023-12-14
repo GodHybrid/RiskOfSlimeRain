@@ -151,14 +151,13 @@ namespace RiskOfSlimeRain.Helpers
 		public static void LoadNPCCache()
 		{
 			List<int> wormList = new List<int>();
-			List<int> buffList = new List<int>();
 			List<int> badModNPCsList = new List<int>();
 
 			for (int i = 0; i < NPCLoader.NPCCount; i++)
 			{
 				try
 				{
-					NPC npc = new NPC();
+					//NPC npc = new NPC();
 
 					// (maybe) tml bug with modded npcs always counting as loaded, thus checking their texture, which doesn't exist yet
 					//TODO 1.4.4 check if need to port
@@ -167,7 +166,7 @@ namespace RiskOfSlimeRain.Helpers
 					//{
 					//	Main.NPCLoaded[i] = false;
 					//}
-					npc.SetDefaults(i);
+					//npc.SetDefaults(i);
 					//if (prev && i >= Main.maxNPCTypes)
 					//{
 					//	Main.NPCLoaded[i] = true;
@@ -176,7 +175,8 @@ namespace RiskOfSlimeRain.Helpers
 					//Modded only
 					if (i >= NPCID.Count)
 					{
-						ModNPC modNPC = npc.ModNPC;
+						//ModNPC modNPC = npc.ModNPC;
+						ModNPC modNPC = NPCLoader.GetNPC(i);
 						if (modNPC != null)
 						{
 							string name = modNPC.GetType().Name;

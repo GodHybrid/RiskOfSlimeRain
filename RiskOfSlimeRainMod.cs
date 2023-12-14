@@ -28,7 +28,8 @@ namespace RiskOfSlimeRain
 		{
 			ROREffectManager.PostSetupContent();
 			NPCHelper.Load();
-			SubworldManager.Load();
+			//TODO sublib
+			//SubworldManager.Load();
 			NPCHelper.LogBadModNPCs();
 		}
 
