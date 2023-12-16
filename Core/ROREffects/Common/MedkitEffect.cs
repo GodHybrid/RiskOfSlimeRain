@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				timer++;
 				if (timer == MaxTimerHeal && Main.myPlayer == player.whoAmI)
 				{
-					SoundEngine.PlaySound(SoundID.Splash.WithPitchOffset(0.6f), player.Center);
+					SoundEngine.PlaySound(SoundID.Item86.WithVolumeScale(0.7f).WithPitchOffset(0.6f), player.Center);
 					//Because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe((int)Formula());
 				}
