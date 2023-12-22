@@ -61,6 +61,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			bool progressionAllowed = CheckProgression(isPreHM);
 			bool drop = false;
 			bool firstDrop = false;
+			RORRarity desiredRarity = RORRarity.Uncommon;
 			if (progressionAllowed)
 			{
 				if (npc.ModNPC == null)
@@ -74,15 +75,12 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 						new UpdateDownedPacket(true).Send();
 					}
 				}
-				else
+				else if (CheckModded(npc, ref drop) is BossChecklistBossInfo modded && modded != null)
 				{
-					var modded = CheckModded(npc, ref drop);
-					if (modded != null)
-					{
-						moddedDowned.Add(modded.key, modded.progression);
-						firstDrop = true;
-						new UpdateDownedPacket(false).Send();
-					}
+					moddedDowned.Add(modded.key, modded.progression);
+					firstDrop = true;
+					desiredRarity = RORRarity.Common; //Modded bosses only get commons
+					new UpdateDownedPacket(false).Send();
 				}
 			}
 
@@ -91,7 +89,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			if (firstDrop)
 			{
 				//First time defeated
-				DropOneItemPerPlayer(npc, true);
+				DropOneItemPerPlayer(npc, desiredRarity);
 			}
 			else
 			{
@@ -104,14 +102,15 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 
 				if (Main.rand.NextBool(random))
 				{
-					DropOneItemPerPlayer(npc, false);
+					//Random drop is always common
+					DropOneItemPerPlayer(npc, RORRarity.Common);
 				}
 			}
 		}
 
-		public static void DropOneItemPerPlayer(NPC npc, bool first)
+		public static void DropOneItemPerPlayer(NPC npc, RORRarity desiredRarity)
 		{
-			RORRarity rarity = RORRarity.Common;
+			//RORRarity rarity = RORRarity.Common;
 			//float rarityRand = Main.rand.NextFloat();
 			//if (rarityRand < 0.05f)
 			//{
@@ -123,13 +122,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 			//}
 			//else common
 
-			//temporary
-			if (first)
-			{
-				rarity = RORRarity.Uncommon;
-			}
-
-			List<int> items = ROREffectManager.GetItemTypesOfRarity(rarity);
+			List<int> items = ROREffectManager.GetItemTypesOfRarity(desiredRarity);
 			if (items.Count <= 0) return; //Item list empty, no items to drop! (mod is not complete yet)
 
 			int itemTypeFunc() => Main.rand.Next(items);
@@ -145,6 +138,10 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning
 		public static bool CheckProgression(bool preHM)
 		{
 			if (!BossChecklistManager.Loaded) return true;
+
+			//No limit
+			return true;
+
 			int vanilla = vanillaDowned.Count(f => ProgressIsPostWallOfFlesh(preHM, f));
 
 			//moddedDowned contains things even if mods are disabled, preserving behavior
