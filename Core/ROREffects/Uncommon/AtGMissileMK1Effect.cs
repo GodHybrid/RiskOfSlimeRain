@@ -4,7 +4,9 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -22,15 +24,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float Alpha => (float)Math.Sin((alphaCounter / 6d) / (Math.PI * 2)) / 4f + 3 / 4f;
 
-		public override string Description => $"{Initial.ToPercent()} chance to fire a missile that deals {damageIncrease.ToPercent()} damage";
-
-		public override string FlavorText => "Lightweight and attachable to torso for free use of both hands.\nCan store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]";
-
-		public override string Name => "AtG Missile Mk. 1";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), damageIncrease.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Spawn chance: {RollChance.ToPercent(2)}";
+			return UIInfoText.Format(RollChance.ToPercent(2));
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
@@ -52,12 +50,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float RollChance => Formula();
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			RollSpawn(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			RollSpawn(player);
 		}
@@ -83,9 +81,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		{
 			//In ror, it actually uses the dealt damage for the missile damage, not the players damage
 			int damage = (int)(DamageIncrease * player.GetDamage());
-			if (Main.netMode != NetmodeID.Server) SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
+			if (Main.netMode != NetmodeID.Server) SoundEngine.PlaySound(SoundID.Item13.WithVolumeScale(SoundHelper.FixVolume(2f)).WithPitchOffset(0.4f), player.Center);
 			Vector2 velo = new Vector2(Main.rand.NextFloat(4f) - 2f, -2f);
-			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(player.Center, velo, damage, 10f);
+			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(GetEntitySource(player), player.Center, velo, damage, 10f);
 		}
 
 		public void PostUpdateEquips(Player player)

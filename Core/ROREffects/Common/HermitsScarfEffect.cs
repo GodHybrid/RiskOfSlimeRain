@@ -4,12 +4,12 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
-using Terraria.DataStructures;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
-	public class HermitsScarfEffect : RORCommonEffect, IPreHurt
+	public class HermitsScarfEffect : RORCommonEffect, IFreeDodge
 	{
 		//const float Initial = 0.05f;
 		//const float Increase = 0.05f;
@@ -22,22 +22,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Name => "Hermit's Scarf";
-
-		public override string Description => $"Allows you to evade attacks with {Initial.ToPercent()} chance";
-
-		public override string FlavorText => "This thing survived that horrible day\nIt must be able to survive whatever I have to endure, right?";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}";
+			return UIInfoText.Format(Math.Min(Chance, 1f).ToPercent());
 		}
 
 		public override bool AlwaysProc => false;
 
 		public override float Chance => Formula();
 
-		public bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public bool FreeDodge(Player player, Player.HurtInfo info)
 		{
 			player.immune = true;
 			player.immuneTime = 60;
@@ -49,8 +45,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				player.hurtCooldowns[i] = player.immuneTime;
 			}
-			if (Main.myPlayer == player.whoAmI) Projectile.NewProjectile(player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
-			return false;
+			Projectile.NewProjectile(GetEntitySource(player), player.Center, new Vector2(0, -0.3f), ModContent.ProjectileType<HermitsScarfProj>(), 0, 0, Main.myPlayer);
+
+			return true;
 		}
 	}
 }

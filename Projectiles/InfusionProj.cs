@@ -14,11 +14,6 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class InfusionProj : PlayerBonusCircleProj
 	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Infusion Orb");
-		}
-
 		public override float SlowDownFactor => 0.97f;
 
 		public override int StartHomingTimerMax => 30;
@@ -29,8 +24,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int HealAmount
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		public override void ApplyBonus(Player target)
@@ -38,23 +33,23 @@ namespace RiskOfSlimeRain.Projectiles
 			InfusionEffect effect = ROREffectManager.GetEffectOfType<InfusionEffect>(target);
 			if (effect != null)
 			{
-				effect.IncreaseBonusLife(HealAmount);
+				effect.IncreaseBonusLife(target, HealAmount);
 				CombatTextPacket.NewText(target.getRect(), CombatText.DamagedHostileCrit, HealAmount, false, false);
 			}
 		}
 
 		public override bool FindTarget(out int targetIndex)
 		{
-			targetIndex = projectile.owner;
-			Player player = projectile.GetOwner();
+			targetIndex = Projectile.owner;
+			Player player = Projectile.GetOwner();
 			return player.active && !player.dead;
 		}
 
 		public override void OtherAI()
 		{
-			if (Main.rand.NextFloat() < projectile.velocity.Length() / MaxHomingSpeed - 0.1f)
+			if (Main.rand.NextFloat() < Projectile.velocity.Length() / MaxHomingSpeed - 0.1f)
 			{
-				Dust dust = Dust.NewDustDirect(projectile.position, projectile.width, projectile.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.IndianRed * 0.78f, 1.5f);
+				Dust dust = Dust.NewDustDirect(Projectile.position, Projectile.width, Projectile.height, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.IndianRed * 0.78f, 1.5f);
 				int speed = Main.rand.Next(2, 4);
 				dust.customData = new InAndOutData(inEnd: Main.rand.Next(30, 50), outEnd: 200, inSpeed: speed, outSpeed: speed, reduceScale: false);
 				dust.velocity.X *= 0f;

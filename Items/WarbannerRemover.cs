@@ -6,31 +6,37 @@ using RiskOfSlimeRain.Helpers;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Items
 {
 	public class WarbannerRemover : ModItem
 	{
+		public override LocalizedText Tooltip => base.Tooltip.WithFormatArgs(Mod.DisplayName);
+
+		public static LocalizedText HighlightText { get; private set; }
+		public static LocalizedText CantUseText { get; private set; }
+		public static LocalizedText ObtainmentText { get; private set; }
+
 		public override void SetStaticDefaults()
 		{
-			Tooltip.SetDefault("Use to remove the nearest warbanner from '" + RiskOfSlimeRainMod.Instance.DisplayName + "'"
-				+ "\nStand inside the range of a warbanner, and it will:"
-				+ "\n- Highlight the warbanner that's about to be removed"
-				+ "\n- Reset the killcount when used");
+			HighlightText = this.GetLocalization("Highlight");
+			CantUseText = this.GetLocalization("CantUse");
+			ObtainmentText = this.GetLocalization("Obtainment");
 		}
 
 		public override void SetDefaults()
 		{
-			item.maxStack = 99;
-			item.width = 18;
-			item.height = 18;
-			item.useStyle = 4;
-			item.useTime = 30;
-			item.useAnimation = 30;
-			item.value = Item.buyPrice(gold: 15);
-			item.rare = ItemRarityID.Orange;
-			item.UseSound = SoundID.Item1;
+			Item.maxStack = 9999;
+			Item.width = 18;
+			Item.height = 18;
+			Item.useStyle = 4;
+			Item.useTime = 30;
+			Item.useAnimation = 30;
+			Item.value = Item.buyPrice(gold: 15);
+			Item.rare = ItemRarityID.Orange;
+			Item.UseSound = SoundID.Item1;
 		}
 
 		public override bool CanUseItem(Player player)
@@ -38,7 +44,7 @@ namespace RiskOfSlimeRain.Items
 			return player.GetRORPlayer().InWarbannerRange;
 		}
 
-		public override bool UseItem(Player player)
+		public override bool? UseItem(Player player)
 		{
 			WarbannerManager.DeleteNearestWarbanner(player);
 
@@ -56,20 +62,39 @@ namespace RiskOfSlimeRain.Items
 
 		public override void ModifyTooltips(List<TooltipLine> tooltips)
 		{
-			if (Main.LocalPlayer.HasItem(item.type))
+			int index;
+			TooltipLine line;
+			bool added = false;
+			if (Main.netMode == NetmodeID.SinglePlayer)
+			{
+				index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				line = new TooltipLine(Mod, nameof(HighlightText), HighlightText.ToString());
+				if (index > -1)
+				{
+					tooltips.Insert(++index, line);
+				}
+				else
+				{
+					tooltips.Add(line);
+				}
+				added = true;
+			}
+
+			if (Main.LocalPlayer.HasItem(Item.type))
 			{
 				if (!Main.LocalPlayer.GetRORPlayer().InWarbannerRange)
 				{
-					tooltips.Add(new TooltipLine(mod, Name, "You aren't standing inside the range of any warbanners!")
+					tooltips.Add(new TooltipLine(Mod, nameof(CantUseText), CantUseText.ToString())
 					{
-						overrideColor = Color.OrangeRed
+						OverrideColor = Color.OrangeRed
 					});
 				}
 			}
 			else
 			{
-				int index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
-				TooltipLine line = new TooltipLine(mod, Name, "25% chance to be sold by the Traveling Merchant after Skeletron has been defeated");
+				index = tooltips.FindLastIndex(t => t.Name.StartsWith("Tooltip"));
+				if (added) index++;
+				line = new TooltipLine(Mod, nameof(ObtainmentText), ObtainmentText.ToString());
 				if (index > -1)
 				{
 					tooltips.Insert(++index, line);

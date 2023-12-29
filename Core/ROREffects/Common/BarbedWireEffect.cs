@@ -6,8 +6,8 @@ using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -30,37 +30,38 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		int wireTimer = 0;
 
 		int Radius => (initialWireRadius + Math.Max(1, Stack)) * radIncrease;
+		int RadiusSQ => (Radius + 16) * (Radius + 16);
 
-		public override string Description => $"Touching enemies deals {Initial.ToPercent()} of your current damage every second";
-
-		public override string FlavorText => "Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Current damage: {Formula().ToPercent()}. Current radius: {Radius / radIncrease} Tiles";
+			return UIInfoText.Format(Formula().ToPercent(), Radius / radIncrease);
 		}
 
 		public void PostUpdateEquips(Player player)
 		{
 			if (Main.hasFocus) alphaCounter++;
 			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
-			wireTimer++;
-			if (wireTimer > wireTimerMax)
+
+			if (wireTimer >= wireTimerMax)
 			{
-				NPC npc = Main.npc.FirstActiveOrDefault(n => n.CanBeChasedBy() && player.DistanceSQ(n.Center) <= (Radius + 16) * (Radius + 16));
-				if (npc != null)
+				for (int i = 0; i < Main.maxNPCs; i++)
 				{
-					int damage = (int)(Formula() * player.GetDamage());
-					player.ApplyDamageToNPC(npc, damage, 0f, 0, false);
-					Item item = player.HeldItem;
-					if (!item.IsAir)
+					NPC npc = Main.npc[i];
+
+					if (npc.CanBeChasedBy() && player.DistanceSQ(npc.Center) <= RadiusSQ)
 					{
-						ItemLoader.OnHitNPC(item, player, npc, damage, 0f, false);
-						NPCLoader.OnHitByItem(npc, player, item, damage, 0f, false);
-						PlayerHooks.OnHitNPC(player, item, npc, damage, 0f, false);
+						int damage = (int)(Formula() * player.GetDamage());
+						player.ApplyDamageToNPC_ProcHeldItem(npc, damage, damageType: ModContent.GetInstance<ArmorPenDamageClass>());
+						wireTimer = 0;
+						break;
 					}
 				}
-				wireTimer = 0;
+			}
+			else
+			{
+				wireTimer++;
 			}
 		}
 

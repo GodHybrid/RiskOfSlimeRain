@@ -11,15 +11,15 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public override bool IsTail => this is MagmaWormDeadTail;
 
-		public override bool IsOtherBody(NPC other) => other.modNPC is MagmaWormDeadBody || other.modNPC is MagmaWormDeadTail;
+		public override bool IsOtherBody(NPC other) => other.ModNPC is MagmaWormDeadBody || other.ModNPC is MagmaWormDeadTail;
 
 		public int DisappearTimer = 0;
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			npc.value = 0;
-			npc.boss = false;
+			NPC.value = 0;
+			NPC.boss = false;
 		}
 
 		public override void HeadAI()
@@ -27,29 +27,29 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			DisappearTimer++;
 			if (DisappearTimer > 240)
 			{
-				npc.active = false;
+				NPC.active = false;
 				return;
 			}
 
-			if (npc.velocity.X < 0f)
+			if (NPC.velocity.X < 0f)
 			{
-				npc.spriteDirection = 1;
+				NPC.spriteDirection = 1;
 			}
-			else if (npc.velocity.X > 0f)
+			else if (NPC.velocity.X > 0f)
 			{
-				npc.spriteDirection = -1;
+				NPC.spriteDirection = -1;
 			}
 
 			SpawnGroundFireAndDoScreenShake(false);
 
-			npc.velocity.X *= 0.986f;
-			npc.velocity.Y = Math.Min(npc.velocity.Y + 0.3f, 18f);
+			NPC.velocity.X *= 0.986f;
+			NPC.velocity.Y = Math.Min(NPC.velocity.Y + 0.3f, 18f);
 
-			npc.rotation = npc.velocity.ToRotation() + 1.57f;
+			NPC.rotation = NPC.velocity.ToRotation() + 1.57f;
 
 			if (Main.netMode == NetmodeID.Server && !Synced)
 			{
-				npc.netUpdate = true;
+				NPC.netUpdate = true;
 				Synced = true;
 			}
 		}
@@ -69,7 +69,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			return false;
 		}
 
-		public override void NPCLoot()
+		public override void OnKill()
 		{
 
 		}

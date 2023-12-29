@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Dusts;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -15,13 +16,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 1.2f : 0.5f;
 
-		public override string Description => $"Increases health regeneration by {Initial} health per second";
-
-		public override string FlavorText => "Side effects may include itching, rashes, bleeding, sensitivity of skin,\ndry patches, permanent scarring, misaligned bone regrowth, rotting of the...";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial);
 
 		public override string UIInfo()
 		{
-			return $"Regeneration: {Formula()}/s";
+			return UIInfoText.Format(Formula());
 		}
 
 		public void UpdateLifeRegen(Player player)

@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using Terraria;
 using Terraria.GameContent.Generation;
 using Terraria.ID;
+using Terraria.IO;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.Subworlds
 {
@@ -65,7 +66,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			return list;
 		}
 
-		public static void PlaceWalls(GenerationProgress progress)
+		public static void PlaceWalls(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Place Walls";
 
@@ -89,7 +90,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			WorldGen.KillTile(1, 1, noItem: true);
 		}
 
-		public static void RemoveWalls(GenerationProgress progress)
+		public static void RemoveWalls(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Remove Walls";
 
@@ -102,59 +103,59 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					Tile tile = Main.tile[i, j];
 
 					//Only remove gemspark walls
-					if (tile.wall != WallID.DiamondGemspark) continue;
+					if (tile.WallType != WallID.DiamondGemspark) continue;
 
 					//Remove gemspark walls if the tile is a gemspark too
-					if (tile.active() && tile.type == TileID.DiamondGemspark)
+					if (tile.HasTile && tile.TileType == TileID.DiamondGemspark)
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 
 					Tile top = Main.tile[i, j - 1];
-					if (!top.active() || !Main.tileSolid[top.type])
+					if (!top.HasTile || !Main.tileSolid[top.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile topLeft = Main.tile[i - 1, j - 1];
-					if (!topLeft.active() || !Main.tileSolid[topLeft.type])
+					if (!topLeft.HasTile || !Main.tileSolid[topLeft.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile left = Main.tile[i - 1, j];
-					if (!left.active() || !Main.tileSolid[left.type])
+					if (!left.HasTile || !Main.tileSolid[left.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile bottomLeft = Main.tile[i - 1, j + 1];
-					if (!bottomLeft.active() || !Main.tileSolid[bottomLeft.type])
+					if (!bottomLeft.HasTile || !Main.tileSolid[bottomLeft.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile bottom = Main.tile[i, j + 1];
-					if (!bottom.active() || !Main.tileSolid[bottom.type])
+					if (!bottom.HasTile || !Main.tileSolid[bottom.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile bottomRight = Main.tile[i + 1, j + 1];
-					if (!bottomRight.active() || !Main.tileSolid[bottomRight.type])
+					if (!bottomRight.HasTile || !Main.tileSolid[bottomRight.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile right = Main.tile[i + 1, j];
-					if (!right.active() || !Main.tileSolid[right.type])
+					if (!right.HasTile || !Main.tileSolid[right.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
 					}
 					Tile topRight = Main.tile[i + 1, j - 1];
-					if (!topRight.active() || !Main.tileSolid[topRight.type])
+					if (!topRight.HasTile || !Main.tileSolid[topRight.TileType])
 					{
 						WorldGen.KillWall(i, j);
 						continue;
@@ -163,7 +164,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static void PlaceTopBorder(GenerationProgress progress)
+		public static void PlaceTopBorder(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Place Top Border";
 			for (int i = 0; i < width; i++)
@@ -230,7 +231,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public static int topLeftTSideX = topLeftTBaseX - sideTWidth;
 		public static int TSideWidth = 2 * sideTWidth + baseTWidth;
 
-		public static void PlaceTerrain(GenerationProgress progress)
+		public static void PlaceTerrain(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Place Terrain";
 			progress.Value = 0f;
@@ -308,7 +309,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static void CoverTerrainWithTop(GenerationProgress progress)
+		public static void CoverTerrainWithTop(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Cover Terrain with Top";
 			for (int i = 0; i < width; i++)
@@ -318,10 +319,10 @@ namespace RiskOfSlimeRain.Core.Subworlds
 					progress.Value = (i * height + (j - topBorder)) / (float)(width * height);
 
 					Tile tile = Main.tile[i, j];
-					if (tile.active() && tile.type == TerrainType)
+					if (tile.HasTile && tile.TileType == TerrainType)
 					{
 						Tile top = Main.tile[i, j - 1];
-						if (!top.active())
+						if (!top.HasTile)
 						{
 							WorldGen.PlaceTile(i, j - 1, TopType, true);
 							if (TopPaint > 0)
@@ -330,7 +331,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 							}
 						}
 						Tile top2 = Main.tile[i, j - 2];
-						if (!top2.active())
+						if (!top2.HasTile)
 						{
 							WorldGen.PlaceTile(i, j - 2, TopType, true);
 							if (TopPaint > 0)
@@ -343,7 +344,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static void SpreadGrass(GenerationProgress progress)
+		public static void SpreadGrass(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Spread Grass";
 			for (int i = 1; i < width - 1; i++)
@@ -352,28 +353,28 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				{
 					progress.Value = (i * height + j) / (float)(width * height);
 					Tile center = Main.tile[i, j];
-					if (center.active())
+					if (center.HasTile)
 					{
 						Tile top = Main.tile[i, j - 1];
-						if (!top.active() || !Main.tileSolid[top.type])
+						if (!top.HasTile || !Main.tileSolid[top.TileType])
 						{
 							WorldGen.PlaceTile(i, j, TileID.Grass, true, true);
 							continue;
 						}
 						Tile left = Main.tile[i - 1, j];
-						if (!left.active())
+						if (!left.HasTile)
 						{
 							WorldGen.PlaceTile(i, j, TileID.Grass, true, true);
 							continue;
 						}
 						Tile bottom = Main.tile[i, j + 1];
-						if (!bottom.active())
+						if (!bottom.HasTile)
 						{
 							WorldGen.PlaceTile(i, j, TileID.Grass, true, true);
 							continue;
 						}
 						Tile right = Main.tile[i + 1, j];
-						if (!right.active())
+						if (!right.HasTile)
 						{
 							WorldGen.PlaceTile(i, j, TileID.Grass, true, true);
 							continue;
@@ -383,7 +384,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 		}
 
-		public static void Adjust(GenerationProgress progress)
+		public static void Adjust(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = nameof(Adjust); //Sets the text above the worldgen progress bar
 			Main.worldSurface = Main.maxTilesY - 42; //Hides the underground layer just out of bounds
@@ -393,7 +394,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			Main.spawnTileY = centerY - 2; //Because sand is 2 tiles thick
 		}
 
-		public static void BuildMetalPlatforms(GenerationProgress progress)
+		public static void BuildMetalPlatforms(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Build Metal Platforms";
 			progress.Value = 0f;
@@ -419,7 +420,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 		public static int HighPlatformX = leftWallWidth + 12;
 		public static int HighPlatformY = rightMiddleMetalPlatformY;
 
-		public static void BuildWoodenPlatforms(GenerationProgress progress)
+		public static void BuildWoodenPlatforms(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Build Wooden Platforms";
 			progress.Value = 0f;
@@ -539,11 +540,11 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 				if (!WorldGen.InWorld(i, j)) continue;
 				Tile left = Main.tile[i - 1, j];
-				if (!left.active()) continue;
+				if (!left.HasTile) continue;
 				Tile center = Main.tile[i, j];
-				if (!center.active()) continue;
+				if (!center.HasTile) continue;
 				Tile right = Main.tile[i + 1, j];
-				if (!right.active()) continue;
+				if (!right.HasTile) continue;
 
 				PlaceBeam(i, j, PlatformBeamWallType, -1, topCut, bottomCut);
 			}
@@ -563,7 +564,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 			Tile tile = Main.tile[i, j];
 			bool firstWall = true;
-			while (startY + beamY < height && (firstWall || !tile.active()))
+			while (startY + beamY < height && (firstWall || !tile.HasTile))
 			{
 				firstWall = false;
 				if (!WorldGen.InWorld(i, j)) continue;
@@ -601,7 +602,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				j = startY + y;
 				if (!WorldGen.InWorld(i, j)) continue;
 				tile = Main.tile[i, j];
-				if (tile.wall == type)
+				if (tile.WallType == type)
 				{
 					WorldGen.KillWall(i, j);
 				}
@@ -668,7 +669,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				bool placed = WorldGen.PlaceTile(i, startY, TileID.MartianConduitPlating);
 				if (placed)
 				{
-					Main.tile[i, startY].halfBrick(true);
+					Tile t = Main.tile[i, startY]; t.IsHalfBlock = true;
 
 					int paint = ItemID.GrayPaint;
 					if (actuate && x < actuated)
@@ -706,7 +707,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				if (!WorldGen.InWorld(pillarStartXTile, pillarStartYTile)) return startX + total;
 
 				Tile tile = Main.tile[pillarStartXTile, pillarStartYTile];
-				while (startY + pillarY < height && !tile.active())
+				while (startY + pillarY < height && !tile.HasTile)
 				{
 					int start = pillarStartX;
 					int end = pillarStartX + pillarWidth;
@@ -793,7 +794,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 			}
 
 			Tile tile = Main.tile[startX + ropeX, startY + ropeY];
-			while (startY + ropeY < height && !tile.active())
+			while (startY + ropeY < height && !tile.HasTile)
 			{
 				int i = startX + ropeX;
 				int j = startY + ropeY;
@@ -819,14 +820,14 @@ namespace RiskOfSlimeRain.Core.Subworlds
 				if (!WorldGen.InWorld(i, j)) continue;
 
 				tile = Main.tile[i, j];
-				if (tile.type == type)
+				if (tile.TileType == type)
 				{
 					WorldGen.KillTile(i, j);
 				}
 			}
 		}
 
-		public static void BuildLadders(GenerationProgress progress)
+		public static void BuildLadders(GenerationProgress progress, GameConfiguration configuration)
 		{
 			progress.Message = "Build Ladders";
 			progress.Value = 0f;
@@ -866,9 +867,9 @@ namespace RiskOfSlimeRain.Core.Subworlds
 
 					//Replace tiles with walls on the way
 					int oldType = -1;
-					if (tile.active())
+					if (tile.HasTile)
 					{
-						oldType = tile.type;
+						oldType = tile.TileType;
 						WorldGen.KillTile(i, j);
 					}
 					if (oldType > -1 && y > 0)
@@ -876,7 +877,7 @@ namespace RiskOfSlimeRain.Core.Subworlds
 						if (WorldGen.InWorld(i, j + 1))
 						{
 							Tile below = Main.tile[i, j + 1];
-							if (below.active())
+							if (below.HasTile)
 							{
 								int wallType;
 								int paintType;

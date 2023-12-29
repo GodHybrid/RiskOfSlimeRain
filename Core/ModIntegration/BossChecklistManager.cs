@@ -1,18 +1,22 @@
-﻿using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
+using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using RiskOfSlimeRain.Items.Consumable;
-using RiskOfSlimeRain.Items.Consumable.Boss;
 using RiskOfSlimeRain.NPCs.Bosses;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.GameContent.ItemDropRules;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 {
-	public static class BossChecklistManager
+	public class BossChecklistManager : ModSystem
 	{
-		private static readonly Version BossChecklistAPIVersion = new Version(1, 1);
+		private static readonly Version BossChecklistAPIVersion = new Version(2, 0);
 		public static Dictionary<string, BossChecklistBossInfo> moddedBossInfoDict;
 
 		public static bool Loaded => moddedBossInfoDict != null;
@@ -20,8 +24,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 		public static bool DoBossChecklistIntegration(out Dictionary<string, BossChecklistBossInfo> bossInfos)
 		{
 			//Make sure to call this method in PostAddRecipes or later for best results
-			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
-			if (BossChecklist != null && BossChecklist.Version >= BossChecklistAPIVersion)
+			if (ModLoader.TryGetMod("BossChecklist", out Mod BossChecklist) && BossChecklist.Version >= BossChecklistAPIVersion)
 			{
 				object currentBossInfoResponse = BossChecklist.Call("GetBossInfoDictionary", RiskOfSlimeRainMod.Instance, BossChecklistAPIVersion.ToString());
 				if (currentBossInfoResponse is Dictionary<string, Dictionary<string, object>> bossInfoList)
@@ -30,17 +33,22 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 					{
 						key = boss.Value.ContainsKey("key") ? boss.Value["key"] as string : "",
 						modSource = boss.Value.ContainsKey("modSource") ? boss.Value["modSource"] as string : "",
-						internalName = boss.Value.ContainsKey("internalName") ? boss.Value["internalName"] as string : "",
-						displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as string : "",
+						displayName = boss.Value.ContainsKey("displayName") ? boss.Value["displayName"] as LocalizedText : null,
+
 						progression = boss.Value.ContainsKey("progression") ? Convert.ToSingle(boss.Value["progression"]) : 0f,
 						downed = boss.Value.ContainsKey("downed") ? boss.Value["downed"] as Func<bool> : () => false,
+
 						isBoss = boss.Value.ContainsKey("isBoss") ? Convert.ToBoolean(boss.Value["isBoss"]) : false,
 						isMiniboss = boss.Value.ContainsKey("isMiniboss") ? Convert.ToBoolean(boss.Value["isMiniboss"]) : false,
 						isEvent = boss.Value.ContainsKey("isEvent") ? Convert.ToBoolean(boss.Value["isEvent"]) : false,
+
 						npcIDs = boss.Value.ContainsKey("npcIDs") ? boss.Value["npcIDs"] as List<int> : new List<int>(),
-						spawnItem = boss.Value.ContainsKey("spawnItem") ? boss.Value["spawnItem"] as List<int> : new List<int>(),
+						spawnInfo = boss.Value.ContainsKey("spawnInfo") ? boss.Value["spawnInfo"] as Func<LocalizedText> : null,
+						spawnItems = boss.Value.ContainsKey("spawnItems") ? boss.Value["spawnItems"] as List<int> : new List<int>(),
+						treasureBag = boss.Value.ContainsKey("treasureBag") ? Convert.ToInt32(boss.Value["treasureBag"]) : 0,
+						dropRateInfo = boss.Value.ContainsKey("dropRateInfo") ? boss.Value["dropRateInfo"] as List<DropRateInfo> : new List<DropRateInfo>(),
 						loot = boss.Value.ContainsKey("loot") ? boss.Value["loot"] as List<int> : new List<int>(),
-						collection = boss.Value.ContainsKey("collection") ? boss.Value["collection"] as List<int> : new List<int>(),
+						collectibles = boss.Value.ContainsKey("collectibles") ? boss.Value["collectibles"] as List<int> : new List<int>(),
 					});
 					return true;
 				}
@@ -65,32 +73,54 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 			return moddedBossInfoDict.FirstOrDefault(boss => Exists(npc, boss)).Value;
 		}
 
-		public static void RegisterBosses()
+		public void RegisterBosses()
 		{
-			Mod BossChecklist = ModLoader.GetMod("BossChecklist");
-			if (BossChecklist != null && BossChecklist.Version >= new Version(1, 0))
+			if (ModLoader.TryGetMod("BossChecklist", out Mod BossChecklist))
 			{
-				Mod mod = RiskOfSlimeRainMod.Instance;
-				string tooltip = MagmaWormSummon.tooltip;
-				tooltip += ". Drops 'Burning Witness' on first death, then with 1% chance";
-				string textureName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist";
-				string headName = mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist_Head";
-				BossChecklist.Call("AddBoss", //Command
-					NPCLootManager.Skeletron + 0.1f, //Progress
-					ModContent.NPCType<MagmaWormHead>(),
-					mod,
-					"Magma Worm",
-					(Func<bool>)(() => RORWorld.downedMagmaWorm),
-					ModContent.ItemType<MagmaWormSummon>(),
-					new List<int>(),
-					ModContent.ItemType<BurningWitness>(), //Loot
-					tooltip,
-					null,
-					textureName,
-					headName,
-					null);
+				string textureName = Mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist";
+				string headName = Mod.Name + "/Core/ModIntegration/MagmaWorm_Checklist_Head";
 
+				List<int> collection = new List<int>()
+				{
+
+				};
+
+				int summonItem = ModContent.ItemType<MagmaWormSummon>();
+
+				/*
+				"LogBoss",
+				submittedMod, // Mod
+				internalName, // Internal Name
+				Convert.ToSingle(args[3]), // Prog
+				args[4] as Func<bool>, // Downed
+				InterpretObjectAsListOfInt(args[5]), // NPC IDs
+				args[6] as Dictionary<string, object>
+				*/
+				BossChecklist.Call(
+					"LogBoss",
+					Mod,
+					"MagmaWorm",
+					NPCLootManager.Skeletron + 0.1f, //Progress
+					(Func<bool>)(() => RORWorld.downedMagmaWorm),
+					ModContent.NPCType<MagmaWormHead>(),
+					new Dictionary<string, object>()
+					{
+						["spawnItems"] = summonItem,
+						["collectibles"] = collection,
+						["overrideHeadTextures"] = headName,
+						["customPortrait"] = (SpriteBatch spriteBatch, Rectangle rect, Color color) => DrawSingleImage(spriteBatch, ModContent.Request<Texture2D>(textureName), rect, color),
+						["spawnInfo"] = MagmaWorm.SpawnInfoText
+						// Other optional arguments as needed...
+					}
+				);
 			}
+		}
+
+		private static void DrawSingleImage(SpriteBatch spriteBatch, Asset<Texture2D> asset, Rectangle rect, Color color)
+		{
+			var texture = asset.Value;
+			Vector2 centered = new Vector2(rect.X + (rect.Width / 2) - (texture.Width / 2), rect.Y + (rect.Height / 2) - (texture.Height / 2));
+			spriteBatch.Draw(texture, centered, color);
 		}
 
 		public static void LoadBossInfo()
@@ -102,7 +132,17 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ModIntegration
 			}
 		}
 
-		public static void Unload()
+		public override void PostSetupContent()
+		{
+			RegisterBosses();
+		}
+
+		public override void PostAddRecipes()
+		{
+			LoadBossInfo();
+		}
+
+		public override void OnModUnload()
 		{
 			moddedBossInfoDict = null;
 		}

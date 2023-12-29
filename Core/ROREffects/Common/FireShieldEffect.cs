@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -16,20 +17,18 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		private float HPlimit => ServerConfig.Instance.OriginalStats ? 0.1f : 0.2f;
 
-		public override string Description => $"After being hit for {HPlimit.ToPercent()} of your max health - explode, dealing {Damage.ToPercent()} damage and knocking back enemies.";
-
-		public override string FlavorText => "The thing is only half-done, but it will do the job\nPLEASE handle with care!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(HPlimit.ToPercent(), Damage.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Damage: {(Damage * Stack).ToPercent()}\nKnockback: {(KB + Stack).ToPercent()}";
+			return UIInfoText.Format((Damage * Stack).ToPercent(), (KB + Stack).ToPercent());
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
-			if (Main.myPlayer == player.whoAmI && damage >= player.statLifeMax2 * HPlimit)
+			if (Main.myPlayer == player.whoAmI && info.Damage >= player.statLifeMax2 * HPlimit)
 			{
-				Projectile.NewProjectile(player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (int)(Damage * Stack * player.GetDamage()), KB + Stack, Main.myPlayer);
+				Projectile.NewProjectile(GetEntitySource(player), player.position, Vector2.Zero, ModContent.ProjectileType<FireShieldExplosion>(), (int)(Damage * Stack * player.GetDamage()), KB + Stack, Main.myPlayer);
 			}
 		}
 	}

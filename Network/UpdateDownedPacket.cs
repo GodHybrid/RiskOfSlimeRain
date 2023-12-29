@@ -1,19 +1,14 @@
 using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using System.IO;
-using Terraria.ModLoader;
-using WebmilioCommons.Networking;
-using WebmilioCommons.Networking.Packets;
 
 namespace RiskOfSlimeRain.Network
 {
 	/// <summary>
 	/// Sent to all clients once vanillaDowned or moddedDowned is changed
 	/// </summary>
-	public class UpdateDownedPacket : NetworkPacket
+	public class UpdateDownedPacket : MPPacket
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAllClients;
-
-		public bool Vanilla { get; set; }
+		public readonly bool vanilla;
 
 		public UpdateDownedPacket() { }
 
@@ -22,21 +17,19 @@ namespace RiskOfSlimeRain.Network
 		/// </summary>
 		public UpdateDownedPacket(bool vanilla)
 		{
-			Vanilla = vanilla;
+			this.vanilla = vanilla;
 		}
 
-		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
+		public override void Send(BinaryWriter writer)
 		{
-			NPCLootManager.NetSend(modPacket, Vanilla);
-
-			return base.PreSend(modPacket, fromWho, toWho);
+			writer.Write((bool)vanilla);
+			NPCLootManager.NetSend(writer, vanilla);
 		}
 
-		protected override bool PostReceive(BinaryReader reader, int fromWho)
+		public override void Receive(BinaryReader reader, int sender)
 		{
-			NPCLootManager.NetReceive(reader, Vanilla);
-
-			return base.PostReceive(reader, fromWho);
+			bool vanilla = reader.ReadBoolean();
+			NPCLootManager.NetReceive(reader, vanilla);
 		}
 	}
 }

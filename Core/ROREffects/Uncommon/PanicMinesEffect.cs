@@ -2,9 +2,11 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
+using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using Terraria.World.Generation;
+using Terraria.WorldBuilding;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -24,19 +26,27 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public int MinesDropped => ServerConfig.Instance.OriginalStats ? (int)Formula() : (int)MathHelper.Clamp(Formula(), 0f, 8f);
 
-		public override string Description => $"Drop mines at low health for {Dmg.ToPercent()} damage";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Dmg.ToPercent());
 
-		public override string FlavorText => "Must be strapped onto vehicles, NOT personnel!\nIncludes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.";
+		public static LocalizedText UIInfoOGStatsText { get; private set; }
+		public static LocalizedText UIInfoMaxText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoOGStatsText ??= GetLocalization("UIInfoOGStats");
+			UIInfoMaxText ??= GetLocalization("UIInfoMax");
+		}
 
 		public override string UIInfo()
 		{
-			return ServerConfig.Instance.OriginalStats ? $"Mine count: {MinesDropped}"
-														: $"Mine count: {MinesDropped} " + (MinesDropped >= balanceQuantCap ? "(max)" : "") + $"\nMine damage: {Dmg.ToPercent()}";
+			string minesDropped = UIInfoOGStatsText.Format(MinesDropped);
+			return ServerConfig.Instance.OriginalStats ? minesDropped
+				: (MinesDropped >= balanceQuantCap ? UIInfoMaxText.Format(minesDropped, Dmg.ToPercent()) : UIInfoText.Format(minesDropped, Dmg.ToPercent()));
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
-			if (Main.myPlayer == player.whoAmI && (damage >= (int)(player.statLifeMax2 * damageThreshold) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
+			if (Main.myPlayer == player.whoAmI && (info.Damage >= (int)(player.statLifeMax2 * damageThreshold) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
 			{
 				Vector2 position = player.Center;
 				int type = ModContent.ProjectileType<PanicMinesProj>();
@@ -48,10 +58,10 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 						new Conditions.IsSolid()
 					}), out _))
 					{
-						Projectile.NewProjectile(new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 24, position.Y + 1), Vector2.Zero,
+						Projectile.NewProjectile(GetEntitySource(player), new Vector2(position.X + ((MinesDropped / 2) - (i - 1)) * 24, position.Y + 1), Vector2.Zero,
 													type, 0, 0, Main.myPlayer, spawnDamage);
 					}
-					else Projectile.NewProjectile(player.Center, Vector2.Zero, type, 0, 0, Main.myPlayer, spawnDamage);
+					else Projectile.NewProjectile(GetEntitySource(player), player.Center, Vector2.Zero, type, 0, 0, Main.myPlayer, spawnDamage);
 				}
 			}
 		}

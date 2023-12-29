@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -19,21 +20,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.4f : 0.2f;
 
-		public override string Description => $"Killing enemies burns the ground to deal {Initial.ToPercent()} damage and set enemies on fire";
-
-		public override string FlavorText => "Gasoline, eh?\nSurprising to find a gas station these days, with everyone drivin' around them electro cars";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Damage: {Formula().ToPercent()}";
+			return UIInfoText.Format(Formula().ToPercent());
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -55,7 +54,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				int spawnLight = x == 0 ? 1 : 0;
 
-				Projectile.NewProjectile(target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, Dutation, spawnLight);
+				Projectile.NewProjectile(GetEntitySource(player), target.Center.X, target.Center.Y, x, 1, type, damage, 0, Main.myPlayer, Dutation, spawnLight);
 				count++;
 			}
 		}

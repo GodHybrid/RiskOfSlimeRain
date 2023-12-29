@@ -44,15 +44,12 @@ But the effect doesn't do anything at all, this is going to be the next step!
 
 ## Step 2: Making it do things
 
-Go back to the effect class, and write up the description and flavor text (and name if it contains special characters, because the name is otherwise taken from the effect name):
+Go back to the effect class, and write up the description format arguments:
 ```csharp
 public class InfusionEffect : RORUncommonEffect
 {
-	public override string Description => "Killing an enemy increases your health permanently by 1";
+	public override LocalizedText Description => base.Description.WithFormatArgs(1);
 
-	public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
-
-	//public override string Name => "|Nv5-IôN";
 }
 ```
 
@@ -62,16 +59,16 @@ After you typed that in, it should be underlined in red. Mouseover it, and click
 ```csharp
 public class InfusionEffect : RORUncommonEffect, IOnHit
 {
-	public override string Description => "Killing an enemy increases your health permanently by 1";
+	public override LocalizedText Description => base.Description.WithFormatArgs() "Killing an enemy increases your health permanently by 1";
 
-	public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
+	public override LocalizedText FlavorText => base.FlavorText.WithFormatArgs() "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-	public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		throw new System.NotImplementedException();
 	}
 
-	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		throw new System.NotImplementedException();
 	}
@@ -83,16 +80,16 @@ Because of the nature of our effect, we are going to have to spawn a projectile 
 ```csharp
 public class InfusionEffect : RORUncommonEffect, IOnHit
 {
-	public override string Description => "Killing an enemy increases your health permanently by 1";
+	public override LocalizedText Description => base.Description.WithFormatArgs() "Killing an enemy increases your health permanently by 1";
 
-	public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
+	public override LocalizedText FlavorText => base.FlavorText.WithFormatArgs() "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
 
-	public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPC(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		SpawnProjectile(player, target);
 	}
 
-	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+	public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 	{
 		SpawnProjectile(player, target);
 	}

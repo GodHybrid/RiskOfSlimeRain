@@ -4,7 +4,9 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -21,24 +23,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 0.005f;
 
-		public override string Description => $" {Initial.ToPercent()} chance to fire {fireworkCount} fireworks that deal {DamageIncrease.ToPercent()} damage";
-
-		public override string FlavorText => "Disguising homing missiles as fireworks?\nDon't ever quote me on it, but it was pretty smart";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), DamageIncrease.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}\nMonsters to kill: {50 - killCount % 50}";
+			return UIInfoText.Format(Math.Min(RollChance, 1f).ToPercent(), 50 - killCount % 50);
 		}
 
 		//Original, todo
 		//const int Initial = 6;
 		//const int Increase = 2;
-		//public override string Description => $"Fire {Initial + Increase} fireworks that deal {damageIncrease.ToPercent()} damage";
+		//public override LocalizedText Description => base.Description.WithFormatArgs(Initial + Increase, damageIncrease.ToPercent()) $"Fire {0} fireworks that deal {1} damage";
 		/*
 		 * 
 		 for loop up to Initial + Increase * Stack
 			//Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-			//RandomMovementProj.NewProjectile<BundleOfFireworksProj>(target.Center, velo, damage, 10f);
+			//RandomMovementProj.NewProjectile<BundleOfFireworksProj>(GetEntitySource(player), target.Center, velo, damage, 10f);
 		 * 
 		 */
 
@@ -46,13 +46,13 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		private float RollChance => Formula();
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			killCount++;
 			SpawnProjectile(target, player);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			killCount++;
 			SpawnProjectile(target, player);
@@ -66,26 +66,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				return; //No statue abuse for more fireworks
 			}
 
-			if (killCount % 50 == 0 || Proc(RollChance))
+			if (target.boss || killCount % 50 == 0 || Proc(RollChance))
 			{
 				int damage = (int)(DamageIncrease * player.GetDamage());
-				SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
-				for (int i = 0; i < fireworkCount; i++)
+				SoundEngine.PlaySound(SoundID.Item13.WithVolumeScale(SoundHelper.FixVolume(2f)).WithPitchOffset(0.4f), player.Center);
+				int count = fireworkCount;
+				if (target.boss)
+				{
+					count *= 3;
+				}
+				for (int i = 0; i < count; i++)
 				{
 					Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
+					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(GetEntitySource(player), player.Center, velo, damage, 10f);
 				}
 			}
-			if (target.boss)
-			{
-				int damage = (int)(DamageIncrease * player.GetDamage());
-				SoundHelper.PlaySound(SoundID.Item13.SoundId, (int)player.Center.X, (int)player.Center.Y, SoundID.Item13.Style, SoundHelper.FixVolume(2f), 0.4f);
-				for (int i = 0; i < fireworkCount * 3; i++)
-				{
-					Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(player.Center, velo, damage, 10f);
-				}
-			}
+
 			if (killCount % 50 == 0) killCount = 0;
 		}
 	}

@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -13,13 +14,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override float Increase => 0.06f;
 
-		public override string Description => $"{Initial.ToPercent()} chance to knock enemies back on hit";
-
-		public override string FlavorText => "These should work fine for the kids you're training.\nA bit musty, though. It'll make your trainees hit like a pro, ha!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Knockback chance: {RollChance.ToPercent(2)}";
+			return UIInfoText.Format(RollChance.ToPercent(2));
 		}
 
 		public override float Formula()
@@ -36,37 +35,39 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float RollChance => Formula();
 
-		private void ModifyKnockback(Player player, ref float knockback, NPC target)
+		private void ModifyKnockback(Player player, ref NPC.HitModifiers modifiers, NPC target)
 		{
 			//Custom rolling
-			if (Proc(RollChance))
+			if (!Proc(RollChance))
 			{
-				//Apply more knockback the less knockBackResist target has
-				float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
-				knockback += 6f + 8f * antiKBResist;
+				return;
+			}
 
-				if (Config.HiddenVisuals(player)) return;
+			//Apply more knockback the less knockBackResist target has
+			float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
+			modifiers.Knockback.Flat += 6f + 8f * antiKBResist;
 
-				for (int i = 0; i < 14; i++)
+			if (Config.HiddenVisuals(player)) return;
+
+			for (int i = 0; i < 14; i++)
+			{
+				Dust dust = Dust.NewDustDirect(target.position, target.width, target.height, DustID.Smoke, 0f, 0f, 100, Color.MintCream, 1f);
+				dust.velocity = new Vector2(0, -1f);
+				if (Main.rand.NextBool(2))
 				{
-					Dust dust = Dust.NewDustDirect(target.position, target.width, target.height, DustID.Smoke, 0f, 0f, 100, Color.MintCream, 1f);
-					dust.velocity = new Vector2(0, -1f);
-					if (Main.rand.NextBool(2))
-					{
-						dust.scale = 0.5f;
-					}
+					dust.scale = 0.5f;
 				}
 			}
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			ModifyKnockback(player, ref knockback, target);
+			ModifyKnockback(player, ref modifiers, target);
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			ModifyKnockback(player, ref knockback, target);
+			ModifyKnockback(player, ref modifiers, target);
 		}
 	}
 }

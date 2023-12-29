@@ -6,15 +6,10 @@ namespace RiskOfSlimeRain.Projectiles
 {
 	public class PlayerHealthProj : PlayerBonusCircleProj
 	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Player Health Orb");
-		}
-
 		public int HealAmount
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		public override Color Color => Color.LimeGreen;
@@ -28,8 +23,8 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool FindTarget(out int targetIndex)
 		{
-			Player owner = projectile.GetOwner();
-			targetIndex = projectile.owner;
+			Player owner = Projectile.GetOwner();
+			targetIndex = Projectile.owner;
 			int minHealth = int.MaxValue;
 			const float maxRangeSQ = 1080 * 1080 * 2;
 			for (int i = 0; i < Main.maxPlayers; i++)
@@ -39,13 +34,13 @@ namespace RiskOfSlimeRain.Projectiles
 
 				int health = player.statLife;
 				bool maxHealth = player.statLife == player.statLifeMax2;
-				if (!maxHealth && health < minHealth && player.DistanceSQ(projectile.Center) < maxRangeSQ)
+				if (!maxHealth && health < minHealth && player.DistanceSQ(Projectile.Center) < maxRangeSQ)
 				{
 					minHealth = health;
 					targetIndex = i;
 				}
 			}
-			if (targetIndex == projectile.owner) return owner.active;
+			if (targetIndex == Projectile.owner) return owner.active;
 			else return targetIndex != -1;
 		}
 	}

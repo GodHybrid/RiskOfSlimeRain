@@ -10,11 +10,6 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override float Gravity => 0.15f;
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Firework explosion");
-		}
-
 		public override void PostCreateDust(Dust dust)
 		{
 			dust.customData = new InAndOutData(direction: -1, outSpeed: 14, reduceScale: false);

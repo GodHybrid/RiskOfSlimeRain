@@ -1,0 +1,18 @@
+[b]"Risk of Slime Rain"[/b] is a mod that aims to add all the existing items from [i]Risk of Rain 1[/i] into Terraria, with some tweaks to fit Terraria's gameplay and world. 
+
+This mod offers [b]permanent upgrades[/b] to the player character through items of varying rarity. Every item is a [b]consumable[/b] and most of them stack infinitely for increased effect, [b]upgrading[/b] your various [b]stats[/b] to your heart's content.
+In exchange for the increased power you will posess, the game will become more difficult.
+However the recipes for them are quite expensive (non-Commons aren't craftable at all!). The items can be found in chests across the world or dropped from bosses that are slain for the first time.
+The mod also features a config setting where you can selectively pick the amount of stacks each item occupies, in case you need to tweak/disable the effects, and to toggle between a [i]balanced[/i] or [i]original[/i] experience. If you want the items you used back, defeat the Wall of Flesh for the [i]Nullifier[/i] item.
+
+[b]"Risk of Slime Rain"[/b] is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
+[list]
+    [*]25 items of [i]Common[/i] rarity - a nice variety of offensive, utility and defensive items.
+    [*]10 items of [i]Uncommon[/i] rarity - mostly defensive items and a handful of offensive ones.
+    [*]1 boss: [i]Magma Worm[/i] - Pre-Hardmode, drops his unique boss item.
+[/list] 
+
+[b]Multiplayer compatible, no pvp support.[/b]
+
+[b]Credits:[/b]
+Rodathus and Plantixx for most of the sprites.

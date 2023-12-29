@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Helpers;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader.IO;
@@ -20,7 +21,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		public static SortedSet<int> filledChests;
 
 		/// <summary>
-		/// Saved on the world
+		/// Saved on the world, synced for "misc info"
 		/// </summary>
 		public static int totalChests = 0;
 
@@ -39,6 +40,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool CanSpawnInChest(int y)
 		{
+			//TODO 1.4.4 dontdigup
 			//40% chance of no item in a chest in the middle third of a world. 80% chance of no item on the surface and close to hell
 			float noItem = 0.4f;
 			//-200 is the "top" of hell, so add 100 more
@@ -55,7 +57,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool IsChestOfType(Tile tile, int frameX)
 		{
-			return tile.type == TileID.Containers && tile.frameX == frameX * 36;
+			return tile.TileType == TileID.Containers && tile.TileFrameX == frameX * 36;
 		}
 
 		/// <summary>
@@ -63,7 +65,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		/// </summary>
 		public static bool IsChestOfTypes(Tile tile, params int[] types)
 		{
-			return tile.type == TileID.Containers && Array.IndexOf(types, tile.frameX / 36) > -1;
+			return tile.TileType == TileID.Containers && Array.IndexOf(types, tile.TileFrameX / 36) > -1;
 		}
 
 		/// <summary>
@@ -158,7 +160,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		{
 			PutRORItemInOneRandomChest(delegate (Chest chest, Tile tile)
 			{
-				return IsChestOfType(tile, ChestType.Gold) && tile.wall == WallID.SandstoneBrick;
+				return IsChestOfType(tile, ChestType.Gold) && tile.WallType == WallID.SandstoneBrick;
 			});
 		}
 
@@ -225,7 +227,7 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 			//Count all chests in the world
 			chests = FindAllChestsOf(delegate (Chest chest, Tile tile)
 			{
-				return tile.type == TileID.Containers;
+				return tile.TileType == TileID.Containers;
 			});
 			totalChests = chests.Count;
 		}
@@ -304,6 +306,16 @@ namespace RiskOfSlimeRain.Core.ItemSpawning.ChestSpawning
 		public static void Save(TagCompound tag)
 		{
 			tag.Add("totalChests", totalChests);
+		}
+
+		internal static void NetSend(BinaryWriter writer)
+		{
+			writer.Write7BitEncodedInt(totalChests);
+		}
+
+		internal static void NetReceive(BinaryReader reader)
+		{
+			totalChests = reader.Read7BitEncodedInt();
 		}
 	}
 }

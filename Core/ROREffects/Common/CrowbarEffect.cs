@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -17,31 +18,29 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.3f : 0.1f;
 
-		public override string Description => $"Deal {Initial.ToPercent()} more damage to enemies above {HealthLimit.ToPercent()} health";
-
-		public override string FlavorText => "Crowbar/prybar/wrecking bar allows for both prying and smashing! \nCarbon steel, so it should last for a very long time, at least until the 3rd edition arrives";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), HealthLimit.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Damage increase: {Formula().ToPercent()}";
+			return UIInfoText.Format(Formula().ToPercent());
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			ModifyDamage(target, ref damage);
+			ModifyDamage(player, target, ref modifiers);
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			ModifyDamage(target, ref damage);
+			ModifyDamage(player, target, ref modifiers);
 		}
 
-		void ModifyDamage(NPC target, ref int damage)
+		void ModifyDamage(Player player, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (target.life >= target.lifeMax * HealthLimit)
 			{
-				Projectile.NewProjectile(target.Center, Vector2.Zero, ModContent.ProjectileType<CrowbarProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
-				damage += (int)(damage * Formula());
+				Projectile.NewProjectile(GetEntitySource(player), target.Center, Vector2.Zero, ModContent.ProjectileType<CrowbarProj>(), 0, 0, Main.myPlayer, 0, target.whoAmI);
+				modifiers.SourceDamage += Formula();
 			}
 		}
 	}

@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -17,25 +18,23 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 7 : 19;
 
-		public override string Description => $"{Initial.ToPercent()} chance to cause bleeding. Bleeding deals {RustyKnifeProj.tickAmount}x{Damage.ToPercent()} damage";
-
-		public override string FlavorText => "Murder weapon, case name ELIAS. Probably a lover's spat?\nThere is still dried blood on the knife, so mark it as biological.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), RustyKnifeProj.tickAmount, Damage.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Chance: {Math.Min(Chance, 1f).ToPercent()}";
+			return UIInfoText.Format(Math.Min(Chance, 1f).ToPercent());
 		}
 
 		public override bool AlwaysProc => false;
 
 		public override float Chance => Formula();
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -43,7 +42,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		void SpawnProjectile(Player player, NPC target)
 		{
 			int damage = (int)(Damage * player.GetDamage());
-			StickyProj.NewProjectile<RustyKnifeProj>(target, damage: damage);
+			StickyProj.NewProjectile<RustyKnifeProj>(GetEntitySource(player), target, damage: damage);
 		}
 	}
 }

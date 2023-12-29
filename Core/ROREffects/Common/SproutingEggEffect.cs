@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -17,13 +18,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 2.4f : 1.5f;
 
-		public override string Description => $"Increases health regeneration by {Initial} health per second when out of combat for {TimerMax / 60} seconds";
-
-		public override string FlavorText => "This egg seems to be somewhere between hatching and dying\nI can't bring it to myself to cook it alive";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, TimerMax / 60);
 
 		public override string UIInfo()
 		{
-			return $"Regeneration: {Formula()}/s";
+			return UIInfoText.Format(Formula());
 		}
 
 		public void UpdateLifeRegen(Player player)

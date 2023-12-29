@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.GameInput;
 using Terraria.ID;
@@ -72,26 +73,26 @@ namespace RiskOfSlimeRain
 			if (WarbannerTimer < 0)
 			{
 				WarbannerTimer = WarbannerTimerMax;
-				if (InWarbannerRange && Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer)
+				if (InWarbannerRange && Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer)
 				{
-					int heal = WarbannerEffect.WarbannerHealAmount(player);
-					player.HealMe(heal);
+					int heal = WarbannerEffect.WarbannerHealAmount(Player);
+					Player.HealMe(heal);
 				}
 			}
-			if (InWarbannerRange) WarbannerBuffTime--;
+			if (InWarbannerRange)
+			{
+				Player.GetAttackSpeed(DamageClass.Generic) += 0.15f;
+				WarbannerBuffTime--;
+			}
 			if (!InWarbannerRange) LastWarbannerIdentity = -1;
 
 			WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(this);
-			if ((effect?.Active ?? false) && Main.netMode != NetmodeID.Server && player.whoAmI == Main.myPlayer)
+			if (!InWarbannerRange && (effect?.Active ?? false) && Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer && effect.WarbannerReadyToDrop)
 			{
-				if (effect.WarbannerReadyToDrop && !InWarbannerRange)
+				if (WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(Player.Center.X, Player.Top.Y)))
 				{
-					bool success = WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(player.Center.X, player.Top.Y));
-					if (success)
-					{
-						effect.ResetKillCount();
-						effect.WarbannerReadyToDrop = false;
-					}
+					effect.ResetKillCount();
+					effect.WarbannerReadyToDrop = false;
 				}
 			}
 		}
@@ -147,10 +148,10 @@ namespace RiskOfSlimeRain
 
 		private void UpdateTimers()
 		{
-			if (player.velocity == Vector2.Zero) NoMoveTimer++;
+			if (Player.velocity == Vector2.Zero) NoMoveTimer++;
 			else NoMoveTimer = 0;
 
-			if (player.itemAnimation == 0) NoItemUseTimer++;
+			if (Player.itemAnimation == 0) NoItemUseTimer++;
 			else NoItemUseTimer = 0;
 
 			NoHurtTimer++;
@@ -184,10 +185,10 @@ namespace RiskOfSlimeRain
 		/// </summary>
 		public void ActivateNullifier()
 		{
-			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return;
+			if (Main.netMode == NetmodeID.Server || Player.whoAmI != Main.myPlayer) return;
 
 			nullifierActive = true;
-			Main.PlaySound(SoundID.MenuOpen, volumeScale: 0.8f);
+			SoundEngine.PlaySound(SoundID.MenuOpen.WithVolumeScale(0.8f));
 		}
 
 		/// <summary>
@@ -196,15 +197,15 @@ namespace RiskOfSlimeRain
 		public bool ApplyNullifier()
 		{
 			//Clientside only
-			if (Main.netMode == NetmodeID.Server || player.whoAmI != Main.myPlayer) return true;
+			if (Main.netMode == NetmodeID.Server || Player.whoAmI != Main.myPlayer) return true;
 			if (savings < nullifierMoney)
 			{
-				CombatText.NewText(player.getRect(), CombatText.DamagedHostile, "Not enough money!");
+				CombatText.NewText(Player.getRect(), CombatText.DamagedHostile, "Not enough money!");
 				return false;
 			}
 			if (nullifierMoney <= 0)
 			{
-				CombatText.NewText(player.getRect(), CombatText.DamagedHostile, "No removed items specified!");
+				CombatText.NewText(Player.getRect(), CombatText.DamagedHostile, "No removed items specified!");
 				return false;
 			}
 
@@ -237,14 +238,14 @@ namespace RiskOfSlimeRain
 			{
 				if (item.Key > 0)
 				{
-					player.QuickSpawnItem(item.Key, item.Value);
+					Player.QuickSpawnItem(Player.GetSource_FromThis(), item.Key, item.Value);
 					count += item.Value;
 				}
 			}
-			player.BuyItem((int)nullifierMoney);
-			Main.PlaySound(SoundID.Coins, volumeScale: 0.8f);
+			Player.BuyItem((int)nullifierMoney);
+			SoundEngine.PlaySound(SoundID.Coins.WithVolumeScale(0.8f));
 			string itemtext = "item" + (count == 1 ? "" : "s");
-			CombatText.NewText(player.getRect(), CombatText.HealLife, $"Restored {count} {itemtext} for {nullifierMoney.MoneyToString()}!");
+			CombatText.NewText(Player.getRect(), CombatText.HealLife, $"Restored {count} {itemtext} for {nullifierMoney.MoneyToString()}!");
 			return true;
 		}
 
@@ -261,7 +262,7 @@ namespace RiskOfSlimeRain
 			nullifierApplyTimer = 0;
 			nullifierMoney = 0;
 			savings = -1;
-			Main.PlaySound(SoundID.MenuClose, volumeScale: 0.8f);
+			SoundEngine.PlaySound(SoundID.MenuClose.WithVolumeScale(0.8f));
 		}
 
 		public void UpdateNullifier()
@@ -294,12 +295,12 @@ namespace RiskOfSlimeRain
 		{
 			if (mouseLeft && nullifierApplyTimer == 0)
 			{
-				Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 				SetNullifierTimer();
 			}
 			else if (mouseLeft && nullifierApplyTimer < nullifierApplyTimerMax - 3) //3 tick margin in case of some weird frameskip stuff or whatnot
 			{
-				Main.PlaySound(SoundID.MenuTick, volumeScale: 0.8f);
+				SoundEngine.PlaySound(SoundID.MenuTick.WithVolumeScale(0.8f));
 				//After a doubleclick 
 				return true;
 			}
@@ -314,6 +315,11 @@ namespace RiskOfSlimeRain
 		public int CountActiveEffects()
 		{
 			return Effects.Sum(e => e.Stack);
+		}
+
+		public int CountTotalEffects()
+		{
+			return Effects.Sum(e => e.UnlockedStack);
 		}
 
 		public float TakenDamageMultiplier()
@@ -338,16 +344,16 @@ namespace RiskOfSlimeRain
 			{
 				PlayerHelper.SetLocalRORPlayer(this);
 			}
-			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(player));
+			ROREffectManager.Perform<IResetEffects>(this, e => e.ResetEffects(Player));
 		}
 
-		public override void ModifyWeaponDamage(Item item, ref float add, ref float mult, ref float flat)
+		public override void ModifyWeaponDamage(Item item, ref StatModifier damage)
 		{
 			if (item.damage > 0 && InWarbannerRange)
 			{
-				flat += 4;
+				damage.Flat += 4;
 			}
-			ROREffectManager.ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
+			ROREffectManager.ModifyWeaponDamage(Player, item, ref damage);
 		}
 
 		public override void PostUpdateRunSpeeds()
@@ -357,40 +363,32 @@ namespace RiskOfSlimeRain
 				//player.moveSpeed *= 1.3f;
 				//These next two actually do something (increase acceleration slightly and increase max speed + cap)
 				//ONLY increasing acceleration while keeping the max speed in check is not possible afaik
-				player.accRunSpeed *= 1.3f;
-				player.runAcceleration *= 1.3f;
+				Player.accRunSpeed *= 1.3f;
+				Player.runAcceleration *= 1.3f;
 			}
-			ROREffectManager.Perform<IPostUpdateRunSpeeds>(this, e => e.PostUpdateRunSpeeds(player));
+			ROREffectManager.Perform<IPostUpdateRunSpeeds>(this, e => e.PostUpdateRunSpeeds(Player));
 		}
 
 		public override void PostUpdateEquips()
 		{
 			UpdateWarbanner();
-			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(player));
-		}
-
-		public override float UseTimeMultiplier(Item item)
-		{
-			float mult = 1f;
-			ROREffectManager.UseTimeMultiplier(player, item, ref mult);
-			if (InWarbannerRange) mult += 0.15f; //Seems to mimic roughly 30% dps increase 
-			return mult;
+			ROREffectManager.Perform<IPostUpdateEquips>(this, e => e.PostUpdateEquips(Player));
 		}
 
 		public override void UpdateLifeRegen()
 		{
-			ROREffectManager.Perform<IUpdateLifeRegen>(this, e => e.UpdateLifeRegen(player));
+			ROREffectManager.Perform<IUpdateLifeRegen>(this, e => e.UpdateLifeRegen(Player));
 		}
 
 		public override void ProcessTriggers(TriggersSet triggersSet)
 		{
-			ROREffectManager.Perform<IProcessTriggers>(this, e => e.ProcessTriggers(player, triggersSet));
+			ROREffectManager.Perform<IProcessTriggers>(this, e => e.ProcessTriggers(Player, triggersSet));
 
 			mouseLeft = Main.mouseLeft && Main.mouseLeftRelease;
 			mouseRight = Main.mouseRight && Main.mouseRightRelease;
 		}
 
-		public override void OnHitNPC(Item item, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPCWithItem(Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			NoOnHitTimer = 0;
 
@@ -398,20 +396,20 @@ namespace RiskOfSlimeRain
 
 			if (target.life <= 0)
 			{
-				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPC(player, item, target, damage, knockback, crit));
+				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithItem(Player, item, target, hit, damageDone));
 			}
 
-			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPC(player, item, target, damage, knockback, crit));
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithItem(Player, item, target, hit, damageDone));
 		}
 
-		public override void ModifyHitNPC(Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public override void ModifyHitNPCWithItem(Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (!NPCHelper.IsHostile(target)) return;
 
-			ROREffectManager.ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+			ROREffectManager.ModifyHitNPC(Player, item, target, ref modifiers);
 		}
 
-		public override void OnHitNPCWithProj(Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPCWithProj(Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			NoOnHitTimer = 0;
 
@@ -419,11 +417,11 @@ namespace RiskOfSlimeRain
 			if (!NPCHelper.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
-			if (proj.modProjectile is IExcludeOnHit) return;
+			if (proj.ModProjectile is IExcludeOnHit) return;
 
 			if (target.life <= 0)
 			{
-				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithProj(player, proj, target, damage, knockback, crit));
+				ROREffectManager.Perform<IOnKill>(this, e => e.OnKillNPCWithProj(Player, proj, target, hit, damageDone));
 			}
 
 			//If this projectile is a minion or sentry, make it only proc 20% of the time
@@ -431,67 +429,68 @@ namespace RiskOfSlimeRain
 				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
 				&& !Main.rand.NextBool(5)) return;
 
-			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(player, proj, target, damage, knockback, crit));
+			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(Player, proj, target, hit, damageDone));
 		}
 
-		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public override void ModifyHitNPCWithProj(Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			//This stuff should be at the bottom of everything
 			if (!NPCHelper.IsHostile(target)) return;
 
 			//If this projectile shouldn't proc at all
-			if (proj.modProjectile is IExcludeOnHit) return;
+			if (proj.ModProjectile is IExcludeOnHit) return;
 
 			//If this projectile is a minion or sentry, make it only proc 20% of the time
 			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type] ||
 				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
 				&& !Main.rand.NextBool(5)) return;
 
-			ROREffectManager.ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+			ROREffectManager.ModifyHitNPCWithProj(Player, proj, target, ref modifiers);
 		}
 
-		public override bool PreHurt(bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
+		public override bool FreeDodge(Player.HurtInfo info)
+		{
+			bool ret = ROREffectManager.FreeDodge(Player, info);
+			return ret;
+		}
+
+		public override bool ConsumableDodge(Player.HurtInfo info)
+		{
+			bool ret = ROREffectManager.ConsumableDodge(Player, info);
+			return ret;
+		}
+
+		public override void ModifyHurt(ref Player.HurtModifiers modifiers)
 		{
 			if (ServerConfig.Instance.DifficultyScaling)
 			{
-				damage = (int)(damage * TakenDamageMultiplier());
+				modifiers.SourceDamage += TakenDamageMultiplier() - 1f;
 			}
-			bool ret = ROREffectManager.PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
-			return ret;
 		}
 
 		public override void Kill(double damage, int hitDirection, bool pvp, PlayerDeathReason damageSource)
 		{
-			ROREffectManager.Perform<IKill>(this, e => e.Kill(player, damage, hitDirection, pvp, damageSource));
+			ROREffectManager.Perform<IKill>(this, e => e.Kill(Player, damage, hitDirection, pvp, damageSource));
 		}
 
-		public override void PostHurt(bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public override void PostHurt(Player.HurtInfo info)
 		{
 			ResetNoHurtTimer();
-			ROREffectManager.Perform<IPostHurt>(this, e => e.PostHurt(player, pvp, quiet, damage, hitDirection, crit));
+			ROREffectManager.Perform<IPostHurt>(this, e => e.PostHurt(Player, info));
 		}
 
-		public override void GetWeaponCrit(Item item, ref int crit)
+		public override void ModifyWeaponCrit(Item item, ref float crit)
 		{
-			ROREffectManager.GetWeaponCrit(player, item, ref crit);
+			ROREffectManager.ModifyWeaponCrit(Player, item, ref crit);
 		}
 
-		public override void ModifyDrawLayers(List<PlayerLayer> layers)
-		{
-			if (Main.gameMenu) return;
-			if (Config.HiddenVisuals(player)) return;
-
-			ROREffectManager.DrawPlayerLayers(layers);
-			if (InWarbannerRange) layers.Insert(layers.Count > 1 ? 1 : 0, WarbannerEffect.WarbannerLayer);
-		}
-
-		public override void DrawEffects(PlayerDrawInfo drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
+		public override void DrawEffects(PlayerDrawSet drawInfo, ref float r, ref float g, ref float b, ref float a, ref bool fullBright)
 		{
 			if (Main.gameMenu) return;
-			if (player.dead || !player.active) return;
+			if (Player.dead || !Player.active) return;
 			if (drawInfo.shadow != 0f) return;
 			if (Config.HiddenVisuals(drawInfo.drawPlayer)) return;
-			if (!ROREffectManager.ParentLayer.visible) return;
+			if (!ROREffectManager.ParentVisibilityLayer.Visible) return;
 
 			List<Effect> shaders = ROREffectManager.GetScreenShaders(drawInfo.drawPlayer);
 			foreach (var shader in shaders)
@@ -500,9 +499,9 @@ namespace RiskOfSlimeRain
 			}
 		}
 
-		public override void OnEnterWorld(Player player)
+		public override void OnEnterWorld()
 		{
-			if (Main.myPlayer == player.whoAmI)
+			if (Main.myPlayer == Player.whoAmI)
 			{
 				ROREffectManager.Populate(this);
 			}
@@ -510,32 +509,24 @@ namespace RiskOfSlimeRain
 
 		public override void SyncPlayer(int toWho, int fromWho, bool newPlayer)
 		{
-			if (Main.netMode == NetmodeID.Server)
-			{
-				new RORPlayerSyncToAllClientsPacket(this).Send(fromWho, toWho);
-			}
-			else
+			if (Main.netMode != NetmodeID.Server)
 			{
 				ROREffectManager.Populate(this);
-				new RORPlayerSyncToServerPacket(this).Send(fromWho, toWho);
 			}
+			new RORPlayerSyncPacket(this).Send(toWho, fromWho);
 		}
 
-		public override TagCompound Save()
+		public override void SaveData(TagCompound tag)
 		{
 			List<TagCompound> effectCompounds = Effects.ConvertAll((effect) => effect.Save());
-			TagCompound tag = new TagCompound
-			{
-				{ "version", LATEST_VERSION },
-				{ "effects", effectCompounds },
-				{ "nullifierEnabled", nullifierEnabled },
-				{ "warbannerRemoverDropped", warbannerRemoverDropped },
-				{ "burningWitnessDropped", burningWitnessDropped },
-			};
-			return tag;
+			tag.Add("version", LATEST_VERSION);
+			tag.Add("effects", effectCompounds);
+			tag.Add("nullifierEnabled", nullifierEnabled);
+			tag.Add("warbannerRemoverDropped", warbannerRemoverDropped);
+			tag.Add("burningWitnessDropped", burningWitnessDropped);
 		}
 
-		public override void Load(TagCompound tag)
+		public override void LoadData(TagCompound tag)
 		{
 			if (tag.ContainsKey("effects"))
 			{
@@ -544,7 +535,7 @@ namespace RiskOfSlimeRain
 				Effects.Clear();
 				foreach (var compound in effectCompounds)
 				{
-					ROREffect effect = ROREffect.Load(player, compound, version);
+					ROREffect effect = ROREffect.Load(Player, compound, version);
 					if (effect != null) Effects.Add(effect);
 				}
 				//Sort by creation time
@@ -563,6 +554,8 @@ namespace RiskOfSlimeRain
 			ROREffectManager.Init(this);
 
 			nullifierEnabled = false;
+			warbannerRemoverDropped = false;
+			burningWitnessDropped = false;
 		}
 
 		public override void ModifyScreenPosition()
@@ -573,7 +566,7 @@ namespace RiskOfSlimeRain
 		public override void PreUpdate()
 		{
 			//This is here because only here resetting the scrollwheel status works properly
-			RORInterfaceLayers.Update(player);
+			RORInterfaceLayers.Update(Player);
 		}
 
 		public override void PostUpdate()

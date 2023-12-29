@@ -1,64 +1,57 @@
 ﻿using RiskOfSlimeRain.Core.NPCEffects;
 using System.IO;
 using Terraria;
-using Terraria.ModLoader;
-using WebmilioCommons.Networking;
+using Terraria.ID;
 
 namespace RiskOfSlimeRain.Network.NPCs
 {
-	public class NPCEffectPacket : NPCPacketBase
+	public class NPCEffectPacket : NPCPacket
 	{
-		public override NetworkPacketBehavior Behavior => NetworkPacketBehavior.SendToAll;
-
 		//Effect parameters
-		public int EffectTime { get; set; }
+		public readonly sbyte effectType;
+		public readonly int effectTime;
 
-		public sbyte EffectType { get; set; }
+		private readonly NPCEffect effect;
 
-		private NPCEffect Effect { get; set; }
-
-		public NPCEffectPacket() : base() { }
+		public NPCEffectPacket() { }
 
 		public NPCEffectPacket(NPC npc, NPCEffect effect) : base(npc)
 		{
-			Effect = effect;
-			EffectTime = effect.Time;
-			EffectType = effect.Type;
+			this.effect = effect;
+			effectTime = effect.Time;
+			effectType = effect.Type;
 		}
 
-		protected override bool PreSend(ModPacket modPacket, int? fromWho = null, int? toWho = null)
+		protected override void PostSend(BinaryWriter writer, NPC npc)
 		{
-			if (Effect == null)
-			{
-				return false;
-				//RiskOfSlimeRainMod.Instance.Logger.Warn("NPCEffect that is about to be sent is null, expect exceptions that won't impact the game");
-			}
-			Effect?.NetSend(modPacket);
-			return base.PreSend(modPacket, fromWho, toWho);
+			writer.Write7BitEncodedInt(effectTime);
+			writer.Write((sbyte)effectType);
+			effect.NetSend(writer);
 		}
 
-		protected override bool NewMidReceive(BinaryReader reader, int fromWho)
+		protected override void PostReceive(BinaryReader reader, int sender, NPC npc)
 		{
-			if (Npc == null)
-			{
-				RiskOfSlimeRainMod.Instance.Logger.Warn("NPC received is null, expect exceptions that won't impact the game");
-				base.NewMidReceive(reader, fromWho); //Whatever happened, something broke, fuck read underflow anyways
-			}
-			Effect = NPCEffectManager.ApplyNPCEffect(EffectType, Npc, EffectTime);
+			var effectTime = reader.Read7BitEncodedInt();
+			var effectType = reader.ReadSByte();
+			var effect = NPCEffectManager.ApplyNPCEffect(effectType, npc, effectTime);
 			try
 			{
-				if (Effect == null)
+				if (effect == null)
 				{
-					//Read underflow protection
-					Effect = NPCEffect.CreateInstance(Npc, NPCEffectManager.GetNPCEffectType(EffectType), EffectTime);
+					RiskOfSlimeRainMod.Instance.Logger.Warn("Effect could not be applied, following exception will cause no harm to your game and can be ignored");
+					return;
 				}
-				Effect?.NetReceive(reader);
+				effect.NetReceive(reader);
 			}
 			catch
 			{
 
 			}
-			return base.NewMidReceive(reader, fromWho);
+
+			if (Main.netMode == NetmodeID.Server)
+			{
+				new NPCEffectPacket(npc, effect).Send(from: sender);
+			}
 		}
 	}
 }

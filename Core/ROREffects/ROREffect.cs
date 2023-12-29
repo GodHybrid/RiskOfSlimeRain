@@ -2,14 +2,14 @@ using Microsoft.Xna.Framework;
 using System;
 using System.IO;
 using System.Text.RegularExpressions;
-using RiskOfSlimeRain.Core.ItemSpawning.NPCSpawning;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.Config;
 using Terraria.ModLoader.IO;
-using WebmilioCommons.Networking.Packets;
-using WebmilioCommons.Networking.Serializing;
+using Terraria.DataStructures;
+using RiskOfSlimeRain.Core.EntitySources;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects
 {
@@ -17,10 +17,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 	/// The base class of all effects. Will be saved on the player once applied
 	/// </summary>
 	//IComparable because we use it in a list to sort
-	//INetworkSerializable because we manually have to sync an entire effect sometimes (from webmiliocommons)
 	//Effects are created via the ROREffect.CreateInstance method
-	public abstract class ROREffect : IComparable<ROREffect>, INetworkSerializable, ICloneable
+	public abstract class ROREffect : IComparable<ROREffect>, ICloneable
 	{
+		public static readonly string LocalizationCategory = "ROREffects";
+
 		//Something you can save in a TagCompound, hence why string, not Type
 		/// <summary>
 		/// Shortened identifier name, unique
@@ -34,26 +35,32 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public Player Player { get; private set; }
 
+		private string MakeDefaultDisplayName()
+		{
+			string name = GetType().Name;
+			//if it ends with "Effect", split the name up without the effect. example:
+			//"BitterRootEffect" -> "Bitter Root"
+			const string effectName = "Effect";
+			if (name.EndsWith(effectName)) name = name.Substring(0, name.Length - effectName.Length);
+			return Regex.Replace(name, "([A-Z])", " $1").Trim();
+		}
+
+		public LocalizedText GetLocalization(string name, Func<string> makeDefaultValue = null) => RiskOfSlimeRainMod.Instance.GetLocalization($"{LocalizationCategory}.{TypeName}.{name}", makeDefaultValue);
+
+		//TypeName contains the rarity separated via "." already so it's handy here for organization
+		//Cached, so not dynamic
 		/// <summary>
 		/// This will be the name of the item responsible for the effect to apply
 		/// </summary>
-		public virtual string Name
-		{
-			get
-			{
-				string name = GetType().Name;
-				//if it ends with "Effect", split the name up without the effect. example:
-				//"BitterRootEffect" -> "Bitter Root"
-				if (name.EndsWith("Effect")) name = GetType().Name.Replace("Effect", "");
-				return Regex.Replace(name, "([A-Z])", " $1").Trim();
-			}
-		}
+		public virtual LocalizedText DisplayName => GetLocalization("DisplayName", MakeDefaultDisplayName);
 
 		//Cached, so not dynamic
-		public virtual string Description => string.Empty;
+		public virtual LocalizedText Description => GetLocalization("Description", () => string.Empty);
 
 		//Cached, so not dynamic
-		public virtual string FlavorText => string.Empty;
+		public virtual LocalizedText FlavorText => GetLocalization("FlavorText", () => string.Empty);
+
+		public LocalizedText UIInfoText => GetLocalization("UIInfo", () => string.Empty);
 
 		//Cached, so not dynamic
 		public virtual RORRarity Rarity => RORRarity.Common;
@@ -201,11 +208,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				if (Main.LocalPlayer.HeldItem.damage < 1 || EnforceMaxStack)
 				{
-					return "You reached the recommended stack amount!";
+					return ReachedRecommendedText.ToString();
 				}
 				else
 				{
-					return "With the currently held weapon, you reached the recommended stack amount!";
+					return ReachedRecommendedWithWeaponText.ToString();
 				}
 			}
 		}
@@ -214,10 +221,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		{
 			get
 			{
-				string msg = "This item is blocked via the Server Config";
+				string msg = BlockedByConfigText.ToString();
 				if (Main.netMode == NetmodeID.MultiplayerClient)
 				{
-					msg += ". The host is responsible for the item blacklist";
+					msg += BlockedByConfigMPExtraText.ToString();
 				}
 				return msg;
 			}
@@ -242,6 +249,11 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			{
 				throw new Exception("wtf");
 			}
+		}
+
+		public virtual void SetStaticDefaults()
+		{
+
 		}
 
 		/// <summary>
@@ -281,12 +293,40 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			//TODO ror mode something?
 		}
 
+		public IEntitySource GetEntitySource(Player player, string? context = null)
+		{
+			return new EntitySource_FromEffect(player, this, context);
+		}
+
+		public static LocalizedText ReachedRecommendedText { get; private set; }
+		public static LocalizedText ReachedRecommendedWithWeaponText { get; private set; }
+		public static LocalizedText BlockedByConfigText { get; private set; }
+		public static LocalizedText BlockedByConfigMPExtraText { get; private set; }
+
+		internal static void SetupLocalization()
+		{
+			var mod = RiskOfSlimeRainMod.Instance;
+			string category = $"{LocalizationCategory}.CommonUI.";
+			ReachedRecommendedText ??= mod.GetLocalization($"{category}ReachedRecommended");
+			ReachedRecommendedWithWeaponText ??= mod.GetLocalization($"{category}ReachedRecommendedWithWeapon");
+			BlockedByConfigText ??= mod.GetLocalization($"{category}BlockedByConfig");
+			BlockedByConfigMPExtraText ??= mod.GetLocalization($"{category}BlockedByConfigMPExtra");
+		}
+
 		/// <summary>
 		/// This returns a new effect of the given type with its creation time set accordingly
 		/// </summary>
 		public static ROREffect NewInstance<T>(Player player) where T : ROREffect
 		{
-			ROREffect effect = CreateInstance(player, typeof(T));
+			return NewInstance(player, typeof(T));
+		}
+
+		/// <summary>
+		/// This returns a new effect of the given type with its creation time set accordingly
+		/// </summary>
+		public static ROREffect NewInstance(Player player, Type type)
+		{
+			ROREffect effect = CreateInstance(player, type);
 			effect.SetCreationTime();
 			return effect;
 		}
@@ -344,10 +384,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			//TODO in ror mode, don't take the useTime of the weapon but instead the base use time
 			//TODO arkhalis/channel weapons
 			Item item = player.HeldItem;
-			if (item.damage < 1 || item.summon) return 1f;
+			if (item.damage < 1 || item.CountsAsClass(DamageClass.Summon)) return 1f;
 			int useTime = item.useTime;
 			//fix for melee weapons
-			if (item.melee && item.shoot <= 0) useTime = item.useAnimation;
+			if (item.CountsAsClass(DamageClass.Melee) && item.shoot <= 0) useTime = item.useAnimation;
 			float byUseTime = 2 * useTime / 60f;
 			byUseTime = Utils.Clamp(byUseTime, 0, 2);
 			return byUseTime;
@@ -506,19 +546,19 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public void NetSendStack(BinaryWriter writer)
 		{
-			writer.Write(UnlockedStack);
-			writer.Write(Stack);
+			writer.Write7BitEncodedInt(UnlockedStack);
+			writer.Write7BitEncodedInt(Stack);
 		}
 
 		public void NetReceiveStack(BinaryReader reader)
 		{
-			UnlockedStack = reader.ReadInt32();
-			Stack = reader.ReadInt32();
+			UnlockedStack = reader.Read7BitEncodedInt();
+			Stack = reader.Read7BitEncodedInt();
 		}
 		#endregion
 
 		#region object overrides and interfaces
-		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(Name)}: {Name}";
+		public override string ToString() => $" {nameof(Stack)}: {Stack} / {UnlockedStack}, {nameof(DisplayName)}: {DisplayName}";
 
 		public override bool Equals(object obj)
 		{
@@ -537,16 +577,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public int CompareTo(ROREffect other)
 		{
 			return _CreationTime.CompareTo(other._CreationTime);
-		}
-
-		public void Send(NetworkPacket networkPacket, ModPacket modPacket)
-		{
-			Send(modPacket);
-		}
-
-		public void Receive(NetworkPacket networkPacket, BinaryReader reader)
-		{
-			Receive(reader);
 		}
 
 		public object Clone()

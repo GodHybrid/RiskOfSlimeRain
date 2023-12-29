@@ -2,10 +2,9 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Extensions;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -20,29 +19,28 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Dead Man's Mine");
-			Main.projFrames[projectile.type] = 7;
+			Main.projFrames[Projectile.type] = 7;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(28, 28);
-			projectile.timeLeft = 3600;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			drawOriginOffsetY = 2;
+			Projectile.Size = new Vector2(28, 28);
+			Projectile.timeLeft = 3600;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			DrawOriginOffsetY = 2;
 		}
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity = Vector2.Zero;
+			Projectile.velocity = Vector2.Zero;
 			return false;
 		}
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			fallThrough = false;
-			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
 		}
 
 		public override bool? CanCutTiles()
@@ -52,48 +50,58 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int Damage
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public int Ticks
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		public override void AI()
 		{
-			projectile.velocity.Y += 0.5f;
-			projectile.LoopAnimation(7);
-			if (Main.myPlayer == projectile.owner)
+			Projectile.velocity.Y += 0.5f;
+			Projectile.LoopAnimation(7);
+			if (Main.myPlayer == Projectile.owner)
 			{
-				bool explode = Main.npc.CountActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(projectile.Hitbox)) > 0;
-				if (explode)
+				for (int i = 0; i < Main.maxNPCs; i++)
 				{
-					Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
-					projectile.Kill();
+					NPC npc = Main.npc[i];
+
+					if (npc.CanBeChasedBy() && npc.Hitbox.Intersects(Projectile.Hitbox))
+					{
+						Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootExplosionProj>(), 0, 0, Main.myPlayer);
+						Projectile.Kill();
+						break;
+					}
 				}
 			}
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
-			if (Main.myPlayer == projectile.owner && timeLeft > 0)
+			if (Main.myPlayer == Projectile.owner && timeLeft > 0)
 			{
-				Rectangle explosionArea = projectile.Hitbox;
+				Rectangle explosionArea = Projectile.Hitbox;
 				explosionArea.Inflate(addRadiusX, addRadiusY);
-				Main.npc.WhereActive(n => n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea)).Do(n =>
+				for (int i = 0; i < Main.maxNPCs; i++)
 				{
-					n.AddBuff(BuffID.Venom, 30 * Ticks);
-					int damage = (int)(1.5f * Damage);
-					StickyProj.NewProjectile(n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
+					NPC n = Main.npc[i];
+
+					if (n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
-						t.TimeLeft = (ushort)(30 * Ticks + 20);
-					});
-				});
+						n.AddBuff(BuffID.Venom, 8 * Ticks);
+						int damage = (int)(1.5f * Damage);
+						StickyProj.NewProjectile(Projectile.GetSource_FromThis(), n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
+						{
+							t.TimeLeft = (ushort)(30 * Ticks + 20);
+						});
+					}
+				}
 			}
-			Main.PlaySound(SoundID.DD2_ExplosiveTrapExplode?.WithVolume(0.8f), projectile.Center);
+			SoundEngine.PlaySound(SoundID.DD2_ExplosiveTrapExplode.WithVolumeScale(0.8f), Projectile.Center);
 		}
 
 		public override Color? GetAlpha(Color lightColor)

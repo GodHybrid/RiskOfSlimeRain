@@ -11,6 +11,7 @@ using System.Reflection;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.GameContent.UI;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects
@@ -28,6 +29,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		//Maps a rarity to a list of all associated items of that rarity
 		private static Dictionary<RORRarity, List<int>> itemRarityToItemTypes;
 
+		private static List<ROREffect> effects;
 		//Used to index each effect type for mp, and check for type validity
 		private static Type[] indexedEffects;
 		//Used to build the dictionary EffectByType on RORPlayer
@@ -36,7 +38,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		private static Type[] interfaceCanProc;
 
 		//Those two need caching cause they are used in ModifyTooltips dynamically for multiline tooltips with color
-		private static Dictionary<Type, string> flavorText;
+		private static Dictionary<Type, LocalizedText> displayName;
+		private static Dictionary<Type, LocalizedText> description;
+		private static Dictionary<Type, LocalizedText> flavorText;
 		private static Dictionary<Type, RORRarity> rarity;
 		//Reverse assign from the item itself, that the effect then accesses
 		private static Dictionary<Type, string> texture;
@@ -51,7 +55,10 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			List<Type> interfaces = new List<Type>();
 			List<Type> canProcs = new List<Type>();
 			Dictionary<string, string> loadedTypeNamespaceToName = new Dictionary<string, string>();
-			flavorText = new Dictionary<Type, string>();
+			effects = new List<ROREffect>();
+			displayName = new Dictionary<Type, LocalizedText>();
+			description = new Dictionary<Type, LocalizedText>();
+			flavorText = new Dictionary<Type, LocalizedText>();
 			rarity = new Dictionary<Type, RORRarity>();
 			texture = new Dictionary<Type, string>();
 			itemType = new Dictionary<Type, int>();
@@ -82,6 +89,9 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 
 					ROREffect effect = ROREffect.CreateInstanceNoPlayer(type);
+					effects.Add(effect);
+					displayName[type] = effect.DisplayName;
+					description[type] = effect.Description;
 					flavorText[type] = effect.FlavorText;
 					rarity[type] = effect.Rarity;
 					effectTypes.Add(type);
@@ -102,11 +112,24 @@ namespace RiskOfSlimeRain.Core.ROREffects
 
 		public static void Unload()
 		{
+			effects = null;
 			validInterfaces = null;
+			displayName = null;
+			description = null;
 			flavorText = null;
 			rarity = null;
 			texture = null;
 			itemType = null;
+		}
+
+		internal static void PostSetupContent()
+		{
+			ROREffect.SetupLocalization();
+			foreach (var effect in effects)
+			{
+				_ = effect.UIInfoText; //To register localization
+				effect.SetStaticDefaults();
+			}
 		}
 
 		/// <summary>
@@ -120,9 +143,29 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
+		public static string GetDisplayName<T>() where T : ROREffect
+		{
+			return displayName[typeof(T)].ToString();
+		}
+
+		public static string GetDisplayName(ROREffect effect)
+		{
+			return displayName[effect.GetType()].ToString();
+		}
+
+		public static string GetDescription<T>() where T : ROREffect
+		{
+			return description[typeof(T)].ToString();
+		}
+
+		public static string GetDescription(ROREffect effect)
+		{
+			return description[effect.GetType()].ToString();
+		}
+
 		public static string GetFlavorText<T>() where T : ROREffect
 		{
-			return flavorText[typeof(T)];
+			return flavorText[typeof(T)].ToString();
 		}
 
 		public static RORRarity GetRarity<T>() where T : ROREffect
@@ -163,7 +206,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static void RegisterItem<T>(RORConsumableItem<T> rItem) where T : ROREffect
 		{
-			int type = rItem.item.type;
+			int type = rItem.Item.type;
 
 			//To set the effects texture to the item texture
 			texture[typeof(T)] = rItem.Texture;
@@ -203,28 +246,53 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// <summary>
 		/// Adds an effect to the list (or increases the stack of an existing effect)
 		/// </summary>
-		public static void ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
+		public static ROREffect ApplyEffect<T>(RORPlayer mPlayer) where T : ROREffect
+		{
+			return ApplyEffect(mPlayer, typeof(T));
+		}
+
+		/// <summary>
+		/// Adds an effect to the list (or increases the stack of an existing effect)
+		/// </summary>
+		public static ROREffect ApplyEffect(RORPlayer mPlayer, int id)
+		{
+			Type effectType = GetEffectOfId(id);
+			if (effectType == null)
+			{
+				//TODO Issue here is that the effects list will be desynced if nothing happens here. But This can only happen if id is invalid (tampered with from outside)
+				//RiskOfSlimeRainMod.Instance.Logger.Warn("Effect could not be applied");
+			}
+			return ApplyEffect(mPlayer, effectType);
+		}
+
+		/// <summary>
+		/// Adds an effect to the list (or increases the stack of an existing effect)
+		/// </summary>
+		public static ROREffect ApplyEffect(RORPlayer mPlayer, Type type)
 		{
 			//First, check if effect exists
-			ROREffect existing = GetEffectOfType<T>(mPlayer);
+			ROREffect existing = GetEffectOfType(mPlayer, type);
 			if (existing != null)
 			{
 				//Effect exists, increase stack
 				//CanStack already checked in the hook ran in CanUseItem
 				existing.IncreaseStack();
+				return existing;
 			}
 			else
 			{
 				//Effect doesn't exist, add one
-				ROREffect newEffect = ROREffect.NewInstance<T>(mPlayer.player);
+				ROREffect newEffect = ROREffect.NewInstance(mPlayer.Player, type);
 				newEffect.OnCreate();
 				//By definition of the list order, append
 				mPlayer.Effects.Add(newEffect);
-				Type[] validInterfaces = GetValidInterfaces(typeof(T));
+				Type[] validInterfaces = GetValidInterfaces(type);
 				foreach (var interf in validInterfaces)
 				{
 					mPlayer.EffectByType[interf].Add(newEffect);
 				}
+
+				return newEffect;
 			}
 		}
 
@@ -336,7 +404,15 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		/// </summary>
 		public static T GetEffectOfType<T>(RORPlayer mPlayer) where T : ROREffect
 		{
-			return mPlayer.Effects.FirstOrDefault(e => e.GetType().Equals(typeof(T))) as T;
+			return GetEffectOfType(mPlayer, typeof(T)) as T;
+		}
+
+		/// <summary>
+		/// Used to retreive an effect of a type on the player. null if not found
+		/// </summary>
+		public static ROREffect GetEffectOfType(RORPlayer mPlayer, Type type)
+		{
+			return mPlayer.Effects.FirstOrDefault(e => e.GetType().Equals(type));
 		}
 
 		/// <summary>
@@ -353,23 +429,21 @@ namespace RiskOfSlimeRain.Core.ROREffects
 		public static bool CanDoEffect<T>(ROREffect effect) where T : IROREffectInterface
 		{
 			if (!effect.Active) return false;
-			if (!effect.AlwaysProc)
+			if (effect.AlwaysProc) return true;
+
+			RORPlayer mPlayer = effect.Player.GetRORPlayer();
+			if (mPlayer.CanProc())
 			{
-				RORPlayer mPlayer = effect.Player.GetRORPlayer();
-				if (mPlayer.CanProc())
+				//If ProcTimer is 0
+				bool result = effect.Proc();
+				if (result)
 				{
-					//If ProcTimer is 0
-					bool result = effect.Proc();
-					if (result)
-					{
-						//If proced, set timer
-						mPlayer.SetProcTimer();
-					}
-					return result;
+					//If proced, set timer
+					mPlayer.SetProcTimer();
 				}
-				return false;
+				return result;
 			}
-			return true;
+			return false;
 		}
 
 		#region Hooks
@@ -388,81 +462,88 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			}
 		}
 
-		public static void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public static void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (CanDoEffect<IModifyHit>(effect))
 				{
-					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref damage, ref knockback, ref crit);
+					((IModifyHit)effect).ModifyHitNPC(player, item, target, ref modifiers);
 				}
 			}
 		}
 
-		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public static void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyHit>(player);
 			foreach (var effect in effects)
 			{
 				if (CanDoEffect<IModifyHit>(effect))
 				{
-					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref damage, ref knockback, ref crit, ref hitDirection);
+					((IModifyHit)effect).ModifyHitNPCWithProj(player, proj, target, ref modifiers);
 				}
 			}
 		}
 
-		public static void GetWeaponCrit(Player player, Item item, ref int crit)
+		public static void ModifyWeaponCrit(Player player, Item item, ref float crit)
 		{
-			List<ROREffect> effects = GetEffectsOf<IGetWeaponCrit>(player);
+			List<ROREffect> effects = GetEffectsOf<IModifyWeaponCrit>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
 				{
-					((IGetWeaponCrit)effect).GetWeaponCrit(player, item, ref crit);
+					((IModifyWeaponCrit)effect).ModifyWeaponCrit(player, item, ref crit);
 				}
 			}
 		}
 
-		public static void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
+		public static void ModifyWeaponDamage(Player player, Item item, ref StatModifier damage)
 		{
 			List<ROREffect> effects = GetEffectsOf<IModifyWeaponDamage>(player);
 			foreach (var effect in effects)
 			{
 				if (effect.Active)
 				{
-					((IModifyWeaponDamage)effect).ModifyWeaponDamage(player, item, ref add, ref mult, ref flat);
+					((IModifyWeaponDamage)effect).ModifyWeaponDamage(player, item, ref damage);
 				}
 			}
 		}
 
-		public static float UseTimeMultiplier(Player player, Item item, ref float multiplier)
+		public static bool FreeDodge(Player player, Player.HurtInfo info)
 		{
-			List<ROREffect> effects = GetEffectsOf<IUseTimeMultiplier>(player);
+			List<ROREffect> effects = GetEffectsOf<IFreeDodge>(player);
 			foreach (var effect in effects)
 			{
-				if (effect.Active)
+				if (CanDoEffect<IFreeDodge>(effect))
 				{
-					((IUseTimeMultiplier)effect).UseTimeMultiplier(player, item, ref multiplier);
-				}
-			}
-			return multiplier;
-		}
-
-		public static bool PreHurt(Player player, bool pvp, bool quiet, ref int damage, ref int hitDirection, ref bool crit, ref bool customDamage, ref bool playSound, ref bool genGore, ref PlayerDeathReason damageSource)
-		{
-			bool ret = true;
-			List<ROREffect> effects = GetEffectsOf<IPreHurt>(player);
-			foreach (var effect in effects)
-			{
-				if (CanDoEffect<IPreHurt>(effect))
-				{
-					ret &= ((IPreHurt)effect).PreHurt(player, pvp, quiet, ref damage, ref hitDirection, ref crit, ref customDamage, ref playSound, ref genGore, ref damageSource);
+					if (((IFreeDodge)effect).FreeDodge(player, info))
+					{
+						return true;
+					}
 				}
 			}
 			//if atleast one PreHurt returns false, it will return false
-			return ret;
+			return false;
 		}
+
+		public static bool ConsumableDodge(Player player, Player.HurtInfo info)
+		{
+			List<ROREffect> effects = GetEffectsOf<IConsumableDodge>(player);
+			foreach (var effect in effects)
+			{
+				if (CanDoEffect<IConsumableDodge>(effect))
+				{
+					if (((IConsumableDodge)effect).ConsumableDodge(player, info))
+					{
+						return true;
+					}
+				}
+			}
+			//if atleast one PreHurt returns false, it will return false
+			return false;
+		}
+		#endregion
 
 		public static List<Effect> GetScreenShaders(Player player)
 		{
@@ -479,67 +560,7 @@ namespace RiskOfSlimeRain.Core.ROREffects
 			return shaders;
 		}
 
-		public static readonly PlayerLayer ParentLayer = PlayerLayer.MiscEffectsBack;
-
-		public static readonly PlayerLayer AllInOne = new PlayerLayer("RiskOfSlimeRain", "AllInOne", ParentLayer, delegate (PlayerDrawInfo drawInfo)
-		{
-			if (drawInfo.shadow != 0f) return;
-
-			Player dPlayer = drawInfo.drawPlayer;
-
-			if (dPlayer.dead || !dPlayer.active) return;
-
-			List<ROREffect> effects = GetEffectsOf<IPlayerLayer>(dPlayer);
-			List<PlayerLayerParams> allParameters = new List<PlayerLayerParams>();
-			foreach (var effect in effects)
-			{
-				if (effect.Active)
-				{
-					PlayerLayerParams parameters = ((IPlayerLayer)effect).GetPlayerLayerParams(dPlayer);
-					if (parameters != null)
-					{
-						allParameters.Add(parameters);
-					}
-				}
-			}
-
-			foreach (var parameters in allParameters)
-			{
-				Texture2D tex = parameters.Texture;
-				float drawX = (int)dPlayer.Center.X - Main.screenPosition.X;
-				float drawY = (int)dPlayer.Center.Y - Main.screenPosition.Y;
-
-				Vector2 off = parameters.Offset;
-				SpriteEffects spriteEffects = SpriteEffects.None;
-
-				if (dPlayer.gravDir < 0f)
-				{
-					off.Y = -off.Y;
-					spriteEffects = SpriteEffects.FlipVertically;
-				}
-				drawY += off.Y + dPlayer.gfxOffY;
-				drawX += off.X;
-
-				Color color = parameters.Color ?? Color.White;
-				if (!(parameters.IgnoreAlpha ?? false))
-				{
-					color *= (255 - dPlayer.immuneAlpha) / 255f;
-				}
-
-				Rectangle sourceRect = parameters.GetFrame();
-
-				DrawData data = new DrawData(tex, new Vector2(drawX, drawY), sourceRect, color, 0, sourceRect.Size() / 2, parameters.Scale ?? 1f, spriteEffects, 0)
-				{
-					ignorePlayerRotation = true
-				};
-				Main.playerDrawData.Add(data);
-			}
-		});
-
-		public static void DrawPlayerLayers(List<PlayerLayer> layers)
-		{
-			layers.Insert(0, AllInOne);
-		}
-		#endregion
+		public static PlayerDrawLayer ParentLayer => PlayerDrawLayers.FirstVanillaLayer;
+		public static PlayerDrawLayer ParentVisibilityLayer => PlayerDrawLayers.ElectrifiedDebuffBack;
 	}
 }

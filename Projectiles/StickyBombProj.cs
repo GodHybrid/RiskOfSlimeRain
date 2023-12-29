@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
+using Terraria.ID;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -10,63 +12,61 @@ namespace RiskOfSlimeRain.Projectiles
 	{
 		public override void SetStaticDefaults()
 		{
-			DisplayName.SetDefault("Sticky Bomb");
-			Main.projFrames[projectile.type] = 2;
+			Main.projFrames[Projectile.type] = 2;
 		}
 
 		public override void SetDefaults()
 		{
 			base.SetDefaults();
-			projectile.Size = new Vector2(16);
-			projectile.timeLeft = 120;
+			Projectile.Size = new Vector2(16);
+			Projectile.timeLeft = 120;
 		}
 
-		public override bool PreDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override bool PreDraw(ref Color lightColor)
 		{
 			//manually drawing the texture with 78% opacity, with a glowmask applied
 			SpriteEffects effects = SpriteEffects.None;
-			Texture2D image = ModContent.GetTexture(Texture);
+			Texture2D image = ModContent.Request<Texture2D>(Texture).Value;
 			Rectangle bounds = new Rectangle
 			{
 				X = 0,
-				Y = projectile.frame,
+				Y = Projectile.frame,
 				Width = image.Bounds.Width,
-				Height = image.Bounds.Height / Main.projFrames[projectile.type]
+				Height = image.Bounds.Height / Main.projFrames[Projectile.type]
 			};
 			bounds.Y *= bounds.Height; //cause proj.frame only contains the frame number
 
-			Vector2 stupidOffset = projectile.Size / 2 + new Vector2(0f, projectile.gfxOffY - 2);
+			Vector2 stupidOffset = Projectile.Size / 2 + new Vector2(0f, Projectile.gfxOffY - 2);
 
-			spriteBatch.Draw(image, projectile.position - Main.screenPosition + stupidOffset, bounds, lightColor * 0.78f, projectile.rotation, bounds.Size() / 2, projectile.scale, effects, 0f);
-			image = ModContent.GetTexture(Texture + "_Glow");
-			spriteBatch.Draw(image, projectile.position - Main.screenPosition + stupidOffset, bounds, Color.White, projectile.rotation, bounds.Size() / 2, projectile.scale, effects, 0f);
+			Main.EntitySpriteDraw(image, Projectile.position - Main.screenPosition + stupidOffset, bounds, lightColor * 0.78f, Projectile.rotation, bounds.Size() / 2, Projectile.scale, effects);
+			image = ModContent.Request<Texture2D>(Texture + "_Glow").Value;
+			Main.EntitySpriteDraw(image, Projectile.position - Main.screenPosition + stupidOffset, bounds, Color.White, Projectile.rotation, bounds.Size() / 2, Projectile.scale, effects);
 
 			return false;
 		}
 
 		public int InitTimer
 		{
-			get => (int)projectile.localAI[1];
-			set => projectile.localAI[1] = value;
+			get => (int)Projectile.localAI[1];
+			set => Projectile.localAI[1] = value;
 		}
 
 		public override void WhileStuck(NPC npc)
 		{
-			if (Main.myPlayer == projectile.owner && projectile.timeLeft <= 3)
+			if (Main.myPlayer == Projectile.owner && Projectile.timeLeft <= 3)
 			{
 				//Explode
-				Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombExplosion>(), damage, 8, Main.myPlayer);
-				projectile.Kill();
+				Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<StickyBombExplosion>(), damage, 8, Main.myPlayer);
+				Projectile.Kill();
 				return;
 			}
 
-			projectile.LoopAnimation(5);
+			Projectile.LoopAnimation(5);
 
 			if (InitTimer < 8)
 			{
-				//167 also decent
-				if (InitTimer == 0) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.8f);
-				if (InitTimer == 7) Main.PlaySound(42, (int)projectile.Center.X, (int)projectile.Center.Y, 166, 0.8f, 0.6f);
+				if (InitTimer == 0) SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact.WithPitchOffset(0.8f), Projectile.Center);
+				if (InitTimer == 7) SoundEngine.PlaySound(SoundID.DD2_CrystalCartImpact.WithPitchOffset(0.6f), Projectile.Center);
 				InitTimer++;
 			}
 		}

@@ -17,26 +17,26 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int DustTimer
 		{
-			get => (int)projectile.localAI[1];
-			set => projectile.localAI[1] = value;
+			get => (int)Projectile.localAI[1];
+			set => Projectile.localAI[1] = value;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(18);
-			projectile.friendly = true;
-			projectile.penetrate = 1;
-			projectile.tileCollide = true;
-			projectile.timeLeft = 1800;
-			projectile.alpha = 255;
+			Projectile.Size = new Vector2(18);
+			Projectile.friendly = true;
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = true;
+			Projectile.timeLeft = 1800;
+			Projectile.alpha = 255;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
-			if (Main.myPlayer == projectile.owner)
+			if (Main.myPlayer == Projectile.owner)
 			{
-				int damage = (int)projectile.ai[0];
-				Projectile.NewProjectile(projectile.Center, Vector2.Zero, ModContent.ProjectileType<MortarTubeExplosion>(), damage, projectile.knockBack, Main.myPlayer);
+				int damage = (int)Projectile.ai[0];
+				Projectile.NewProjectile(Projectile.GetSource_FromThis(), Projectile.Center, Vector2.Zero, ModContent.ProjectileType<MortarTubeExplosion>(), damage, Projectile.knockBack, Main.myPlayer);
 			}
 		}
 
@@ -46,7 +46,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 			Update();
 
-			if (projectile.alpha > 50) return;
+			if (Projectile.alpha > 50) return;
 
 			Collide();
 
@@ -55,23 +55,23 @@ namespace RiskOfSlimeRain.Projectiles
 
 		private void FadeIn()
 		{
-			if (projectile.alpha > 0)
+			if (Projectile.alpha > 0)
 			{
-				projectile.alpha -= 35;
-				if (projectile.alpha < 0)
+				Projectile.alpha -= 35;
+				if (Projectile.alpha < 0)
 				{
-					projectile.alpha = 0;
+					Projectile.alpha = 0;
 				}
 			}
 		}
 
 		private void Update()
 		{
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
-			projectile.velocity.Y = projectile.velocity.Y + 0.2f; // 0.1f for arrow gravity, 0.4f for knife gravity
-			if (projectile.velocity.Y > 15f) // This check implements "terminal velocity". We don't want the projectile to keep getting faster and faster. Past 16f this projectile will travel through blocks, so this check is useful.
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+			Projectile.velocity.Y = Projectile.velocity.Y + 0.2f; // 0.1f for arrow gravity, 0.4f for knife gravity
+			if (Projectile.velocity.Y > 15f) // This check implements "terminal velocity". We don't want the projectile to keep getting faster and faster. Past 16f this projectile will travel through blocks, so this check is useful.
 			{
-				projectile.velocity.Y = 15f;
+				Projectile.velocity.Y = 15f;
 			}
 		}
 
@@ -80,9 +80,9 @@ namespace RiskOfSlimeRain.Projectiles
 			for (int i = 0; i < Main.maxNPCs; i++)
 			{
 				NPC npc = Main.npc[i];
-				if ((npc.CanBeChasedBy() || npc.type == NPCID.TargetDummy) && npc.Hitbox.Intersects(projectile.Hitbox))
+				if ((npc.CanBeChasedBy() || npc.type == NPCID.TargetDummy) && npc.Hitbox.Intersects(Projectile.Hitbox))
 				{
-					projectile.Kill();
+					Projectile.Kill();
 					return;
 				}
 			}
@@ -99,9 +99,9 @@ namespace RiskOfSlimeRain.Projectiles
 			//now, DustTimer is in range of 0 to 60, and our Sin is in range of 0 to 60, so everything is fine
 			//lastly, we stretch its return values from -1 to 1, to -fanout to fanout
 
-			Vector2 direction = Vector2.Normalize(projectile.velocity);
+			Vector2 direction = Vector2.Normalize(Projectile.velocity);
 			//position of the fin
-			Vector2 backOffset = direction * (projectile.height + thickness);
+			Vector2 backOffset = direction * (Projectile.height + thickness);
 			Vector2 sinDirection;
 			Vector2 center;
 			Rectangle spawn;
@@ -114,10 +114,10 @@ namespace RiskOfSlimeRain.Projectiles
 				else sign = 1;
 				//one "clockwise", one "counter clockwise", 90 degrees offset to the direction
 				sinDirection = direction.RotatedBy(sign * MathHelper.PiOver4) * sin;
-				center = projectile.Center - backOffset + sinDirection;
+				center = Projectile.Center - backOffset + sinDirection;
 				spawn = Utils.CenteredRectangle(center, new Vector2(thickness));
 
-				Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Fire, 0f, 0f, 100, default(Color), 1f);
+				Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Torch, 0f, 0f, 100, default(Color), 1f);
 				dust.scale *= Main.rand.NextFloat(1f, 2f);
 				dust.velocity *= 0.2f;
 				dust.noGravity = true;

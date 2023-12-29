@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -21,15 +22,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.05f : 0.02f;
 
-		public override string Name => "Paul's Goat Hoof";
-
-		public override string Description => $"Run {Initial.ToPercent()} faster";
-
-		public override string FlavorText => "A hoof from one of my many goats\nThinking it was cancerous, I went to the doctors and low-and-behold; it was";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Speed increase: {Formula().ToPercent()}";
+			return UIInfoText.Format(Formula().ToPercent());
 		}
 
 		public void PostUpdateRunSpeeds(Player player)
@@ -59,7 +56,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 					{
 						timer = 0;
 						Vector2 position = new Vector2(player.position.X + (player.direction > 0 ? 0 : player.width), player.position.Y + player.gfxOffY + Main.rand.Next(player.height));
-						Projectile.NewProjectile(position, Vector2.Zero, ModContent.ProjectileType<PaulsGoatHoofProj>(), 0, 0, Main.myPlayer);
+						Projectile.NewProjectile(GetEntitySource(player), position, Vector2.Zero, ModContent.ProjectileType<PaulsGoatHoofProj>(), 0, 0, Main.myPlayer);
 					}
 				}
 			}

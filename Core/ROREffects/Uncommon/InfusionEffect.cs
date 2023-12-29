@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -33,21 +34,19 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override int HitCheckMax => 60;
 
-		public override string Description => $"Killing an enemy increases your health permanently by {Initial}, up to {cap}";
-
-		public override string FlavorText => "You can add whatever blood sample you want, as far as I know.\nRemember that sampling from other creatures is a great basis for experimentation!";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, cap);
 
 		public override string UIInfo()
 		{
-			return $"Bonus life: {BonusLife}. Cap: {Cap}. Stored heal: {Math.Round(StoredHeals, 2)}";
+			return UIInfoText.Format(BonusLife, Cap, Math.Round(StoredHeals, 2));
 		}
 
-		public void OnKillNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleHealAndProjectile(player, target);
 		}
 
-		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnKillNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleHealAndProjectile(player, target);
 		}
@@ -69,12 +68,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		protected override void NetSend(BinaryWriter writer)
 		{
-			writer.Write(BonusLife);
+			writer.Write7BitEncodedInt(BonusLife);
 		}
 
 		protected override void NetReceive(BinaryReader reader)
 		{
-			BonusLife = reader.ReadInt32();
+			BonusLife = reader.Read7BitEncodedInt();
 		}
 
 		public void PostUpdateEquips(Player player)
@@ -96,17 +95,17 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			int heal = GetHeal();
 			if (heal > 0)
 			{
-				PlayerBonusProj.NewProjectile(target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
+				PlayerBonusProj.NewProjectile(GetEntitySource(player), target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
 				{
 					inf.HealAmount = heal;
 				});
 			}
 		}
 
-		public void IncreaseBonusLife(int heal)
+		public void IncreaseBonusLife(Player player, int heal)
 		{
 			BonusLife += heal;
-			new ROREffectSyncSinglePacket(this).Send();
+			new ROREffectSyncSinglePacket(player, this).Send();
 		}
 
 		public override string ToString()

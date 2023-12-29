@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,25 +17,23 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => 0.5f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to snare enemies for {Initial} seconds";
-
-		public override string FlavorText => "You say you can fix 'em?\nThese tasers are very very faulty";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Chance.ToPercent(), Initial);
 
 		public override string UIInfo()
 		{
-			return $"Duration: {Formula()}s";
+			return UIInfoText.Format(Formula());
 		}
 
 		public override bool AlwaysProc => false;
 
 		public override float Chance => ServerConfig.Instance.OriginalStats ? 0.07f : 0.1f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			AddBuff(target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			AddBuff(target);
 		}

@@ -1,14 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using ReLogic.Content;
 using Terraria;
-using Terraria.ID;
+using Terraria.GameContent;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Effects
 {
 	/// <summary>
 	/// Responsible for dealing with shaders
 	/// </summary>
-	public static class ShaderManager
+	[Autoload(Side = ModSide.Client)]
+	public class ShaderManager : ModSystem
 	{
 		public static Effect CircleEffect { get; private set; }
 
@@ -49,29 +52,26 @@ namespace RiskOfSlimeRain.Effects
 		public static void StartEffectOnSpriteBatch(SpriteBatch spriteBatch, Effect effect)
 		{
 			spriteBatch.End();
-			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.instance.Rasterizer, effect, Main.GameViewMatrix.TransformationMatrix);
+			spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, effect, Main.GameViewMatrix.TransformationMatrix);
 		}
 
 		public static void DrawEmptyCanvasToScreen(SpriteBatch spriteBatch)
 		{
-			spriteBatch.Draw(Main.magicPixel, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Transparent);
+			spriteBatch.Draw(TextureAssets.MagicPixel.Value, new Rectangle(0, 0, Main.screenWidth, Main.screenHeight), Color.Transparent);
 		}
 
 		public static void RestoreVanillaSpriteBatchSettings(SpriteBatch spriteBatch)
 		{
 			spriteBatch.End();
-			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.instance.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
+			spriteBatch.Begin(SpriteSortMode.Deferred, BlendState.AlphaBlend, Main.DefaultSamplerState, DepthStencilState.None, Main.Rasterizer, null, Main.GameViewMatrix.TransformationMatrix);
 		}
 
-		public static void Load()
+		public override void OnModLoad()
 		{
-			if (Main.netMode != NetmodeID.Server)
-			{
-				CircleEffect = RiskOfSlimeRainMod.Instance.GetEffect("Effects/CircleShader/Circle");
-			}
+			CircleEffect = RiskOfSlimeRainMod.Instance.Assets.Request<Effect>("Effects/CircleShader/Circle", AssetRequestMode.ImmediateLoad).Value;
 		}
 
-		public static void Unload()
+		public override void OnModUnload()
 		{
 			CircleEffect = null;
 		}

@@ -5,14 +5,15 @@ using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Boss
 {
 	public class BurningWitnessEffect : RORBossEffect, IPostUpdateEquips, IModifyHit, IOnHit, IPostUpdateRunSpeeds, IPlayerLayer
 	{
 		const int durationIncrease = 3;
+		const int flatDamage = 1;
 		int InitialDuration => ServerConfig.Instance.OriginalStats ? 6 : 3;
 
 		int timer = -1;
@@ -24,13 +25,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 		int Duration => InitialDuration + durationIncrease * Math.Max(0, Stack - 1);
 
-		public override string Description => $"Grant +{Initial.ToPercent()} movement speed, +1 damage, and a firetrail on kill for {InitialDuration} seconds";
-
-		public override string FlavorText => "The Worm's eye seems to still see... watching... rewarding...";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), flatDamage, InitialDuration);
 
 		public override string UIInfo()
 		{
-			return $"Current speed increase: {Formula().ToPercent()}. Current duration: {Duration}";
+			return UIInfoText.Format(Formula().ToPercent(), Duration);
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
@@ -58,14 +57,35 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 
 				Rectangle hitbox = player.Hitbox;
 				hitbox.Inflate(spawnTimer, spawnTimer);
-				bool noTrail = !Main.projectile.AnyActive(p => p.Hitbox.Intersects(hitbox));
+
 				int fireDuration = 50;
-				if (noTrail || timer % (fireDuration - 10) == 0)
+				int type = ModContent.ProjectileType<FireProj>();
+				bool canDrop = timer % (fireDuration - 10) == 0;
+				if (!canDrop)
 				{
-					int type = ModContent.ProjectileType<FireProj>();
+					bool noTrail = true;
+					for (int i = 0; i < Main.maxProjectiles; i++)
+					{
+						Projectile proj = Main.projectile[i];
+
+						if (proj.active && proj.type == type && proj.Hitbox.Intersects(hitbox))
+						{
+							noTrail = false;
+							break;
+						}
+					}
+
+					if (noTrail)
+					{
+						canDrop = true;
+					}
+				}
+
+				if (canDrop)
+				{
 					int damage = (int)(0.35f * player.GetDamage());
 
-					Projectile.NewProjectile(player.Center.X - player.direction * player.width / 2, player.Center.Y + 6f, 0, 1, type, damage, 0, Main.myPlayer, fireDuration);
+					Projectile.NewProjectile(GetEntitySource(player), player.Center.X - player.direction * player.width / 2, player.Center.Y + 6f, 0, 1, type, damage, 0, Main.myPlayer, fireDuration);
 					spawnTimer = 20;
 				}
 			}
@@ -77,22 +97,22 @@ namespace RiskOfSlimeRain.Core.ROREffects.Boss
 			player.moveSpeed += player.moveSpeed * Formula();
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) damage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += flatDamage;
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
-			if (timer > 0) damage += 1;
+			if (timer > 0) modifiers.FlatBonusDamage += flatDamage;
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (target.life <= 0) timer = Duration * 60;
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			if (target.life <= 0) timer = Duration * 60;
 		}

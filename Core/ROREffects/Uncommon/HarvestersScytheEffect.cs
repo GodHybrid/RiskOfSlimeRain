@@ -4,11 +4,14 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
-	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IGetWeaponCrit, IPostUpdateEquips, IPlayerLayer
+	public class HarvestersScytheEffect : HealingPoolEffect, IOnHit, IModifyWeaponCrit, IPostUpdateEquips, IPlayerLayer
 	{
+		public override RORRarity Rarity => RORRarity.Uncommon;
+
 		public const float critChance = 0.05f;
 
 		public float CritChance => critChance + (ServerConfig.Instance.OriginalStats ? 0.02f * Math.Max(0, Stack - 1) : 0f);
@@ -21,18 +24,21 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override int HitCheckMax => 1; //Minimum, max once per second
 
-		public override string Description => $"Gain {critChance.ToPercent()} crit chance. Critical strikes heal for {Initial} health";
+		public override LocalizedText Description => base.Description.WithFormatArgs(critChance.ToPercent(), Initial);
 
-		public override string FlavorText => "It takes a brave man to look death in the eye and claim they don't need help.";
+		public static LocalizedText UIInfoTextOGStats { get; private set; }
 
-		public override string Name => "Harvester's Scythe";
+		public override void SetStaticDefaults()
+		{
+			UIInfoTextOGStats ??= GetLocalization("UIInfoOGStats");
+		}
 
 		public override string UIInfo()
 		{
-			string info = $"Heal amount: {Math.Round(CurrentHeal, 2)}";
+			string info = UIInfoText.Format(Math.Round(CurrentHeal, 2));
 			if (ServerConfig.Instance.OriginalStats)
 			{
-				info = $"Crit chance increase: {CritChance.ToPercent()}. " + info;
+				info = UIInfoTextOGStats.Format(CritChance.ToPercent(), info);
 			}
 			return info;
 		}
@@ -42,12 +48,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			return new PlayerLayerParams("Textures/HarvestersScythe", new Vector2(0, -48));
 		}
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			HandleAndApplyHeal(player);
 		}
@@ -57,7 +63,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			UpdateHitCheckCount(player);
 		}
 
-		public void GetWeaponCrit(Player player, Item item, ref int crit)
+		public void ModifyWeaponCrit(Player player, Item item, ref float crit)
 		{
 			crit += (int)(CritChance * 100);
 		}

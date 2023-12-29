@@ -8,30 +8,25 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public class PaulsGoatHoofProj : ModProjectile
 	{
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Paul's Goat Hoof Trail");
-		}
-
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(40, 2);
-			projectile.aiStyle = -1;
-			projectile.friendly = true;
-			projectile.penetrate = -1;
-			projectile.timeLeft = 60;
-			projectile.ignoreWater = true;
-			projectile.tileCollide = false;
+			Projectile.Size = new Vector2(40, 2);
+			Projectile.aiStyle = -1;
+			Projectile.friendly = true;
+			Projectile.penetrate = -1;
+			Projectile.timeLeft = 60;
+			Projectile.ignoreWater = true;
+			Projectile.tileCollide = false;
 		}
 
 		public override void AI()
 		{
-			if (projectile.alpha < 255)
+			if (Projectile.alpha < 255)
 			{
-				projectile.alpha += 10;
-				if (projectile.alpha >= 255)
+				Projectile.alpha += 10;
+				if (Projectile.alpha >= 255)
 				{
-					projectile.Kill();
+					Projectile.Kill();
 				}
 			}
 		}

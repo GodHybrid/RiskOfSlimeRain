@@ -7,8 +7,6 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.ModLoader;
-using WebmilioCommons.Extensions;
-using WebmilioCommons.Tinq;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -22,37 +20,37 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetStaticDefaults()
 		{
-			Main.projFrames[projectile.type] = 5;
+			Main.projFrames[Projectile.type] = 5;
 		}
 
 		public override void SetDefaults()
 		{
-			projectile.width = Width;
-			projectile.height = Height;
-			projectile.friendly = false;
-			projectile.hostile = false;
-			projectile.penetrate = -1;
-			projectile.tileCollide = true;
-			projectile.timeLeft = 60;
-			projectile.netImportant = true;
-			drawOriginOffsetY = 2;
+			Projectile.width = Width;
+			Projectile.height = Height;
+			Projectile.friendly = false;
+			Projectile.hostile = false;
+			Projectile.penetrate = -1;
+			Projectile.tileCollide = true;
+			Projectile.timeLeft = 60;
+			Projectile.netImportant = true;
+			DrawOriginOffsetY = 2;
 		}
 
-		public override void Kill(int timeLeft)
+		public override void OnKill(int timeLeft)
 		{
-			Utils.PoofOfSmoke(projectile.Center);
+			Utils.PoofOfSmoke(Projectile.Center);
 		}
 
-		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override void PostDraw(Color lightColor)
 		{
 			if (Config.Instance.HideWarbannerRadius) return;
 			bool iAmLast = false;
 			for (int i = Main.maxProjectiles - 1; i >= 0; i--)
 			{
 				Projectile p = Main.projectile[i];
-				if (p.active && p.modProjectile is WarbannerProj)
+				if (p.active && p.ModProjectile is WarbannerProj)
 				{
-					if (p.whoAmI == projectile.whoAmI)
+					if (p.whoAmI == Projectile.whoAmI)
 					{
 						iAmLast = true;
 					}
@@ -65,56 +63,64 @@ namespace RiskOfSlimeRain.Projectiles
 				for (int i = 0; i < Main.maxProjectiles; i++)
 				{
 					Projectile p = Main.projectile[i];
-					if (p.active && p.modProjectile is WarbannerProj w)
+					if (p.active && p.ModProjectile is WarbannerProj w)
 					{
 						Effect circle = ShaderManager.SetupCircleEffect(p.Center, w.Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
 						if (circle != null)
 						{
-							ShaderManager.ApplyToScreenOnce(spriteBatch, circle, restore: false);
+							ShaderManager.ApplyToScreenOnce(Main.spriteBatch, circle, restore: false);
 						}
 					}
 				}
-				ShaderManager.RestoreVanillaSpriteBatchSettings(spriteBatch);
+				ShaderManager.RestoreVanillaSpriteBatchSettings(Main.spriteBatch);
 			}
 		}
 
 		public int Radius
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public bool SpawnedByEffect
 		{
-			get => projectile.ai[1] == 1;
-			set => projectile.ai[1] = value ? 1f : 0f;
+			get => Projectile.ai[1] == 1;
+			set => Projectile.ai[1] = value ? 1f : 0f;
 		}
 
 		public int SoundTimer
 		{
-			get => (int)projectile.localAI[1];
-			set => projectile.localAI[1] = value;
+			get => (int)Projectile.localAI[1];
+			set => Projectile.localAI[1] = value;
 		}
 
 		public override void AI()
 		{
-			projectile.timeLeft = 60;
+			Projectile.timeLeft = 60;
 			GiveBuff();
 			Animate();
 		}
 
 		private void GiveBuff()
 		{
-			Main.player.WhereActive(p => p.GetRORPlayer().CanReceiveWarbannerBuff && p.DistanceSQ(projectile.Center) < Radius * Radius).Do(delegate (Player p)
+			for (int i = 0; i < Main.maxPlayers; i++)
 			{
-				RORPlayer mPlayer = p.GetRORPlayer();
-				mPlayer.ActivateWarbanner(projectile.identity);
-			});
+				Player p = Main.player[i];
+
+				if (p.active && !p.dead)
+				{
+					RORPlayer mPlayer = p.GetRORPlayer();
+					if (mPlayer.CanReceiveWarbannerBuff && p.DistanceSQ(Projectile.Center) < Radius * Radius)
+					{
+						mPlayer.ActivateWarbanner(Projectile.identity);
+					}
+				}
+			}
 		}
 
 		private void Animate()
 		{
-			projectile.WaterfallAnimation(8);
+			Projectile.WaterfallAnimation(8);
 
 			if (SpawnedByEffect)
 			{
@@ -149,19 +155,9 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
-		private void PlaySound(LegacySoundStyle sound, float vol, float pitch)
+		private void PlaySound(SoundStyle sound, float vol, float pitch)
 		{
-			PlaySound(sound.SoundId, sound.Style, vol, pitch);
-		}
-
-		private void PlaySound(int type, float vol, float pitch)
-		{
-			PlaySound(type, -1, vol, pitch);
-		}
-
-		private void PlaySound(int type, int style, float vol, float pitch)
-		{
-			Main.PlaySound(type, (int)projectile.Center.X, (int)projectile.Center.Y, style, vol, pitch);
+			SoundEngine.PlaySound(sound.WithVolumeScale(vol).WithPitchOffset(pitch), Projectile.Center);
 		}
 	}
 }

@@ -27,15 +27,15 @@ namespace RiskOfSlimeRain.Projectiles
 			return Color;
 		}
 
-		public override void PostDraw(SpriteBatch spriteBatch, Color lightColor)
+		public override void PostDraw(Color lightColor)
 		{
 			bool iAmLast = false;
 			for (int i = Main.maxProjectiles - 1; i >= 0; i--)
 			{
 				Projectile p = Main.projectile[i];
-				if (p.active && p.type == projectile.type)
+				if (p.active && p.type == Projectile.type)
 				{
-					if (p.whoAmI == projectile.whoAmI)
+					if (p.whoAmI == Projectile.whoAmI)
 					{
 						iAmLast = true;
 					}
@@ -49,14 +49,14 @@ namespace RiskOfSlimeRain.Projectiles
 				for (int i = 0; i < Main.maxProjectiles; i++)
 				{
 					Projectile p = Main.projectile[i];
-					if (p.active && p.type == projectile.type)
+					if (p.active && p.type == Projectile.type)
 					{
 						Effect circle;
 						//Outer ring
 						circle = ShaderManager.SetupCircleEffect(p.Center, radius + Radius, Color, Color * 0.15f);
 						if (circle != null)
 						{
-							ShaderManager.ApplyToScreenOnce(spriteBatch, circle, restore: false);
+							ShaderManager.ApplyToScreenOnce(Main.spriteBatch, circle, restore: false);
 						}
 
 						//"Sprite"
@@ -65,12 +65,12 @@ namespace RiskOfSlimeRain.Projectiles
 							circle = ShaderManager.SetupCircleEffect(p.Center, radius, Color);
 							if (circle != null)
 							{
-								ShaderManager.ApplyToScreenOnce(spriteBatch, circle, restore: false);
+								ShaderManager.ApplyToScreenOnce(Main.spriteBatch, circle, restore: false);
 							}
 						}
 					}
 				}
-				ShaderManager.RestoreVanillaSpriteBatchSettings(spriteBatch);
+				ShaderManager.RestoreVanillaSpriteBatchSettings(Main.spriteBatch);
 			}
 		}
 	}

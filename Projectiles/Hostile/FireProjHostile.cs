@@ -8,18 +8,18 @@ namespace RiskOfSlimeRain.Projectiles.Hostile
 
 		public override void SetDefaults()
 		{
-			projectile.width = 4;
-			projectile.height = 8;
-			projectile.penetrate = -1;
-			projectile.friendly = false;
-			projectile.hostile = true;
-			projectile.timeLeft = 120;
-			projectile.hide = true;
+			Projectile.width = 4;
+			Projectile.height = 8;
+			Projectile.penetrate = -1;
+			Projectile.friendly = false;
+			Projectile.hostile = true;
+			Projectile.timeLeft = 120;
+			Projectile.hide = true;
 		}
 
-		public override void DrawBehind(int index, List<int> drawCacheProjsBehindNPCsAndTiles, List<int> drawCacheProjsBehindNPCs, List<int> drawCacheProjsBehindProjectiles, List<int> drawCacheProjsOverWiresUI)
+		public override void DrawBehind(int index, List<int> behindNPCsAndTiles, List<int> behindNPCs, List<int> behindProjectiles, List<int> overPlayers, List<int> overWiresUI)
 		{
-			drawCacheProjsBehindNPCsAndTiles.Add(index);
+			behindNPCsAndTiles.Add(index);
 		}
 	}
 }

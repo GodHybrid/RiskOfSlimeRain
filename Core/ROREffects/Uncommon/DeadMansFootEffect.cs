@@ -5,6 +5,7 @@ using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using Terraria;
+using Terraria.Localization;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -22,24 +23,20 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private float Ticks => Formula();
 
-		public override string Description => $"Drop a poison mine at low health or after taking significant damage for {Initial}x{damage.ToPercent()} damage";
-
-		public override string FlavorText => "It looks like he was infested by some bug-like creatures, and exploded when I got close.\nI hope his death wasn't too painful; his family will know how he died.";
-
-		public override string Name => "Dead Man's Foot";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, damage.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Debuff duration: {30 * (int)Formula()}";
+			return UIInfoText.Format(30 * (int)Formula());
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
 			if (Main.myPlayer == player.whoAmI && 
 				(damage >= Math.Max(damageFlat, (int)(player.statLifeMax2 * damageThreshold)) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold))	)
 			{
 				int damageForProj = player.GetDamage();
-				Projectile.NewProjectile(player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);
+				Projectile.NewProjectile(GetEntitySource(player), player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);
 			}
 		}
 
@@ -49,7 +46,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 			if (Main.rand.NextBool(30))
 			{
-				Dust dust = Dust.NewDustDirect(player.Left, player.width, player.height >> 1, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightYellow * 0.78f, 1.25f);
+				Dust dust = Dust.NewDustDirect(player.Left, player.width, player.height / 2, ModContent.DustType<ColorableDustAlphaFade>(), 0, 0, 0, Color.LightYellow * 0.78f, 1.25f);
 				dust.customData = new InAndOutData(inSpeed: 30, outSpeed: 10, reduceScale: false);
 				dust.velocity.X *= 0f;
 				dust.velocity.Y = 0.3f;

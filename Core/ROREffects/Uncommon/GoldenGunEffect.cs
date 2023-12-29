@@ -3,6 +3,8 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -29,13 +31,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float DamageIncrease => Formula() * Ratio;
 
-		public override string Description => $"Deals bonus damage scaling by money in your inventory, up to {Initial.ToPercent()} damage at {defMaxMoney / Item.platinum} platinum";
-
-		public override string FlavorText => "Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), defMaxMoney / Item.platinum);
 
 		public override string UIInfo()
 		{
-			return $"Damage: {DamageIncrease.ToPercent()}. Max: {Math.Round((float)MaxMoney / Item.platinum, 1)} Platinum";
+			return UIInfoText.Format(DamageIncrease.ToPercent(), Math.Round((float)MaxMoney / Item.platinum, 1));
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
@@ -60,9 +60,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			}
 		}
 
-		public void ModifyWeaponDamage(Player player, Item item, ref float add, ref float mult, ref float flat)
+		public void ModifyWeaponDamage(Player player, Item item, ref StatModifier damage)
 		{
-			add += DamageIncrease;
+			damage += DamageIncrease;
 		}
 	}
 }

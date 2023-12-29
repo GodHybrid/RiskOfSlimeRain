@@ -1,0 +1,626 @@
+ROREffects: {
+	Uncommon: {
+		AtGMissileMK1: {
+			DisplayName: AtG Missile Mk. 1
+			Description: "{0} chance to fire a missile that deals {1} damage"
+			FlavorText:
+				'''
+				Lightweight and attachable to torso for free use of both hands.
+				Can store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]
+				'''
+			UIInfo: Spawn chance: {0}
+		}
+
+		BoxingGloves: {
+			DisplayName: Boxing Gloves
+			Description: "{0} chance to knock enemies back on hit"
+			FlavorText:
+				'''
+				These should work fine for the kids you're training.
+				A bit musty, though. It'll make your trainees hit like a pro, ha!
+				'''
+			UIInfo: Knockback chance: {0}
+		}
+
+		DeadMansFoot: {
+			DisplayName: Dead Man's Foot
+			Description: Drop a poison mine at low health or after taking significant damage for {0}x{1} damage
+			FlavorText:
+				'''
+				It looks like he was infested by some bug-like creatures, and exploded when I got close.
+				I hope his death wasn't too painful; his family will know how he died.
+				'''
+			UIInfo: Debuff duration: {0}
+		}
+
+		GoldenGun: {
+			DisplayName: Golden Gun
+			Description: Deals bonus damage scaling by money in your inventory, up to {0} damage at {1} platinum
+			FlavorText: Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.
+			UIInfo: Damage: {0}. Max: {1} Platinum
+		}
+
+		GuardiansHeart: {
+			DisplayName: Guardian's Heart
+			Description: Gain {0} shields. Recharges in {1} seconds out of combat
+			FlavorText:
+				'''
+				While living, the subject had advanced muscle growth, cell regeneration, higher agility...
+				His heart seems to still beat independent of the rest of the body.
+				'''
+			UIInfo: Shield: {0}/{1}
+		}
+
+		HarvestersScythe: {
+			DisplayName: Harvester's Scythe
+			Description: Gain {0} crit chance. Critical strikes heal for {1} health
+			FlavorText: It takes a brave man to look death in the eye and claim they don't need help.
+			UIInfo: Heal amount: {0}
+			UIInfoOGStats: Crit chance increase: {0}. {1}
+		}
+
+		Infusion: {
+			DisplayName: Infusion
+			Description: Killing an enemy increases your health permanently by {0}, up to {1}
+			FlavorText:
+				'''
+				You can add whatever blood sample you want, as far as I know.
+				Remember that sampling from other creatures is a great basis for experimentation!
+				'''
+			UIInfo: Bonus life: {0}. Cap: {1}. Stored life: {2}
+		}
+
+		LeechingSeed: {
+			DisplayName: Leeching Seed
+			Description: Dealing damage heals you for {0} health
+			FlavorText:
+				'''
+				These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.
+				However, before they die, they feel increased health and state of mind!
+				'''
+			UIInfo: Stored heal: {0}. Heal amount: {1}
+		}
+
+		PanicMines: {
+			DisplayName: Panic Mines
+			Description: Drop mines at low health for {0} damage
+			FlavorText:
+				'''
+				Must be strapped onto vehicles, NOT personnel!
+				Includes smart-fire, but leave the blast radius regardless. The laws of physics don't pick sides.
+				'''
+			UIInfoOGStats: Mine count: {0}
+			UIInfo:
+				'''
+				{0}
+				Mine damage: {1}
+				'''
+			UIInfoMax:
+				'''
+				{0} (max)
+				Mine damage: {1}
+				'''
+		}
+
+		ToughTimes: {
+			DisplayName: Tough Times
+			Description: Increase damage reduction by {0}, stacks multiplicatively
+			FlavorText:
+				'''
+				Bears are just about the only toy that can lose just about everything and still maintain their dignity and worth.
+				Don't forget, hon. I'm coming home soon. Stay strong.
+				'''
+			UIInfo: Additional DR: {0}
+		}
+	}
+
+	Common: {
+		BarbedWire: {
+			DisplayName: Barbed Wire
+			Description: Touching enemies deals {0} of your current damage every second
+			FlavorText: Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...
+			UIInfo: Current damage: {0}. Current radius: {1} Tiles
+		}
+
+		BitterRoot: {
+			DisplayName: Bitter Root
+			Description: Increases maximum life by roughly {0}
+			FlavorText: Biggest. Ginseng. Root. Ever.
+			UIInfo: Life increase: {0}
+		}
+
+		BundleOfFireworks: {
+			DisplayName: Bundle Of Fireworks
+			Description: "{0} chance to fire 5 fireworks on kill that deal {1} damage"
+			FlavorText:
+				'''
+				Disguising homing missiles as fireworks?
+				Don't ever quote me on it, but it was pretty smart
+				'''
+			UIInfo:
+				'''
+				Chance: {0}
+				Monsters to kill for guaranteed fireworks: {1}
+				'''
+		}
+
+		BustlingFungus: {
+			DisplayName: Bustling Fungus
+			Description: After {0} seconds, heal for {1} of your max health every second
+			FlavorText:
+				'''
+				The strongest biological healing agent...
+				...is a mushroom
+				'''
+			UIInfo:
+				'''
+				Requires solid ground below you to spawn
+				Heal amount: {0}
+				'''
+		}
+
+		Crowbar: {
+			DisplayName: Crowbar
+			Description: Deal {0} more damage to enemies above {1} health
+			FlavorText:
+				'''
+				Crowbar/prybar/wrecking bar allows for both prying and smashing! 
+				Carbon steel, so it should last for a very long time, at least until the 3rd edition arrives
+				'''
+			UIInfo: Damage increase: {0}
+		}
+
+		FireShield: {
+			DisplayName: Fire Shield
+			Description: After being hit for {0} of your max health - explode, dealing {1} damage and knocking back enemies.
+			FlavorText:
+				'''
+				The thing is only half-done, but it will do the job
+				PLEASE handle with care!
+				'''
+			UIInfo:
+				'''
+				Damage: {0}
+				Knockback: {1}
+				'''
+		}
+
+		Gasoline: {
+			DisplayName: Gasoline
+			Description: Killing enemies burns the ground to deal {0} damage and set enemies on fire
+			FlavorText:
+				'''
+				Gasoline, eh?
+				Surprising to find a gas station these days, with everyone drivin' around them electro cars
+				'''
+			UIInfo: Damage: {0}
+		}
+
+		Headstompers: {
+			DisplayName: Headstompers
+			Description: Hurt enemies by falling for up to {0} damage
+			FlavorText:
+				'''
+				Combat Ready Spikeshoes, lovingly named 'Headstompers', allow you to get the drop on foes. 
+				Literally. Vertically.
+				'''
+			UIInfo: Damage: {0}
+		}
+
+		HermitsScarf: {
+			DisplayName: Hermit's Scarf
+			Description: Allows you to evade attacks with {0} chance
+			FlavorText:
+				'''
+				This thing survived that horrible day
+				It must be able to survive whatever I have to endure, right?
+				'''
+			UIInfo: Chance: {0}
+		}
+
+		LensmakersGlasses: {
+			DisplayName: Lens-Maker's Glasses
+			Description: Increases crit chance by {0}
+			FlavorText:
+				'''
+				Calibrated for high focal alignment
+				Should allow for the precision you were asking for
+				'''
+			UIInfo: Crit chance increase: {0}
+		}
+
+		LifeSavings: {
+			DisplayName: Life Savings
+			Description: Generate {0} copper every {1} seconds. Withdraw by opening the inventory
+			FlavorText: hi im billy and heer is money for mom thanks
+			UIInfo: Last withdrawn: {0}
+			UIInfoNext: Next withdrawal: {0}
+			UIInfoTotal: Total money generated: {0}
+		}
+
+		MeatNugget: {
+			DisplayName: Meat Nugget
+			Description: Enemies will have a {0} chance to drop a meat nugget that recovers {1} health
+			FlavorText:
+				'''
+				MM. Delicious
+				Just kidding, it's awful
+				'''
+			UIInfo: Heal amount: {0}
+		}
+
+		Medkit: {
+			DisplayName: Medkit
+			Description: Heal for {0} health {1} seconds after receiving damage
+			FlavorText:
+				'''
+				Each Medkit should contain bandages, sterile dressings, soap,
+				antiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen
+				'''
+			UIInfo: Heal amount: {0}
+		}
+
+		MonsterTooth: {
+			DisplayName: Monster Tooth
+			Description: Killing an enemy will heal you for {0} health
+			FlavorText:
+				'''
+				Sometimes I felt like it helped me on hunts, ya know?
+				Like... instincts
+				'''
+			UIInfo: Heal amount: {0}
+		}
+
+		MortarTube: {
+			DisplayName: Mortar Tube
+			Description: "{0} chance to fire a mortar for {1} damage"
+			FlavorText:
+				'''
+				You stick explosives down the end, then you fire the explosive
+				I suppose you can beat them with the tube afterwards
+				'''
+			UIInfo: Damage: {0}
+		}
+
+		MysteriousVial: {
+			DisplayName: Mysterious Vial
+			Description: Increases health regeneration by {0} health per second
+			FlavorText:
+				'''
+				Side effects may include itching, rashes, bleeding, sensitivity of skin,
+				dry patches, permanent scarring, misaligned bone regrowth, rotting of the...
+				'''
+			UIInfo: Regeneration: {0}/s
+		}
+
+		PaulsGoatHoof: {
+			DisplayName: Paul's Goat Hoof
+			Description: Run {0} faster
+			FlavorText:
+				'''
+				A hoof from one of my many goats
+				Thinking it was cancerous, I went to the doctors and low-and-behold; it was
+				'''
+			UIInfo: Speed increase: {0}
+		}
+
+		RustyKnife: {
+			DisplayName: Rusty Knife
+			Description: "{0} chance to cause bleeding. Bleeding deals {1}x{2} damage"
+			FlavorText:
+				'''
+				Murder weapon, case name ELIAS. Probably a lover's spat?
+				There is still dried blood on the knife, so mark it as biological.
+				'''
+			UIInfo: Chance: {0}
+		}
+
+		SnakeEyes: {
+			DisplayName: Snake Eyes
+			Description: Increases crit chance by {0} for each time you're in peril, up to {1} times. Resets upon dying or drinking a potion
+			FlavorText:
+				'''
+				You dirty----------er
+				You KNEW I had to win to pay off my debts
+				'''
+			UIInfo: Crit chance increase: {0}%
+		}
+
+		SoldiersSyringe: {
+			DisplayName: Soldier's Syringe
+			Description: Increase attack speed by {0}
+			FlavorText:
+				'''
+				Should help multi-purpose requirements needed of soldiers
+				Contains vaccinations, antibiotics, pain killers, steroids, heroine, gasoline...
+				'''
+			UIInfo: Attack speed increase: {0}
+		}
+
+		Spikestrip: {
+			DisplayName: Spikestrip
+			Description: Drop spikestrips on hit, slowing enemies by {0}
+			FlavorText:
+				'''
+				The doctors say I don't have much time left
+				Since you're in the force now and all, I felt obligated to return it to you
+				'''
+			UIInfo: Spikestrip lifetime: {0}s
+		}
+
+		SproutingEgg: {
+			DisplayName: Sprouting Egg
+			Description: Increases health regeneration by {0} health per second when out of combat for {1} seconds
+			FlavorText:
+				'''
+				This egg seems to be somewhere between hatching and dying
+				I can't bring it to myself to cook it alive
+				'''
+			UIInfo: Regeneration: {0}/s
+		}
+
+		StickyBomb: {
+			DisplayName: Sticky Bomb
+			Description: "{0} chance to attach a bomb to an enemy, detonating for {1} damage"
+			FlavorText:
+				'''
+				Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.
+				YOU STICK THAT END ON BAD THINGS, NOT YOURSELF
+				'''
+			UIInfo: Damage: {0}
+		}
+
+		Taser: {
+			DisplayName: Taser
+			Description: "{0} chance to snare enemies for {1} seconds"
+			FlavorText:
+				'''
+				You say you can fix 'em?
+				These tasers are very very faulty
+				'''
+			UIInfo: Duration: {0}s
+		}
+
+		Warbanner: {
+			DisplayName: Warbanner
+			Description: Drop an empowering banner after killing enough enemies
+			FlavorText:
+				'''
+				Very very valuable
+				Don't drop it; it's worth more than you
+				'''
+			UIInfo: Kills required for next banner: {0}
+			UIInfoActive: . Active banners: {0}
+			UIInfoReady: New banner ready, leave the current area of effect or return to solid ground
+			UIInfoInvasion: Kill countdown is disabled while an invasion is in progress
+		}
+	}
+
+	Boss: {
+		BurningWitness: {
+			DisplayName: Burning Witness
+			Description: Grant +{0} movement speed, +{1} damage, and a firetrail on kill for {2} seconds
+			FlavorText: The Worm's eye seems to still see... watching... rewarding...
+			UIInfo: Current speed increase: {0}. Current duration: {1}
+		}
+	}
+
+	CommonUI: {
+		ReachedRecommended: You reached the recommended stack amount!
+		ReachedRecommendedWithWeapon: With the currently held weapon, you reached the recommended stack amount!
+		BlockedByConfig: This item is blocked via the Server Config
+		BlockedByConfigMPExtra: . The host is responsible for the item blacklist
+	}
+}
+
+Items: {
+	MagmaWormSummon: {
+		DisplayName: Spicy Honey Donut
+		Tooltip: Summons the Magma Worm
+	}
+
+	Nullifier: {
+		DisplayName: Nullifier
+		Tooltip: Use to enable the ability to restore your used '{0}' items, for a price
+		AlreadyEnabled: Nullifier is already enabled! Click the "?" in the UI
+		Obtainment: 25% chance to be sold by the Traveling Merchant in hardmode
+		Flavor: Gone with the wind...
+	}
+
+	ColossusPaintingItem: {
+		DisplayName: Colossus Painting
+		Tooltip: "'R. Odathus'"
+	}
+
+	WarbannerRemover: {
+		DisplayName: Warbanner Remover
+		Tooltip:
+			'''
+			Use to remove the nearest warbanner from '{0}'
+			Stand inside the range of a warbanner, and it will:
+			- Reset the killcount when used
+			'''
+		Highlight: - Highlight the warbanner that's about to be removed
+		CantUse: You aren't standing inside the range of any warbanners!
+		Obtainment: 25% chance to be sold by the Traveling Merchant after Skeletron has been defeated
+	}
+
+	DebugItem: {
+		DisplayName: Debug Item
+		Tooltip: ""
+	}
+
+	EnteringItem: {
+		DisplayName: Entering Item
+		Tooltip: Use to enter a subworld. Only works with 'SubworldLibrary' Mod enabled
+	}
+
+	RORConsumableItem.CantUse: Max stack is enforced, you cannot stack more of this item!
+}
+
+NPCs: {
+	MagmaWorm: {
+		CommonName: Magma Worm
+		SpawnInfo: Summons the {$NPCs.MagmaWorm.CommonName}. Drops '{$ROREffects.Boss.BurningWitness.DisplayName}' on first death, then with 1% chance
+		BestiaryFlavorText: With its massive size, the Magma Worm must either eat VAST amounts of food a day or hibernate for a very, very, very long time below ground.
+	}
+}
+
+Projectiles: {
+	AtGMissileMK1Proj.DisplayName: "{$ROREffects.Uncommon.AtGMissileMK1.DisplayName}"
+	BundleOfFireworksProj.DisplayName: "{$ROREffects.Common.BundleOfFireworks.DisplayName}"
+	BundleOfFireworksVisualExplosion.DisplayName: "{$ROREffects.Common.BundleOfFireworks.DisplayName}"
+	BustlingFungusProj.DisplayName: "{$ROREffects.Common.BustlingFungus.DisplayName}"
+	CrowbarProj.DisplayName: "{$ROREffects.Common.Crowbar.DisplayName}"
+	DeadMansFootDoTProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	DeadMansFootExplosionProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	DeadMansFootMineProj.DisplayName: "{$ROREffects.Uncommon.DeadMansFoot.DisplayName}"
+	FireProj.DisplayName: Fire
+	FireShieldExplosion.DisplayName: "{$ROREffects.Common.FireShield.DisplayName}"
+	HeadstompersProj.DisplayName: "{$ROREffects.Common.Headstompers.DisplayName}"
+	HermitsScarfProj.DisplayName: "{$ROREffects.Common.HermitsScarf.DisplayName}"
+	FireballGravityBouncy.DisplayName: Fireball
+	FireProjHostile.DisplayName: Fire
+	InfusionProj.DisplayName: "{$ROREffects.Uncommon.Infusion.DisplayName}"
+	MeatNuggetProj.DisplayName: "{$ROREffects.Common.MeatNugget.DisplayName}"
+	MortarTubeExplosion.DisplayName: "{$ROREffects.Common.MortarTube.DisplayName}"
+	MortarTubeRocket.DisplayName: "{$ROREffects.Common.MortarTube.DisplayName}"
+	PanicMinesExplosionProj.DisplayName: "{$ROREffects.Uncommon.PanicMines.DisplayName}"
+	PanicMinesProj.DisplayName: "{$ROREffects.Uncommon.PanicMines.DisplayName}"
+	PaulsGoatHoofProj.DisplayName: "{$ROREffects.Common.PaulsGoatHoof.DisplayName}"
+	PlayerHealthProj.DisplayName: Health
+	RustyKnifeProj.DisplayName: "{$ROREffects.Common.RustyKnife.DisplayName}"
+	SpikestripProj.DisplayName: "{$ROREffects.Common.Spikestrip.DisplayName}"
+	StickyBombExplosion.DisplayName: "{$ROREffects.Common.StickyBomb.DisplayName}"
+	StickyBombProj.DisplayName: "{$ROREffects.Common.StickyBomb.DisplayName}"
+	WarbannerProj.DisplayName: "{$ROREffects.Common.Warbanner.DisplayName}"
+}
+
+Configs: {
+	Config: {
+		DisplayName: Client Config
+
+		Headers: {
+			ItemUI: Item UI
+			Visuals: Visuals
+			Hint: To go to the server config containing game mode settings, press the '>' arrow in the bottom right
+		}
+
+		CustomStacking: {
+			Label: Custom stacking
+			Tooltip: Manually select how many stacks an item has (up to the unlocked amount)
+		}
+
+		OnlyShowWhenOpenInventory: {
+			Label: Only show when open inventory
+			Tooltip: Toggle if the UI should be always shown or only when the inventory is open
+		}
+
+		ItemUIVerticalOffset: {
+			Label: Vertical offset
+			Tooltip: Adjust how far away the UI starts off vertically from the bottom
+		}
+
+		HideOwnVisuals: {
+			Label: Hide own player visuals
+			Tooltip: Toggle visuals created by effects (with exceptions)
+		}
+
+		HideOtherVisuals: {
+			Label: Hide other player visuals
+			Tooltip: Toggle visuals created by effects (with exceptions)
+		}
+
+		HideWarbannerRadius: {
+			Label: Hide warbanner radius
+			Tooltip: Toggle the warbanner circle
+		}
+
+		Hint: {
+			Label: Hint
+			Tooltip: ""
+		}
+	}
+
+	ServerConfig: {
+		DisplayName: Server Config
+
+		Headers: {
+			GameModes:
+				'''
+				Game Modes
+				You can only change those settings in the 'Mods' menu accessed from the main menu (not ingame)
+				'''
+			ServerTools: Server Tools
+			Hint: Hint: To go to the client config containing UI adjustments, press the '<' arrow in the bottom left
+		}
+
+		OriginalStats: {
+			Label: Original Stats
+			Tooltip: If enabled, replicates the item's stats from the original game for the most part. Leave it disabled for the recommended game balance
+		}
+
+		DifficultyScaling: {
+			Label: Difficulty Scaling
+			Tooltip: If enabled, scales damage taken and enemy spawns by the amount of items that are currently active. Leave it enabled for the recommended game balance
+		}
+
+		Blacklist: {
+			Label: Item Blacklist
+			Tooltip: Customize which items will have no effect on players (they can still apply it, it'll just stay inactive)
+		}
+
+		DisableRecipes: {
+			Label: Disable Recipes
+			Tooltip: If enabled, disables recipes for the consumable power-up items
+		}
+
+		Hint: {
+			Label: Hint
+			Tooltip: ""
+		}
+	}
+}
+
+RecipeGroups: {
+	Any: "{0} {1}"
+	Chest: Chest
+	Jellyfish: Jellyfish
+	EvilWater: Evil Water
+	EvilMaterial: Evil Material
+	BasicBoots: Basic Boots
+	EvilMushroom: Evil Mushroom
+}
+
+UI: {
+	EffectUI: {
+		Misc: {
+			Header: This UI shows all your currently used items from '{0}'
+			NullifierExplanation:
+				'''
+				Nullifier view currently active
+				Left/right click or use the mousewheel on an icon to increase/decrease removed stack count
+				Double left click on this icon twice to pay the price, remove the effects and return the items
+				Right click to switch to normal UI
+				'''
+			CheckConfig: Check the config of this mod to customize the UI
+			ChangeStack: Left/right click or use the mousewheel on an icon to increase/decrease stack
+			SwitchToNullifier: Right click to switch to nullifier UI
+			Info:
+				'''
+				Misc Info:
+				Proc multiplier (based on held weapon): {0}
+				'''
+			TotalStacks: Active items: {0}/{1}
+			DifficultyScaling:
+				'''
+				Taken damage multiplier: {0}
+				Spawn increase multiplier: {1}
+				'''
+			HasChests: This world originally generated with {0} chests filled with items from '{1}'
+			NoChests: This world has no '{0}' items generated in chests. Make a new world!
+			NullifierSavings: Savings: {0}
+			NullifierTotal: Total price: {0}
+		}
+	}
+}

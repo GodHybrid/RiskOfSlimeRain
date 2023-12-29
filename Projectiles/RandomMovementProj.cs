@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.Utilities;
@@ -13,12 +14,12 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public abstract class RandomMovementProj : ModProjectile
 	{
-		public static void NewProjectile<T>(Vector2 position, Vector2 velocity, int damage, float knockBack, Action<T> onCreate = null) where T : RandomMovementProj
+		public static void NewProjectile<T>(IEntitySource source, Vector2 position, Vector2 velocity, int damage, float knockBack, Action<T> onCreate = null) where T : RandomMovementProj
 		{
-			Projectile p = Projectile.NewProjectileDirect(position, velocity, ModContent.ProjectileType<T>(), damage, knockBack, Main.myPlayer, (int)DateTime.Now.Ticks);
+			Projectile p = Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<T>(), damage, knockBack, Main.myPlayer, (int)DateTime.Now.Ticks);
 			if (p.whoAmI < Main.maxProjectiles)
 			{
-				T t = p.modProjectile as T;
+				T t = p.ModProjectile as T;
 
 				onCreate?.Invoke(t);
 			}
@@ -32,7 +33,7 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				if (rng == null)
 				{
-					rng = new UnifiedRandom(RandomSeed / (1 + projectile.identity));
+					rng = new UnifiedRandom(RandomSeed / (1 + Projectile.identity));
 				}
 				return rng;
 			}
@@ -40,20 +41,20 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int RandomSeed
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
 		public int HomingTimer
 		{
-			get => (int)projectile.ai[1];
-			set => projectile.ai[1] = value;
+			get => (int)Projectile.ai[1];
+			set => Projectile.ai[1] = value;
 		}
 
 		public int RandomMoveTimer
 		{
-			get => (int)projectile.localAI[0];
-			set => projectile.localAI[0] = value;
+			get => (int)Projectile.localAI[0];
+			set => Projectile.localAI[0] = value;
 		}
 
 		//Status flag for when default acceleration takes place
@@ -89,12 +90,12 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override void SetDefaults()
 		{
-			projectile.Size = new Vector2(16);
-			projectile.penetrate = 1;
-			projectile.tileCollide = false;
-			projectile.timeLeft = 300;
-			projectile.alpha = 255;
-			projectile.netImportant = true;
+			Projectile.Size = new Vector2(16);
+			Projectile.penetrate = 1;
+			Projectile.tileCollide = false;
+			Projectile.timeLeft = 300;
+			Projectile.alpha = 255;
+			Projectile.netImportant = true;
 		}
 
 		public sealed override void AI()
@@ -104,7 +105,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (RandomMoveTimer > RandomMoveTimerMax && FindTarget(out int targetIndex))
 			{
 				//once it found a target it becomes "able to damage stuff"
-				projectile.friendly = true;
+				Projectile.friendly = true;
 				Homing(targetIndex);
 			}
 			else
@@ -116,7 +117,7 @@ namespace RiskOfSlimeRain.Projectiles
 
 			OtherAI();
 
-			if (projectile.alpha > AlphaCutoff) return;
+			if (Projectile.alpha > AlphaCutoff) return;
 
 			SpawnDust();
 		}
@@ -133,8 +134,8 @@ namespace RiskOfSlimeRain.Projectiles
 				NPC npc = Main.npc[i];
 				if (npc.CanBeChasedBy())
 				{
-					float betweenProj = Vector2.DistanceSquared(npc.Center, projectile.Center);
-					float betweenPlayer = Vector2.DistanceSquared(npc.Center, projectile.GetOwner().Center);
+					float betweenProj = Vector2.DistanceSquared(npc.Center, Projectile.Center);
+					float betweenPlayer = Vector2.DistanceSquared(npc.Center, Projectile.GetOwner().Center);
 					float between = Math.Min(betweenPlayer, betweenProj);
 					if (between < MaxHomingRangeSQ && between < minDistance)
 					{
@@ -148,12 +149,12 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public virtual void FadeIn()
 		{
-			if (projectile.alpha > 0)
+			if (Projectile.alpha > 0)
 			{
-				projectile.alpha -= AlphaDecrease;
-				if (projectile.alpha < 0)
+				Projectile.alpha -= AlphaDecrease;
+				if (Projectile.alpha < 0)
 				{
-					projectile.alpha = 0;
+					Projectile.alpha = 0;
 				}
 			}
 		}
@@ -168,20 +169,20 @@ namespace RiskOfSlimeRain.Projectiles
 			RandomMoveTimer++;
 			if (RandomMoveTimer % RandomMoveDirectionChangeFrequency == 0)
 			{
-				projectile.velocity = projectile.velocity.RotatedBy((Rng.NextDouble() - 0.5) * RandomMoveDirectionChangeMagnitude);
+				Projectile.velocity = Projectile.velocity.RotatedBy((Rng.NextDouble() - 0.5) * RandomMoveDirectionChangeMagnitude);
 			}
 		}
 
 		public virtual void Homing(int targetIndex)
 		{
 			HomingTimer++;
-			Vector2 direction = Main.npc[targetIndex].Center + Main.npc[targetIndex].velocity * 5f - projectile.Center;
+			Vector2 direction = Main.npc[targetIndex].Center + Main.npc[targetIndex].velocity * 5f - Projectile.Center;
 			direction.Normalize();
 			direction *= MaxHomingSpeed;
 			//For that nice initial curving
 			//Accel starts at 30, then goes down to 4
 			float accel = Utils.Clamp(MaxHomingAccel - HomingTimer, MinHomingAccel, MaxHomingAccel);
-			projectile.velocity = (projectile.velocity * (accel - 1) + direction) / accel;
+			Projectile.velocity = (Projectile.velocity * (accel - 1) + direction) / accel;
 		}
 
 		public virtual void Movement()
@@ -195,9 +196,9 @@ namespace RiskOfSlimeRain.Projectiles
 
 			if (keepIncreasingVelocity)
 			{
-				if (projectile.velocity.LengthSquared() < MaxHomingSpeed * MaxHomingSpeed)
+				if (Projectile.velocity.LengthSquared() < MaxHomingSpeed * MaxHomingSpeed)
 				{
-					projectile.velocity *= 1.04f;
+					Projectile.velocity *= 1.04f;
 				}
 				else
 				{
@@ -206,21 +207,21 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 
 			//Terminal velocity cap
-			if (Math.Abs(projectile.velocity.X) > 16) projectile.velocity.X *= 0.95f;
-			if (Math.Abs(projectile.velocity.Y) > 16) projectile.velocity.Y *= 0.95f;
+			if (Math.Abs(Projectile.velocity.X) > 16) Projectile.velocity.X *= 0.95f;
+			if (Math.Abs(Projectile.velocity.Y) > 16) Projectile.velocity.Y *= 0.95f;
 
-			projectile.rotation = projectile.velocity.ToRotation() + MathHelper.PiOver2;
+			Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 		}
 
 		public virtual void SpawnDust()
 		{
-			Vector2 direction = Vector2.Normalize(projectile.velocity);
+			Vector2 direction = Vector2.Normalize(Projectile.velocity);
 			//Position of the fin
-			Vector2 backOffset = direction * projectile.height;
-			Vector2 center = projectile.Center - backOffset;
+			Vector2 backOffset = direction * Projectile.height;
+			Vector2 center = Projectile.Center - backOffset;
 			Rectangle spawn = Utils.CenteredRectangle(center, new Vector2(DustBoxThickness));
 
-			Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Fire, 0f, 0f, 100);
+			Dust dust = Dust.NewDustDirect(spawn.TopLeft(), spawn.Height, spawn.Width, DustID.Torch, 0f, 0f, 100);
 			dust.scale *= Main.rand.NextFloat(1f, 2f);
 			dust.velocity *= 0.2f;
 			dust.noGravity = true;

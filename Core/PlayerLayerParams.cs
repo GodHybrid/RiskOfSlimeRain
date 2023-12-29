@@ -35,7 +35,7 @@ namespace RiskOfSlimeRain.Core
 			FrameCount = frameCount;
 		}
 
-		public Texture2D Texture => ModContent.GetTexture("RiskOfSlimeRain/" + TexturePath);
+		public Texture2D Texture => ModContent.Request<Texture2D>("RiskOfSlimeRain/" + TexturePath).Value;
 
 		/// <summary>
 		/// Returns the sourceRectangle of the texture. Only vertical spritesheets supported

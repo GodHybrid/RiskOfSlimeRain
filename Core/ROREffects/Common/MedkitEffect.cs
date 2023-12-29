@@ -2,7 +2,9 @@
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.ID;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -25,13 +27,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 10f : 5f;
 
-		public override string Description => $"Heal for {Initial} health {MaxTimerHeal / 60d} seconds after receiving damage";
-
-		public override string FlavorText => "Each Medkit should contain bandages, sterile dressings, soap,\nantiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial, MaxTimerHeal / 60d);
 
 		public override string UIInfo()
 		{
-			return $"Heal amount: {Formula()}";
+			return UIInfoText.Format(Formula());
 		}
 
 		public void PostUpdateEquips(Player player)
@@ -41,7 +41,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				timer++;
 				if (timer == MaxTimerHeal && Main.myPlayer == player.whoAmI)
 				{
-					SoundHelper.PlaySound(SoundID.Splash, (int)player.Center.X, (int)player.Center.Y, 1, 1f, 0.6f);
+					SoundEngine.PlaySound(SoundID.Item86.WithVolumeScale(0.7f).WithPitchOffset(0.6f), player.Center);
 					//Because the healeffect number is delayed, to sync it up with the timer
 					player.HealMe((int)Formula());
 				}
@@ -60,7 +60,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			}
 		}
 
-		public void PostHurt(Player player, bool pvp, bool quiet, double damage, int hitDirection, bool crit)
+		public void PostHurt(Player player, Player.HurtInfo info)
 		{
 			timer = 0;
 		}

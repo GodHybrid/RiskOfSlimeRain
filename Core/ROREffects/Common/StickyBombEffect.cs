@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,25 +17,23 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override float Increase => ServerConfig.Instance.OriginalStats ? 0.4f : 0.3f;
 
-		public override string Description => $"{Chance.ToPercent()} chance to attach a bomb to an enemy, detonating for {Initial.ToPercent()} damage";
-
-		public override string FlavorText => "Once you take the wrapping off, the adhesive is ACTIVE. DON'T TOUCH IT.\nYOU STICK THAT END ON BAD THINGS, NOT YOURSELF";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Chance.ToPercent(), Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Damage: {Formula().ToPercent()}";
+			return UIInfoText.Format(Formula().ToPercent());
 		}
 
 		public override bool AlwaysProc => false;
 
 		public override float Chance => 0.08f;
 
-		public void OnHitNPC(Player player, Item item, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithItem(Player player, Item item, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
 
-		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, int damage, float knockback, bool crit)
+		public void OnHitNPCWithProj(Player player, Projectile proj, NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			SpawnProjectile(player, target);
 		}
@@ -44,12 +43,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			int damage = (int)(Formula() * player.GetDamage());
 			int width = Main.rand.Next(target.width);
 			int height = bound;
-			if ((target.height >> 1) > bound)
+			if ((target.height / 2) > bound)
 			{
 				height = Main.rand.Next(bound, target.height - bound);
 			}
 			Vector2 offset = new Vector2(width, height);
-			StickyProj.NewProjectile<StickyBombProj>(target, offset, damage);
+			StickyProj.NewProjectile<StickyBombProj>(GetEntitySource(player), target, offset, damage);
 		}
 	}
 }

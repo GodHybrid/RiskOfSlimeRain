@@ -2,6 +2,7 @@
 using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -39,13 +40,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override bool EnforceMaxStack => true;
 
-		public override string Description => $"Increases maximum life by roughly {Increase.ToPercent(0)}";
-
-		public override string FlavorText => "Biggest. Ginseng. Root. Ever.";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Increase.ToPercent(0));
 
 		public override string UIInfo()
 		{
-			return $"Life increase: {GetIncreaseAmount(Player)}";
+			return UIInfoText.Format(GetIncreaseAmount(Player));
 		}
 
 		public void ResetEffects(Player player)

@@ -51,7 +51,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 		public override void PostDraw(NPC npc, SpriteBatch spriteBatch, Color drawColor)
 		{
 			Vector2 drawCenter = new Vector2(npc.Center.X, npc.Top.Y + npc.gfxOffY - 20) - Main.screenPosition;
-			Texture2D texture = ModContent.GetTexture("RiskOfSlimeRain/Textures/Tasered");
+			Texture2D texture = ModContent.Request<Texture2D>("RiskOfSlimeRain/Textures/Tasered").Value;
 			Rectangle destination = Utils.CenteredRectangle(drawCenter, texture.Size());
 			spriteBatch.Draw(texture, destination, Color.White);
 		}

@@ -1,8 +1,10 @@
 ﻿using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.Audio;
 using Terraria.GameInput;
 using Terraria.ID;
+using Terraria.Localization;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
@@ -35,22 +37,29 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			totalText = total.MoneyToString();
 		}
 
-		public override string Description => $"Generate {amount} copper every {interval / 60} seconds. Withdraw by opening the inventory";
+		public override LocalizedText Description => base.Description.WithFormatArgs(amount, interval / 60);
 
-		public override string FlavorText => "hi im billy and heer is money for mom thanks";
+		public static LocalizedText UIInfoNextText { get; private set; }
+		public static LocalizedText UIInfoTotalText { get; private set; }
+
+		public override void SetStaticDefaults()
+		{
+			UIInfoNextText ??= GetLocalization("UIInfoNext");
+			UIInfoTotalText ??= GetLocalization("UIInfoTotal");
+		}
 
 		public override string UIInfo()
 		{
 			string text = string.Empty;
 			if (Main.playerInventory)
 			{
-				text += $"Last withdrawn: {lastWithdrawn}";
+				text += UIInfoText.Format(lastWithdrawn);
 			}
 			else
 			{
-				text += $"Next withdrawal: {nextMoneyWithdrawn}";
+				text += UIInfoText.Format(nextMoneyWithdrawn);
 			}
-			return text + $"\nTotal money generated: {totalText}";
+			return text + $"\n" + UIInfoText.Format(totalText);
 		}
 
 		public void PostUpdateEquips(Player player)
@@ -66,11 +75,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 			if (justOpenedInventory && savings > 0)
 			{
-				Main.PlaySound(SoundID.CoinPickup);
-				lastWithdrawn = (amount * savings).MoneyToString();
-				//*5 cause sell/buy value stuff
-				player.SellItem(amount * 5, savings);
-				total += amount * savings;
+				SoundEngine.PlaySound(SoundID.CoinPickup);
+				int money = amount * savings;
+				lastWithdrawn = money.MoneyToString();
+				player.GiveCoinsToPlayer(money);
+				total += money;
 				totalText = total.MoneyToString();
 				savings = 0;
 				nextMoneyWithdrawn = 0.MoneyToString();

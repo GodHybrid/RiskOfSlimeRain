@@ -1,8 +1,9 @@
 [c/64bbde:"Risk of Slime Rain"] is a mod that aims to add all the existing items from [c/334a8a:Risk of Rain 1] into [c/64a851:Terraria], with some tweaks to fit Terraria's gameplay and world. 
 
 This mod offers [c/d18660:permanent upgrades] to the player character through items of varying rarity. Every item is a [c/d18660:consumable] and most of them stack infinitely for increased effect, [c/d18660:upgrading] your various [c/d18660:stats] to your heart's content. 
+In exchange for the increased power you will posess, the game will become more difficult.
 However the recipes for them are quite expensive (non-Commons aren't craftable at all!). The items can be found in chests across the world or dropped from bosses that are slain for the first time.
-The mod also features a config setting where you can selectively pick the amount of stacks each item occupies, in case you need to tweak/disable the effects. If you want the items you used back, defeat the Wall of Flesh for the [c/d18660:Nullifier] item.
+The mod also features a config setting where you can selectively pick the amount of stacks each item occupies, in case you need to tweak/disable the effects, and to toggle between a balanced or original experience. If you want the items you used back, defeat the Wall of Flesh for the [c/d18660:Nullifier] item.
 
 [c/64bbde:"Risk of Slime Rain"] is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
 [i:3520] 25 items of [c/e9f2f2:Common] rarity - a nice variety of offensive, utility and defensive items.
@@ -14,17 +15,3 @@ The mod also features a config setting where you can selectively pick the amount
 
 [i:2560] Credits:
 Rodathus and Plantixx for most of the sprites.
-
-[c/888888:Changelog:]
-
-v0.4.0.2
-    + Added config setting to disable recipes for consumable power-up items
-v0.4.0.1
-    + Buffed minion/sentry proc rate by 100% (from 10% to 20%)
-    + Fixed Magma Worm's fireballs making a sound and bouncing too many times
-    + Fixed certain player bound textures showing up when they shouldn't
-    + Fixed Barbed Wire tooltip
-    + Fixed rocket projectiles not accelerating when no targets exist
-
-
-

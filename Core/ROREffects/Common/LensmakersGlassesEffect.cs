@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using System;
 using Terraria;
+using Terraria.Localization;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -16,15 +17,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public override int MaxRecommendedStack => ServerConfig.Instance.OriginalStats ? 14 : 25;
 
-		public override string Name => "Lens-Maker's Glasses";
-
-		public override string Description => $"Increases crit chance by {Initial.ToPercent()}";
-
-		public override string FlavorText => "Calibrated for high focal alignment\nShould allow for the precision you were asking for";
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent());
 
 		public override string UIInfo()
 		{
-			return $"Crit chance increase: {Math.Min(Formula(), 1f).ToPercent()}";
+			return UIInfoText.Format(Math.Min(Formula(), 1f).ToPercent());
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
@@ -32,16 +29,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			return new PlayerLayerParams("Textures/LensMakersGlasses", new Vector2(0, -50));
 		}
 
-		public void ModifyHitNPC(Player player, Item item, NPC target, ref int damage, ref float knockback, ref bool crit)
+		public void ModifyHitNPC(Player player, Item item, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (!Proc(Formula())) return;
-			crit = true;
+			modifiers.SetCrit();
 		}
 
-		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref int damage, ref float knockback, ref bool crit, ref int hitDirection)
+		public void ModifyHitNPCWithProj(Player player, Projectile proj, NPC target, ref NPC.HitModifiers modifiers)
 		{
 			if (!Proc(Formula())) return;
-			crit = true;
+			modifiers.SetCrit();
 		}
 	}
 }

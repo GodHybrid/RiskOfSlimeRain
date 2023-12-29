@@ -18,33 +18,28 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public int TimeLeft
 		{
-			get => (int)projectile.ai[0];
-			set => projectile.ai[0] = value;
+			get => (int)Projectile.ai[0];
+			set => Projectile.ai[0] = value;
 		}
 
-		public int SpawnLight => (int)projectile.ai[1];
+		public int SpawnLight => (int)Projectile.ai[1];
 
 		public virtual bool IgnoreTimeLeft => false;
 
 		public override string Texture => "RiskOfSlimeRain/Empty";
 
-		public override void SetStaticDefaults()
-		{
-			DisplayName.SetDefault("Fire");
-		}
-
 		public override void SetDefaults()
 		{
-			projectile.width = 8;
-			projectile.height = 8;
-			projectile.penetrate = -1;
-			projectile.friendly = true;
-			projectile.timeLeft = timeLeftDefault; //Set by TimeLeft through ai[0]
-			projectile.ranged = true;
-			projectile.noEnchantments = true;
+			Projectile.width = 8;
+			Projectile.height = 8;
+			Projectile.penetrate = -1;
+			Projectile.friendly = true;
+			Projectile.timeLeft = timeLeftDefault; //Set by TimeLeft through ai[0]
+			Projectile.DamageType = DamageClass.Ranged;
+			Projectile.noEnchantments = true;
 
-			projectile.usesIDStaticNPCImmunity = true;
-			projectile.idStaticNPCHitCooldown = 30;
+			Projectile.usesIDStaticNPCImmunity = true;
+			Projectile.idStaticNPCHitCooldown = 30;
 		}
 
 		public override void ModifyDamageHitbox(ref Rectangle hitbox)
@@ -54,18 +49,18 @@ namespace RiskOfSlimeRain.Projectiles
 
 		public override bool OnTileCollide(Vector2 oldVelocity)
 		{
-			projectile.velocity.Y = 0f;
+			Projectile.velocity.Y = 0f;
 			return false;
 		}
 
-		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough)
+		public override bool TileCollideStyle(ref int width, ref int height, ref bool fallThrough, ref Vector2 hitboxCenterFrac)
 		{
 			//so it sticks to platforms
 			fallThrough = false;
-			return base.TileCollideStyle(ref width, ref height, ref fallThrough);
+			return base.TileCollideStyle(ref width, ref height, ref fallThrough, ref hitboxCenterFrac);
 		}
 
-		public override void OnHitNPC(NPC target, int damage, float knockback, bool crit)
+		public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
 		{
 			target.AddBuff(BuffID.OnFire, 60);
 		}
@@ -83,14 +78,14 @@ namespace RiskOfSlimeRain.Projectiles
 			if (IgnoreTimeLeft) return;
 			if (!timeLeftSet)
 			{
-				projectile.timeLeft = TimeLeft < 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
+				Projectile.timeLeft = TimeLeft < 0 ? timeLeftDefault : TimeLeft; //Set to timeLeftDefault if its not set, otherwise set to specified
 				timeLeftSet = true;
 			}
 		}
 
 		private void Hitbox()
 		{
-			newHitbox = projectile.Hitbox;
+			newHitbox = Projectile.Hitbox;
 			newHitbox.Inflate(8, 2);
 		}
 
@@ -102,26 +97,26 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				Timer = 5;
 				//stop spreading
-				projectile.velocity.X *= 0.9f;
-				if (projectile.velocity.X > -0.01f && projectile.velocity.X < 0.01f)
+				Projectile.velocity.X *= 0.9f;
+				if (Projectile.velocity.X > -0.01f && Projectile.velocity.X < 0.01f)
 				{
-					projectile.velocity.X = 0f;
-					projectile.netUpdate = true;
+					Projectile.velocity.X = 0f;
+					Projectile.netUpdate = true;
 				}
 				//fall down
-				projectile.velocity.Y = projectile.velocity.Y + 0.2f;
+				Projectile.velocity.Y = Projectile.velocity.Y + 0.2f;
 			}
 
 			//terminal velocity cap
-			if (projectile.velocity.Y > 16f)
+			if (Projectile.velocity.Y > 16f)
 			{
-				projectile.velocity.Y = 16f;
+				Projectile.velocity.Y = 16f;
 			}
 
 			//die if wet
-			if (projectile.wet)
+			if (Projectile.wet)
 			{
-				projectile.Kill();
+				Projectile.Kill();
 			}
 		}
 
@@ -129,12 +124,12 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			if (SpawnLight > 0)
 			{
-				Lighting.AddLight(projectile.Center, new Vector3(1f, 0.7f, 0.7f));
+				Lighting.AddLight(Projectile.Center, new Vector3(1f, 0.7f, 0.7f));
 			}
 
 			if (Main.rand.NextFloat() < 0.6f) return;
 			//fire going up
-			Dust dust = Dust.NewDustDirect(newHitbox.TopLeft(), newHitbox.Width, newHitbox.Height, DustID.Fire, 0f, 0f, 100);
+			Dust dust = Dust.NewDustDirect(newHitbox.TopLeft(), newHitbox.Width, newHitbox.Height, DustID.Torch, 0f, 0f, 100);
 			dust.position.X -= 2f;
 			dust.position.Y += 2f;
 			dust.scale += Main.rand.NextFloat(0.5f);
@@ -145,7 +140,7 @@ namespace RiskOfSlimeRain.Projectiles
 			//static fire
 			if (Main.rand.NextBool(2))
 			{
-				dust = Dust.NewDustDirect(newHitbox.TopLeft(), newHitbox.Width, newHitbox.Height, DustID.Fire, 0f, 0f, 100);
+				dust = Dust.NewDustDirect(newHitbox.TopLeft(), newHitbox.Width, newHitbox.Height, DustID.Torch, 0f, 0f, 100);
 				dust.position.X -= 2f;
 				dust.position.Y += 2f;
 				dust.scale += 0.3f + Main.rand.NextFloat(0.5f);
