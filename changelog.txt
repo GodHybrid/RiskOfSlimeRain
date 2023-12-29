@@ -1,5 +1,6 @@
 v{ModVersion} has been published to {tMLBuildPurpose} tML v{tMLVersion}.
 Learn more at the [url={ModHomepage}]homepage[/url]
+Full changelogs [url=https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/changelogs.md#changelogs]Here[/url]
 
 Update to 1.4.4 versions of Terraria
 
