@@ -10,6 +10,7 @@ The mod also features a config setting where you can selectively pick the amount
 [i:989] 10 items of [c/66fa95:Uncommon] rarity - mostly defensive items and a handful of offensive ones.
 [i:560] 1 boss: [c/ffb034:Magma Worm] - Pre-Hardmode, drops his unique boss item.
 
+It is highly recommended to use Boss Checklist alongside Risk of Slime Rain. That way, you will receive additional drops from modded bosses!
 
 [c/d18660:Multiplayer compatible, no pvp support.]
 
