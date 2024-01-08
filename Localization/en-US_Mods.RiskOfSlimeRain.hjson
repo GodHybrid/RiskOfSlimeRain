@@ -83,7 +83,7 @@ ROREffects: {
 
 		PanicMines: {
 			DisplayName: Panic Mines
-			Description: Drop mines at low health for {0} damage
+			Description: Drop mines at low health or after taking heavy damage for {0} damage
 			FlavorText:
 				'''
 				Must be strapped onto vehicles, NOT personnel!
@@ -117,7 +117,7 @@ ROREffects: {
 	Common: {
 		BarbedWire: {
 			DisplayName: Barbed Wire
-			Description: Touching enemies deals {0} of your current damage every second
+			Description: Being close to enemies deals {0} of your current damage every second
 			FlavorText: Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...
 			UIInfo: Current damage: {0}. Current radius: {1} Tiles
 		}
@@ -131,7 +131,11 @@ ROREffects: {
 
 		BundleOfFireworks: {
 			DisplayName: Bundle Of Fireworks
-			Description: "{0} chance to fire 5 fireworks on kill that deal {1} damage"
+			Description: 
+				'''
+				{0} chance to fire 5 fireworks on kill that deal {1} damage
+				Guaranteed firework salvo every 50 kills and on defeating a boss
+				'''
 			FlavorText:
 				'''
 				Disguising homing missiles as fireworks?
