@@ -92,15 +92,19 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 		public int ChildWhoAmI
 		{
-			get => (int)NPC.ai[0];
-			protected set => NPC.ai[0] = value;
+			get => (int)NPC.ai[0] - 1;
+			protected set => NPC.ai[0] = value + 1;
 		}
+
+		public bool HasChild => ChildWhoAmI > -1 && ChildWhoAmI < Main.maxNPCs;
 
 		public int ParentWhoAmI
 		{
-			get => (int)NPC.ai[1];
-			protected set => NPC.ai[1] = value;
+			get => (int)NPC.ai[1] - 1;
+			protected set => NPC.ai[1] = value + 1;
 		}
+
+		public bool HasParent => ParentWhoAmI > -1 && ParentWhoAmI < Main.maxNPCs;
 
 		public float Scale
 		{
@@ -139,7 +143,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		{
 			if (Main.netMode != NetmodeID.MultiplayerClient)
 			{
-				if (IsHead && ChildWhoAmI == 0f)
+				if (IsHead && !HasChild)
 				{
 					AttachedHealthWhoAmI = NPC.whoAmI;
 					NPC.realLife = NPC.whoAmI;
@@ -205,7 +209,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 
 				if (!(IsTail || IsHeadExtension))
 				{
-					bool childIsTail = (Parent.ModNPC as MagmaWorm)?.IsTail ?? false;
+					bool childIsTail = (Child.ModNPC as MagmaWorm)?.IsTail ?? false;
 					if (!Child.active || !(IsOtherBody(Child) || childIsTail))
 					{
 						NPC.life = 0;
@@ -709,6 +713,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 			float parentRotation = Parent.rotation;
 
 			NPC.velocity = Vector2.Zero;
+			NPC.netOffset = Parent.netOffset;
 			Vector2 newVelocity = pCenter - NPC.Center;
 			if (parentRotation != NPC.rotation)
 			{
@@ -741,7 +746,7 @@ namespace RiskOfSlimeRain.NPCs.Bosses
 		/// </summary>
 		private void AllAI()
 		{
-			if (!IsHead && ParentWhoAmI >= 0f && ParentWhoAmI < Main.maxNPCs)
+			if (!IsHead && HasParent)
 			{
 				if (Parent.ModNPC is MagmaWorm mwb && mwb != null)
 				{
