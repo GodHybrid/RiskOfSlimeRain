@@ -4,8 +4,8 @@
 * Misc
 	* Added russian localization
 * Fixes
-    * Fixed Taser not working correctly in multiplayer
-    * Fixed Headstompers working on indestructible enemies (like Blazing Wheel) and some damage-over-time effects working if the enemy is temporarily invincible
+	* Fixed Taser not working correctly in multiplayer
+	* Fixed Headstompers working on indestructible enemies (like Blazing Wheel) and some damage-over-time effects working if the enemy is temporarily invincible
 
 ## 0.5
 * Items
@@ -46,22 +46,22 @@
 
 ## 0.4
 * 10 new items of Uncommon rarity, dropped from bosses and found in post-Plantera dungeon chests
-    * AtG Missile Mk. 1
-    * Boxing Gloves
-    * Dead Man's Foot
-    * Golden Gun
-    * Guardian's Heart
-    * Harvester's Scythe
-    * Infusion
-    * Leeching Seed
-    * Panic Mines
-    * Tough Times
+	* AtG Missile Mk. 1
+	* Boxing Gloves
+	* Dead Man's Foot
+	* Golden Gun
+	* Guardian's Heart
+	* Harvester's Scythe
+	* Infusion
+	* Leeching Seed
+	* Panic Mines
+	* Tough Times
 
 * Paul's Goat Hoof now increases max speed in addition to acceleration
 * Lens-Maker's Glasses don't make a sound anymore
 * Various small bugfixes
-    * Added missing 'Burning Witness' player sprites
-    * Fixed projectiles that fall to the ground hovering just above it
+	* Added missing 'Burning Witness' player sprites
+	* Fixed projectiles that fall to the ground hovering just above it
 
 ## 0.3.3.3
 * Fixed only one effect triggering, preventing subsequent ones from going off
@@ -78,27 +78,27 @@
 ## 0.3.3
 
 * Magma Worm!
-    * Recommended to fight in Pre-Hardmode, drops his unique boss item "Burning Witness" on first kill
-    * Summoned via "Spicy Honey Donut"
+	* Recommended to fight in Pre-Hardmode, drops his unique boss item "Burning Witness" on first kill
+	* Summoned via "Spicy Honey Donut"
 * Fixed Barbed Wire and Headstompers softlocking the player when no item was selected
 
 ## 0.3.2
 
 * New sprites!
 * Balance!
-    * Added a new config (labeled "Server Config") containing various balance options
-        * "Original Stats": If enabled, you keep using the same stats for items as in previous updates. Disabled by default
-        * "Difficulty Scaling": If enabled, the game becomes harder the more powerful you are. More infos on the "?" UI
-        * You can find all the balance changes [here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/OriginalStatsvsBalancedStats.md#original-stats-vs-balanced-stats)
-        * Please give feedback about the new balance on our homepage!
+	* Added a new config (labeled "Server Config") containing various balance options
+		* "Original Stats": If enabled, you keep using the same stats for items as in previous updates. Disabled by default
+		* "Difficulty Scaling": If enabled, the game becomes harder the more powerful you are. More infos on the "?" UI
+		* You can find all the balance changes [here](https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/OriginalStatsvsBalancedStats.md#original-stats-vs-balanced-stats)
+		* Please give feedback about the new balance on our homepage!
 * Item acquisition rework!
-    * Items generate in chests all over the world
-    * You are guaranteed one drop from each vanilla boss (with exceptions)
-        * If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
-            * Limit: 12 bosses in pre-Hardmode, 16 in Hardmode
-    * You can still craft all items
+	* Items generate in chests all over the world
+	* You are guaranteed one drop from each vanilla boss (with exceptions)
+		* If you have "Boss Checklist" mod enabled, the amount of items you can get from bosses potentially doubles
+			* Limit: 12 bosses in pre-Hardmode, 16 in Hardmode
+	* You can still craft all items
 * Item blacklist!
-    * Filter out undesired items on server side. Selected items will have no effect on players until deselected again. Useful for filtering items you deem problematic
+	* Filter out undesired items on server side. Selected items will have no effect on players until deselected again. Useful for filtering items you deem problematic
 * Added more mouseover text for most items
 * Fixed Bustling Fungus and Warbanner spawning in multiplayer when not standing on ground
 * Fixed Hermit's Scarf spamming "dodged"
@@ -157,24 +157,24 @@
 ## 0.3.1
 
 * Fixes
-    * Various unintended interactions with enemies are fixed/toned down
-        * Monster Tooth, Spikestrip, Taser
-    * Reworked how warbanners work:
-        * Instead of a chance, it's via kill count, guaranteed banner after exceeding that count
-        * Count increases the more banners exist in the world
-    * UI will show proper boss item drop chance in multiplayer
+	* Various unintended interactions with enemies are fixed/toned down
+		* Monster Tooth, Spikestrip, Taser
+	* Reworked how warbanners work:
+		* Instead of a chance, it's via kill count, guaranteed banner after exceeding that count
+		* Count increases the more banners exist in the world
+	* UI will show proper boss item drop chance in multiplayer
 
 * Additions
-    * Painting (Colossus), sold by Painter NPC
-    * Nullifier
-        * Drops when you kill the Wall of Flesh and have atleast one item from this mod activated
-        * Allows you to get back your items for a price
-        * Consumable, enables a new option in the UI (see the "?")
-    * Warbanner Remover
-        * Drops when you kill Skeletron and atleast one banner is active in the world
-        * Allows you to remove the nearest warbanner you stand in range of. Will reset your current kill count
-        * Not consumable
-    * The latter two items, once unlocked, will also sell from the traveling merchant with a 25% chance
+	* Painting (Colossus), sold by Painter NPC
+	* Nullifier
+		* Drops when you kill the Wall of Flesh and have atleast one item from this mod activated
+		* Allows you to get back your items for a price
+		* Consumable, enables a new option in the UI (see the "?")
+	* Warbanner Remover
+		* Drops when you kill Skeletron and atleast one banner is active in the world
+		* Allows you to remove the nearest warbanner you stand in range of. Will reset your current kill count
+		* Not consumable
+	* The latter two items, once unlocked, will also sell from the traveling merchant with a 25% chance
 
 ## 0.3.0.4
 
