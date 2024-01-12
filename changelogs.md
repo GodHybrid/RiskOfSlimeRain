@@ -1,5 +1,12 @@
 # Changelogs
 
+## 0.5.1
+* Misc
+	* Added russian localization
+* Fixes
+    * Fixed Taser not working correctly in multiplayer
+    * Fixed Headstompers working on indestructible enemies (like Blazing Wheel) and some damage-over-time effects working if the enemy is temporarily invincible
+
 ## 0.5
 * Items
 	* ALL damage items now have a minimal damage threshold that increases as player progresses. Players are no longer required to hold a weapon for the effects to deal any damage

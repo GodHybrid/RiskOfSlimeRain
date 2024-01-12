@@ -2,29 +2,8 @@ v{ModVersion} has been published to {tMLBuildPurpose} tML v{tMLVersion}.
 Learn more at the [url={ModHomepage}]homepage[/url]
 Full changelogs [url=https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/changelogs.md#changelogs]Here[/url]
 
-Update to 1.4.4 versions of Terraria
-
-* Items
-	* ALL damage items now have a minimal damage threshold that increases as player progresses. Players are no longer required to hold a weapon for the effects to deal any damage
-	* Some damage items now penetrate armor, making them not useless against high armor enemies
-	* Barbed Wire now immediately triggers if an enemy enters the radius
-	* Bundle Of Fireworks now spawns rockets every 50 kills, triple rockets every boss kill. The chance to fire rockets remains
-	* Fire Shield now correctly displays current stack stats of the item:
-		* Original stats: 200% damage -> 400% damage
-		* Balanced stats: 200% damage -> 600% damage; 10 knockback -> 15 knockback
-	* Medkit had its animation drastically sped up after the heal was already applied
-	* Panic Mines now activate at both low HP and after taking heavy damage
-		* Balanced stats: Maximum quantity of mines is limited to 8 at 8 stacks, further stacks increase the damage instead
-	* Spikestrips now spawn on set X locations: covers less area if hit airborne, but is much more useful if hit while grounded
-	* Taser (Balanced stats): Chance 7% -> 10%
 * Misc
-	* (With Boss Checklist Mod enabled) Modded bosses now only drop Common items instead of Uncommon. They will now continue dropping after you defeat 8 (or 11 in hardmode) different modded bosses
-	* When hovering over items in the bottom UI, it will now hide the chat and other items
-	* UI now shows total item count
-	* Increased taken damage multiplier slightly if Difficulty Scaling is enabled
+	* Added russian localization
 * Fixes
-	* Fixed Bustling Mushroom healing 1 HP less than intended
-	* Fixed Harvester's Scythe not counting as an Uncommon
-	* Fixed Paul's Goat Hoof UI info
-	* Fixed Rusty Knife having less duration than intended
-	* Fixed "chests with RoSR items in it" UI tooltip not working in multiplayer
+    * Fixed Taser not working correctly in multiplayer
+    * Fixed Headstompers working on indestructible enemies (like Blazing Wheel) and some damage-over-time effects working if the enemy is temporarily invincible
