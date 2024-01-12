@@ -48,7 +48,7 @@ namespace RiskOfSlimeRain.Projectiles
 			if (Main.myPlayer == Projectile.owner)
 			{
 				StrikeTimer++;
-				if (StrikeTimer > StrikeTimerMax)
+				if (StrikeTimer > StrikeTimerMax && !npc.dontTakeDamage)
 				{
 					StrikeTimer = 0;
 					npc.SimpleStrikeNPC(damage, 0, damageType: ModContent.GetInstance<ArmorPenDamageClass>()); //Does not proc, syncs
