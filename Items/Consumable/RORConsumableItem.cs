@@ -21,7 +21,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 
 		public RORRarity Rarity => ROREffectManager.GetRarity<T>();
 
-		public static Color FlavorColor => new Color(220, 220, 220);
+		public static Color FlavorColor => new Color(165, 165, 165);
 
 		public bool HasFlavorText => FlavorText != string.Empty;
 

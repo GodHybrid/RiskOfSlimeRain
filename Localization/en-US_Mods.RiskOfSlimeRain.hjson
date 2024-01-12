@@ -6,7 +6,7 @@ ROREffects: {
 			FlavorText:
 				'''
 				Lightweight and attachable to torso for free use of both hands.
-				Can store up to 120 heat-seaking missiles, which is just what your men need to fight off the [REDACTED]
+				Can store up to 120 heat-seeking missiles, which is just what your men need to fight off the [REDACTED].
 				'''
 			UIInfo: Spawn chance: {0}
 		}
@@ -131,7 +131,7 @@ ROREffects: {
 
 		BundleOfFireworks: {
 			DisplayName: Bundle Of Fireworks
-			Description: 
+			Description:
 				'''
 				{0} chance to fire 5 fireworks on kill that deal {1} damage
 				Guaranteed firework salvo every 50 kills and on defeating a boss
