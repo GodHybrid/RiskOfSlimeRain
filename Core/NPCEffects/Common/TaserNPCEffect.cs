@@ -10,7 +10,7 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 	{
 		public override void DrawEffects(NPC npc, ref Color drawColor)
 		{
-			Lighting.AddLight(npc.position, 0.1f, 0.2f, 0.7f);
+			Lighting.AddLight(npc.Center, 0.1f, 0.2f, 0.7f);
 		}
 
 		public Vector2 oldVelocity = default;
@@ -25,13 +25,13 @@ namespace RiskOfSlimeRain.Core.NPCEffects.Common
 
 		public override void NetSend(BinaryWriter writer)
 		{
-			writer.WritePackedVector2(oldVelocity);
+			writer.WriteVector2(oldVelocity);
 			writer.Write(oldDirections);
 		}
 
 		public override void NetReceive(BinaryReader reader)
 		{
-			oldVelocity = reader.ReadPackedVector2();
+			oldVelocity = reader.ReadVector2();
 			oldDirections = reader.ReadByte();
 		}
 
