@@ -53,6 +53,7 @@ namespace RiskOfSlimeRain.Items.Consumable
 			Recipe recipe = CreateRecipe();
 			recipe.AddIngredient(ItemID.LavaBucket, 4);
 			recipe.AddIngredient(ItemID.CrispyHoneyBlock, 10);
+			recipe.DisableDecraft(); //Otherwise free lava buckets
 			recipe.Register();
 		}
 

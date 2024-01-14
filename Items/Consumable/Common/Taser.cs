@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.TopazStaff, 4);
 			recipe.AddIngredient(ItemID.CopperBar, 90);
 			recipe.AddIngredient(ItemID.TeamBlockPink, 150);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

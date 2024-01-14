@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.NinjaPants, 5);
 			recipe.AddIngredient(ItemID.Spike, 80);
 			recipe.AddIngredient(ItemID.Leather, 55);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Gel, 800);
 			recipe.AddIngredient(ItemID.Hellstone, 260);
 			recipe.AddIngredient(ItemID.TinCan, 45);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

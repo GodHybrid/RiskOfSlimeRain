@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Gel, 990);
 			recipe.AddIngredient(ItemID.PinkGel, 170);
 			recipe.AddIngredient(ItemID.Bunny, 50);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.RegenerationPotion, 45);
 			recipe.AddIngredient(ItemID.NeonTetra, 35);
 			recipe.AddIngredient(ItemID.DaybloomSeeds, 600);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

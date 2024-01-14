@@ -15,6 +15,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Blinkroot, 200);
 			recipe.AddIngredient(ItemID.HoneyBlock, 100);
 			recipe.AddIngredient(ItemID.OrangeBloodroot, 2);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

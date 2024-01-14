@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.BreathingReed, 3);
 			recipe.AddIngredient(ItemID.Wrench, 6);
 			recipe.AddIngredient(ItemID.BlackDye, 30);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

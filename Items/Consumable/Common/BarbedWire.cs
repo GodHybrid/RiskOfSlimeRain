@@ -10,10 +10,11 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 		public override void SafeAddRecipes()
 		{
 			Recipe recipe = CreateRecipe(1);
-			recipe.AddRecipeGroup("IronBar", 60);
+			recipe.AddRecipeGroup(RecipeGroupID.IronBar, 60);
 			recipe.AddIngredient(ItemID.ThornChakram, 3);
 			recipe.AddIngredient(ItemID.SharkToothNecklace, 5);
 			recipe.AddIngredient(ItemID.Wire, 210);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

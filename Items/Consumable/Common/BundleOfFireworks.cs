@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.BlueRocket, 450);
 			recipe.AddIngredient(ItemID.RopeCoil, 55);
 			recipe.AddIngredient(ItemID.FireworkFountain, 10);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Gel, 400);
 			recipe.AddIngredient(ItemID.Silk, 200);
 			recipe.AddIngredient(ItemID.Timer1Second, 30);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

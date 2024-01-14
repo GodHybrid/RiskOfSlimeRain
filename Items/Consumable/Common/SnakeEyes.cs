@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Ruby, 62);
 			recipe.AddIngredient(ItemID.RichMahogany, 410);
 			recipe.AddIngredient(ItemID.RedAcidDye, 10);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

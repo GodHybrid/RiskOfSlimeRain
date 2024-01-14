@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.GrayPressurePlate, 20);
 			recipe.AddIngredient(ItemID.SnowBrick, 250);
 			recipe.AddIngredient(ItemID.CactusSword, 7);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

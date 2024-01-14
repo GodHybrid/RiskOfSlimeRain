@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.FlowerofFire, 1);
 			recipe.AddIngredient(ItemID.HellstoneBrick, 666);
 			recipe.AddIngredient(ItemID.LargeAmber, 5);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

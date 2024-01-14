@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Scorpion, 10);
 			recipe.AddIngredient(ItemID.StrangeBrew, 60);
 			recipe.AddIngredient(ItemID.Seed, 450);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

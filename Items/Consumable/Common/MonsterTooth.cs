@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.BandofRegeneration, 4);
 			recipe.AddIngredient(ItemID.SharkToothNecklace, 2);
 			recipe.AddIngredient(ItemID.ChainKnife, 2);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

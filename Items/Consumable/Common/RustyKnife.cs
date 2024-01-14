@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.ThrowingKnife, 900);
 			recipe.AddIngredient(ItemID.SharkFin, 18);
 			recipe.AddIngredient(ItemID.Swordfish, 5);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

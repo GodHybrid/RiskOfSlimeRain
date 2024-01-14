@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.BlackLens, 16);
 			recipe.AddIngredient(ItemID.Ruby, 70);
 			recipe.AddIngredient(ItemID.MeteoriteBrick, 270);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

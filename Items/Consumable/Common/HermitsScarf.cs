@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Feather, 150);
 			recipe.AddIngredient(ItemID.Gi, 5);
 			recipe.AddIngredient(ItemID.TrapsightPotion, 20);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

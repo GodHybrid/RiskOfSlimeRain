@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.Bone, 355);
 			recipe.AddIngredient(ItemID.FossilOre, 280);
 			recipe.AddIngredient(ItemID.Rally, 3);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

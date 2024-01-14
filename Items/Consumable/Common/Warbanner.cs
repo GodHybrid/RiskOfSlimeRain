@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.BorealWood, 505);
 			recipe.AddIngredient(ItemID.TatteredCloth, 60);
 			recipe.AddIngredient(ItemID.InfernoPotion, 9);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

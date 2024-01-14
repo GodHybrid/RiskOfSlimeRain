@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.WineGlass, 100);
 			recipe.AddIngredient(ItemID.FeralClaws, 2);
 			recipe.AddIngredient(ItemID.SwiftnessPotion, 40);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}

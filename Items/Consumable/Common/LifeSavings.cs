@@ -14,6 +14,7 @@ namespace RiskOfSlimeRain.Items.Consumable.Common
 			recipe.AddIngredient(ItemID.GoldCoin, 50);
 			recipe.AddIngredient(ItemID.ClayBlock, 600);
 			recipe.AddIngredient(ItemID.GoldenCarp, 10);
+			recipe.DisableDecraft();
 			recipe.Register();
 		}
 	}
