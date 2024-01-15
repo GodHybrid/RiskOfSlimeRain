@@ -3,6 +3,7 @@
 ## 0.5.1.1
 * Misc
 	* Made all items non-decraftable
+	* Slight tooltip tweaks
 * Fixes
 	* Fixed Dead Man's Foot not working and showing the wrong duration in the tooltip
 	* Fixed Life Savings incorrect tooltip

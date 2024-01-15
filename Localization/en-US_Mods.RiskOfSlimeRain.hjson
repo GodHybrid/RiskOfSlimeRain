@@ -35,9 +35,13 @@ ROREffects: {
 
 		GoldenGun: {
 			DisplayName: Golden Gun
-			Description: Deals bonus damage scaling by money in your inventory, up to {0} damage at {1} platinum
+			Description: Deals bonus damage scaling by money in your inventory, up to {0} damage at {1} gold
 			FlavorText: Was this supposed to... intimidate me? I do like its look, however; perhaps I'll set it above my fireplace.
-			UIInfo: Damage: {0}. Max: {1} Platinum
+			UIInfo:
+				'''
+				Damage: {0}
+				Max: {1} Gold
+				'''
 		}
 
 		GuardiansHeart: {
@@ -56,7 +60,11 @@ ROREffects: {
 			Description: Gain {0} crit chance. Critical strikes heal for {1} health
 			FlavorText: It takes a brave man to look death in the eye and claim they don't need help.
 			UIInfo: Heal amount: {0}
-			UIInfoOGStats: Crit chance increase: {0}. {1}
+			UIInfoOGStats:
+				'''
+				Crit chance increase: {0}
+				{1}
+				'''
 		}
 
 		Infusion: {
@@ -67,7 +75,12 @@ ROREffects: {
 				You can add whatever blood sample you want, as far as I know.
 				Remember that sampling from other creatures is a great basis for experimentation!
 				'''
-			UIInfo: Bonus life: {0}. Cap: {1}. Stored life: {2}
+			UIInfo:
+				'''
+				Bonus life: {0} HP
+				Cap: {1} HP
+				Stored life: {2} HP
+				'''
 		}
 
 		LeechingSeed: {
@@ -78,7 +91,11 @@ ROREffects: {
 				These flesh-infesting pods seem to burrow, balloon, and then pop in a few months. Most test patients have... died.
 				However, before they die, they feel increased health and state of mind!
 				'''
-			UIInfo: Stored heal: {0}. Heal amount: {1}
+			UIInfo:
+				'''
+				Stored heal: {0} HP
+				Heal amount: {1} HP
+				'''
 		}
 
 		PanicMines: {
@@ -119,14 +136,18 @@ ROREffects: {
 			DisplayName: Barbed Wire
 			Description: Being close to enemies deals {0} of your current damage every second
 			FlavorText: Disclaimer: I, or my company, am not responsible for any bodily harm delivered to...
-			UIInfo: Current damage: {0}. Current radius: {1} Tiles
+			UIInfo:
+				'''
+				Current damage: {0}.
+				Current radius: {1} Tiles
+				'''
 		}
 
 		BitterRoot: {
 			DisplayName: Bitter Root
 			Description: Increases maximum life by roughly {0}
 			FlavorText: Biggest. Ginseng. Root. Ever.
-			UIInfo: Life increase: {0}
+			UIInfo: Life increase: {0} HP
 		}
 
 		BundleOfFireworks: {
@@ -250,7 +271,7 @@ ROREffects: {
 				MM. Delicious
 				Just kidding, it's awful
 				'''
-			UIInfo: Heal amount: {0}
+			UIInfo: Heal amount: {0} HP
 		}
 
 		Medkit: {
@@ -261,7 +282,7 @@ ROREffects: {
 				Each Medkit should contain bandages, sterile dressings, soap,
 				antiseptics, saline, gloves, scissors, aspirin, codeine, and an Epipen
 				'''
-			UIInfo: Heal amount: {0}
+			UIInfo: Heal amount: {0} HP
 		}
 
 		MonsterTooth: {
@@ -272,7 +293,7 @@ ROREffects: {
 				Sometimes I felt like it helped me on hunts, ya know?
 				Like... instincts
 				'''
-			UIInfo: Heal amount: {0}
+			UIInfo: Heal amount: {0} HP
 		}
 
 		MortarTube: {
@@ -405,7 +426,11 @@ ROREffects: {
 			DisplayName: Burning Witness
 			Description: Grant +{0} movement speed, +{1} damage, and a firetrail on kill for {2} seconds
 			FlavorText: The Worm's eye seems to still see... watching... rewarding...
-			UIInfo: Current speed increase: {0}. Current duration: {1}
+			UIInfo:
+				'''
+				Current speed increase: {0}
+				Current duration: {1}
+				'''
 		}
 	}
 

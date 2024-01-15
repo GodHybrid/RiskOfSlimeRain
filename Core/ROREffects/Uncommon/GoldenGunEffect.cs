@@ -31,11 +31,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public float DamageIncrease => Formula() * Ratio;
 
-		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), defMaxMoney / Item.platinum);
+		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), defMaxMoney / Item.gold);
 
 		public override string UIInfo()
 		{
-			return UIInfoText.Format(DamageIncrease.ToPercent(), Math.Round((float)MaxMoney / Item.platinum, 1));
+			return UIInfoText.Format(DamageIncrease.ToPercent(), Math.Round((float)MaxMoney / Item.gold, 1));
 		}
 
 		public PlayerLayerParams GetPlayerLayerParams(Player player)
