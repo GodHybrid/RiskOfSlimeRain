@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -75,10 +76,11 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 				{
 					count *= 3;
 				}
+				var source = GetEntitySource(player);
 				for (int i = 0; i < count; i++)
 				{
 					Vector2 velo = new Vector2(Main.rand.NextFloat(-0.25f, 0.25f), -2f);
-					RandomMovementProj.NewProjectile<BundleOfFireworksProj>(GetEntitySource(player), player.Center, velo, damage, 10f);
+					Projectile.NewProjectile(source, player.Center, velo, ModContent.ProjectileType<BundleOfFireworksProj>(), damage, 10f, Main.myPlayer);
 				}
 			}
 

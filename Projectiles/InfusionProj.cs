@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using RiskOfSlimeRain.Core.ROREffects;
 using RiskOfSlimeRain.Core.ROREffects.Uncommon;
 using RiskOfSlimeRain.Dusts;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Network;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -26,6 +28,16 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			get => (int)Projectile.ai[1];
 			set => Projectile.ai[1] = value;
+		}
+
+		public override void OnSpawn(IEntitySource source)
+		{
+			if (source is not EntitySource_FromEffect_Heal healSource)
+			{
+				return;
+			}
+
+			HealAmount = healSource.Heal;
 		}
 
 		public override void ApplyBonus(Player target)

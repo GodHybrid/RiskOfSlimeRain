@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -17,6 +19,16 @@ namespace RiskOfSlimeRain.Projectiles
 			base.SetDefaults();
 			Projectile.Size = new Vector2(8);
 			Projectile.timeLeft = 420; //Default, changed in OtherAI
+		}
+
+		public override void OnSpawn(IEntitySource source)
+		{
+			if (source is not EntitySource_Parent_Duration durationSource)
+			{
+				return;
+			}
+
+			TimeLeft = durationSource.Duration;
 		}
 
 		private const int StrikeTimerMax = 30;

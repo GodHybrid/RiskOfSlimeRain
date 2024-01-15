@@ -3,6 +3,7 @@ using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -51,10 +52,12 @@ namespace RiskOfSlimeRain.Projectiles
 		{
 			SoundEngine.PlaySound(SoundID.Item14.WithVolumeScale(0.6f), Projectile.Center);
 			Vector2 velo;
+			var source = Projectile.GetSource_FromThis();
+			int type = ModContent.ProjectileType<BundleOfFireworksVisualExplosion>();
 			for (int i = 0; i < explosionCount; i++)
 			{
 				velo = Vector2.UnitX.RotatedBy(-45).RotatedByRandom(270) * 4;
-				GravityDustProj.NewProjectile<BundleOfFireworksVisualExplosion>(Projectile.GetSource_FromThis(), Projectile.Center, velo);
+				Projectile.NewProjectile(source, Projectile.Center, velo, type, 0, 0f, Main.myPlayer);
 			}
 		}
 	}

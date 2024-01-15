@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
 using Terraria;
-using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -11,17 +10,6 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public abstract class PlayerBonusProj : ModProjectile
 	{
-		public static void NewProjectile<T>(IEntitySource source, Vector2 position, Vector2 velocity, Action<T> onCreate = null) where T : PlayerBonusProj
-		{
-			Projectile p = Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<T>(), 0, 0f, Main.myPlayer);
-			if (p.whoAmI < Main.maxProjectiles)
-			{
-				T t = p.ModProjectile as T;
-
-				onCreate?.Invoke(t);
-			}
-		}
-
 		public int HomingTimer
 		{
 			get => (int)Projectile.ai[0];

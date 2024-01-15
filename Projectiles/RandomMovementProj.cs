@@ -14,17 +14,6 @@ namespace RiskOfSlimeRain.Projectiles
 	/// </summary>
 	public abstract class RandomMovementProj : ModProjectile
 	{
-		public static void NewProjectile<T>(IEntitySource source, Vector2 position, Vector2 velocity, int damage, float knockBack, Action<T> onCreate = null) where T : RandomMovementProj
-		{
-			Projectile p = Projectile.NewProjectileDirect(source, position, velocity, ModContent.ProjectileType<T>(), damage, knockBack, Main.myPlayer, (int)DateTime.Now.Ticks);
-			if (p.whoAmI < Main.maxProjectiles)
-			{
-				T t = p.ModProjectile as T;
-
-				onCreate?.Invoke(t);
-			}
-		}
-
 		private UnifiedRandom rng;
 
 		public UnifiedRandom Rng
@@ -96,6 +85,11 @@ namespace RiskOfSlimeRain.Projectiles
 			Projectile.timeLeft = 300;
 			Projectile.alpha = 255;
 			Projectile.netImportant = true;
+		}
+
+		public override void OnSpawn(IEntitySource source)
+		{
+			RandomSeed = (int)DateTime.Now.Ticks;
 		}
 
 		public sealed override void AI()

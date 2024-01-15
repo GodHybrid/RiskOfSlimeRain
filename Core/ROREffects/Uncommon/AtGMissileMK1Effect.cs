@@ -7,6 +7,7 @@ using Terraria;
 using Terraria.Audio;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 {
@@ -81,9 +82,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 		{
 			//In ror, it actually uses the dealt damage for the missile damage, not the players damage
 			int damage = (int)(DamageIncrease * player.GetDamage());
-			if (Main.netMode != NetmodeID.Server) SoundEngine.PlaySound(SoundID.Item13.WithVolumeScale(SoundHelper.FixVolume(2f)).WithPitchOffset(0.4f), player.Center);
+			SoundEngine.PlaySound(SoundID.Item13.WithVolumeScale(SoundHelper.FixVolume(2f)).WithPitchOffset(0.4f), player.Center);
 			Vector2 velo = new Vector2(Main.rand.NextFloat(4f) - 2f, -2f);
-			RandomMovementProj.NewProjectile<AtGMissileMK1Proj>(GetEntitySource(player), player.Center, velo, damage, 10f);
+			Projectile.NewProjectile(GetEntitySource(player), player.Center, velo, ModContent.ProjectileType<AtGMissileMK1Proj>(), damage, 10f, Main.myPlayer);
 		}
 
 		public void PostUpdateEquips(Player player)
