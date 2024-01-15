@@ -1,5 +1,12 @@
 # Changelogs
 
+## 0.5.1.1
+* Misc
+	* Made all items non-decraftable
+* Fixes
+	* Fixed Dead Man's Foot not working and showing the wrong duration in the tooltip
+	* Fixed Life Savings incorrect tooltip
+
 ## 0.5.1
 * Misc
 	* Added russian localization
