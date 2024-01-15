@@ -2,7 +2,7 @@
 
 This mod offers [b]permanent upgrades[/b] to the player character through items of varying rarity. Every item is a [b]consumable[/b] and most of them stack infinitely for increased effect, [b]upgrading[/b] your various [b]stats[/b] to your heart's content.
 In exchange for the increased power you will posess, the game will become more difficult.
-However the recipes for them are quite expensive (non-Commons aren't craftable at all!). Common items can be found in chests across the world, and Uncommon items are dropped from bosses that are slain for the first time, or with a 1% chance on consecutive kills.
+However the recipes for them are quite expensive (non-Commons aren't craftable at all!). Common items can be found in chests across the world, and Uncommon items are dropped from bosses that are slain for the first time, or with a 1% chance on consecutive kills (as Common).
 The mod also features config settings with which you can selectively pick the amount of stacks each item occupies (in case you need to tweak/disable the effects), blacklist item effects, and toggle between a [i]balanced[/i] or [i]original[/i] experience. If you want the items you used back, defeat the Wall of Flesh for the [i]Nullifier[/i] item.
 
 [b]"Risk of Slime Rain"[/b] is in a beta-stage as of now, offering a fraction of what the end goal is. However, it is still playable! It currently offers:
