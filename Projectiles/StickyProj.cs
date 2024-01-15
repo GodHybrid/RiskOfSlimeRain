@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
-using System;
 using System.Collections.Generic;
 using Terraria;
 using Terraria.DataStructures;
@@ -14,9 +13,9 @@ namespace RiskOfSlimeRain.Projectiles
 	public abstract class StickyProj : ModProjectile
 	{
 		/// <summary>
-		/// Custom NewProjectile to properly spawn a StickyProj. offset is from the position of the target (defaults to center). damage is clientside. onCreate to set additional variables (clientside). Projectile will be synced after onCreate
+		/// Custom NewProjectile to properly spawn a StickyProj. offset is from the position of the target (defaults to center). damage is clientside.
 		/// </summary>
-		public static void NewProjectile<T>(IEntitySource source, NPC target, Vector2 offset = default(Vector2), int damage = 0, Action<T> onCreate = null) where T : StickyProj
+		public static void NewProjectile<T>(IEntitySource source, NPC target, Vector2 offset = default(Vector2), int damage = 0) where T : StickyProj
 		{
 			if (typeof(IOncePerNPC).IsAssignableFrom(typeof(T)))
 			{
@@ -49,11 +48,6 @@ namespace RiskOfSlimeRain.Projectiles
 				T t = p.ModProjectile as T;
 
 				t.damage = damage;
-				if (onCreate != null)
-				{
-					onCreate.Invoke(t);
-					p.netUpdate = true;
-				}
 			}
 		}
 

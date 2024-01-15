@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using RiskOfSlimeRain.Core.ROREffects.Helpers;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
@@ -9,6 +10,7 @@ using System.IO;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
@@ -95,10 +97,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			int heal = GetHeal();
 			if (heal > 0)
 			{
-				PlayerBonusProj.NewProjectile(GetEntitySource(player), target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, onCreate: (InfusionProj inf) =>
-				{
-					inf.HealAmount = heal;
-				});
+				Projectile.NewProjectile(new EntitySource_FromEffect_Heal(player, this, heal), target.Center, new Vector2(player.direction, Main.rand.NextFloat(-1f, -0.7f)) * 8, ModContent.ProjectileType<InfusionProj>(), 0, 0, Main.myPlayer);
 			}
 		}
 

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
+using Terraria.DataStructures;
 
 namespace RiskOfSlimeRain.Projectiles
 {
@@ -15,6 +17,16 @@ namespace RiskOfSlimeRain.Projectiles
 		public override Color Color => Color.LimeGreen;
 
 		public override int Radius => HealAmount / 10;
+
+		public override void OnSpawn(IEntitySource source)
+		{
+			if (source is not EntitySource_FromEffect_Heal healSource)
+			{
+				return;
+			}
+
+			HealAmount = healSource.Heal;
+		}
 
 		public override void ApplyBonus(Player target)
 		{

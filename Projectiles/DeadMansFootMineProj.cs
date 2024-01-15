@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using Terraria;
@@ -86,18 +87,16 @@ namespace RiskOfSlimeRain.Projectiles
 			{
 				Rectangle explosionArea = Projectile.Hitbox;
 				explosionArea.Inflate(addRadiusX, addRadiusY);
+				int duration = 30 * Ticks;
+				int damage = (int)(1.5f * Damage);
 				for (int i = 0; i < Main.maxNPCs; i++)
 				{
 					NPC n = Main.npc[i];
 
 					if (n.CanBeChasedBy() && n.Hitbox.Intersects(explosionArea))
 					{
-						n.AddBuff(BuffID.Venom, 8 * Ticks);
-						int damage = (int)(1.5f * Damage);
-						StickyProj.NewProjectile(Projectile.GetSource_FromThis(), n, damage: damage, onCreate: delegate (DeadMansFootDoTProj t)
-						{
-							t.TimeLeft = (ushort)(30 * Ticks + 20);
-						});
+						n.AddBuff(BuffID.Poisoned, duration); //This is purely for visuals
+						StickyProj.NewProjectile<DeadMansFootDoTProj>(new EntitySource_Parent_Duration(Projectile, duration + 20), n, damage: damage);
 					}
 				}
 			}

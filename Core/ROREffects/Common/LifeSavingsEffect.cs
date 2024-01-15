@@ -57,9 +57,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			}
 			else
 			{
-				text += UIInfoText.Format(nextMoneyWithdrawn);
+				text += UIInfoNextText.Format(nextMoneyWithdrawn);
 			}
-			return text + $"\n" + UIInfoText.Format(totalText);
+			return text + $"\n" + UIInfoTotalText.Format(totalText);
 		}
 
 		public void PostUpdateEquips(Player player)

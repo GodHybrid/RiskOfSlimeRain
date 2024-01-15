@@ -1,7 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Helpers;
+using RiskOfSlimeRain.Core.EntitySources;
 using System.IO;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Projectiles
@@ -20,6 +21,16 @@ namespace RiskOfSlimeRain.Projectiles
 			Projectile.timeLeft = 420; //Default, changed in OtherAI
 		}
 
+		public override void OnSpawn(IEntitySource source)
+		{
+			if (source is not EntitySource_Parent_Duration durationSource)
+			{
+				return;
+			}
+
+			TimeLeft = durationSource.Duration;
+		}
+
 		private const int StrikeTimerMax = 30;
 
 		//Timer for strikes on only that NPC
@@ -29,7 +40,7 @@ namespace RiskOfSlimeRain.Projectiles
 			set => Projectile.localAI[0] = value;
 		}
 
-		public ushort TimeLeft { get; set; } //Synced
+		public int TimeLeft { get; set; } //Synced
 
 		public bool appliedTimeLeft = false;
 
@@ -55,19 +66,14 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return Color.White;
-		}
-
 		public override void SendExtraAI(BinaryWriter writer)
 		{
-			writer.Write(TimeLeft);
+			writer.Write7BitEncodedInt(TimeLeft);
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
-			TimeLeft = reader.ReadUInt16();
+			TimeLeft = reader.Read7BitEncodedInt();
 		}
 	}
 }

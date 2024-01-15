@@ -1,10 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
+using RiskOfSlimeRain.Core.EntitySources;
 using RiskOfSlimeRain.Core.ROREffects.Interfaces;
 using RiskOfSlimeRain.Helpers;
 using RiskOfSlimeRain.Projectiles;
 using Terraria;
 using Terraria.ID;
 using Terraria.Localization;
+using Terraria.ModLoader;
 
 namespace RiskOfSlimeRain.Core.ROREffects.Common
 {
@@ -41,10 +43,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			if (NPCHelper.IsSpawnedFromStatue(target)) return;
 			if (target.type == NPCID.EaterofWorldsHead && !Main.rand.NextBool(10)) return;
 
-			PlayerBonusProj.NewProjectile(GetEntitySource(player), target.Center, new Vector2(0f, -10f), onCreate: delegate (PlayerHealthProj proj)
-			{
-				proj.HealAmount = (int)Formula();
-			});
+			Projectile.NewProjectile(new EntitySource_FromEffect_Heal(player, this, (int)Formula()), target.Center, new Vector2(0f, -10f), ModContent.ProjectileType<PlayerHealthProj>(), 0, 0, Main.myPlayer);
 		}
 	}
 }
