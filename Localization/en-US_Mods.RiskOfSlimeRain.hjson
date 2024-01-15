@@ -294,7 +294,7 @@ ROREffects: {
 				Side effects may include itching, rashes, bleeding, sensitivity of skin,
 				dry patches, permanent scarring, misaligned bone regrowth, rotting of the...
 				'''
-			UIInfo: Regeneration: {0}/s
+			UIInfo: Regeneration: {0} HP/s
 		}
 
 		PaulsGoatHoof: {
@@ -360,7 +360,7 @@ ROREffects: {
 				This egg seems to be somewhere between hatching and dying
 				I can't bring it to myself to cook it alive
 				'''
-			UIInfo: Regeneration: {0}/s
+			UIInfo: Regeneration: {0} HP/s
 		}
 
 		StickyBomb: {
