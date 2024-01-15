@@ -27,13 +27,14 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		public override string UIInfo()
 		{
-			return UIInfoText.Format(30 * (int)Formula());
+			int durationTicks = 30 * (int)Formula();
+			return UIInfoText.Format(Math.Round(durationTicks / 60d, 1));
 		}
 
 		public void PostHurt(Player player, Player.HurtInfo info)
 		{
 			if (Main.myPlayer == player.whoAmI && 
-				(damage >= Math.Max(damageFlat, (int)(player.statLifeMax2 * damageThreshold)) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold))	)
+				(info.Damage >= Math.Max(damageFlat, (int)(player.statLifeMax2 * damageThreshold)) || player.statLife <= (int)(player.statLifeMax2 * lowHealthThreshold)))
 			{
 				int damageForProj = player.GetDamage();
 				Projectile.NewProjectile(GetEntitySource(player), player.Center, Vector2.Zero, ModContent.ProjectileType<DeadMansFootMineProj>(), 0, 0, Main.myPlayer, damageForProj, Ticks);

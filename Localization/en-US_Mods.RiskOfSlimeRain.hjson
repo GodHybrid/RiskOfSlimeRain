@@ -30,7 +30,7 @@ ROREffects: {
 				It looks like he was infested by some bug-like creatures, and exploded when I got close.
 				I hope his death wasn't too painful; his family will know how he died.
 				'''
-			UIInfo: Debuff duration: {0}
+			UIInfo: Debuff duration: {0}s
 		}
 
 		GoldenGun: {

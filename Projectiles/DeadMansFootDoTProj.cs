@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using RiskOfSlimeRain.Helpers;
 using System.IO;
 using Terraria;
 using Terraria.ModLoader;
@@ -29,7 +28,7 @@ namespace RiskOfSlimeRain.Projectiles
 			set => Projectile.localAI[0] = value;
 		}
 
-		public ushort TimeLeft { get; set; } //Synced
+		public int TimeLeft { get; set; } //Synced
 
 		public bool appliedTimeLeft = false;
 
@@ -55,19 +54,14 @@ namespace RiskOfSlimeRain.Projectiles
 			}
 		}
 
-		public override Color? GetAlpha(Color lightColor)
-		{
-			return Color.White;
-		}
-
 		public override void SendExtraAI(BinaryWriter writer)
 		{
-			writer.Write(TimeLeft);
+			writer.Write7BitEncodedInt(TimeLeft);
 		}
 
 		public override void ReceiveExtraAI(BinaryReader reader)
 		{
-			TimeLeft = reader.ReadUInt16();
+			TimeLeft = reader.Read7BitEncodedInt();
 		}
 	}
 }
