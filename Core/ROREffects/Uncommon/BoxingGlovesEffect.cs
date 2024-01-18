@@ -37,6 +37,12 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 
 		private void ModifyKnockback(Player player, ref NPC.HitModifiers modifiers, NPC target)
 		{
+			if (target.knockBackResist <= 0f)
+			{
+				//Prevent things that don't like getting knocked back
+				return;
+			}
+
 			//Custom rolling
 			if (!Proc(RollChance))
 			{
