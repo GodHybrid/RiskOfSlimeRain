@@ -425,9 +425,7 @@ namespace RiskOfSlimeRain
 			}
 
 			//If this projectile is a minion or sentry, make it only proc 20% of the time
-			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type] ||
-				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
-				&& !Main.rand.NextBool(5)) return;
+			if (proj.IsMinionOrSentryRelated && !Main.rand.NextBool(5)) return;
 
 			ROREffectManager.Perform<IOnHit>(this, e => e.OnHitNPCWithProj(Player, proj, target, hit, damageDone));
 		}
@@ -441,9 +439,7 @@ namespace RiskOfSlimeRain
 			if (proj.ModProjectile is IExcludeOnHit) return;
 
 			//If this projectile is a minion or sentry, make it only proc 20% of the time
-			if ((proj.minion || ProjectileID.Sets.MinionShot[proj.type] ||
-				proj.sentry || ProjectileID.Sets.SentryShot[proj.type])
-				&& !Main.rand.NextBool(5)) return;
+			if (proj.IsMinionOrSentryRelated && !Main.rand.NextBool(5)) return;
 
 			ROREffectManager.ModifyHitNPCWithProj(Player, proj, target, ref modifiers);
 		}
