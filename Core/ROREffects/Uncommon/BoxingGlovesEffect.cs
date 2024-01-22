@@ -40,6 +40,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			if (target.knockBackResist <= 0f)
 			{
 				//Prevent things that don't like getting knocked back
+				//This is mandatory since Knockback.Flat ignores it
 				return;
 			}
 
@@ -50,8 +51,9 @@ namespace RiskOfSlimeRain.Core.ROREffects.Uncommon
 			}
 
 			//Apply more knockback the less knockBackResist target has
-			float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
-			modifiers.Knockback.Flat += 6f + 8f * antiKBResist;
+			//float antiKBResist = 1f - Utils.Clamp(target.knockBackResist, 0f, 1f);
+			//modifiers.Knockback += 6f + 8f * antiKBResist;
+			modifiers.Knockback.Flat += 8f;
 
 			if (Config.HiddenVisuals(player)) return;
 
