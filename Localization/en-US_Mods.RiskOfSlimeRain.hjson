@@ -418,6 +418,8 @@ ROREffects: {
 			UIInfoActive: . Active banners: {0}
 			UIInfoReady: New banner ready, leave the current area of effect or return to solid ground
 			UIInfoInvasion: Kill countdown is disabled while an invasion is in progress
+			UIInfoConfig: You can configure it further in the '{$Configs.Config.DisplayName}' and '{$Configs.Config.DisplayName}'
+			UIInfoRemoved: You can remove dropped warbanners using the '{$Items.WarbannerRemover.DisplayName}'
 		}
 	}
 
@@ -607,6 +609,11 @@ Configs: {
 		Hint: {
 			Label: Hint
 			Tooltip: ""
+		}
+
+		WarbannerDurationMinutes: {
+			Label: Warbanner Duration
+			Tooltip: Set the time (in minutes) dropped warbanners last in the world. Maximum value means they last infinitely
 		}
 	}
 }

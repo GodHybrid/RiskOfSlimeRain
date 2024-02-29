@@ -36,12 +36,16 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public static LocalizedText UIInfoActiveText { get; private set; }
 		public static LocalizedText UIInfoReadyText { get; private set; }
 		public static LocalizedText UIInfoInvasionText { get; private set; }
+		public static LocalizedText UIInfoConfigText { get; private set; }
+		public static LocalizedText UIInfoRemovedText { get; private set; }
 
 		public override void SetStaticDefaults()
 		{
 			UIInfoActiveText ??= GetLocalization("UIInfoActive");
 			UIInfoReadyText ??= GetLocalization("UIInfoReady");
 			UIInfoInvasionText ??= GetLocalization("UIInfoInvasion");
+			UIInfoConfigText ??= GetLocalization("UIInfoConfig");
+			UIInfoRemovedText ??= GetLocalization("UIInfoRemoved");
 		}
 
 		public override string UIInfo()
@@ -59,6 +63,8 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 			{
 				text += "\n" + UIInfoInvasionText.ToString();
 			}
+			text += "\n" + UIInfoRemovedText.ToString();
+			text += "\n" + UIInfoConfigText.ToString();
 			return text;
 		}
 

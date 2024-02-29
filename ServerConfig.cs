@@ -34,6 +34,15 @@ namespace RiskOfSlimeRain
 		[BackgroundColor(30, 30, 30)]
 		public List<ItemDefinition> Blacklist = new List<ItemDefinition>();
 
+		public const int WarbannerDurationMax = 60 * 2;
+		[Slider]
+		[Range(1, WarbannerDurationMax)]
+		[DefaultValue(WarbannerDurationMax)]
+		public int WarbannerDurationMinutes;
+
+		[JsonIgnore]
+		public bool WarbannerDurationMinutesInfinite => WarbannerDurationMinutes == WarbannerDurationMax;
+
 		[ReloadRequired]
 		[DefaultValue(false)]
 		public bool DisableRecipes;

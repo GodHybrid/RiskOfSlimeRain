@@ -426,6 +426,8 @@ ROREffects: {
 			UIInfoActive: . Всего расставлено знамён: {0}
 			UIInfoReady: Новое знамя готово, выйдите из зоны действия текущего, либо встаньте на твёрдую поверхность.
 			UIInfoInvasion: Счётчик убийств выключен, пока происходит нашествие.
+			// UIInfoConfig: You can configure it further in the '{$Configs.Config.DisplayName}' and '{$Configs.Config.DisplayName}'
+			// UIInfoRemoved: You can remove dropped warbanners using {$Items.WarbannerRemover.DisplayName}
 		}
 	}
 
@@ -623,6 +625,11 @@ Configs: {
 		Hint: {
 			Label: Подсказка
 			Tooltip: ""
+		}
+
+		WarbannerDurationMinutes: {
+			// Label: Warbanner Duration Minutes
+			// Tooltip: ""
 		}
 	}
 }

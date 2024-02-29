@@ -83,7 +83,12 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			{
 				DeleteWarbanner(warbanners[0]);
 			}
-			Warbanner banner = new Warbanner(radius, x, y);
+			int timeLeft = ServerConfig.Instance.WarbannerDurationMinutes * 60 * 60;
+			if (ServerConfig.Instance.WarbannerDurationMinutesInfinite)
+			{
+				timeLeft = -1;
+			}
+			Warbanner banner = new Warbanner(radius, x, y, timeLeft);
 			warbanners.Add(banner);
 			unspawnedWarbanners.Add(banner);
 		}
@@ -91,7 +96,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// <summary>
 		/// Goes through all players and checks if they are in range of any unspawned warbanners, then attempts to spawn them
 		/// </summary>
-		public static void TrySpawnWarbanners()
+		private static void TrySpawnWarbanners()
 		{
 			if (Main.netMode == NetmodeID.MultiplayerClient) return;
 			if (unspawnedWarbanners.Count == 0) return;
@@ -237,11 +242,15 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			return banner;
 		}
 
-
 		public override void ClearWorld()
 		{
 			warbanners = new List<Warbanner>();
 			unspawnedWarbanners = new List<Warbanner>();
+		}
+
+		public override void OnModUnload()
+		{
+			warbanners = unspawnedWarbanners = null;
 		}
 
 		public static void Load(TagCompound tag)
@@ -252,14 +261,31 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			unspawnedWarbanners = new List<Warbanner>(warbanners);
 		}
 
-		public override void OnModUnload()
-		{
-			warbanners = unspawnedWarbanners = null;
-		}
-
 		public static void Save(TagCompound tag)
 		{
 			tag.Add("warbanners", warbanners);
+		}
+
+		public override void PostUpdateWorld()
+		{
+			TrySpawnWarbanners();
+
+			//Reverse because we remove from list
+			for (int i = warbanners.Count - 1; i > 0; i--)
+			{
+				Warbanner banner = warbanners[i];
+				ref int timeLeft = ref banner.timeLeft;
+				if (timeLeft == -1)
+				{
+					continue;
+				}
+
+				timeLeft--;
+				if (timeLeft <= 0)
+				{
+					DeleteWarbanner(banner);
+				}
+			}
 		}
 	}
 }

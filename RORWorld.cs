@@ -92,7 +92,6 @@ namespace RiskOfSlimeRain
 
 		public override void PostUpdateWorld()
 		{
-			WarbannerManager.TrySpawnWarbanners();
 			SpawnedFromStatuePacket.SendSpawnedFromStatues();
 		}
 
