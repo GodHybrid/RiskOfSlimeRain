@@ -3,8 +3,9 @@ Learn more at the [url={ModHomepage}]homepage[/url]
 Full changelogs [url=https://github.com/GodHybrid/RiskOfSlimeRain/blob/master/changelogs.md#changelogs]Here[/url]
 
 * Misc
-	* Made all items non-decraftable
-	* Slight tooltip tweaks
+	* Added config setting to configure the lifetime of dropped Warbanners. Defaults to inifite
+	* Improved health related tooltips
+	* Golden Gun tooltip now shows gold instead of platinum
 * Fixes
-	* Fixed Dead Man's Foot not working and showing the wrong duration in the tooltip
-	* Fixed Life Savings incorrect tooltip
+	* Fixed Boxing Gloves inconsistent knockback on enemies with knockback resistance
+	* Fixed russian localization

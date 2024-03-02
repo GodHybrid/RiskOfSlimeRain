@@ -1,5 +1,14 @@
 # Changelogs
 
+## 0.5.1.2
+* Misc
+	* Added config setting to configure the lifetime of dropped Warbanners. Defaults to inifite
+	* Improved health related tooltips
+	* Golden Gun tooltip now shows gold instead of platinum
+* Fixes
+	* Fixed Boxing Gloves inconsistent knockback on enemies with knockback resistance
+	* Fixed russian localization
+
 ## 0.5.1.1
 * Misc
 	* Made all items non-decraftable

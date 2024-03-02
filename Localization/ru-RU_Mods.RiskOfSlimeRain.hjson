@@ -427,7 +427,7 @@ ROREffects: {
 			UIInfoReady: Новое знамя готово, выйдите из зоны действия текущего, либо встаньте на твёрдую поверхность.
 			UIInfoInvasion: Счётчик убийств выключен, пока происходит нашествие.
 			UIInfoConfig: Настройте функционал предмета, заглянув в '{$Configs.Config.DisplayName}' и '{$Configs.ServerConfig.DisplayName}'
-			UIInfoRemoved: {$Items.WarbannerRemover.DisplayName} поможет убрать расставленные знамёна
+			UIInfoRemoved: "'{$Items.WarbannerRemover.DisplayName}' поможет убрать расставленные знамёна"
 		}
 	}
 
