@@ -523,7 +523,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 				}
 			}
-			//if atleast one PreHurt returns false, it will return false
 			return false;
 		}
 
@@ -540,7 +539,6 @@ namespace RiskOfSlimeRain.Core.ROREffects
 					}
 				}
 			}
-			//if atleast one PreHurt returns false, it will return false
 			return false;
 		}
 		#endregion
