@@ -28,7 +28,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		int CritIncrease => (int)(failedAttempts * Formula());
 
-		public override LocalizedText Description => base.Description.WithFormatArgs(Initial.ToPercent(), maxIncrease);
+		public override LocalizedText Description => base.Description.WithFormatArgs((Initial / 100f).ToPercent(), maxIncrease);
 
 		public override string UIInfo()
 		{
