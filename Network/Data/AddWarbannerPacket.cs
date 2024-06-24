@@ -5,14 +5,14 @@ using Terraria;
 
 namespace RiskOfSlimeRain.Network.Data
 {
-	public class WarbannerPacket : MPPacket
+	public class AddWarbannerPacket : MPPacket
 	{
 		public readonly int radius;
 		public readonly Vector2 position;
 
-		public WarbannerPacket() { }
+		public AddWarbannerPacket() { }
 
-		public WarbannerPacket(int radius, Vector2 position)
+		public AddWarbannerPacket(int radius, Vector2 position)
 		{
 			this.radius = radius;
 			this.position = position;

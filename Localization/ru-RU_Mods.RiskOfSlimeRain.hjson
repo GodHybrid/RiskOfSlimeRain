@@ -678,3 +678,4 @@ UI: {
 }
 
 // DamageClasses.ArmorPenDamageClass.DisplayName: Full Armor Penetration Damage
+MapLayers.WarbannerMapLayer.Name: Боевое знамя

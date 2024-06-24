@@ -49,6 +49,8 @@ namespace RiskOfSlimeRain
 			flags[0] = downedMagmaWorm;
 			writer.Write(flags);
 
+			WarbannerManager.NetSend(writer);
+
 			NPCLootManager.NetSend(writer, true);
 			NPCLootManager.NetSend(writer, false);
 
@@ -60,6 +62,8 @@ namespace RiskOfSlimeRain
 		{
 			BitsByte flags = reader.ReadByte();
 			downedMagmaWorm = flags[0];
+
+			WarbannerManager.NetReceive(reader);
 
 			NPCLootManager.NetReceive(reader, true);
 			NPCLootManager.NetReceive(reader, false);

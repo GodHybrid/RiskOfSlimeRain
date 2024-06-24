@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using System;
+using System.IO;
+using Terraria;
 using Terraria.ModLoader.IO;
 
 namespace RiskOfSlimeRain.Core.Warbanners
@@ -74,6 +76,22 @@ namespace RiskOfSlimeRain.Core.Warbanners
 				{"position", position },
 				{"timeLeft", timeLeft },
 			};
+		}
+
+		public void NetSend(BinaryWriter writer)
+		{
+			writer.Write7BitEncodedInt(radius);
+			writer.WriteVector2(position);
+			writer.Write7BitEncodedInt(timeLeft);
+		}
+
+		public static Warbanner FromReader(BinaryReader reader)
+		{
+			int radius = reader.Read7BitEncodedInt();
+			Vector2 position = reader.ReadVector2();
+			int timeLeft = reader.Read7BitEncodedInt();
+
+			return new Warbanner(radius, position, timeLeft, fresh: false);
 		}
 	}
 }

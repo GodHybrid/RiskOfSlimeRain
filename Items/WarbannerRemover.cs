@@ -46,7 +46,10 @@ namespace RiskOfSlimeRain.Items
 
 		public override bool? UseItem(Player player)
 		{
-			WarbannerManager.DeleteNearestWarbanner(player);
+			if (player.ItemTimeIsZero)
+			{
+				WarbannerManager.DeleteNearestWarbanner(player);
+			}
 
 			//Local player resets their killcount if they have one
 			if (Main.netMode != NetmodeID.Server)

@@ -89,7 +89,7 @@ namespace RiskOfSlimeRain
 			WarbannerEffect effect = ROREffectManager.GetEffectOfType<WarbannerEffect>(this);
 			if (!InWarbannerRange && (effect?.Active ?? false) && Main.netMode != NetmodeID.Server && Player.whoAmI == Main.myPlayer && effect.WarbannerReadyToDrop)
 			{
-				if (WarbannerManager.TryAddWarbanner(effect.Radius, new Vector2(Player.Center.X, Player.Top.Y)))
+				if (WarbannerManager.TryAddWarbanner(effect.Radius, Player.Top))
 				{
 					effect.ResetKillCount();
 					effect.WarbannerReadyToDrop = false;

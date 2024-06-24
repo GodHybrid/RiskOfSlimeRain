@@ -4,6 +4,7 @@ using RiskOfSlimeRain.Network.Data;
 using RiskOfSlimeRain.Projectiles;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using Terraria;
 using Terraria.DataStructures;
 using Terraria.ID;
@@ -20,9 +21,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 	{
 		public const int LIMIT = 100;
 
-		//Clients do not have this info
 		/// <summary>
-		/// List to save and load warbanners
+		/// List to save/load/sync warbanners
 		/// </summary>
 		public static List<Warbanner> warbanners;
 
@@ -49,7 +49,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			const int maxDistanceInTiles = WarbannerProj.Height / 16 + 3;
 			if (FindNearestBelow(ref position, maxDistanceInTiles))
 			{
-				new WarbannerPacket(radius, position).Send();
+				new AddWarbannerPacket(radius, position).Send();
 				AddWarbanner(radius, position.X, position.Y);
 				success = true;
 			}
@@ -72,6 +72,16 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			return success;
 		}
 
+		public static void SyncWarbanners()
+		{
+			if (Main.netMode != NetmodeID.Server)
+			{
+				return;
+			}
+
+			new SyncWarbannersPacket().Send();
+		}
+
 		/// <summary>
 		/// Add a new banner to the list
 		/// </summary>
@@ -91,6 +101,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			Warbanner banner = new Warbanner(radius, x, y, timeLeft);
 			warbanners.Add(banner);
 			unspawnedWarbanners.Add(banner);
+
+			SyncWarbanners();
 		}
 
 		/// <summary>
@@ -145,7 +157,7 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		/// </summary>
 		public static void DeleteNearestWarbanner(Player player)
 		{
-			//If client: since he has no backend data of warbanners, only the projectiles, it'll remove the projectile safely. The server then removes the banner too
+			//If client: it'll remove the projectile safely. The server then removes the banner too
 
 			RORPlayer mPlayer = player.GetRORPlayer();
 			if (mPlayer.InWarbannerRange)
@@ -159,14 +171,17 @@ namespace RiskOfSlimeRain.Core.Warbanners
 		}
 
 		/// <summary>
-		/// Deletes the warbanner matching this identity from 'warbanners' and kills the projectile if it exists
+		/// Deletes the warbanner matching this identity from the list and kills the projectile if it exists
 		/// </summary>
 		public static void DeleteWarbanner(int identity)
 		{
-			Warbanner banner = warbanners.Find(w => w.associatedProjIdentity == identity);
-			if (banner != null)
+			//There is some bug where multiple of the same associatedProjIdentity can exist (but they don't spawn), delete them aswell
+			foreach (var banner in warbanners.FindAll(w => w.associatedProjIdentity == identity))
 			{
-				DeleteWarbanner(banner);
+				if (banner != null)
+				{
+					DeleteWarbanner(banner);
+				}
 			}
 		}
 
@@ -178,6 +193,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			warbanners.Remove(banner);
 			Projectile proj = FindWarbannerProj(banner.associatedProjIdentity);
 			proj?.Kill();
+
+			SyncWarbanners();
 		}
 
 		/// <summary>
@@ -266,6 +283,25 @@ namespace RiskOfSlimeRain.Core.Warbanners
 			tag.Add("warbanners", warbanners);
 		}
 
+		public static void NetSend(BinaryWriter writer)
+		{
+			writer.Write7BitEncodedInt(warbanners.Count);
+			for (int i = 0; i < warbanners.Count; i++)
+			{
+				warbanners[i].NetSend(writer);
+			}
+		}
+
+		public static void NetReceive(BinaryReader reader)
+		{
+			int count = reader.Read7BitEncodedInt();
+			warbanners = new List<Warbanner>();
+			for (int i = 0; i < count; i++)
+			{
+				warbanners.Add(Warbanner.FromReader(reader));
+			}
+		}
+
 		public override void PostUpdateWorld()
 		{
 			TrySpawnWarbanners();
@@ -284,6 +320,8 @@ namespace RiskOfSlimeRain.Core.Warbanners
 				if (timeLeft <= 0)
 				{
 					DeleteWarbanner(banner);
+
+					SyncWarbanners();
 				}
 			}
 		}

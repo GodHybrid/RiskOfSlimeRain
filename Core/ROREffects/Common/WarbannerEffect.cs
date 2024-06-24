@@ -51,10 +51,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 		public override string UIInfo()
 		{
 			var text = UIInfoText.Format(Math.Max(0, WarbannerManager.KillCountForNextWarbanner - KillCount));
-			if (Main.netMode == NetmodeID.SinglePlayer)
-			{
-				text += UIInfoActiveText.Format(WarbannerManager.warbanners.Count);
-			}
+			text += UIInfoActiveText.Format(WarbannerManager.warbanners.Count);
 			if (WarbannerReadyToDrop)
 			{
 				text += "\n" + UIInfoReadyText.ToString();
@@ -96,7 +93,7 @@ namespace RiskOfSlimeRain.Core.ROREffects.Common
 
 		public void ResetKillCount()
 		{
-			KillCount = 0;
+			KillCount = Math.Max(0, KillCount - WarbannerManager.KillCountForNextWarbanner);
 		}
 
 		public override void PopulateTag(TagCompound tag)

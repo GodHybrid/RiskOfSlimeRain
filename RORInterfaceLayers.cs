@@ -413,7 +413,7 @@ namespace RiskOfSlimeRain
 			Player player = Main.LocalPlayer;
 			RORPlayer mPlayer = player.GetRORPlayer();
 			if (WarbannerManager.warbanners.Count <= 0) return true;
-			if (!(player.HeldItem.ModItem is WarbannerRemover)) return true;
+			if (player.HeldItem.ModItem is not WarbannerRemover) return true;
 
 			Color color = Color.White;
 			Vector2 target = default(Vector2);

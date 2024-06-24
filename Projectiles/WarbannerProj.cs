@@ -17,6 +17,22 @@ namespace RiskOfSlimeRain.Projectiles
 		public const int Width = 32;
 
 		public const int Height = 50;
+		private static bool drawnCircleThisTick = false;
+
+		public override void Load()
+		{
+			Main.OnPostDraw += OnPostDraw;
+		}
+
+		public override void Unload()
+		{
+			Main.OnPostDraw -= OnPostDraw;
+		}
+
+		private static void OnPostDraw(GameTime gameTime)
+		{
+			drawnCircleThisTick = false;
+		}
 
 		public override void SetStaticDefaults()
 		{
@@ -44,36 +60,23 @@ namespace RiskOfSlimeRain.Projectiles
 		public override void PostDraw(Color lightColor)
 		{
 			if (Config.Instance.HideWarbannerRadius) return;
-			bool iAmLast = false;
-			for (int i = Main.maxProjectiles - 1; i >= 0; i--)
+			if (drawnCircleThisTick) return;
+
+			for (int i = 0; i < Main.maxProjectiles; i++)
 			{
 				Projectile p = Main.projectile[i];
-				if (p.active && p.ModProjectile is WarbannerProj)
+				if (p.active && p.ModProjectile is WarbannerProj w)
 				{
-					if (p.whoAmI == Projectile.whoAmI)
+					Effect circle = ShaderManager.SetupCircleEffect(p.Center, w.Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
+					if (circle != null)
 					{
-						iAmLast = true;
+						drawnCircleThisTick = true;
+						ShaderManager.ApplyToScreenOnce(Main.spriteBatch, circle, restore: false);
 					}
-					break;
 				}
 			}
 
-			if (iAmLast)
-			{
-				for (int i = 0; i < Main.maxProjectiles; i++)
-				{
-					Projectile p = Main.projectile[i];
-					if (p.active && p.ModProjectile is WarbannerProj w)
-					{
-						Effect circle = ShaderManager.SetupCircleEffect(p.Center, w.Radius, Color.LightYellow * 0.78f * WarbannerManager.GetWarbannerCircleAlpha());
-						if (circle != null)
-						{
-							ShaderManager.ApplyToScreenOnce(Main.spriteBatch, circle, restore: false);
-						}
-					}
-				}
-				ShaderManager.RestoreVanillaSpriteBatchSettings(Main.spriteBatch);
-			}
+			ShaderManager.RestoreVanillaSpriteBatchSettings(Main.spriteBatch);
 		}
 
 		public int Radius
