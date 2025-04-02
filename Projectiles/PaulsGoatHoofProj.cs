@@ -19,6 +19,11 @@ namespace RiskOfSlimeRain.Projectiles
 			Projectile.tileCollide = false;
 		}
 
+		public override bool? CanCutTiles()
+		{
+			return false;
+		}
+
 		public override void AI()
 		{
 			if (Projectile.alpha < 255)
